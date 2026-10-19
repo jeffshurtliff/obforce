@@ -1471,6 +1471,20 @@ dependency links where available, and safe build/refresh workflows. Updated this
 roadmap and root agent guidance to record that decision. Detailed implementation
 defaults remain proposed; no implementation thread was started.
 
+**Housekeeping handoff — 18 October 2026:** Adapted all 16 copied GitHub issue
+templates for Obforce, preserving their categories, labels, and general structure.
+Replaced encryption/backup examples with Salesforce source, coverage, note
+ownership, refresh, and recovery context; updated privacy guidance and removed
+links to absent contributor/release guides. Release preparation now follows this
+roadmap without assuming another project's publishing automation. Local macOS
+review checked YAML frontmatter/required fields, repository link targets against
+local files, obsolete references, Markdown fences, privacy, and whitespace
+(including the untracked templates). GitHub rendering and application/live/native
+qualification were not exercised for this prose-only task. The templates remain
+untracked and all changes are unstaged/uncommitted, pending maintainer review;
+no external actions were taken. No scope decision or implementation blocker was
+introduced. Thread 01 remains the next eligible thread, explicitly not started.
+
 ## 12. Reference notes for implementers
 
 Official documentation was reviewed on 18 October 2026 where readable. Follow the

@@ -10,6 +10,10 @@ Thread 02 adds internal config/model validation; see [configuration](docs/CONFIG
 contracts and their implementation boundaries. The production CLI is unchanged.
 Thread 03 adds internal [offline Apex acquisition](docs/OFFLINE_SOURCE.md) and a
 fictional multi-package DX sample; it adds no public command or live access.
+The delivered Windows identity correction passed all 12 hosted cells, including
+Windows tests and independent artifact installations. Thread 03 is accepted;
+see its [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-03-acceptance-and-closure--19-october-2026)
+for exact commit/run evidence and the retained FIFO/native-lifecycle limits.
 
 ## Development setup
 

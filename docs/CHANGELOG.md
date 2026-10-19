@@ -39,7 +39,10 @@ All notable changes to this project will be documented in this file, following
   descriptor change-time semantics through an exact birthtime comparison,
   preserving all other identity fields, raw descriptor before/after guards,
   and independent pathname checks. Regression tests cover stable reads and
-  refusal of changed metadata without introducing platform skips.
+  refusal of changed metadata without introducing platform skips. Delivered
+  correction `20bff7f` / merge `6154b74` passed all 12 hosted Python 3.12–3.15
+  cells, including Windows tests/build/Twine/independent installs; the existing
+  unavailable Windows FIFO case remains explicitly skipped.
 - Enforced LF repository text checkouts and separated setup/validation commands
   into individual CI steps so Windows Ruff failures cannot be masked by a later
   successful command. Correction `65305fb` passed standalone checks and artifact

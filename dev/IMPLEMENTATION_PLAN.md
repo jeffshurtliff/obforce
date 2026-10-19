@@ -8,9 +8,10 @@
 Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
 as completed. Thread 02 is **accepted and complete**, including delivered
 correction `65305fb` and all 12 passing hosted cells with standalone Windows
-formatting checks. Issue #2 is closed as completed. Thread 03 is **delivered;
-Windows CI correction locally verified; corrected hosted CI pending**, with acceptance withheld. Issue #3 remains
-open. Threads 04–17 are **not started**.
+formatting checks. Issue #2 is closed as completed. Thread 03 is **accepted and
+complete**, including delivered correction merge `6154b74` and all 12 passing
+hosted cells. Issue #3 is closed as completed. Thread 04 is next eligible;
+Threads 04–17 remain **not started**.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -785,7 +786,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | --- | --- | --- | --- | --- | --- |
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
-| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Delivered; local Windows correction ready; hosted gate pending; open |
+| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
@@ -892,8 +893,8 @@ retains the earlier masked failures. Current evidence is in the
 [acceptance record](#thread-02-acceptance-and-closure--19-october-2026): delivered
 correction `65305fb` passed all 12 cells, including standalone Windows formatting,
 117 tests per cell, and both independent artifact installs per cell. Thread 03
-is delivered with a locally verified Windows correction awaiting delivery/CI;
-Thread 04 remains not started.
+is accepted with delivered Windows correction and passing hosted CI; Thread 04
+is next eligible and remains not started.
 
 **GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
@@ -958,10 +959,12 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 
 **Goal:** A read-only local project source producing honest normalized Apex records.
 
-**Depends on:** 02. **Status:** Core delivered; Windows correction locally verified,
-pending delivery and corrected exact-commit CI.
-Acceptance remains pending. The [original handoff](#thread-03-handoff--19-october-2026)
-is historical; see the follow-up record below for current evidence.
+**Depends on:** 02. **Status:** Accepted and complete; issue #3 closed.
+The [original handoff](#thread-03-handoff--19-october-2026) and Windows follow-up
+are historical. Current evidence is in the
+[acceptance record](#thread-03-acceptance-and-closure--19-october-2026): correction
+`20bff7f`, merged at `6154b74`, passed all 12 exact-commit hosted cells, including
+every Windows test/build/Twine/independent-install step. Thread 04 remains not started.
 
 **Windows correction decision — 19 October 2026 (before coding):** Run
 `39298411328` at delivered merge `1f86032` has eight passing Ubuntu/macOS cells
@@ -1111,10 +1114,66 @@ Report actual executable/platform coverage, not assumed compatibility.
 > verified checklist, and handoff evidence, synchronized with the roadmap. Leave
 > it open pending maintainer acceptance; do not create duplicate tracking issues.
 >
-> Implement only Thread 04 using mocked sf process results. Verify current
-> official command contracts and implement the bounded read-only process boundary.
-> Do not install/update sf, authenticate, query an org, or build a vault. Record
-> platform gaps and leave changes uncommitted.
+> Read AGENTS.md, CONTRIBUTING.md, dev/IMPLEMENTATION_PLAN.md, and the configuration,
+> coverage, and note contracts. Check relevant local/vendor_docs/ if present.
+> Verify prerequisite code and exact-commit CI before implementation. Thread 04's
+> direct prerequisite is Thread 02 / #2. Current baseline merge
+> 6154b745ed56c819cad179daa61d0ba606bede3b includes the accepted Thread 03 Windows
+> correction 20bff7f. Run 39302343644 passed all 12 Linux/macOS/Windows cells for
+> Python 3.12–3.15: 220 tests per Linux/macOS cell; 219 passed and the existing
+> FIFO test skipped per Windows cell; standalone formatting, build, strict Twine,
+> and both independent artifact installs passed everywhere. Preserve historical
+> failed runs and recheck current code/CI; report any new blocker before coding.
+> Thread 03's closure does not add a new direct dependency to Thread 04.
+>
+> Implement only Thread 04: the internal, bounded, mockable, read-only Salesforce
+> CLI process boundary in sources/sf_cli.py and focused tests/fixtures/docs.
+> Verify current official CLI command/JSON contracts without invoking real sf.
+> Record material executable/platform/envelope decisions before dependent code.
+>
+> Implement safe explicit executable resolution and a fixed allowlist of supported
+> read-only query/version operations. Construct subprocess argument lists with
+> explicit targets for org-sensitive operations, controlled working directories,
+> timeouts, and bounded stdout/stderr enforced during collection, before decoding
+> or JSON parsing. Refuse arbitrary command strings, shell input, and implicit
+> machine-default org selection. Handle Windows command wrappers explicitly;
+> refuse unsupported execution paths when safe invocation cannot be established.
+> Do not enable shell=True or interpolate user input to make a wrapper work.
+>
+> Validate bounded JSON success/error envelopes and preserve pagination/completion
+> signals without treating empty output or process success as complete inventory.
+> Use the existing typed errors and exit-code contracts. Redact diagnostics so raw
+> stdout/stderr, credentials, auth URLs, org details, and personal data cannot leak
+> through errors or logging. Do not implement Thread 05's org identity verification,
+> Apex inventory, or audit enrichment in this process-boundary thread.
+>
+> Use synthetic fixtures, mocked process interfaces, and small fictional child
+> processes only where needed to verify bounds and cleanup. Test exact argv,
+> spaces/metacharacters and option-like selectors, Windows wrappers, success and
+> failure envelopes, missing executables, expired-auth responses, malformed or
+> oversized JSON, excessive stdout/stderr, timeouts, process cleanup, and safe
+> redaction. Do not invoke real sf, discover authentication, inspect credential
+> stores/.env, install/update CLI or plugins, authenticate, query an org, execute
+> Apex, deploy, or access real metadata/vaults. Keep runtime tests offline.
+>
+> For every new or changed Python header, preserve Created By and use exactly:
+> :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+> with the current local date in the existing date format.
+> Do not update unrelated headers.
+>
+> Preserve maintainer changes, Apache licensing, normalized identity/hash/coverage
+> contracts, and the existing offline source. Add no public lifecycle commands,
+> live inventory adapter, graph collection, rendering, or state/vault publication.
+> Justify dependency additions through Poetry; never hand-edit poetry.lock.
+> Update applicable docs, docs/CHANGELOG.md, and the roadmap handoff. Run relevant
+> checks and fresh build/Twine/archive-inspection/independent wheel and sdist
+> installation checks for package/dependency changes, extending the explicit
+> artifact allowlist deliberately. Separate local, mocked, hosted, skipped, and
+> unavailable evidence; mocked Windows execution is not native qualification.
+>
+> Leave changes unstaged/uncommitted and #4 open for acceptance. Do not create
+> issues, stage, commit, push, open a PR, close issues, rerun CI, or publish.
+> Leave Thread 05 and all later threads explicitly not started.
 
 ### Thread 05 — Live Apex inventory and audit enrichment
 
@@ -2660,6 +2719,80 @@ changing shared `os.name` or runtime code. Focused source/identity tests and
 Ruff/whitespace checks pass locally. Python headers retain `GPT-6.1 Sol`.
 Existing artifact candidates are unaffected; corrected hosted Windows CI remains
 pending. All changes remain unstaged/uncommitted; Threads 04–17 not started.
+
+### Thread 03 acceptance and closure — 19 October 2026
+
+**Status:** Accepted and complete. The maintainer reviewed/pushed the correction,
+reported passing CI, and explicitly requested verification, docs/issue updates,
+and closure when appropriate. Delivered code and all hosted follow-up gates
+are verified; issue #3 is closed as completed. Thread 04 is next eligible;
+**Threads 04–17 remain not started**. This supersedes pending/open/undelivered
+wording in historical handoffs while preserving original failures and hashes.
+
+**Exact delivery:** Core `d2a8a50` / merge `1f86032` is followed by correction
+[`20bff7fb0dd3bcace76ceec05c2564725d3bde00`](https://github.com/jeffshurtliff/obforce/commit/20bff7fb0dd3bcace76ceec05c2564725d3bde00),
+merged at [`6154b745ed56c819cad179daa61d0ba606bede3b`](https://github.com/jeffshurtliff/obforce/commit/6154b745ed56c819cad179daa61d0ba606bede3b).
+Clean local `main`, `origin/main`, live GitHub main, and the tested run head all
+matched that merge before this prose-only update. Actual code contains the
+exact Windows birthtime bridge, independent raw descriptor change-time guard,
+and namespace-dictionary test patches. Maintainer annotations/headers are retained.
+
+**Verified hosted acceptance:** Inspected every job/required step and full log
+in [run 39302343644, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39302343644)
+at exact head `6154b74`. All 12 cells passed:
+
+| Cells | Actual outcome |
+| --- | --- |
+| Ubuntu/macOS, Python 3.12–3.15 (8) | 220 tests per cell, no skips |
+| Windows, Python 3.12–3.15 (4) | 219 passed, 1 skipped per cell; existing unavailable native FIFO case |
+| Every cell | Standalone metadata/lock, Ruff lint/format (46 files already formatted), Bandit, fresh wheel/sdist, strict Twine, both independent installs, and whitespace passed |
+
+All cells report 96% combined statement/branch coverage. All 24 independent
+artifact installations passed exact allowlists/license/imports/resources/model
+hashing/dependency consistency, installed offline acquisition, console/module
+entry points, future-command refusal, blocked sockets/absent tools, source
+preservation and no discovery writes. Every Windows build/Twine/install step
+that was skipped in the failed run actually executed successfully this time.
+No required workflow step was skipped, and no command-level formatter/test
+failure appears behind a green summary.
+
+**Acceptance checklist:**
+
+- [x] All four original Thread 03 tasks and the synthetic multi-package demo.
+- [x] Read-only/coverage/hash/source-binding/XML/path safety contracts preserved.
+- [x] Reviewed core and Windows correction delivered at verified commits.
+- [x] Corrected Windows 3.12–3.15 tests and previously skipped artifact gates pass.
+- [x] Full 12-cell CI, docs/checklist/handoff, and final maintainer authorization.
+
+**Retained limits:** FIFO refusal remains unexecuted on Windows because the
+native facility is unavailable; no new skip was introduced. Symlink/hardlink
+cases ran in the hosted suite, but this is not general junction/reparse,
+filesystem/ACL, hostile-race, scale, full lifecycle, real-org/vault/Obsidian,
+renderer/graph/template, state/publication or recovery qualification. Local
+Python 3.15 remains unexecuted; hosted 3.15 passed separately. No release or
+stable public Python API promise follows. Failed run `39298411328` stays failed,
+and old `39275023920` retains its masked Windows formatter failures.
+
+**Docs/Git/handoff:** Updated current roadmap status/index, Thread 03 evidence,
+Thread 04 eligibility and exact copy-ready prompt (including the requested
+`GPT-6.1 Sol` header identifier), contributor guidance and changelog. This is a
+prose-only tracking update: local links/fences/consistency/privacy/whitespace and
+tracked/untracked review are checked; no new test/build/dependency run is needed.
+Only `CONTRIBUTING.md`, `docs/CHANGELOG.md` and this roadmap remain
+unstaged/uncommitted on `main` at `6154b74`. No new source/test change, commit,
+push, PR, rerun, release, publication, Salesforce/auth/vault access or later work.
+Remote source/correction is already delivered; these final docs await separate
+delivery. #3's original metadata and reciprocal native dependencies are retained.
+
+**Next eligible thread:** Thread 04 / #4, explicitly **not started**. Its direct
+prerequisite remains Thread 02 / #2; Thread 03 closure does not alter that graph.
+The exact kickoff prompt above authorizes only Thread 04 when separately used;
+no chat was created or messaged and Thread 05 or later work was not started.
+
+**Closure evidence:** [Final verified acceptance/closure comment](https://github.com/jeffshurtliff/obforce/issues/3#issuecomment-6274600473).
+Read back #3 as closed with reason completed, implementation/follow-up gates
+checked, original labels/assignment/milestone and reciprocal dependencies
+preserved. #4 remains open and not started with its existing prerequisite #2.
 
 ## 12. Reference notes for implementers
 

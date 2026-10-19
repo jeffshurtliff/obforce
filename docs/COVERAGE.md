@@ -3,7 +3,9 @@
 Thread 02 supplies immutable internal records, canonical serialization/hashing,
 and validation helpers. Thread 03 now implements the internal
 [offline Apex source](OFFLINE_SOURCE.md), using these unchanged contracts.
-Live connectors, dependency collection, and graph building remain planned.
+Thread 05 implements the internal [live Apex adapter](LIVE_SOURCE.md) with mocked
+process tests, verified org binding, bounded enumeration and optional scoped audit
+names. Dependency collection and graph building remain planned.
 All examples below are fictional. These are
 versioned internal contracts, not a stable public Python API.
 
@@ -41,8 +43,8 @@ these supplied-record validators.
 
 Bindings contain no machine path or live alias. A local workspace is the explicit
 configured logical identity; moving its checkout does not inherently change it.
-The later live adapter must supply the actual verified org ID. Merely constructing
-a binding does not verify an ID. `require_same_source` refuses workspace, mode,
+The live adapter supplies the actual verified org ID from a minimal Organization
+query. Merely constructing a binding does not verify an ID. `require_same_source` refuses workspace, mode,
 or verified-org changes. Local/live rebinding and automatic adoption are
 unsupported. Changing local scope cannot establish live absence/deletion.
 
@@ -100,7 +102,9 @@ of runtime behavior or comprehensive impact analysis. Unresolved endpoints stay
 labeled text and do not create component notes. Offline XML alone supplies no
 Apex code-reference proof. Failed refreshes must preserve prior edges as stale;
 this record can represent stale evidence but does not perform that refresh.
-Current API capabilities/limits remain for Threads 04–06 to verify.
+Thread 04 process contracts and Thread 05 inventory/audit capabilities/limits are
+documented in [SF_CLI.md](SF_CLI.md) and [LIVE_SOURCE.md](LIVE_SOURCE.md).
+Thread 06 relationship capabilities remain unimplemented.
 
 ## Deterministic fingerprints
 

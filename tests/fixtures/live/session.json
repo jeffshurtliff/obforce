@@ -1,0 +1,112 @@
+[
+  {
+    "status": 0,
+    "result": {
+      "records": [
+        {
+          "attributes": {
+            "type": "Organization",
+            "url": "/services/data/v67.0/sobjects/Organization/00D000000000001EAA"
+          },
+          "Id": "00D000000000001EAA"
+        }
+      ],
+      "totalSize": 1,
+      "done": true
+    },
+    "warnings": []
+  },
+  {
+    "status": 0,
+    "result": {
+      "records": [
+        {
+          "attributes": {
+            "type": "ApexClass",
+            "url": "/services/data/v67.0/tooling/sobjects/ApexClass/01p000000000001AAA"
+          },
+          "Id": "01p000000000001AAA",
+          "Name": "FictionalService",
+          "NamespacePrefix": null,
+          "ApiVersion": 67.0,
+          "Status": "Active"
+        },
+        {
+          "Id": "01p000000000002AAA",
+          "Name": "FictionalJob",
+          "NamespacePrefix": null,
+          "ApiVersion": 66.0,
+          "Status": "Active"
+        }
+      ],
+      "totalSize": 2,
+      "done": true
+    },
+    "warnings": []
+  },
+  {
+    "status": 0,
+    "result": {
+      "records": [
+        {
+          "Id": "01p000000000001AAA",
+          "CreatedDate": "2025-04-10T12:30:00.000+0000",
+          "LastModifiedDate": "2026-10-01T13:45:00.000+0000"
+        },
+        {
+          "Id": "01p000000000002AAA",
+          "CreatedDate": "2025-04-10T12:30:00.000+0000",
+          "LastModifiedDate": "2026-10-01T13:45:00.000+0000"
+        }
+      ],
+      "totalSize": 2,
+      "done": true
+    },
+    "warnings": []
+  },
+  {
+    "status": 0,
+    "result": {
+      "records": [
+        {
+          "Id": "01p000000000001AAA",
+          "CreatedBy": {
+            "attributes": {
+              "type": "User",
+              "url": "/synthetic/ignored"
+            },
+            "Name": "Fictional Creator"
+          },
+          "LastModifiedBy": {
+            "Name": "Fictional Maintainer"
+          }
+        },
+        {
+          "Id": "01p000000000002AAA",
+          "CreatedBy": {
+            "attributes": {
+              "type": "User",
+              "url": "/synthetic/ignored"
+            },
+            "Name": "Fictional Creator"
+          },
+          "LastModifiedBy": {
+            "Name": "Fictional Maintainer"
+          }
+        }
+      ],
+      "totalSize": 2,
+      "done": true
+    },
+    "warnings": []
+  },
+  {
+    "status": 0,
+    "result": {
+      "records": [],
+      "totalSize": 0,
+      "done": true
+    },
+    "warnings": []
+  }
+]

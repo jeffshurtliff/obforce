@@ -94,14 +94,15 @@ org = "fictional-sandbox"
 ```
 
 Live targets must be explicit, nonempty, and cannot begin with `-`. The selector
-is an alias/username for a later adapter, not verified org identity or permission
-to query it. Loading never inspects authentication or invokes `sf`.
+is an alias/username for the internal [live adapter](LIVE_SOURCE.md), not verified
+org identity or permission to query it. Loading never inspects authentication or invokes `sf`.
 
 Precedence for supported selection is explicit invocation, config, then listed
 non-selector defaults. Future initialization requires exactly one absolute
 project path or live target; both or neither fail. Given a config, only a live
 `org` override is supported. A project override or local/live switch fails.
-The live override must subsequently match the verified state org binding; an
+The adapter verifies the actual org ID with a minimal query before inventory;
+the live override must subsequently match the verified state org binding; an
 alias change alone does not establish a new source. No rebinding workflow is
 implemented. See [coverage and identity](COVERAGE.md).
 

@@ -12,7 +12,7 @@ formatting checks. Issue #2 is closed as completed. Thread 03 is **accepted and
 complete**, including delivered correction merge `6154b74` and all 12 passing
 hosted cells. Issue #3 is closed as completed. Thread 04 is **accepted and complete**, delivered at merge `6980b26` with all
 12 hosted cells passing their applicable checks. Issue #4 is closed as completed.
-Thread 05 is next eligible; Threads 05–17 remain **not started**. Windows sf
+Thread 05 is **implemented locally, pending maintainer acceptance**; Threads 06–17 remain **not started**. Windows sf
 execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -790,7 +790,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
-| 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
+| 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Implemented locally; pending acceptance |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Not started |
@@ -1182,7 +1182,8 @@ Report actual executable/platform coverage, not assumed compatibility.
 
 **Goal:** Normalized live Apex records using existing CLI authorization.
 
-**Depends on:** 04. **Status:** Not started; next eligible after accepted/delivered Thread 04.
+**Depends on:** 04. **Status:** Implemented and verified locally; pending maintainer acceptance.
+See the [Thread 05 handoff](#thread-05-handoff--19-october-2026) for checklist and actual evidence.
 Future Windows support in #18 is not an additional prerequisite.
 
 **GitHub issue:** [#5](https://github.com/jeffshurtliff/obforce/issues/5)
@@ -3132,3 +3133,86 @@ supported-interpreter claims from this plan without implementation-time checks.
   rendering and its resource/trust limitations.
 - [ruamel.yaml round-trip details](https://yaml.dev/doc/ruamel.yaml/detail/): comment
   preservation capabilities and formatting limitations.
+
+### Thread 05 start and adapter decisions — 19 October 2026
+
+Thread 05 started — 19 October 2026. Implementing only the internal live Apex inventory/audit adapter, with synthetic fixtures and mocked process responses; no live Salesforce access is authorized or performed.
+
+Prerequisites verified: read #4 and transitive #2/#1, current guidance/contracts and accepted process/model/offline code. Initial clean checkout HEAD `a4d248c95d38a3991e00aacb206a7ebbb97856d7` matches GitHub main and differs from tested merge `6980b26bc539779fb9be2b7fb1cc6ae7f655f418` only in four documentation files. Rechecked run [39314787749, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39314787749), every job/step and full command logs: eight Linux/macOS cells each 340 passed; four Windows cells each 329 passed/11 expected skips; standalone checks, fresh build/Twine and 24 independent installs passed. Historical failed runs remain unchanged. No new prerequisite blocker. Native reciprocal #4 -> #5 -> #6 links, labels/assignment/milestone retained; #18 is not a prerequisite. No local/vendor_docs directory exists.
+
+Material decisions before implementation:
+
+- Use only the accepted QUERY/TOOLING_QUERY operation families. First query `SELECT Id FROM Organization LIMIT 2` with an explicit target; require one validated org ID and consistent completion/count/no-continuation/no-warning evidence. Construct the existing SourceBinding and compare any configured/state binding before accepting inventory. No auth discovery, org display, default org, adoption or rebinding.
+- Enumerate ApexClass with fixed allowlisted identity/namespace/API-version/status fields, server `ORDER BY Id`, `LIMIT 200`, and subsequent validated `Id > '<cursor>'` filters. Exclude namespaces server-side when selected; apply optional existing name filters locally without interpolating them. Follow no continuation URL, use no OFFSET/bulk/extra operation. Require a final empty page AND consistent count/done/no-continuation/no-warning evidence on every page. Never treat one done flag, empty array or process success alone as completeness. Retain safe per-request observed signals; contradictions stop inventory as partial. No snapshot/deletion proof.
+- Bound the entire collection to 300 seconds, 156 queries, 51 inventory pages and 10,000 enumerated records; each query retains the accepted process byte/time/cleanup limits with a reduced 262,144-byte stdout cap. A full boundary without exhaustion yields explicit partial coverage, never silent truncation.
+- Required inventory/identity query failures remain typed operational failures; malformed required or observed audit values are validation errors, duplicate mappings/source mismatches conflicts. Optional audit query process failures yield unavailable/partial audit coverage with safe fixed diagnostics; they cannot erase inventory evidence. Do not guess whether a redacted CLI failure means permission or field availability.
+- Query audit dates separately, and optional `CreatedBy.Name`/`LastModifiedBy.Name` only on selected Apex IDs. No User scan/IDs/usernames/emails, Body, source, tokens or auth URLs. Name omission makes name facts absent and sends no name query; requested missing fields are unavailable and explicit null stays null. No invented dates or debt. API request version remains unknown because the accepted transport intentionally does not select/report it; class ApiVersion is separate.
+- Use unchanged component/selection/hash/ownership/exit contracts, explicit provenance and independent inventory/audit/relationship coverage. Relationships remain uncollected/unrequested for Thread 06. Preserve Windows refusal, process controls and offline behavior; standard library only, no dependency changes or public commands.
+
+Official current documentation and source reads (no sf execution) confirm CLI JSON/target/Tooling flags, auto-fetch/count/warning behavior, ApexClass fields and system audit relationships, Organization query support, filter-based pagination and endpoint-specific permission limits. HTML object pages lacked readable bodies; official current Salesforce PDFs supplied those sections. The CLI source is still `salesforcecli/plugin-data@a0cdb671f42af74e31a782c34c5cdcc22e1ea5b0`. Detailed references/limitations will accompany adapter docs.
+
+Changes will remain unstaged/uncommitted and #5 open pending maintainer acceptance. No new issue, stage/commit/push/PR/closure/rerun/publication. Thread 06, all later threads and #18 remain explicitly not started.
+
+### Thread 05 implementation progress — 19 October 2026
+
+Thread 05 progress — 19 October 2026. Internal implementation and synthetic process-response regression coverage are complete locally; final review/artifact verification continues. #5 remains open pending maintainer acceptance.
+
+- Added `sources/live.py`: minimal explicit-target Organization identity query, unchanged SourceBinding checks before inventory, allowlisted Apex fields, bounded SELECT/ID-filter pages with terminal probe, safe contradictory signal evidence and independent coverage. No continuation endpoint execution, deletion inference, public command or dependency change.
+- Scoped date/display-name queries use only selected validated Apex IDs. Explicit omission sends no name query and leaves name facts absent; missing requested facts remain unavailable and explicit null remains null. Operational required failures, optional unavailable coverage and higher-precedence validation/conflict failures stay distinct. Dates/versions/IDs normalize deterministically; unrelated/private response fields are refused.
+- Current local macOS ARM64 suites pass **434 tests each on Python 3.12.7, 3.13.15 and 3.14.7**, no skips. Python 3.14 combined statement/branch coverage: **97% overall / 98% live adapter**. The initially selected bare 3.12/3.13 interpreters lacked pytest; existing isolated test environments then passed both full suites. No unavailable attempt is counted as a pass.
+- Strict Poetry metadata/lock and Ruff lint/format pass. Bandit passes with the existing two subprocess annotations plus two narrowly reviewed B608 annotations for fixed SOQL structure with checksum-validated alphanumeric IDs; injection-shaped response-ID regressions stop before subsequent query construction. No global lint/security suppression.
+- Fresh r1 build, strict Twine, exact 18-member wheel / 17-member sdist allowlists and independent Python 3.14 installs passed. Installed smoke includes the live adapter under a mocked run_sf boundary, with network blocked and no external tools, plus existing offline preservation and help/version checks. Rebuild final artifacts after the subsequent annotation change; r1 is superseded for source-byte review.
+- Added live adapter limits/contracts/current official references and synchronized applicable docs/changelog. Existing process transport, model/hash/ownership contracts, offline code, lock/dependencies, workflow and license remain unchanged.
+
+Hosted evidence remains the verified Thread 04 baseline only. No Thread 05 hosted result, native Linux/Windows run, local Python 3.15, real CLI/Node/plugin/org/vault access or Windows sf execution qualification is claimed. No sf invocation/auth/credential/.env discovery or CLI/plugin install/update occurred. Separate CLI calls do not provide a metadata/auth snapshot or whole-org permission proof. Thread 06/later threads and enhancement #18 remain explicitly not started. Changes remain unstaged/uncommitted; no new issue, stage/commit/push/PR/closure/rerun/publication.
+
+### Thread 05 handoff — 19 October 2026
+
+Thread 05 handoff — 19 October 2026. **Implemented and verified locally; pending maintainer acceptance.** #5 remains open; Ready to merge/release remains unchecked.
+
+Implemented only the internal live Apex inventory/audit adapter, shared finite limits, realistic synthetic envelope fixture, 101 new mocked-process regression cases, adapter/contract/contributor/changelog docs and the deliberate artifact allowlist/installed-smoke extension. No public lifecycle command, real Salesforce access or dependency addition. The accepted sf process boundary, offline source/parser, frozen config/models/errors/hash/scope/ownership contracts, lockfile/package metadata, workflow and Apache license are byte-unchanged.
+
+Verified checklist:
+
+- [x] Explicit target and minimal non-secret Organization.Id query; validated canonical org identity; configured/state mismatch refusal before inventory; no automatic adoption/rebinding.
+- [x] Fixed allowlisted Apex projection and scoped optional date/display-name queries; no Body, User scan, usernames/emails/tokens/auth URLs; name omission, absent/unavailable/null distinctions and deterministic provenance/hashes.
+- [x] Bounded multi-page SELECT enumeration with terminal probe, explicit namespace/name scope, finite record/page/query/time/byte limits and no arbitrary continuation execution. Contradictory count/done/continuation/warning signals retained; requested incompleteness yields existing outcome 4.
+- [x] Required operational failures, optional audit unavailability, malformed values and higher-precedence identity/config/model conflicts remain distinct; inventory/audit/relationships are independent. Relationships remain uncollected.
+- [x] Mocked identity/target mismatches, multiple pages, empty/truncated/contradictory results, namespace selection, permission loss, audit omission/unavailability/null, invalid IDs/dates/versions, duplicates, privacy/injection refusal, stable hashes, record-ceiling terminal probe and no-work-artifact preservation verified. Existing offline suite unchanged.
+- [x] Current official query/field/permission/JSON/pagination contracts read without sf execution; decisions recorded before code. Docs/changelog/roadmap synchronized and package artifacts independently verified.
+- [ ] Maintainer acceptance, separately authorized delivery and exact-commit hosted Thread 05 validation.
+
+Actual local evidence — native macOS 27.0.1 ARM64, Poetry 2.4.2:
+
+| Check | Result |
+| --- | --- |
+| Full pytest, Python 3.12.7 / 3.13.15 / 3.14.7 | **441 passed each, no skips** |
+| Python 3.14 combined statement/branch coverage | **97% overall / 98% live adapter**; remaining gaps visible |
+| Strict Poetry metadata/lock; Ruff lint/format | Passed; 53 files formatted |
+| Bandit | Passed; four narrow reviewed annotations: existing subprocess pair plus fixed SOQL construction pair; no global suppression |
+| Fresh final r2 wheel/sdist / strict Twine | Passed both |
+| Archive inspection | Exact **18-member wheel / 17-member sdist**; every packaged source byte matches checkout; sdist README/metadata/license match |
+| Independent clean artifact installs | Both passed on Python 3.14.7 outside checkout: imports/resources/hash, mocked live adapter, synthetic envelope, offline source immutability, pip check, both entry points and future-command refusal |
+| Application smoke controls | Network blocked, no external tools; live installed smoke mocks run_sf; no discovery/work-directory writes |
+| Review | Local Markdown links/fences, exact four Python headers, privacy/scope/frozen-contract and tracked/untracked diff review, whitespace and empty index checked |
+
+Final candidate: `<temporary>/obforce-thread05-candidate-20261019-r2/`.
+
+- Wheel SHA-256: `06b2e5a19e3e142949ba581385817d2db27b9394d5f233171a5f6fd618d972d5`
+- Sdist SHA-256: `6fa6e32a8e0f2a951cd70bd6a470a171b5ad38201bcb4f58faf9f0d400e3e489`
+
+The earlier passing r1 artifacts are superseded after the final two reviewed source annotations and README wrapping. Initial bare Python 3.12/3.13 interpreters lacked pytest; existing isolated test environments subsequently passed the final suites. Initial Bandit findings were reviewed and constrained with injection-refusal tests plus two line-specific B608 annotations. Bandit emits informational nosec AST notices for these f-strings but reports no findings. Build/install setup used the network; runtime tests remained offline.
+
+Prerequisite evidence: #4 and transitive #2/#1 accepted/closed and actual source verified; reviewed `09a7011` / merge `6980b26bc539779fb9be2b7fb1cc6ae7f655f418`. Re-read all jobs/steps/full logs of [run 39314787749, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39314787749): all 12 cells passed; eight Linux/macOS cells each 340 tests, four Windows cells each 329 passed/11 expected skips; standalone formatting, fresh builds/Twine and all 24 independent installs passed. Current baseline HEAD `a4d248c95d38a3991e00aacb206a7ebbb97856d7` differs only in four docs files and has **zero** workflow runs; source/tests/tooling/workflow match that tested merge. Historical failed/masked runs are preserved. This is prerequisite evidence, not hosted Thread 05 evidence.
+
+Retained gaps: no Thread 05 hosted CI, local Python 3.15, native Linux/Windows, real installed sf/Node/plugin, actual org permissions/live metadata or vault validation. Windows sf execution remains refused; prerequisite CI/refusal tests do not qualify it. CLI calls are bounded read queries but may have the CLI's own auth/config/log side effects in a future authorized run. Separate identity/keyset calls are not an atomic auth/metadata snapshot, whole-org permission certification or deletion proof. Request API version remains unknown rather than inferred from class ApiVersion. No remaining implementation blocker identified; acceptance/delivery/hosted checks remain separate gates.
+
+Git/tracking: work remains unstaged/uncommitted at baseline HEAD on the existing `feature/5-thread-05-live-apex-inv-and-audit-enrichment` branch. No branch was created or switched by the agent. Existing #5 labels/assignment/v0.1.0 milestone and native reciprocal #4 -> #5 -> #6 relationships are retained; #6 also retains prerequisite #3. No duplicate issue, stage, commit, push, PR, closure, CI rerun, publication, sf invocation, auth/credential/.env discovery, installation/update or real org/vault access.
+
+**Next eligible after Thread 05 acceptance/delivery verification and a new request: Thread 06 / #6, explicitly NOT STARTED. Threads 07–17 and enhancement #18 also remain NOT STARTED.**
+
+Issue evidence: [start/decisions](https://github.com/jeffshurtliff/obforce/issues/5#issuecomment-6276257245), [implementation progress](https://github.com/jeffshurtliff/obforce/issues/5#issuecomment-6276378837). Final verified checklist/handoff is synchronized with this roadmap; issue #5 stays open for acceptance.
+
+**Final issue evidence:** [Verified checklist/handoff](https://github.com/jeffshurtliff/obforce/issues/5#issuecomment-6276453506).
+The existing issue body checks all four implementation tasks and local verification,
+with Ready to merge/release unchecked and #5 open pending maintainer acceptance.

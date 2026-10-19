@@ -15,6 +15,11 @@ Windows tests and independent artifact installations. Thread 03 is accepted;
 see its [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-03-acceptance-and-closure--19-october-2026)
 for exact commit/run evidence and the retained FIFO/native-lifecycle limits.
 
+Thread 04 adds an internal [bounded Salesforce CLI process boundary](docs/SF_CLI.md),
+with synthetic protocols and fictional child-process tests only. POSIX direct
+execution is implemented; Windows execution fails closed pending safe launcher
+and cleanup support. No public command or live inventory adapter is added.
+
 ## Development setup
 
 Use Python 3.12 or newer and Poetry 2.4.x or newer within Poetry 2.x. From the
@@ -92,7 +97,7 @@ both archives, and installs each artifact independently in a fresh temporary
 virtual environment outside the checkout. Installation may download runtime and
 isolated build dependencies. It then checks imports, package-file access through
 `importlib.resources`, installed internal model hashing, console/module help and 
-version, installed offline acquisition/parser checks, rejection of future commands,
+version, installed offline acquisition/parser and synthetic CLI-envelope checks, rejection of future commands,
 dependency consistency, and no
 working-directory writes with external tools absent. There are no template/Bases 
 assets yet; their installed resource checks belong to Threads 07 and 14. The 

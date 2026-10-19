@@ -7,6 +7,15 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal allowlisted Salesforce CLI transport with explicit executable/target/
+  working directory, byte bounds enforced during collection, timeouts, POSIX
+  process-group cleanup, private JSON envelope validation and fixed redacted errors.
+  Windows execution and command wrappers fail closed; no shell fallback, public
+  command, org verification, live inventory, or real Salesforce execution is added.
+- Synthetic CLI fixtures, argv/envelope/refusal tests and fictional child-process
+  cleanup/bounds tests; exact artifact allowlists and independent installed
+  synthetic-envelope smoke checks now include `sources/sf_cli.py`.
+
 - Internal read-only offline Apex acquisition, bounded safe XML via
   Poetry-managed `defusedxml`, declared DX package/path validation, duplicate
   refusal, source-preservation checks, and explicit local/partial coverage.

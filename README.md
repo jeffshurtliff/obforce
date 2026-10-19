@@ -11,7 +11,9 @@ offline tests. See the [configuration](docs/CONFIGURATION.md),
 Internal [offline Apex acquisition](docs/OFFLINE_SOURCE.md) inventories supported
 pairs in declared DX packages with bounded safe XML and explicit local coverage.
 The fictional multi-package sample is testable without Salesforce CLI or network.
-There are no source acquisition, rendering, or vault-writing CLI commands yet.
+The internal [Salesforce CLI process boundary](docs/SF_CLI.md) is tested offline;
+Windows execution currently fails closed. Live inventory and org verification
+remain planned. There are no source acquisition, rendering, or vault-writing CLI commands yet.
 
 For development, use Python 3.12+ and Poetry 2.4+ within Poetry 2.x:
 

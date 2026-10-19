@@ -10,8 +10,8 @@ as completed. Thread 02 is **accepted and complete**, including delivered
 correction `65305fb` and all 12 passing hosted cells with standalone Windows
 formatting checks. Issue #2 is closed as completed. Thread 03 is **accepted and
 complete**, including delivered correction merge `6154b74` and all 12 passing
-hosted cells. Issue #3 is closed as completed. Thread 04 is next eligible;
-Threads 04–17 remain **not started**.
+hosted cells. Issue #3 is closed as completed. Thread 04 is **implemented locally, pending acceptance**;
+Threads 05–17 remain **not started**.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -787,7 +787,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Accepted; closed; corrected 12/12 hosted cells passed |
-| 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
+| 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Implemented locally; pending acceptance; open |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
@@ -1078,7 +1078,7 @@ packages, unknown types, and missing audit data.
 
 **Goal:** A bounded, mockable, read-only `sf` process adapter.
 
-**Depends on:** 02. **Status:** Not started.
+**Depends on:** 02. **Status:** Implemented/verified locally; pending acceptance; #4 open.
 
 **GitHub issue:** [#4](https://github.com/jeffshurtliff/obforce/issues/4)
 
@@ -2793,6 +2793,173 @@ no chat was created or messaged and Thread 05 or later work was not started.
 Read back #3 as closed with reason completed, implementation/follow-up gates
 checked, original labels/assignment/milestone and reciprocal dependencies
 preserved. #4 remains open and not started with its existing prerequisite #2.
+
+### Thread 04 start and process-boundary decisions — 19 October 2026
+
+Thread 04 started — 19 October 2026. Clean HEAD `63a78dc214647eada65fcfaa17cc4e23464ad748` (current
+GitHub main) differs from tested merge `6154b745ed56c819cad179daa61d0ba606bede3b` only in
+contributor/changelog/roadmap docs. Application, tests, package/lock, artifact checker and workflow
+match exactly. No run exists for the docs-only HEAD. Rechecked run 39302343644 attempt 1, all 12
+job/step records and command logs: 220 tests per Linux/macOS cell; Windows 219 passed plus existing
+FIFO skip; standalone formatting, fresh builds, strict Twine and all 24 independent artifact
+installations passed. Historical failures remain unchanged. No new prerequisite blocker.
+
+Read #4, direct prerequisite #2 and transitive #1, repository guidance and
+configuration/coverage/note contracts. #2 is accepted/closed; native reciprocal #2 -> #4 -> #5 links
+remain unchanged. #3 is not a new direct prerequisite. No local/vendor_docs directory exists.
+
+Material decisions recorded before implementation:
+
+- Internal enum allowlist: nonverbose version, data query, Tooling data query only; fixed argv,
+  explicit non-option-like target, SELECT-only query text, no shell/extra flags/file/output
+  operations. No Thread 05 query templates, identity verification or inventory adapter.
+- Explicit absolute executable path, no PATH/default-org search. Resolve/check only the supplied
+  executable; reject command wrappers. POSIX direct execution only, nonblocking bounded binary
+  stdout/stderr collection with wall timeout, process-session/group termination and child reap.
+  Windows execution fails closed pending a safe native launcher/descendant-cleanup implementation;
+  simulated Windows refusal is not qualification. No shell workaround.
+- Controlled explicit absolute working directory, stdin closed; child environment excludes arbitrary
+  inherited CLI/Node overrides, disables telemetry/update notices and caps query auto-fetch. CLI may
+  still use/write its own auth/config/log state in future authorized live runs; read-only queries
+  are not a third-party no-write guarantee.
+- Official query reference/schema/source and SfCommand verify status/result/warnings and
+  records/totalSize/done; oclif version uses a bare architecture/cliVersion/nodeVersion result.
+  Preserve completion/continuation/count signals; never grant inventory completeness.
+  Duplicate-key/nonfinite/deep/malformed/oversized envelopes fail. Discard stderr and raw
+  diagnostics; emit only fixed operational/config diagnostics without raw exception chains or
+  logging.
+- Standard library only; no dependency changes. Synthetic fixtures/mock process interfaces and
+  fictional children only. No sf invocation, auth discovery, real org/vault,
+  install/update/login/query/Apex/deploy, public commands or later-thread work.
+
+Local roadmap synchronized. Changes remain unstaged/uncommitted; #4 stays open pending maintainer
+acceptance. Thread 05 and all later threads remain explicitly not started. No CI rerun or Git
+delivery authorized/performed.
+
+### Thread 04 implementation progress — 19 October 2026
+
+Thread 04 progress — internal implementation complete locally; final verification/review continues.
+
+- Added fixed version/query/Tooling operations, explicit absolute executable and working directory,
+  explicit non-option-like org selectors, argument-list binding, limited SELECT input and no
+  shell/extra flags/default org.
+- POSIX nonblocking stdout/stderr collection enforces independent byte caps before decoding, one
+  wall deadline and process-group kill/direct-child reap. Cleanup attempts both pipes and reap even
+  after a cleanup error. Windows/native wrappers fail closed as recorded before coding.
+- Official command/schema/framework sources distinguish Salesforce query envelopes from bare oclif
+  version output. Bounded UTF-8/JSON validation rejects duplicate/nonfinite/deep/malformed/oversized
+  output; replies retain counts/done/continuation and warning/stderr presence without claiming
+  inventory coverage. Diagnostics contain only fixed safe text.
+- Synthetic fixtures and mocked interfaces cover argv, metacharacters, option-like targets, Windows
+  refusal, errors/expired auth/redaction and envelope bounds. Fictional Python children exercise
+  both pipe limits, concurrent drain, timeout, interruption, reap/closed handles and descendants
+  holding pipes. No sf process, auth discovery or real org/vault access.
+- Latest full local macOS ARM64 Python 3.14.7 suite: 339 passed, no skips. Earlier 335-test suites
+  passed Python 3.12.7 and 3.13.15; final suites will be refreshed after review additions. Ruff and
+  strict Poetry lock passed. Bandit passes with two narrow reviewed annotations for the intentional
+  subprocess import and validated shell-free invocation; no global suppression.
+- Fresh r2 wheel/sdist strict Twine, exact 17/16-member archive allowlists and independent clean
+  Python 3.14.7 installs outside checkout passed, including installed synthetic-envelope validation.
+  Final cleanup hardening requires rebuilt artifacts. Initial sandbox build could not reach PyPI;
+  network-enabled isolated build/install succeeded. Runtime tests remain offline.
+
+Docs/changelog and roadmap are being synchronized for final handoff. No
+dependency/lock/workflow/license/normalized/offline-source changes or public commands. Hosted
+evidence remains baseline-only; no Thread 04 hosted/native Windows/real CLI execution is claimed.
+All changes remain unstaged/uncommitted; #4 stays open pending acceptance, Ready to merge/release
+unchecked. Thread 05 and all later threads remain not started.
+
+### Thread 04 handoff — 19 October 2026
+
+**Implemented and verified locally; pending maintainer acceptance.** #4 remains open; Ready to
+merge/release remains unchecked. Current changes are unstaged/uncommitted on existing `main` at
+`63a78dc`. No Thread 04 hosted CI, delivery, acceptance, or publication is claimed.
+
+Implemented only the internal `sources/sf_cli.py` transport, shared bound constants, synthetic
+fixtures, focused unit/fictional-process tests, `docs/SF_CLI.md`, contributor/README/changelog
+guidance and the deliberate artifact-allowlist/smoke extension. No new dependency, public command,
+org identity verification, live inventory/audit adapter, graph, renderer, or state/vault operation.
+Existing config/models/errors/offline source, license, lockfile and workflow are unchanged.
+
+### Verified checklist
+
+- [x] Explicit absolute executable resolution without PATH discovery; fixed version/query/Tooling
+  allowlist; explicit non-option-like org targets and indivisible argv values.
+- [x] Controlled explicit working directory, closed stdin, restricted environment, finite wall
+  deadline and independent byte ceilings enforced during binary collection before decoding/parsing.
+- [x] POSIX process-group cleanup, direct-child reap, pipe/selector closure on
+  success/failure/overflow/timeout/interruption; cleanup continues after individual errors.
+- [x] Bounded command-specific success/error JSON, malformed/duplicate/nonfinite/deep/oversized
+  refusals, preserved done/count/continuation signals, no inferred complete inventory, fixed
+  diagnostics and no raw output/auth/personal-data logging.
+- [x] Spaces/metacharacters, option-like targets, missing executable, expired auth,
+  malformed/oversized JSON, excessive stdout/stderr, timeout, process cleanup and redaction tested
+  offline.
+- [x] Windows/native execution and wrappers fail closed; no shell workaround; explicit platform
+  limits and official contract references documented before dependent implementation.
+- [x] Docs/changelog, compatibility/privacy review, fresh artifacts, independent installs and roadmap handoff completed.
+- [ ] Maintainer acceptance, separately authorized delivery and exact-commit hosted Thread 04 verification.
+
+### Actual local evidence
+
+Native macOS 27.0.1 ARM64, Poetry 2.4.2:
+
+| Check | Result |
+| --- | --- |
+| Full pytest, Python 3.12.7 / 3.13.15 / 3.14.7 | **340 passed each, no skips**; 120 new cases |
+| 3.14.7 combined statement/branch coverage | **97% overall; 99% CLI boundary**, remaining gaps visible |
+| Strict Poetry metadata/lock; Ruff lint/format (50 files) | Passed |
+| Bandit | Passed; two line-specific reviewed subprocess annotations, no global rule disabled |
+| Fresh final r4 wheel/sdist / strict Twine | Passed both |
+| Independent clean artifact installations | Wheel and sdist each passed outside checkout on Python 3.14.7 |
+| Archive contents | Exact **17-member wheel / 16-member sdist**; only `sources/sf_cli.py` added to allowlist; source/README/pyproject/license bytes match checkout |
+| Installed probes | Import/resource/model hashing, synthetic partial CLI envelope, dependency consistency, both entry points, future-command refusal, offline source preservation and no discovery writes |
+| Review | Local Markdown links/fences, privacy/scope/contracts, all changed/untracked files, exact headers and whitespace passed; index remains empty |
+
+Final artifacts: `<temporary>/obforce-thread04-candidate-20261019-r4/`.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `obforce-0.1.0.dev0-py3-none-any.whl` | `cd3dcdfd428e103870f9da01e787e1619b918f428ddbe6374e013919df2f9f64` |
+| `obforce-0.1.0.dev0.tar.gz` | `2a04d804318cafe5c6c8707039c2d81f0add1d4f9b1b53e6b37d8507b758d887` |
+
+The first sandbox build could not reach PyPI; network-enabled isolated build/install succeeded.
+Passed r2/r3 candidates are superseded by r4 after cleanup hardening and a regression fix rejecting
+enormous timeout integers before float conversion. Setup/build/install used network; application
+tests used only synthetic data, mocked process interfaces and fictional Python children. No `sf`
+executable was invoked or discovered.
+
+### Prerequisite, limitations and next work
+
+Verified #2 and transitive #1 acceptance/code, current docs-only HEAD `63a78dc`, tested merge
+`6154b745ed56c819cad179daa61d0ba606bede3b` containing `20bff7f`, and run
+[39302343644](https://github.com/jeffshurtliff/obforce/actions/runs/39302343644), attempt 1. Every
+job/required step and command log passed: eight Linux/macOS cells with 220 tests each; four Windows
+cells with 219 passed/one existing FIFO skip each; standalone formatting/build/Twine/all 24
+independent installs. Application/tests/tooling/workflow are identical between merge and current
+docs-only HEAD, which has no separate run. Historical failed/masked runs remain unchanged. #3
+closure creates no direct #4 dependency.
+
+**Retained gaps:** No real installed CLI/Node/plugin execution, authentication, org metadata, vault,
+native Linux/Windows or local Python 3.15 Thread 04 run. Windows execution is unavailable; POSIX
+process/symlink tests are explicitly gated on unsupported hosts and Windows-refusal tests are
+mocked. Baseline hosted Windows evidence qualifies neither the new transport nor Windows live
+execution. Trusted installation/interpreter/plugin behavior, OS-uninterruptible spawn/processes and
+hostile descendants escaping a POSIX process group are outside this boundary. The CLI may have its
+own auth/config/log/cache side effects in a future authorized live run. No source/model/coverage or
+stable public API promise is expanded.
+
+**Tracking/Git:** Existing labels (`enhancement`, `codex`, `maintainer`, `security`), assignment,
+milestone and reciprocal #2 -> #4 -> #5 links are preserved. No duplicate issue, stage, commit,
+push, PR, issue closure, CI rerun or publishing. Work remains reviewable and uncommitted; #4 remains
+open for acceptance. **Next eligible after acceptance/delivery verification and a new request:
+Thread 05 / #5, explicitly NOT STARTED. Threads 06–17 also remain NOT STARTED.**
+
+**Issue evidence:** [Start and prerequisite/decision record](https://github.com/jeffshurtliff/obforce/issues/4#issuecomment-6274953209),
+[implementation progress](https://github.com/jeffshurtliff/obforce/issues/4#issuecomment-6275092739),
+and [verified checklist/handoff](https://github.com/jeffshurtliff/obforce/issues/4#issuecomment-6275133652).
+The issue body marks all four implementation tasks and verified local checks;
+Ready to merge/release remains unchecked. #4 remains open for maintainer acceptance.
 
 ## 12. Reference notes for implementers
 

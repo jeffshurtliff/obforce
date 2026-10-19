@@ -231,3 +231,8 @@ pids
 *.pid
 *.seed
 *.pid.lock
+
+# Obforce private/generated state and fixture scratch output
+.obforce/
+.obsidian/
+tests/fixtures/_scratch/

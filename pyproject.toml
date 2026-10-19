@@ -1,0 +1,87 @@
+[project]
+name = "obforce"
+version = "0.1.0.dev0"
+description = "Create and maintain living Salesforce documentation in an Obsidian vault."
+authors = [
+    { name = "Jeff Shurtliff", email = "jeff@shurt.us" }
+]
+maintainers = [
+    { name = "Jeff Shurtliff", email = "jeff@shurt.us" }
+]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["click (>=8.5,<9)"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+
+[project.urls]
+Repository = "https://github.com/jeffshurtliff/obforce"
+Issues = "https://github.com/jeffshurtliff/obforce/issues"
+
+[project.scripts]
+obforce = "obforce.cli:main"
+
+[tool.poetry]
+requires-poetry = ">=2.4,<3.0"
+packages = [{ include = "obforce", from = "src" }]
+exclude = [
+    "local/**",
+    "tests/**",
+    "dev/**",
+    ".github/**",
+    ".env*",
+    ".obforce/**",
+    ".obsidian/**",
+    "dist/**",
+    "build/**",
+]
+
+[build-system]
+requires = ["poetry-core>=2.5.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 130
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# Keep the encoding line required by the repository's Python header convention.
+ignore = ["UP009"]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/integration"]
+addopts = "--strict-config --strict-markers"
+
+[tool.coverage.run]
+source = ["obforce"]
+branch = true
+patch = ["subprocess"]
+
+[tool.coverage.report]
+show_missing = true
+
+[dependency-groups]
+dev = [
+    "pytest (>=9.1.1,<10)",
+    "pytest-cov (>=7.1,<8)",
+    "ruff (>=0.17.1,<0.18)",
+    "bandit (>=1.9.4,<2)",
+    "twine (>=7,<8)"
+]

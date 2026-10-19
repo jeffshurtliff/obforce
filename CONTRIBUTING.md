@@ -63,8 +63,10 @@ The repository `.gitattributes` keeps text checkouts LF on Windows as well as
 POSIX hosts, retaining automatic binary detection. Each CI environment-selection,
 installation, and validation command runs in its own step so a later successful
 native command cannot mask an earlier failure in PowerShell. A green job summary
-is insufficient when command logs show a failed check; see the roadmap for the
-pending Windows formatter follow-up and its delivery/verification gate.
+is insufficient when command logs show a failed check. The Windows formatter
+correction is delivered and verified; see the roadmap's
+[Thread 02 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-02-acceptance-and-closure--19-october-2026)
+for the exact commit and hosted evidence.
 
 ## Fresh artifact validation
 

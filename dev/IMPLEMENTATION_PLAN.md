@@ -6,11 +6,10 @@
 
 **Status:** Thread 01 is **accepted and complete**, including the delivered
 Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
-as completed. Thread 02 is **reviewed and delivered**, but issue #2 remains open
-for a Windows CI validation defect: formatter failures were masked by a later
-successful command. A bounded local follow-up is prepared; delivery and Windows
-verification remain pending. Threads 03–17 are **not started**; Thread 03 is gated
-on resolving this prerequisite.
+as completed. Thread 02 is **accepted and complete**, including delivered
+correction `65305fb` and all 12 passing hosted cells with standalone Windows
+formatting checks. Issue #2 is closed as completed. Threads 03–17 are **not
+started**; Thread 03 is next eligible.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -784,8 +783,8 @@ for a truncated requested live scan. This contract adds no public commands.
 | ID | Thread | Dependencies | Phase | GitHub issue | Status |
 | --- | --- | --- | --- | --- | --- |
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
-| 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Reviewed/merged; Windows formatter gate pending; local fix uncommitted |
-| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started; prerequisite CI follow-up pending |
+| 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
+| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started; prerequisite verified; next eligible |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
@@ -883,14 +882,16 @@ and local-only evidence remains recorded below as history. Issue #1 is closed.
 
 **Goal:** Validated configuration and versioned internal records before connectors.
 
-**Depends on:** 01. **Status:** Core reviewed/merged/pushed; Windows CI validation follow-up pending.
+**Depends on:** 01. **Status:** Accepted and complete; issue #2 closed.
 See the [Thread 01 completion record](#thread-01-acceptance-and-closure--19-october-2026).
 Rechecked actual code/current CI before implementation; see the Thread 02 start record below.
 The [original Thread 02 handoff](#thread-02-handoff--19-october-2026) is historical.
-Current evidence is in the [delivery/CI follow-up](#thread-02-delivery-and-ci-follow-up--19-october-2026).
-Issue #2 remains open: all 12 jobs are green, but Windows formatting actually
-failed in each cell. The local correction needs delivery and exact-commit hosted
-verification before closure or dependent work. Threads 03/04 are not started.
+The [delivery/CI follow-up](#thread-02-delivery-and-ci-follow-up--19-october-2026)
+retains the earlier masked failures. Current evidence is in the
+[acceptance record](#thread-02-acceptance-and-closure--19-october-2026): delivered
+correction `65305fb` passed all 12 cells, including standalone Windows formatting,
+117 tests per cell, and both independent artifact installs per cell. Thread 03 is
+next eligible; Threads 03/04 are explicitly not started.
 
 **GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
@@ -957,10 +958,14 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 
 **Depends on:** 02. **Status:** Not started.
 
-**Prerequisite gate:** Thread 02 core is reviewed and merged at `785b45d`, but
-the Windows formatter/CI failure-propagation follow-up remains pending in #2.
-Do not start until its correction is delivered and the actual required checks
-pass for that commit. A green summary or closed issue alone is insufficient.
+**Prerequisite gate satisfied:** Thread 02 core merged at `785b45d`; correction
+`65305fb` passed exact-commit run `39278236478`, including every standalone
+Windows formatting/test/artifact check. See the
+[Thread 02 acceptance record](#thread-02-acceptance-and-closure--19-october-2026).
+The copy-ready prompt below remains valid: its repair-verification requirement
+is satisfied by that delivery/run. Recheck actual code/current CI in the new
+thread; a green summary or closed issue alone is insufficient. Thread 03 remains
+not started until separately requested.
 
 **GitHub issue:** [#3](https://github.com/jeffshurtliff/obforce/issues/3)
 
@@ -2350,6 +2355,75 @@ Read back #2 as open, core implementation tasks checked, implementation-complete
 reopened for the bounded follow-up, and Ready to merge/release unchecked. Labels,
 assignment, milestone, and native prerequisite/dependent relationships remain
 unchanged. No acceptance/closure or corrected Windows pass is claimed.
+
+### Thread 02 acceptance and closure — 19 October 2026
+
+**Status:** Accepted and complete. The maintainer reviewed/pushed the correction,
+reported passing CI, and requested verification, issue/docs updates, and closure.
+All Thread 02 implementation and follow-up gates are satisfied. Issue #2 is
+closed as completed. Thread 03 is next eligible; Threads 03/04 remain **not
+started**. This supersedes historical pending/open wording without rewriting
+the earlier failures or local artifact evidence.
+
+**Verified delivery:** Core implementation `3cb1bc4`, merged as `785b45d`, is
+followed by correction
+[`65305fb62d0c4f25c12e2c533834a13b506e6854`](https://github.com/jeffshurtliff/obforce/commit/65305fb62d0c4f25c12e2c533834a13b506e6854).
+Actual code contains LF checkout attributes and individual single-command setup/
+validation steps. Clean local `main`, `origin/main`, and live GitHub main matched
+`b686fcb21e181edf9a200c00e92423a1a598f735` before this tracking update. That later
+commit changes only README punctuation; application/tests/workflow match the
+tested correction. It has no workflow run because README is path-filtered;
+do not describe that unrun SHA as a passed CI run.
+
+**Hosted acceptance evidence:** Inspected push run
+[`39278236478`, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39278236478)
+at exact correction SHA `65305fb`, every required step in all 12 jobs, and full
+logs. Ubuntu/macOS/Windows on Python 3.12–3.15 all passed:
+
+- Standalone environment selection, locked install, metadata/lock, Ruff lint,
+  **Ruff formatting**, and Bandit checks. All 12 formatter logs confirm
+  **38 files already formatted**, including all four Windows jobs.
+- **117 tests per cell, no skips**, with 96% combined coverage.
+- Fresh wheel/sdist builds, strict Twine, and **24 independent artifact installs**
+  across the matrix, including import/model/resource checks, dependency
+  consistency, console/module smoke checks, future-command refusal, runtime
+  socket prohibition, absent external tools, and unchanged working directory.
+- Whitespace checks; no required step skipped. No masked formatter failures
+  remain. The old `39275023920` run still contains real Windows format failures
+  despite its green summary; it is retained as historical evidence, not relabeled.
+
+**Acceptance/limits:** The original four implementation tasks, local normalized
+contract tests/docs, reviewed core delivery, and corrected Windows CI gates are
+satisfied. These are hosted contract/foundation results, not full lifecycle,
+native filesystem/recovery, live Salesforce/vault/Obsidian, renderer, graph,
+template, or scale qualification. No release publication is implied.
+
+**Docs/prompt/handoff:** Updated current roadmap status/index, Thread 02 evidence,
+Thread 03 eligibility, contributor guidance, and the changelog to remove current
+pending-fix claims. Historical handoffs remain intact. The previously supplied
+Thread 03 prompt can be used unchanged: it requires verifying the correction,
+which is now delivered and verified. Its scope remains offline Apex acquisition
+and safe XML only; it does not start Thread 04 or later work.
+
+**Checks/Git/tracking:** This is a prose-only acceptance update; local link,
+fence, privacy/consistency, preserved maintainer-content, tracked/untracked diff,
+and whitespace checks are performed before handoff. No application rerun,
+dependency install, or rebuild is warranted for these documentation edits.
+Updated #2's verified completion/CI checklist, posted exact delivery/run evidence,
+and closed it under the maintainer's explicit authorization. Existing labels,
+assignment, milestone, and native prerequisite/dependent edges are preserved.
+Only three docs (`CONTRIBUTING.md`, `docs/CHANGELOG.md`, and this roadmap) remain
+unstaged/uncommitted on `main` at `b686fcb`; no new commit, push, PR, rerun,
+release, Salesforce/vault access, or later-thread implementation. The remote
+roadmap retains its prior wording until this tracking update is delivered.
+
+**Next eligible thread:** Thread 03 / #3, explicitly **not started**. Thread 04
+also has its direct prerequisite satisfied but requires its own new request.
+
+**Closure evidence:** [Final verified acceptance/closure comment](https://github.com/jeffshurtliff/obforce/issues/2#issuecomment-6271939652).
+Read back issue #2 as `closed` with reason `completed`, completion and follow-up
+gates checked, original labels/assignment/milestone preserved, and #3's native
+prerequisite pointing to closed #2. No issue #3/#4 implementation or closure.
 
 ## 12. Reference notes for implementers
 

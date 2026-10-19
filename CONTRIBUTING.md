@@ -59,6 +59,13 @@ Ruff targets Python 3.12, 130 columns, single-quoted ordinary strings,
 triple-double-quoted docstrings, spaces, and LF. Use type hints at boundaries and
 the Python headers in AGENTS.md, with the actual generating model and local date.
 
+The repository `.gitattributes` keeps text checkouts LF on Windows as well as
+POSIX hosts, retaining automatic binary detection. Each CI environment-selection,
+installation, and validation command runs in its own step so a later successful
+native command cannot mask an earlier failure in PowerShell. A green job summary
+is insufficient when command logs show a failed check; see the roadmap for the
+pending Windows formatter follow-up and its delivery/verification gate.
+
 ## Fresh artifact validation
 
 Build into a **new, empty directory** outside the checkout (substitute your own

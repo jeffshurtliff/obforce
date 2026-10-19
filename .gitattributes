@@ -1,0 +1,3 @@
+# Keep repository text consistent with Ruff's LF policy on every checkout.
+# Binary files retain Git's automatic binary detection.
+* text=auto eol=lf

@@ -27,6 +27,10 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Prepared a CI follow-up that enforces LF repository text checkouts and separates
+  setup/validation commands into individual steps. Windows Ruff format failures
+  were masked by a later successful command in the same PowerShell step; delivery
+  and exact-commit Windows verification remain pending in issue #2.
 - Entry-point integration tests now use Poetry's installed Python launcher on
   Windows instead of assuming its editable install creates `obforce.exe`. Added
   cross-platform regression coverage for interpreter-driven console invocation;

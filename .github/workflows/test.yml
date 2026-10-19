@@ -64,16 +64,18 @@ jobs:
           allow-prereleases: false
       - name: Install Poetry
         run: python -m pip install poetry==2.4.2
+      - name: Select Python environment
+        run: poetry env use python
       - name: Install locked environment
-        run: |
-          poetry env use python
-          poetry install --with dev
-      - name: Validate metadata and source
-        run: |
-          poetry check --lock --strict
-          poetry run ruff check .
-          poetry run ruff format --check .
-          poetry run bandit -r src/obforce
+        run: poetry install --with dev
+      - name: Check metadata and lock
+        run: poetry check --lock --strict
+      - name: Lint sources
+        run: poetry run ruff check .
+      - name: Check formatting
+        run: poetry run ruff format --check .
+      - name: Audit source security
+        run: poetry run bandit -r src/obforce
       - name: Run offline tests
         run: poetry run pytest -q --cov=obforce --cov-report=term-missing
       - name: Build fresh artifacts

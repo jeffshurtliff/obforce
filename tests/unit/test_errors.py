@@ -3,9 +3,11 @@
 :Module:            tests.unit.test_errors
 :Synopsis:          Verifies Click operational exits and aggregated outcome precedence
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Last Modified:     Jeff Shurtliff
 :Modified Date:     19 Oct 2026
 """
+
+from __future__ import annotations
 
 from itertools import permutations
 

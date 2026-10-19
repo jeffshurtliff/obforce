@@ -69,6 +69,9 @@ permit traversal in generated relative paths. `~`, `$` and `%` expansion forms
 are rejected; use literal paths. Non-native drive/backslash paths fail rather
 than being interpreted as local relative names. Paths need not exist at this
 stage. Loading does not validate an SFDX project or contact Salesforce.
+The separate [offline acquisition](OFFLINE_SOURCE.md) phase validates declared
+DX package roots and supported Apex pairs using the loaded project path,
+logical workspace binding, and explicit namespace selection.
 
 Layout directories and note-state paths use `/`, remain relative to the vault,
 and reject empty/`.`/`..` segments, drive/absolute paths, backslashes, control

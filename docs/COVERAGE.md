@@ -1,8 +1,10 @@
 # Normalized identity and coverage
 
 Thread 02 supplies immutable internal records, canonical serialization/hashing,
-and validation helpers. No offline parser, live connector, dependency collector,
-or graph builder is implemented. All examples below are fictional. These are
+and validation helpers. Thread 03 now implements the internal
+[offline Apex source](OFFLINE_SOURCE.md), using these unchanged contracts.
+Live connectors, dependency collection, and graph building remain planned.
+All examples below are fictional. These are
 versioned internal contracts, not a stable public Python API.
 
 ## Records and identities

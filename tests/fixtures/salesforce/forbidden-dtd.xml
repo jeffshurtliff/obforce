@@ -1,0 +1,5 @@
+<!DOCTYPE ApexClass [<!ENTITY fictional "must not expand">]>
+<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <status>&fictional;</status>
+</ApexClass>

@@ -3,9 +3,11 @@
 :Module:            obforce.cli
 :Synopsis:          Provides command discovery and installed version reporting
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     18 Oct 2026
+:Last Modified:     Jeff Shurtliff
+:Modified Date:     19 Oct 2026
 """
+
+from __future__ import annotations
 
 import click
 

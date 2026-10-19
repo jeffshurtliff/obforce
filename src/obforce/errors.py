@@ -3,9 +3,11 @@
 :Module:            obforce.errors
 :Synopsis:          Defines typed failures and terminal outcome precedence
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Last Modified:     Jeff Shurtliff
 :Modified Date:     19 Oct 2026
 """
+
+from __future__ import annotations
 
 from collections.abc import Iterable
 from enum import IntEnum

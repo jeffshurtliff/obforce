@@ -3,9 +3,11 @@
 :Module:            tests.unit.test_cli
 :Synopsis:          Verifies CLI discovery and rejection of unimplemented features
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     18 Oct 2026
+:Last Modified:     Jeff Shurtliff
+:Modified Date:     19 Oct 2026
 """
+
+from __future__ import annotations
 
 from importlib import import_module
 from importlib.metadata import version

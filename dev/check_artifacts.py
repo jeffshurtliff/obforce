@@ -7,6 +7,8 @@
 :Modified Date:     19 Oct 2026
 """
 
+from __future__ import annotations
+
 import argparse
 import configparser
 import hashlib
@@ -39,7 +41,7 @@ def _run(command: list[str], cwd: Path, environment: dict[str, str]) -> str:
 
 
 def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
-    """Enforce the explicit foundation and internal-contract artifact allowlist.
+    """Enforce the explicit foundation, contract, and offline-source artifact allowlist.
 
     :param artifact: Locally built wheel or sdist to inspect without extraction.
     :param version: Expected static project version.
@@ -47,6 +49,7 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
     :raises ValueError: If archive contents or metadata violate the allowlist.
     """
     package_files = {'__init__.py', '__main__.py', 'cli.py', 'config.py', 'constants.py', 'errors.py', 'models.py'}
+    package_files.update({'parsers/__init__.py', 'parsers/apex.py', 'sources/__init__.py', 'sources/local.py'})
     if artifact.suffix == '.whl':
         metadata_root = f'obforce-{version}.dist-info/'
         expected = {f'obforce/{name}' for name in package_files} | {
@@ -141,6 +144,31 @@ def _check_install(artifact: Path, version: str) -> None:
             encoding='utf-8',
         )
         environment.update(PATH='', PYTHONPATH=str(guard))
+        # Installed code must acquire a fresh synthetic project with network blocked,
+        # no external tools, and the same normalized hash/preservation contracts.
+        offline_probe = """
+import json
+from pathlib import Path
+from obforce.models import SourceBinding, Selection
+from obforce.sources.local import collect_local
+root = Path('synthetic-project').resolve()
+classes = root / 'demo/main/default/classes'
+classes.mkdir(parents=True)
+(root / 'sfdx-project.json').write_text(json.dumps({'packageDirectories': [{'path': 'demo'}]}))
+(classes / 'Example.cls').write_text('public class Example {}')
+(classes / 'Example.cls-meta.xml').write_text(
+    '<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">'
+    '<apiVersion>67.0</apiVersion><status>Active</status></ApexClass>')
+before = {p: (p.read_bytes() if p.is_file() else None, p.stat().st_mtime_ns) for p in root.rglob('*')}
+result = collect_local(root, SourceBinding('demo', 'local'), Selection())
+assert len(result.components) == 1 and len(result.inventory_hash) == 64
+assert result.coverage.inventory.status == 'complete'
+assert result.coverage.audit.status == 'unavailable' and not result.coverage.audit.requested
+assert result.coverage.relationships.status == 'not_collected'
+assert before == {p: (p.read_bytes() if p.is_file() else None, p.stat().st_mtime_ns) for p in root.rglob('*')}
+"""
+        # Keep this fixture outside the entry-point no-write working directory.
+        _run([str(python), '-c', offline_probe], root, environment)
         for command in ([str(console)], [str(python), '-m', 'obforce']):
             for arguments in ([], ['--help'], ['--version']):
                 output = _run(command + arguments, work, environment)

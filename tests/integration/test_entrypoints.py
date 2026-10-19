@@ -3,9 +3,11 @@
 :Module:            tests.integration.test_entrypoints
 :Synopsis:          Exercises installed entry points offline outside the checkout
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Last Modified:     Jeff Shurtliff
 :Modified Date:     19 Oct 2026
 """
+
+from __future__ import annotations
 
 import os
 import subprocess

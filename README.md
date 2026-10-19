@@ -1,5 +1,5 @@
 # Obforce
-Create and maintain living documentation for your Salesforce org within an Obsidian vault
+Create and maintain living documentation for your Salesforce org within an Obsidian vault.
 
 Under development: the `0.1.0.dev0` foundation provides help and installed-version
 reporting. Salesforce inputs, note generation, and safe refresh are planned in

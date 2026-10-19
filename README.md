@@ -5,6 +5,11 @@ Under development: the `0.1.0.dev0` foundation provides help and installed-versi
 reporting. Salesforce inputs, note generation, and safe refresh are planned in
 the [implementation roadmap](dev/IMPLEMENTATION_PLAN.md).
 
+Internal configuration and normalized-record validation are implemented with
+offline tests. See the [configuration](docs/CONFIGURATION.md),
+[coverage](docs/COVERAGE.md), and [note ownership](docs/NOTE_FORMAT.md) contracts.
+These do not add source acquisition, rendering, or vault-writing commands.
+
 For development, use Python 3.12+ and Poetry 2.4+ within Poetry 2.x:
 
 ```sh

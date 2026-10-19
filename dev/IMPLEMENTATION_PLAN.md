@@ -742,6 +742,17 @@ in Thread 02. Never return a success code for a truncated requested live scan.
 
 - Read root agent/contributor guidance, this roadmap, and the relevant contracts.
   Inspect actual dependencies and repository changes; do not rely on labels alone.
+- Read the thread's linked GitHub issue and prerequisite issues before work.
+  Verify dependency code and validation, not just issue state. Keep the existing
+  issue and this roadmap synchronized with a start comment, meaningful progress
+  and blocker/decision updates, verified task checkboxes, and a public-safe handoff.
+  The maintainer's 18 October 2026 tracking request authorizes these routine
+  updates when implementation of that named thread is explicitly requested;
+  renewed permission for each progress update is unnecessary. It does not
+  authorize starting implementation merely because an issue exists.
+  Leave partial work and pending review open; close only after acceptance criteria
+  are met and the maintainer approves completion or requests closure. If GitHub
+  access fails, record the unsent update and report the limitation accurately.
 - Implement one requested thread. If its work cannot fit a reviewable thread,
   propose a documented `NN.a`/`NN.b` split before continuing into another boundary.
 - Add focused behavior/regression tests and necessary help/docs. Use synthetic
@@ -753,36 +764,45 @@ in Thread 02. Never return a success code for a truncated requested live scan.
 - Update `docs/CHANGELOG.md` under `[Unreleased]` and the status/handoff record as
   appropriate. Planned examples remain labeled until usable.
 - Leave changes reviewable and uncommitted. Identify the next eligible thread;
-  do not begin it. No issue numbers are assigned by this document.
+  do not begin it. Use the linked existing issue; do not create duplicate tracking.
 
-### Thread index and milestones
+### Thread index, implementation phases, and GitHub issues
 
-| ID | Thread | Dependencies | Milestone | Status |
-| --- | --- | --- | --- | --- |
-| 01 | Foundation and developer workflow | None | A: foundations | Not started |
-| 02 | Configuration, models, and contracts | 01 | A | Not started |
-| 03 | Offline Apex source | 02 | B: source data | Not started |
-| 04 | Salesforce CLI process boundary | 02 | B | Not started |
-| 05 | Live Apex inventory and audit enrichment | 04 | B | Not started |
-| 06 | Platform relationships and normalized graph | 03, 05 | B | Not started |
-| 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | Not started |
-| 08 | Existing-note parsing and preservation | 07 | C | Not started |
-| 09 | State validation and identity reconciliation | 08 | C | Not started |
-| 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | Not started |
-| 11 | Transaction writer and recovery | 10 | D: working lifecycle | Not started |
-| 12 | Public initialization and initial build | 11 | D | Not started |
-| 13 | Public refresh and missing-component lifecycle | 12 | D | Not started |
-| 14 | Native dashboard and CLI usability | 13 | E: usable product | Not started |
-| 15 | Platform, failure, and scale qualification | 14 | E | Not started |
-| 16 | User and maintainer documentation | 15 | F: release candidate | Not started |
-| 17 | v0.1.0 release preparation | 16 | F | Not started |
+| ID | Thread | Dependencies | Phase | GitHub issue | Status |
+| --- | --- | --- | --- | --- | --- |
+| 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Not started |
+| 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Not started |
+| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started |
+| 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
+| 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
+| 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
+| 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
+| 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Not started |
+| 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Not started |
+| 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Not started |
+| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Not started |
+| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
+| 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
+| 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
+| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
+| 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
+| 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
+
+All 17 issues are assigned to `jeffshurtliff` and associated with the
+[`v0.1.0` GitHub milestone](https://github.com/jeffshurtliff/obforce/milestone/1). They carry `maintainer`, `codex`,
+and the category labels from their selected maintainer templates, with additional
+`ci`/`security` labels where relevant. A–F are internal implementation phases,
+not separate GitHub milestones. Thread IDs in the dependency column map to the
+issues in this table; GitHub's native blocked-by/blocking relationships mirror
+the exact 21 direct prerequisite edges, including redundant direct prerequisites
+that the roadmap lists explicitly. Issue creation does not start implementation.
 
 The default path is sequential. Threads 03 and 04 can be worked on independently
 after 02 if the maintainer explicitly chooses parallel work; avoid shared-file
 conflicts. Do not start extra agents or chats merely because the table permits
 independent work.
 
-Milestone demos: **A** installs and validates synthetic normalized data; **B**
+Phase demos: **A** installs and validates synthetic normalized data; **B**
 produces comparable source/graph records from offline fixtures and mocked live
 responses; **C** previews changes against edited fixture notes without writing;
 **D** builds, edits, refreshes, and recovers a synthetic vault; **E** demonstrates
@@ -795,6 +815,14 @@ functions; public mutation commands remain unavailable until their safety gates.
 **Goal:** An installable, reproducible Python package with safe development defaults.
 
 **Depends on:** None. **Status:** Not started.
+
+**GitHub issue:** [#1](https://github.com/jeffshurtliff/obforce/issues/1)
+
+**Issue template:** [`maintainer-chore.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-chore.md)
+
+**Blocked by:** None.
+
+**Blocks:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
 1. Inspect the real baseline; preserve the existing Apache license and maintainer
    edits. Establish Poetry/PEP 621, `src/obforce/`, static `0.1.0.dev0`, console and
@@ -820,6 +848,11 @@ artifact privacy/content inspection. No live connections.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/1 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Read AGENTS.md, CONTRIBUTING.md if present, and dev/IMPLEMENTATION_PLAN.md.
 > Implement only Thread 01. Preserve the current license and user changes; create
 > the Poetry/src foundation, contributor guidance, offline tests and CI. Validate
@@ -831,6 +864,14 @@ artifact privacy/content inspection. No live connections.
 **Goal:** Validated configuration and versioned internal records before connectors.
 
 **Depends on:** 01. **Status:** Not started.
+
+**GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#1](https://github.com/jeffshurtliff/obforce/issues/1)
+
+**Blocks:** [#3](https://github.com/jeffshurtliff/obforce/issues/3), [#4](https://github.com/jeffshurtliff/obforce/issues/4)
 
 1. Implement TOML loading, strict schema/selection checks, config-relative path
    resolution, source-mode validation, and typed operational errors.
@@ -853,6 +894,11 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/2 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 02 after verifying Thread 01. Freeze and document the
 > proposed configuration/model/ownership contracts, add deterministic validation
 > tests, and record any unresolved material decision. Do not query Salesforce or
@@ -863,6 +909,14 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 **Goal:** A read-only local project source producing honest normalized Apex records.
 
 **Depends on:** 02. **Status:** Not started.
+
+**GitHub issue:** [#3](https://github.com/jeffshurtliff/obforce/issues/3)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
+
+**Blocks:** [#6](https://github.com/jeffshurtliff/obforce/issues/6), [#7](https://github.com/jeffshurtliff/obforce/issues/7)
 
 1. Validate `sfdx-project.json`, declared package roots, namespace options, and
    supported Apex source/metadata pairs without modifying source files.
@@ -884,6 +938,11 @@ packages, unknown types, and missing audit data.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/3 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 03. Add the offline Apex adapter and synthetic project,
 > preserving source bytes and reporting limited local coverage. Verify safe XML,
 > identity, and unavailable-field behavior offline. Do not write vault notes,
@@ -894,6 +953,14 @@ packages, unknown types, and missing audit data.
 **Goal:** A bounded, mockable, read-only `sf` process adapter.
 
 **Depends on:** 02. **Status:** Not started.
+
+**GitHub issue:** [#4](https://github.com/jeffshurtliff/obforce/issues/4)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
+
+**Blocks:** [#5](https://github.com/jeffshurtliff/obforce/issues/5)
 
 1. Resolve the explicit executable safely on supported systems, inspect supported
    command behavior, and define an allowlist for read-only query/version calls.
@@ -916,6 +983,11 @@ Report actual executable/platform coverage, not assumed compatibility.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/4 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 04 using mocked sf process results. Verify current
 > official command contracts and implement the bounded read-only process boundary.
 > Do not install/update sf, authenticate, query an org, or build a vault. Record
@@ -926,6 +998,14 @@ Report actual executable/platform coverage, not assumed compatibility.
 **Goal:** Normalized live Apex records using existing CLI authorization.
 
 **Depends on:** 04. **Status:** Not started.
+
+**GitHub issue:** [#5](https://github.com/jeffshurtliff/obforce/issues/5)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#4](https://github.com/jeffshurtliff/obforce/issues/4)
+
+**Blocks:** [#6](https://github.com/jeffshurtliff/obforce/issues/6)
 
 1. Verify org identity through a minimal non-secret read query; require an
    explicit target and prevent mismatches with configured/state identity.
@@ -949,6 +1029,11 @@ ordinary offline CI.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/5 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 05 with the existing process boundary and synthetic
 > responses. Add explicit org identity, Apex inventory/audit normalization, and
 > tested coverage handling. Do not access a live org unless I separately authorize
@@ -959,6 +1044,14 @@ ordinary offline CI.
 **Goal:** Useful references with explicit evidence and incomplete-coverage handling.
 
 **Depends on:** 03, 05. **Status:** Not started.
+
+**GitHub issue:** [#6](https://github.com/jeffshurtliff/obforce/issues/6)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#3](https://github.com/jeffshurtliff/obforce/issues/3), [#5](https://github.com/jeffshurtliff/obforce/issues/5)
+
+**Blocks:** [#7](https://github.com/jeffshurtliff/obforce/issues/7), [#10](https://github.com/jeffshurtliff/obforce/issues/10)
 
 1. Verify current platform dependency API behavior, limits, permissions, supported
    endpoints, and CLI result handling. Record accessible official evidence and
@@ -984,6 +1077,11 @@ record the release limitation; do not invent results or substitute static guesse
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/6 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 06. Verify the platform dependency contract, then add the
 > provenance-aware graph and best-effort adapter with honest failure/coverage
 > behavior. Use synthetic responses; no live queries are authorized by this prompt.
@@ -994,6 +1092,14 @@ record the release limitation; do not invent results or substitute static guesse
 **Goal:** Deterministic candidate notes from normalized data without vault writes.
 
 **Depends on:** 03, 06. **Status:** Not started.
+
+**GitHub issue:** [#7](https://github.com/jeffshurtliff/obforce/issues/7)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#3](https://github.com/jeffshurtliff/obforce/issues/3), [#6](https://github.com/jeffshurtliff/obforce/issues/6)
+
+**Blocks:** [#8](https://github.com/jeffshurtliff/obforce/issues/8), [#10](https://github.com/jeffshurtliff/obforce/issues/10)
 
 1. Add packaged creation and generated-section Jinja templates with audit facts,
    coverage, references, and human-owned context/debt/additional sections.
@@ -1016,6 +1122,11 @@ and filename collisions, template traversal, and bounded rendering failures.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/7 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 07. Add installed-package templates and deterministic
 > rendering with the defined ownership and safety contract. Test synthetic output,
 > overrides, escaping, and wheel/sdist resource access. Do not publish notes into
@@ -1026,6 +1137,14 @@ and filename collisions, template traversal, and bounded rendering failures.
 **Goal:** Safe reading/patching of managed notes while retaining human content.
 
 **Depends on:** 07. **Status:** Not started.
+
+**GitHub issue:** [#8](https://github.com/jeffshurtliff/obforce/issues/8)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#7](https://github.com/jeffshurtliff/obforce/issues/7)
+
+**Blocks:** [#9](https://github.com/jeffshurtliff/obforce/issues/9), [#10](https://github.com/jeffshurtliff/obforce/issues/10)
 
 1. Parse supported frontmatter/markers with duplicate-key and unsafe-tag
    rejection, schema validation, size bounds, and explicit malformed-note errors.
@@ -1048,6 +1167,11 @@ schemas, generated-property edits, and unsafe content. No filesystem publication
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/8 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 08. Add managed-note parsing, baseline conflict detection,
 > and in-memory preservation patches using synthetic edited notes. Verify user
 > content and technical-debt fields survive. Do not add a force-overwrite escape
@@ -1058,6 +1182,14 @@ schemas, generated-property edits, and unsafe content. No filesystem publication
 **Goal:** Reliable ownership and note-move matching independent of filenames.
 
 **Depends on:** 08. **Status:** Not started.
+
+**GitHub issue:** [#9](https://github.com/jeffshurtliff/obforce/issues/9)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#8](https://github.com/jeffshurtliff/obforce/issues/8)
+
+**Blocks:** [#10](https://github.com/jeffshurtliff/obforce/issues/10)
 
 1. Implement strict versioned state serialization/validation and persist only
    the minimum identity, scope, path, hash, and generated baseline data.
@@ -1080,6 +1212,11 @@ non-adoption behavior. State parsing never writes or repairs automatically.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/9 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 09. Add strict state handling and identity-based note-move
 > reconciliation with synthetic vaults. Refuse ambiguous ownership, unsupported
 > source switches, and absent/corrupt state. Do not implement automatic adoption,
@@ -1090,6 +1227,14 @@ non-adoption behavior. State parsing never writes or repairs automatically.
 **Goal:** A complete deterministic preview of a build/refresh before any write.
 
 **Depends on:** 06, 07, 08, 09. **Status:** Not started.
+
+**GitHub issue:** [#10](https://github.com/jeffshurtliff/obforce/issues/10)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#6](https://github.com/jeffshurtliff/obforce/issues/6), [#7](https://github.com/jeffshurtliff/obforce/issues/7), [#8](https://github.com/jeffshurtliff/obforce/issues/8), [#9](https://github.com/jeffshurtliff/obforce/issues/9)
+
+**Blocks:** [#11](https://github.com/jeffshurtliff/obforce/issues/11)
 
 1. Combine source results, graph, rendered candidates, notes, and prior state into
    typed create/update/no-op/move/missing/conflict actions with preconditions.
@@ -1111,6 +1256,11 @@ refusal, template changes, and deterministic count/result precedence.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/10 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 10. Produce complete read-only change plans with coverage,
 > conflicts, no-op behavior, and accurate summaries. Verify dry-run filesystem
 > preservation using synthetic vaults. Do not expose mutating build/sync commands
@@ -1121,6 +1271,14 @@ refusal, template changes, and deterministic count/result precedence.
 **Goal:** Recoverable bounded publication primitives before public vault writes.
 
 **Depends on:** 10. **Status:** Not started.
+
+**GitHub issue:** [#11](https://github.com/jeffshurtliff/obforce/issues/11)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#10](https://github.com/jeffshurtliff/obforce/issues/10)
+
+**Blocks:** [#12](https://github.com/jeffshurtliff/obforce/issues/12)
 
 1. Implement the single-writer guard, same-filesystem staging, before-images,
    versioned journal, immediate precondition rechecks, and per-file replacement.
@@ -1145,6 +1303,11 @@ publication, and recovery no-op/dry-run behavior. Record native platform gaps.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/11 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 11. Add and fault-test the bounded transaction and recovery
 > primitives with temporary synthetic vaults. Preserve intervening edits and
 > refuse invalid journals. Do not widen into public build/sync implementation,
@@ -1155,6 +1318,14 @@ publication, and recovery no-op/dry-run behavior. Record native platform gaps.
 **Goal:** The first complete user journey from configuration to a managed vault.
 
 **Depends on:** 11. **Status:** Not started.
+
+**GitHub issue:** [#12](https://github.com/jeffshurtliff/obforce/issues/12)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#11](https://github.com/jeffshurtliff/obforce/issues/11)
+
+**Blocks:** [#13](https://github.com/jeffshurtliff/obforce/issues/13)
 
 1. Implement `init` with mutually exclusive explicit sources, config-relative
    paths, non-overwriting config creation, and a write-free preview.
@@ -1177,6 +1348,11 @@ tree snapshots, clean installed package, and source-tree preservation.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/12 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 12 after verifying the transaction tests. Expose init,
 > initial build, and recovery using the established contracts. Demonstrate the
 > offline synthetic quickstart and mocked live flow. Do not implement refresh,
@@ -1187,6 +1363,14 @@ tree snapshots, clean installed package, and source-tree preservation.
 **Goal:** Trustworthy incremental writing that preserves knowledge over time.
 
 **Depends on:** 12. **Status:** Not started.
+
+**GitHub issue:** [#13](https://github.com/jeffshurtliff/obforce/issues/13)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#12](https://github.com/jeffshurtliff/obforce/issues/12)
+
+**Blocks:** [#14](https://github.com/jeffshurtliff/obforce/issues/14)
 
 1. Expose `sync` and `--dry-run` using validated existing state and full preflight;
    apply only clean owned-region/property changes through the writer.
@@ -1210,6 +1394,11 @@ batch refusal, and failures after some notes were published.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/13 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 13. Add safe public refresh with ownership/conflict,
 > note-move, coverage, no-op, and recovery behavior. Demonstrate the multi-run
 > synthetic lifecycle and preserve all human fields. No force-overwrite, automatic
@@ -1221,6 +1410,14 @@ batch refusal, and failures after some notes were published.
 **Goal:** A discoverable administrator experience using native Obsidian features.
 
 **Depends on:** 13. **Status:** Not started.
+
+**GitHub issue:** [#14](https://github.com/jeffshurtliff/obforce/issues/14)
+
+**Issue template:** [`maintainer-feature.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-feature.md)
+
+**Blocked by:** [#13](https://github.com/jeffshurtliff/obforce/issues/13)
+
+**Blocks:** [#15](https://github.com/jeffshurtliff/obforce/issues/15)
 
 1. Package a minimal Apex Classes `.base` view filtered by reserved managed-note
    identity/type, showing class, namespace, status, audit dates, and human debt
@@ -1245,6 +1442,11 @@ consistency. Report separately whether a native app preview was actually done.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/14 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 14. Add the minimal protected native Bases dashboard and
 > polish the documented CLI journey using synthetic data. Verify current Bases
 > syntax, asset packaging, and edited-dashboard preservation. Do not install
@@ -1256,6 +1458,14 @@ consistency. Report separately whether a native app preview was actually done.
 **Goal:** Evidence for the supported platforms and realistic local operation.
 
 **Depends on:** 14. **Status:** Not started.
+
+**GitHub issue:** [#15](https://github.com/jeffshurtliff/obforce/issues/15)
+
+**Issue template:** [`maintainer-test.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-test.md)
+
+**Blocked by:** [#14](https://github.com/jeffshurtliff/obforce/issues/14)
+
+**Blocks:** [#16](https://github.com/jeffshurtliff/obforce/issues/16)
 
 1. Run offline tests and isolated wheel/sdist resource/entry-point checks across
    Linux/macOS/Windows and the selected stable Python matrix, targeting
@@ -1282,6 +1492,11 @@ evidence are distinct; a skip is never qualification.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/15 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 15. Qualify the offline lifecycle, safety, packaging, and
 > synthetic scale behavior across the stated matrix, fixing bounded defects.
 > Report native, hosted, mocked, skipped, and unavailable evidence separately.
@@ -1293,6 +1508,14 @@ evidence are distinct; a skip is never qualification.
 **Goal:** An accurate, maintainable path from installation through safe refresh.
 
 **Depends on:** 15. **Status:** Not started.
+
+**GitHub issue:** [#16](https://github.com/jeffshurtliff/obforce/issues/16)
+
+**Issue template:** [`maintainer-docs.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-docs.md)
+
+**Blocked by:** [#15](https://github.com/jeffshurtliff/obforce/issues/15)
+
+**Blocks:** [#17](https://github.com/jeffshurtliff/obforce/issues/17)
 
 1. Complete README and user guides for installation, separately managed `sf`
    authorization, offline/live setup, build/preview/refresh, note ownership,
@@ -1317,6 +1540,11 @@ No dependency installation or application refactoring merely to check prose.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/16 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 16. Finish and verify accurate user/contributor/security/
 > release documentation and the clean-install offline tutorial. Describe actual
 > limitations and evidence without promising full-org documentation. Do not build
@@ -1328,6 +1556,14 @@ No dependency installation or application refactoring merely to check prose.
 **Goal:** Reviewable `0.1.0` candidate artifacts and a concrete publication handoff.
 
 **Depends on:** 16. **Status:** Not started.
+
+**GitHub issue:** [#17](https://github.com/jeffshurtliff/obforce/issues/17)
+
+**Issue template:** [`maintainer-release.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-release.md)
+
+**Blocked by:** [#16](https://github.com/jeffshurtliff/obforce/issues/16)
+
+**Blocks:** None within v0.1.0.
 
 1. Verify the acceptance matrix, dependency/license metadata, accurate platform
    claims, current changelog, and absence of unresolved preservation blockers.
@@ -1354,6 +1590,11 @@ not part of this thread without separate direct authorization.
 
 **Copy-ready prompt:**
 
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/17 and its linked
+> prerequisite issues. Keep this existing issue updated with start/progress,
+> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
+> it open pending maintainer acceptance; do not create duplicate tracking issues.
+>
 > Implement only Thread 17 after verifying the release acceptance matrix. Prepare
 > and validate fresh v0.1.0 candidates, release notes, and a reviewable publication
 > handoff. Report checksums and actual evidence. Do not stage/commit, push, tag,
@@ -1431,11 +1672,20 @@ public scope requires a recorded maintainer decision.
 
 ## 11. Tracking and future handoff records
 
-Thread IDs are local roadmap identifiers, not invented GitHub issue numbers.
-Creating issues/milestones, posting public comments, or messaging another chat
-requires a direct maintainer instruction for that action. If requested, map one
-issue per bounded thread and preserve the dependency graph. Update only verified
-progress; leave partial work/pending review accurately labeled.
+Each of the 17 roadmap threads now has a real linked GitHub issue in
+[`v0.1.0`](https://github.com/jeffshurtliff/obforce/milestone/1); Thread 01 maps to issue #1 through Thread 17 to
+issue #17. Each issue contains its four implementation subtasks, acceptance/demo,
+validation, the appropriate maintainer-template sections, actual prerequisite
+and dependent issue links, and progress/handoff guidance.
+
+**Maintainer tracking authorization — 18 October 2026:** When implementation of
+a named roadmap thread is requested, keep its existing issue updated throughout
+that work as described in the common thread contract. This scoped authorization
+covers start/progress/blocker/handoff comments and truthful checklist updates;
+it does not authorize new issues, other-chat messages, closure without approval,
+or Git/release/publication actions. If authorization is later narrowed for a
+particular task, follow that instruction. Update only verified progress and
+leave partial work or pending review accurately labeled.
 
 Use status labels such as **Not started**, **In progress**, **Implemented locally;
 validation gaps remain**, **Ready for maintainer review**, and **Accepted**.
@@ -1484,6 +1734,36 @@ qualification were not exercised for this prose-only task. The templates remain
 untracked and all changes are unstaged/uncommitted, pending maintainer review;
 no external actions were taken. No scope decision or implementation blocker was
 introduced. Thread 01 remains the next eligible thread, explicitly not started.
+
+**GitHub roadmap tracking — 18 October 2026:** At the maintainer's explicit
+request, verified the source roadmap, root agent guide, and selected maintainer
+templates against `main` at `d80cad5d59623f8cdf41e9e5bd5ecd7e5152c8fe`.
+The prior housekeeping work and templates were already committed in that
+baseline; its earlier uncommitted handoff wording is historical.
+
+Created issues [#1](https://github.com/jeffshurtliff/obforce/issues/1)–[#17](https://github.com/jeffshurtliff/obforce/issues/17), one per implementation
+thread, using `maintainer-chore.md`, `maintainer-feature.md`,
+`maintainer-test.md`, `maintainer-docs.md`, and `maintainer-release.md` according
+to the work category. All issues are open, assigned to `jeffshurtliff`, labeled
+with `maintainer`, `codex`, and the applicable category/supplementary labels, and
+associated with [milestone `v0.1.0`](https://github.com/jeffshurtliff/obforce/milestone/1). Added the 21 exact direct
+blocked-by relationships through GitHub's dependency API and cross-linked both
+prerequisites and dependents in the issue bodies. The release issue covers
+preparation only and retains separate publication authorization checkpoints.
+
+Verified the live issue metadata, final bodies, and native blocked-by/blocking
+relationships against the roadmap. Updated the thread index, all 17 thread
+references, kickoff prompts, and progress/handoff contract while preserving all
+68 implementation subtasks, scope, acceptance criteria, validation, and the
+existing housekeeping record. Document structure, links, privacy, and whitespace
+checks passed; no application tests were appropriate for this tracking-only work.
+The connected GitHub app could not access the private repository; the requested
+changes were completed through the authenticated GitHub CLI.
+
+The updated plan was prepared as a replacement file outside the checkout for
+the maintainer to add to the repository. No repository files, application code,
+Salesforce org, or vault were changed; no commit/push/publication was performed.
+**All 17 implementation threads remain not started. Thread 01 / issue #1 is next.**
 
 ## 12. Reference notes for implementers
 

@@ -15,6 +15,7 @@ import shutil
 import socket
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -383,3 +384,54 @@ def test_nested_manifest_and_wrong_package_kind(tmp_path):
     (root / 'one').write_text('not a directory', encoding='utf-8')
     with pytest.raises(ConfigError):
         collect_local(root, BINDING, Selection())
+
+
+def _windows_stat(info, **changes):
+    """Model Windows path/descriptor ctime semantics while retaining real file IDs."""
+    names = ('st_dev', 'st_ino', 'st_mode', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+    values = {name: getattr(info, name) for name in names}
+    values.update(changes)
+    return SimpleNamespace(**values)
+
+
+@pytest.mark.parametrize('change', [None, 'st_ctime_ns', 'st_mtime_ns', 'st_ino', 'st_birthtime_ns'])
+def test_windows_descriptor_read_guards(tmp_path, monkeypatch, change):
+    """A birthtime bridge allows stable reads but never hides descriptor changes."""
+    root = manifest(tmp_path / 'project')
+    path = root / 'sfdx-project.json'
+    reader = local._Reader(root)
+    inspect = reader.inspect
+    fstat = os.fstat
+    observed_descriptors = []
+    calls = 0
+
+    def inspect_path(value):
+        return _windows_stat(inspect(value), st_ctime_ns=100)
+
+    def inspect_descriptor(descriptor):
+        nonlocal calls
+        calls += 1
+        observed_descriptors.append(descriptor)
+        result = _windows_stat(fstat(descriptor), st_ctime_ns=200, st_birthtime_ns=100)
+        if calls == 2 and change is not None:
+            setattr(result, change, getattr(result, change) + 1)
+        return result
+
+    # Scope the platform emulation to this module; do not mutate global os.name
+    # or pathlib's native path implementation.
+    platform_os = SimpleNamespace(**vars(os))
+    platform_os.name = 'nt'
+    platform_os.fstat = inspect_descriptor
+    monkeypatch.setitem(vars(local), 'os', platform_os)
+    monkeypatch.setattr(reader, 'inspect', inspect_path)
+    before = snapshot(root)
+    if change is None:
+        assert reader.read(path, const.MAX_PROJECT_BYTES) == path.read_bytes()
+    else:
+        with pytest.raises(OperationalError, match='changed while reading'):
+            reader.read(path, const.MAX_PROJECT_BYTES)
+    assert calls == 2
+    assert snapshot(root) == before
+    for descriptor in observed_descriptors:
+        with pytest.raises(OSError):
+            fstat(descriptor)

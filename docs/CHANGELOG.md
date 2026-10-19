@@ -35,6 +35,11 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Offline reads now handle Windows CPython's pathname creation-time versus
+  descriptor change-time semantics through an exact birthtime comparison,
+  preserving all other identity fields, raw descriptor before/after guards,
+  and independent pathname checks. Regression tests cover stable reads and
+  refusal of changed metadata without introducing platform skips.
 - Enforced LF repository text checkouts and separated setup/validation commands
   into individual CI steps so Windows Ruff failures cannot be masked by a later
   successful command. Correction `65305fb` passed standalone checks and artifact

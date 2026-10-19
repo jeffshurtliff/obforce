@@ -10,8 +10,10 @@ as completed. Thread 02 is **accepted and complete**, including delivered
 correction `65305fb` and all 12 passing hosted cells with standalone Windows
 formatting checks. Issue #2 is closed as completed. Thread 03 is **accepted and
 complete**, including delivered correction merge `6154b74` and all 12 passing
-hosted cells. Issue #3 is closed as completed. Thread 04 is **implemented locally, pending acceptance**;
-Threads 05–17 remain **not started**.
+hosted cells. Issue #3 is closed as completed. Thread 04 is **accepted and complete**, delivered at merge `6980b26` with all
+12 hosted cells passing their applicable checks. Issue #4 is closed as completed.
+Thread 05 is next eligible; Threads 05–17 remain **not started**. Windows sf
+execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -787,7 +789,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Accepted; closed; corrected 12/12 hosted cells passed |
-| 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Implemented locally; pending acceptance; open |
+| 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
@@ -1078,7 +1080,8 @@ packages, unknown types, and missing audit data.
 
 **Goal:** A bounded, mockable, read-only `sf` process adapter.
 
-**Depends on:** 02. **Status:** Implemented/verified locally; pending acceptance; #4 open.
+**Depends on:** 02. **Status:** Accepted and complete; #4 closed; all 12 hosted cells passed applicable checks.
+Windows sf execution remains refused; future support is tracked in [#18](https://github.com/jeffshurtliff/obforce/issues/18).
 
 **GitHub issue:** [#4](https://github.com/jeffshurtliff/obforce/issues/4)
 
@@ -1179,7 +1182,8 @@ Report actual executable/platform coverage, not assumed compatibility.
 
 **Goal:** Normalized live Apex records using existing CLI authorization.
 
-**Depends on:** 04. **Status:** Not started.
+**Depends on:** 04. **Status:** Not started; next eligible after accepted/delivered Thread 04.
+Future Windows support in #18 is not an additional prerequisite.
 
 **GitHub issue:** [#5](https://github.com/jeffshurtliff/obforce/issues/5)
 
@@ -1216,10 +1220,81 @@ ordinary offline CI.
 > verified checklist, and handoff evidence, synchronized with the roadmap. Leave
 > it open pending maintainer acceptance; do not create duplicate tracking issues.
 >
-> Implement only Thread 05 with the existing process boundary and synthetic
-> responses. Add explicit org identity, Apex inventory/audit normalization, and
-> tested coverage handling. Do not access a live org unless I separately authorize
-> its target and operations. Leave work uncommitted and report validation limits.
+> Read AGENTS.md, CONTRIBUTING.md, dev/IMPLEMENTATION_PLAN.md, docs/CONFIGURATION.md,
+> docs/COVERAGE.md, docs/NOTE_FORMAT.md, and docs/SF_CLI.md. Check relevant
+> local/vendor_docs/ if present. Verify prerequisite code and exact-commit CI
+> before implementation; report any new blocker before coding. Thread 05's direct
+> prerequisite is Thread 04 / #4, now accepted and closed. Reviewed implementation
+> 09a701169f80f875052359ff0b84476da3c36942 was merged at
+> 6980b26bc539779fb9be2b7fb1cc6ae7f655f418. Run 39314787749, attempt 1, passed all
+> 12 Linux/macOS/Windows Python 3.12–3.15 cells: 340 tests per Linux/macOS cell;
+> 329 passed and 11 expected skips per Windows cell. Standalone formatting,
+> fresh builds, strict Twine, and both independent artifact installs passed in
+> every cell. Recheck current code/CI and preserve historical failed runs.
+>
+> Implement only Thread 05: an internal live Apex inventory/audit adapter using
+> the accepted sources/sf_cli.py process boundary and synthetic, mocked responses.
+> Add no public lifecycle command. Verify current official Salesforce API/CLI
+> field, query, permission, pagination and JSON contracts through documentation
+> and source reads without invoking real sf. Record material query, enumeration,
+> identity, audit-privacy and coverage decisions before dependent implementation.
+>
+> Require an explicit target. Verify the actual org identity with a minimal
+> non-secret read query, construct the established live SourceBinding, and refuse
+> configured/state identity mismatches before accepting inventory. An alias is
+> not stable identity. Do not add credential-bearing org-display operations,
+> custom OAuth, auth discovery, or automatic rebinding/state adoption.
+>
+> Query only allowlisted ApexClass identity, namespace, API version, status and
+> creation/modification audit fields. Never request Body, tokens, auth URLs,
+> usernames, emails, customer records or unrelated User data. Support optional,
+> scoped audit display-name enrichment and explicit name omission; preserve
+> unavailable/null/absent distinctions without inventing audit values or technical
+> debt assessments. Normalize into the existing component/selection/coverage
+> contracts, with accurate provenance and deterministic hashes.
+>
+> Handle complete enumeration, pagination, namespace selection, empty results,
+> truncation, missing permissions, unavailable fields and required-versus-optional
+> failures. Establish a bounded enumeration strategy compatible with the fixed
+> read-only operation allowlist; do not add arbitrary endpoint/continuation-URL
+> execution. Retain contradictory completion/count/continuation/warning signals;
+> a successful process, empty result or done flag alone never proves completeness.
+> If exhaustion cannot be established, report precise incomplete coverage under
+> the existing typed-error and exit-precedence contracts. Track inventory, audit
+> and relationship coverage independently; relationship collection remains Thread
+> 06. Do not infer deletion or change the frozen scope/hash/ownership contracts.
+>
+> Preserve explicit executable/target/working-directory controls, byte/time limits,
+> cleanup and diagnostic redaction. Windows sf execution remains refused. Issue
+> #18 tracks future Windows support outside v0.1.0; it is not a new prerequisite
+> or authorization to implement Windows transport in this thread. Do not enable
+> shell=True, wrapper workarounds, default-org selection or unbounded collection.
+>
+> Use realistic synthetic fixtures and mocked process interfaces. Test verified
+> identity/target mismatch, multi-page enumeration, empty success, contradictory
+> or truncated pages, namespace inclusion/exclusion, permission loss, unavailable
+> audit fields, audit-name omission, invalid IDs/dates/versions, duplicate records,
+> privacy/redaction, deterministic hashes and unchanged offline behavior. Keep
+> runtime tests offline. Do not invoke real sf, inspect credential stores/.env,
+> install/update CLI or plugins, authenticate, query an org, execute Apex, deploy,
+> or access real metadata/vaults. Any future live validation requires separate
+> explicit authorization for its target and operations.
+>
+> For every new or changed Python header, preserve Created By and use exactly:
+> :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+> with the current local date in the existing date format. Do not update unrelated
+> headers. Preserve maintainer changes and Apache licensing. Justify dependency
+> additions through Poetry; never hand-edit poetry.lock.
+>
+> Update applicable docs, docs/CHANGELOG.md and the roadmap handoff. Run relevant
+> checks and fresh build/Twine/archive-inspection/independent wheel and sdist
+> installation checks for package/dependency changes, extending the explicit
+> artifact allowlist deliberately. Separate local, mocked, hosted, skipped and
+> unavailable evidence; Windows CI/refusal tests are not Windows sf execution
+> qualification. Leave changes unstaged/uncommitted and #5 open for acceptance.
+> Do not create issues, stage, commit, push, open a PR, close issues, rerun CI or
+> publish. Leave Thread 06 and all later threads, and enhancement #18, explicitly
+> not started.
 
 ### Thread 06 — Platform relationships and normalized graph
 
@@ -2960,6 +3035,77 @@ Thread 05 / #5, explicitly NOT STARTED. Threads 06–17 also remain NOT STARTED.
 and [verified checklist/handoff](https://github.com/jeffshurtliff/obforce/issues/4#issuecomment-6275133652).
 The issue body marks all four implementation tasks and verified local checks;
 Ready to merge/release remains unchecked. #4 remains open for maintainer acceptance.
+
+### Thread 04 acceptance and closure — 19 October 2026
+
+**Accepted and complete.** The maintainer reviewed/pushed Thread 04, confirmed passing CI and
+explicitly requested issue closure when appropriate. Delivered code and all hosted acceptance gates
+are verified. Closing #4 as completed; no release/publication is implied. Thread 05 is next eligible
+and remains **not started**.
+
+**Delivered identity:** Implementation `09a701169f80f875052359ff0b84476da3c36942`, merged at
+`6980b26bc539779fb9be2b7fb1cc6ae7f655f418`. Clean local main, origin/main and live GitHub main match
+the merge; all packaged source bytes match the reviewed final r4 candidate. Actual code retains
+fixed operations/explicit targets, bounded pre-decode pipe collection, process-group cleanup,
+private envelopes/redaction and Windows refusal. No maintainer changes were discarded.
+
+**Exact-commit hosted evidence:** Inspected every job/required step and full command logs in [run
+39314787749, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39314787749), head
+`6980b26bc539779fb9be2b7fb1cc6ae7f655f418`:
+
+| Cells | Verified outcome |
+| --- | --- |
+| Linux/macOS, Python 3.12–3.15 (8) | **340 passed per cell, no skips**; 97% combined coverage |
+| Windows, Python 3.12–3.15 (4) | **329 passed, 11 skipped per cell**; 93% combined coverage |
+| Every cell | Standalone strict metadata/lock, Ruff lint/format (50 files), Bandit, fresh wheel/sdist build, strict Twine, both independent artifact installs and whitespace passed |
+
+All 24 independent artifact installations passed exact archive/license/import/resource/model,
+synthetic CLI-envelope, dependency, entry-point, offline-source and no-discovery-write checks. No
+required workflow step was skipped and no hidden formatter/command failure appears behind the green
+summary. Two narrow reviewed subprocess Bandit annotations remain explicit.
+
+The 11 Windows skips are deliberate and retained: nine POSIX process-collector cases, one POSIX
+wrapper-symlink case and the existing unavailable native FIFO case. Windows refusal/envelope/argv
+tests and installed smoke checks passed; they do **not** qualify Windows sf execution. Linux/macOS
+fictional-child transport tests executed successfully. No real sf/Node/plugin/authenticated
+org/vault execution or full lifecycle qualification is claimed; trusted-installation,
+OS-interruption and escaped-descendant limitations remain.
+
+**Related future work:** The maintainer associated [#18 — Native Windows support for the Salesforce
+CLI process boundary](https://github.com/jeffshurtliff/obforce/issues/18). Verified its existing
+cross-reference to #4, open backlog status and explicit outside-v0.1.0 scope/eventual-v1.0.0 intent.
+It is not a new prerequisite for #4/#5 and does not block this closure or authorize implementation.
+Windows execution remains fail-closed. #18 is **not started**; no new dependency edge or
+milestone/schedule was added.
+
+### Verified acceptance gates
+
+- [x] All four original Thread 04 implementation tasks and offline acceptance scenario.
+- [x] Maintainer review and exact delivered implementation/merge identity verified.
+- [x] All 12 hosted suites and standalone check/build/Twine/independent-install gates passed, with
+  actual Windows skips preserved.
+- [x] Existing normalized config/identity/hash/coverage/note/offline-source contracts preserved; no
+  public command or new dependency.
+- [x] Windows limitation linked to existing #18 without expanding v0.1.0 or changing the prerequisite graph.
+- [x] Maintainer authorized closure; current roadmap/docs/checklist/handoff synchronized.
+
+**Docs/Git/handoff:** Updated current roadmap status/index, Thread 04 acceptance record, Thread 05
+eligibility/exact kickoff prompt, CLI-boundary/contributor guidance and changelog. Earlier
+start/progress/local handoffs, candidate hashes and failed CI history remain historical evidence.
+This is a prose-only update: local links/fences/consistency/privacy/whitespace and tracked/untracked
+review checked; no new application tests/builds/dependency installation needed. Final acceptance
+docs remain unstaged/uncommitted on main at `6980b26`; delivered code is already merged/pushed. No
+new issue, commit, push, PR, rerun, release, publication, Salesforce/auth/vault access or later
+implementation.
+
+Existing #4 labels/assignment/milestone and reciprocal #2 -> #4 -> #5 native relationships are
+retained. #4 is closed as completed. **Next eligible: Thread 05 / #5, explicitly NOT STARTED.
+Threads 06–17 and enhancement #18 also remain NOT STARTED.**
+
+**Closure evidence:** [Final verified acceptance/closure comment](https://github.com/jeffshurtliff/obforce/issues/4#issuecomment-6276129493).
+#4 is closed as completed with implementation/acceptance gates checked, original
+metadata and reciprocal native dependencies preserved. #18 remains open backlog;
+#5 remains open and not started.
 
 ## 12. Reference notes for implementers
 

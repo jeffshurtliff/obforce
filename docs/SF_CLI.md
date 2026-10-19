@@ -7,6 +7,17 @@ Apex inventory/audit fields, normalize records, or decide collection coverage.
 Thread 05 remains unstarted. Internal interfaces are not a stable Python API.
 No Salesforce CLI installation or authentication is needed for tests/help/version.
 
+Thread 04 is accepted and delivered at merge `6980b26`. Exact-commit
+[run 39314787749](https://github.com/jeffshurtliff/obforce/actions/runs/39314787749)
+passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells: Linux/macOS each
+executed 340 tests; Windows each reported 329 passed and 11 expected skips.
+Every cell passed standalone checks, fresh build/Twine and both independent
+artifact installations. The Windows skips include the nine POSIX collector
+cases, POSIX wrapper-symlink case and existing FIFO case. These results qualify
+those tests/refusals, not real CLI or Windows sf execution. Future native Windows
+support is tracked in [#18](https://github.com/jeffshurtliff/obforce/issues/18),
+an unstarted enhancement outside v0.1.0 that does not block Thread 05.
+
 ## Execution contract and platform boundary
 
 A caller must separately obtain authorization for the selected live org and

@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file, following
   process-group cleanup, private JSON envelope validation and fixed redacted errors.
   Windows execution and command wrappers fail closed; no shell fallback, public
   command, org verification, live inventory, or real Salesforce execution is added.
+  Accepted at merge `6980b26`: all 12 hosted Python 3.12–3.15 cells passed
+  checks/build/Twine/independent installs; Linux/macOS ran 340 tests per cell,
+  Windows 329 passed/11 expected skips. Windows sf execution remains refused;
+  future support is tracked in #18 outside v0.1.0 and does not block Thread 05.
 - Synthetic CLI fixtures, argv/envelope/refusal tests and fictional child-process
   cleanup/bounds tests; exact artifact allowlists and independent installed
   synthetic-envelope smoke checks now include `sources/sf_cli.py`.

@@ -19,6 +19,11 @@ Thread 04 adds an internal [bounded Salesforce CLI process boundary](docs/SF_CLI
 with synthetic protocols and fictional child-process tests only. POSIX direct
 execution is implemented; Windows execution fails closed pending safe launcher
 and cleanup support. No public command or live inventory adapter is added.
+Thread 04 is accepted with exact-merge CI verified across all 12 cells; Windows
+skips/refusals do not establish Windows sf execution support. See the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-04-acceptance-and-closure--19-october-2026).
+Future Windows execution is tracked in [#18](https://github.com/jeffshurtliff/obforce/issues/18),
+outside v0.1.0 and without blocking Thread 05, which remains not started.
 
 ## Development setup
 

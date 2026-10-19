@@ -9,13 +9,16 @@ on:
       - CLAUDE.md
       - GEMINI.md
       - LICENSE
+      - SECURITY.md
       - .readthedocs.yaml
       - .env.example
       - dev/**
       - docs/**
       - examples/**
-      - .github/ISSUE_TEMPLATE/**
+      - .agents/**
+      - .claude/**
       - .gemini/**
+      - .github/ISSUE_TEMPLATE/**
   pull_request:
     paths-ignore:
       - README.md
@@ -24,13 +27,16 @@ on:
       - CLAUDE.md
       - GEMINI.md
       - LICENSE
+      - SECURITY.md
       - .readthedocs.yaml
       - .env.example
       - dev/**
       - docs/**
       - examples/**
-      - .github/ISSUE_TEMPLATE/**
+      - .agents/**
+      - .claude/**
       - .gemini/**
+      - .github/ISSUE_TEMPLATE/**
 
 permissions:
   contents: read

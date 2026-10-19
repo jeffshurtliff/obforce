@@ -43,6 +43,14 @@ tools from `PATH`. Dependency installation can require network access; installed
 help/version operation does not. Do not install or invoke Salesforce CLI or
 Obsidian for foundation tests.
 
+Poetry's editable install generates an extensionless Python console script and,
+on Windows, a `.cmd` wrapper. Integration tests invoke that installed Python
+script through the active interpreter on Windows, with the same invocation
+tested on other platforms. They fail if the script is missing. The separate
+artifact checker directly runs pip-installed console executables (`obforce.exe`
+on Windows) from clean wheel/sdist environments; neither check substitutes the
+module entry point for the console script or skips Windows coverage.
+
 Ruff targets Python 3.12, 130 columns, single-quoted ordinary strings,
 triple-double-quoted docstrings, spaces, and LF. Use type hints at boundaries and
 the Python headers in AGENTS.md, with the actual generating model and local date.

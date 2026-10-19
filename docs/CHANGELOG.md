@@ -14,3 +14,10 @@ All notable changes to this project will be documented in this file, following
 - Test-only CI targeting stable Python 3.12–3.15 on Linux, macOS, and Windows;
   configured matrix cells do not establish platform support.
 - Contributor/security guidance and explicit foundation limitations.
+
+### Fixed
+
+- Entry-point integration tests now use Poetry's installed Python launcher on
+  Windows instead of assuming its editable install creates `obforce.exe`. Added
+  cross-platform regression coverage for interpreter-driven console invocation;
+  independent pip artifact checks retain direct executable validation.

@@ -4,7 +4,7 @@
 :Synopsis:          Exercises installed entry points offline outside the checkout
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     18 Oct 2026
+:Modified Date:     19 Oct 2026
 """
 
 import os
@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 
-@pytest.mark.parametrize('entrypoint', ['console', 'module'])
+@pytest.mark.parametrize('entrypoint', ['console', 'console-via-python', 'module'])
 @pytest.mark.parametrize('arguments', [[], ['--help'], ['--version'], ['build']])
 def test_entrypoint_without_external_tools(entrypoint: str, arguments: list[str], tmp_path: Path) -> None:
     """Run with no external tools, block network calls, and leave the work directory untouched."""
@@ -37,8 +37,11 @@ def test_entrypoint_without_external_tools(entrypoint: str, arguments: list[str]
     if entrypoint == 'module':
         command = [sys.executable, '-m', 'obforce']
     else:
-        script = Path(sysconfig.get_path('scripts')) / ('obforce.exe' if os.name == 'nt' else 'obforce')
-        command = [str(script)]
+        # Poetry's editable install writes a Python script and a Windows .cmd
+        # wrapper, while pip-installed executables are checked by check_artifacts.py.
+        script = Path(sysconfig.get_path('scripts')) / 'obforce'
+        assert script.is_file(), 'The installed Poetry console script is missing'
+        command = [sys.executable, str(script)] if os.name == 'nt' or entrypoint == 'console-via-python' else [str(script)]
     result = subprocess.run(
         command + arguments, cwd=work, env=environment, capture_output=True, text=True, timeout=20, check=False
     )

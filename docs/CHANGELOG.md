@@ -7,6 +7,20 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal live Apex inventory/audit adapter with explicit target and minimal org
+  identity verification, configured/state mismatch refusal, bounded SELECT keyset
+  enumeration and independent inventory/audit/relationship coverage. Optional
+  display-name queries are scoped to selected Apex IDs; omission sends no name
+  query. No Body, User scan, auth discovery, rebinding or public command.
+- Synthetic process-response fixtures and live-adapter regression coverage for
+  pagination contradictions, finite collection budgets, namespace selection,
+  permission/field failures, privacy, validation, duplicate identities and hashes.
+  The existing process controls, Windows refusal, offline source and frozen
+  model/ownership contracts remain unchanged. No dependencies added.
+- Explicit artifact allowlist and independent installed synthetic smoke checks
+  extended to `sources/live.py`; live access and Windows sf qualification remain
+  unavailable. Thread 06/later threads and enhancement #18 are not started.
+
 - Internal allowlisted Salesforce CLI transport with explicit executable/target/
   working directory, byte bounds enforced during collection, timeouts, POSIX
   process-group cleanup, private JSON envelope validation and fixed redacted errors.

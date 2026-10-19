@@ -4,7 +4,9 @@ Thread 04 implements `sources/sf_cli.py`, an internal transport boundary with
 mocked protocol tests and fictional Python child-process tests. It adds no
 public CLI command or live source adapter. It does not verify an org, collect
 Apex inventory/audit fields, normalize records, or decide collection coverage.
-Thread 05 remains unstarted. Internal interfaces are not a stable Python API.
+Thread 05 now supplies a separate internal [live Apex adapter](LIVE_SOURCE.md)
+that verifies org identity and interprets bounded inventory/audit coverage.
+The transport itself remains unchanged. Internal interfaces are not a stable Python API.
 No Salesforce CLI installation or authentication is needed for tests/help/version.
 
 Thread 04 is accepted and delivered at merge `6980b26`. Exact-commit

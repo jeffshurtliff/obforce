@@ -41,7 +41,7 @@ def _run(command: list[str], cwd: Path, environment: dict[str, str]) -> str:
 
 
 def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
-    """Enforce the explicit foundation, contract, offline-source, and CLI-boundary artifact allowlist.
+    """Enforce the explicit foundation, contract, offline-source, CLI-boundary and live-adapter artifact allowlist.
 
     :param artifact: Locally built wheel or sdist to inspect without extraction.
     :param version: Expected static project version.
@@ -50,7 +50,14 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
     """
     package_files = {'__init__.py', '__main__.py', 'cli.py', 'config.py', 'constants.py', 'errors.py', 'models.py'}
     package_files.update(
-        {'parsers/__init__.py', 'parsers/apex.py', 'sources/__init__.py', 'sources/local.py', 'sources/sf_cli.py'}
+        {
+            'parsers/__init__.py',
+            'parsers/apex.py',
+            'sources/__init__.py',
+            'sources/local.py',
+            'sources/sf_cli.py',
+            'sources/live.py',
+        }
     )
     if artifact.suffix == '.whl':
         metadata_root = f'obforce-{version}.dist-info/'
@@ -173,6 +180,24 @@ assert result.coverage.audit.status == 'unavailable' and not result.coverage.aud
 assert result.coverage.relationships.status == 'not_collected'
 assert before == {p: (p.read_bytes() if p.is_file() else None, p.stat().st_mtime_ns) for p in root.rglob('*')}
 """
+        # Installed live adapter uses only synthetic replies and cannot start a process.
+        live_probe = """
+from pathlib import Path
+from unittest.mock import patch
+from obforce.models import Selection
+from obforce.sources.live import collect_live
+from obforce.sources.sf_cli import Reply
+identity = Reply({'records': [{'Id': '00D000000000001EAA'}]}, done=True, total_size=1)
+empty = Reply({'records': []}, done=True, total_size=0)
+with patch('obforce.sources.sf_cli.run_sf', side_effect=[identity, empty]) as process:
+    result = collect_live(Path('/fictional/sf'), directory=Path.cwd(), target='fictional',
+                          workspace_id='demo', selection=Selection(), include_audit_names=False)
+assert process.call_count == 2 and result.components == ()
+assert result.coverage.outcome == 0 and result.coverage.binding.org_id == '00D000000000001EAA'
+assert result.coverage.relationships.status == 'not_collected'
+assert len(result.inventory_hash) == 64
+"""
+        _run([str(python), '-c', live_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.
         _run([str(python), '-c', offline_probe], root, environment)
         for command in ([str(console)], [str(python), '-m', 'obforce']):

@@ -62,3 +62,13 @@ OWNED_PROPERTIES = IDENTITY_PROPERTIES | SF_PROPERTIES
 COMPONENT_ATTRIBUTES = frozenset({'api_version', 'status', 'created_at', 'created_by', 'last_modified_at', 'last_modified_by'})
 DEFAULT_APEX_DIRECTORY = 'Custom Code/Apex Classes'
 DEFAULT_DASHBOARD_DIRECTORY = 'Dashboards'
+
+# Live collection uses bounded SELECT keyset pages, never arbitrary continuation URLs.
+LIVE_APEX_METHOD = 'live-apex-keyset-v1'
+LIVE_AUDIT_METHOD = 'live-apex-scoped-audit-v1'
+LIVE_PAGE_SIZE = 200
+MAX_LIVE_PAGES = 51
+MAX_LIVE_RECORDS = 10_000
+MAX_LIVE_QUERIES = 156
+LIVE_TIMEOUT_SECONDS = 300
+MAX_LIVE_STDOUT_BYTES = 262_144

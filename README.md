@@ -2,7 +2,7 @@
 Create and maintain living documentation for your Salesforce org within an Obsidian vault.
 
 Under development: the `0.1.0.dev0` foundation provides help and installed-version
-reporting. Live Salesforce access, note generation, and safe refresh are planned in
+reporting. Public live Salesforce workflows, note generation, and safe refresh are planned in
 the [implementation roadmap](dev/IMPLEMENTATION_PLAN.md).
 
 Internal configuration and normalized-record validation are implemented with
@@ -12,8 +12,10 @@ Internal [offline Apex acquisition](docs/OFFLINE_SOURCE.md) inventories supporte
 pairs in declared DX packages with bounded safe XML and explicit local coverage.
 The fictional multi-package sample is testable without Salesforce CLI or network.
 The internal [Salesforce CLI process boundary](docs/SF_CLI.md) is tested offline;
-Windows execution currently fails closed. Live inventory and org verification
-remain planned. There are no source acquisition, rendering, or vault-writing CLI commands yet.
+Windows execution currently fails closed. The internal [live Apex adapter](docs/LIVE_SOURCE.md)
+adds explicit verified org identity, bounded inventory and optional scoped audit names,
+validated with synthetic mocked responses only. There are no source acquisition,
+rendering, or vault-writing CLI commands yet.
 
 For development, use Python 3.12+ and Poetry 2.4+ within Poetry 2.x:
 

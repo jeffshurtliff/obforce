@@ -23,7 +23,13 @@ Thread 04 is accepted with exact-merge CI verified across all 12 cells; Windows
 skips/refusals do not establish Windows sf execution support. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-04-acceptance-and-closure--19-october-2026).
 Future Windows execution is tracked in [#18](https://github.com/jeffshurtliff/obforce/issues/18),
-outside v0.1.0 and without blocking Thread 05, which remains not started.
+outside v0.1.0 and without blocking Thread 05.
+
+Thread 05 adds the internal [live Apex inventory/audit adapter](docs/LIVE_SOURCE.md),
+with explicit verified identity, bounded SELECT pagination, scoped optional audit
+queries and independent coverage. Tests mock process collection; no real sf/org
+access or Windows transport qualification is claimed. No public command is added;
+Thread 06 and later work remain not started.
 
 ## Development setup
 
@@ -102,7 +108,7 @@ both archives, and installs each artifact independently in a fresh temporary
 virtual environment outside the checkout. Installation may download runtime and
 isolated build dependencies. It then checks imports, package-file access through
 `importlib.resources`, installed internal model hashing, console/module help and 
-version, installed offline acquisition/parser and synthetic CLI-envelope checks, rejection of future commands,
+version, installed offline acquisition/parser and synthetic CLI-envelope/live-adapter checks, rejection of future commands,
 dependency consistency, and no
 working-directory writes with external tools absent. There are no template/Bases 
 assets yet; their installed resource checks belong to Threads 07 and 14. The 

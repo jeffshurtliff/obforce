@@ -4,7 +4,8 @@
 
 **Target release:** `0.1.0`; initial development version: `0.1.0.dev0`
 
-**Status:** Planning only. All implementation threads are **not started**.
+**Status:** Thread 01 is **ready for maintainer review** (locally validated; hosted
+CI unrun). Threads 02–17 are **not started**.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -770,7 +771,7 @@ in Thread 02. Never return a success code for a truncated requested live scan.
 
 | ID | Thread | Dependencies | Phase | GitHub issue | Status |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Not started |
+| 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Ready for maintainer review; hosted CI unrun |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Not started |
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
@@ -814,7 +815,7 @@ functions; public mutation commands remain unavailable until their safety gates.
 
 **Goal:** An installable, reproducible Python package with safe development defaults.
 
-**Depends on:** None. **Status:** Not started.
+**Depends on:** None. **Status:** Ready for maintainer review; hosted CI unrun.
 
 **GitHub issue:** [#1](https://github.com/jeffshurtliff/obforce/issues/1)
 
@@ -845,6 +846,10 @@ there is no fake build/sync command or accidental dependency on `sf`/Obsidian.
 **Validation:** Poetry metadata/lock checks, Ruff, entry-point tests, `poetry build`,
 strict Twine checks of fresh artifacts, installation outside the checkout, and
 artifact privacy/content inspection. No live connections.
+
+**Local acceptance evidence:** See the [Thread 01 handoff](#thread-01-handoff--18-october-2026).
+All four implementation subtasks are verified locally; maintainer acceptance and
+hosted/platform qualification remain separate. Issue #1 stays open.
 
 **Copy-ready prompt:**
 
@@ -1764,6 +1769,130 @@ The updated plan was prepared as a replacement file outside the checkout for
 the maintainer to add to the repository. No repository files, application code,
 Salesforce org, or vault were changed; no commit/push/publication was performed.
 **All 17 implementation threads remain not started. Thread 01 / issue #1 is next.**
+
+**Thread 01 start — 18 October 2026:** Authorized foundation implementation against
+clean baseline `4ce3d28`. Read root agent guidance, this roadmap, and issue #1;
+no prerequisite issues exist (verified body and native blocked-by API). Root
+`CONTRIBUTING.md` and `local/vendor_docs/` are absent. Work is limited to packaging,
+help/version, offline tooling/tests, test-only CI, and guidance. Preserve the
+Apache license; leave changes uncommitted and issue #1 open pending acceptance.
+Threads 02–17 remain not started.
+
+**Thread 01 implementation decisions — 18 October 2026:** Use Click alone at
+runtime; defer rendering/YAML/XML dependencies to their owning threads. Current
+PyPI metadata verified Click 8.5.0 and poetry-core 2.5.0 before resolution.
+Poetry 2.4.2 is the local/CI tool baseline; build isolation uses poetry-core
+`>=2.5,<3` for current SPDX metadata. Static PEP 621 is the sole version source.
+Official `actions/python-versions` manifest lists stable 3.15.0 artifacts for
+Linux, macOS, and Windows; configure the 3.12–3.15 test matrix without claiming
+passed hosted cells. Official Actions releases verify checkout v7.0.1 and
+setup-python v7.0.0; use their v7 majors. No template/Bases assets or source
+connectors are added; installed asset behavior remains with Threads 07/14.
+These are routine foundation choices, with no scope or ownership change.
+
+**Thread 01 progress — 18 October 2026:** Foundation files are implemented
+locally. Initial macOS ARM64 / Python 3.14.7 run: 19 offline tests, Poetry
+metadata/lock, Ruff lint/format, Bandit, fresh build/strict Twine, and independent
+wheel/sdist installs passed. Complete archive lists and unchanged Apache license
+were checked; installed entry points passed outside checkout without external
+tools or runtime socket access. A checker-only metadata-whitespace assumption
+was corrected. Subprocess coverage and an additional import-safety test were
+added; final suite/artifact checks and other available local interpreters remain
+pending. No hosted CI/live/native Windows/Linux evidence is claimed. Issue #1
+has matching start/progress comments; it remains open. Work is unstaged and
+uncommitted; Thread 02 remains not started.
+
+### Thread 01 handoff — 18 October 2026
+
+**Status:** Ready for maintainer review; issue #1 remains open. Local validation
+meets the foundation demo; hosted/platform gaps below are retained.
+
+**Authorized scope/baseline:** Thread 01 only, starting from clean `main` at
+`4ce3d28`. Issue #1 and its native blocked-by list have no prerequisites. Root
+agent guidance, full roadmap, and issue were read; no contributor guide or vendor
+docs existed. No source connectors or later-thread modules were implemented.
+
+**Verified implementation checklist:**
+
+- [x] Preserved Apache license and maintainer files; added Poetry/PEP 621 static
+  `0.1.0.dev0`, Python `>=3.12`, `src/obforce/`, both entry points, and a
+  Poetry-generated lockfile. Version reporting uses installed metadata.
+- [x] Added Click alone at runtime, justified locked dev tools, configured Ruff,
+  unit/integration tests, offline socket guards, and subprocess-aware coverage.
+- [x] Added `CONTRIBUTING.md`, `SECURITY.md`, `docs/CHANGELOG.md`, focused ignores,
+  README discovery instructions, and links between guidance and roadmap.
+- [x] Added test-only 12-cell CI and inspected fresh artifact exclusions. No
+  publishing/upload/deploy steps or credential-dependent tests exist.
+
+**Files/behavior:** `pyproject.toml`, `poetry.lock`, `src/obforce/`, `tests/`,
+`.github/workflows/test.yml`, `dev/check_artifacts.py`, root guidance, README,
+changelog, and ignores. Only help/version and no-argument discovery are available;
+`init`, `build`, `sync`, and `recover` fail with usage code 2. No stable public
+Python API is promised. The artifact checker's small Thread 01 allowlist must be
+extended deliberately when later threads add packaged modules/assets.
+
+**Checks actually executed:** Native macOS 27.0.1 ARM64; Poetry 2.4.2. Locked
+pytest 9.1.1, pytest-cov 7.1.0, Ruff 0.17.1, Bandit 1.9.4, Twine 7.0.0, Click
+8.5.0. Python 3.14.7 is the repository `.venv`; 3.12.7 and 3.13.15 used separate
+temporary locked Poetry environments.
+
+| Local check | Actual result |
+| --- | --- |
+| `poetry check --lock --strict` | Passed |
+| Ruff lint and format check | Passed; only UP009 excluded to retain required encoding headers |
+| `pytest -q` on 3.12.7 / 3.13.15 / 3.14.7 | 20 passed on each; no skips |
+| 3.14.7 suite with subprocess coverage | 20 passed; 100% statement/branch coverage of the small foundation package |
+| `bandit -r src/obforce` | Passed, no findings/suppressions |
+| Fresh `poetry build` and strict Twine | Both final r2 artifacts passed |
+| Independent wheel and sdist installs | Both passed separately on each of 3.12.7 / 3.13.15 / 3.14.7 (six clean installs outside checkout) |
+| Installed smoke checks | Import provenance, installed metadata/resources, `pip check`, both help/version entry points, future-command refusal, no runtime sockets/external tools or working-directory writes |
+| Workflow/docs/diff review | YAML structure and 12-cell matrix, links/fences, new-file LF/whitespace/privacy, tracked diff, untracked file list, `git diff --check` passed |
+
+**Artifact evidence:** Final candidates are retained outside the checkout under
+`<temporary>/obforce-thread01-candidate-r2/`. Full lists were inspected: the wheel
+has three package Python files plus METADATA, WHEEL, entry points, RECORD, and
+license (8 members); the sdist has those three source files plus LICENSE, README,
+pyproject, and PKG-INFO (7 members). Exact allowlists reject extra/duplicate paths
+and sdist links/special files. Neither artifact contains private `local/`, vaults,
+state/recovery data, tests, developer tools, workflow files, or planning records.
+Both include byte-identical root LICENSE and Apache-2.0 metadata.
+
+| Final artifact | SHA-256 |
+| --- | --- |
+| `obforce-0.1.0.dev0-py3-none-any.whl` | `127cb347b01fde3edc41b8b26e23cefdaee88198a7c66ddfde5e373a4a52af5d` |
+| `obforce-0.1.0.dev0.tar.gz` | `9b0fe8a1b9290e7735b44a64ba88d9fc1d03e7d7bef32c8f61548cb962810095` |
+
+**Gaps/limits:** No hosted workflow execution, native Linux/Windows test, or local
+Python 3.15 run was performed. Stable 3.15 runner availability was verified, not
+execution compatibility. No real Salesforce/org/vault/Obsidian tests were run or
+authorized. Installed template/Bases tests wait for Threads 07/14. Setup and
+isolated pip/build dependency acquisition used the network; application smoke
+tests blocked Python socket operations. No platform support qualification is
+claimed from configured CI or the limited foundation tests.
+
+**Decisions/deviations:** No material scope/ownership deviation or unresolved
+implementation decision. Initial lint/format findings were corrected, retaining
+the required encoding headers through a targeted Ruff exception. A checker-only
+entry-point whitespace assumption was fixed. Initial candidates remain superseded
+by final r2 after coverage configuration changed; no failed check is claimed as
+a pass. Maintainer confirmed the Python-header model name as `GPT-6.1 Sol`.
+
+**Privacy/review/Git:** No credentials, real metadata, or vaults were inspected.
+`LICENSE`, `AGENTS.md`, and existing issue templates are unchanged. Start/progress
+and verified checklist/handoff evidence are recorded in existing issue #1 using
+the authenticated CLI (the connector could not access this repository). All
+repository changes remain unstaged/uncommitted on `main`; no branch, issue, PR,
+commit, push, publication, or workflow activation was created/performed.
+
+**Issue evidence:** [Start](https://github.com/jeffshurtliff/obforce/issues/1#issuecomment-6258959653),
+[progress](https://github.com/jeffshurtliff/obforce/issues/1#issuecomment-6259017940),
+and [final handoff](https://github.com/jeffshurtliff/obforce/issues/1#issuecomment-6259052477)
+were posted; verified task/test/doc checkboxes are checked and Ready to close is
+unchecked. The GitHub main-branch roadmap remains the prior baseline until
+separately authorized delivery of this uncommitted local roadmap.
+
+**Next eligible thread:** Thread 02 / issue #2, after maintainer acceptance and
+verification of this foundation. **Explicitly not started.**
 
 ## 12. Reference notes for implementers
 

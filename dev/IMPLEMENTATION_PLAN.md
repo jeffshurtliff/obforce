@@ -8,9 +8,9 @@
 Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
 as completed. Thread 02 is **accepted and complete**, including delivered
 correction `65305fb` and all 12 passing hosted cells with standalone Windows
-formatting checks. Issue #2 is closed as completed. Thread 03 is **locally
-implemented and verified; pending maintainer acceptance/delivery**. Issue #3
-remains open. Threads 04–17 are **not started**.
+formatting checks. Issue #2 is closed as completed. Thread 03 is **delivered;
+Windows CI correction locally verified; corrected hosted CI pending**, with acceptance withheld. Issue #3 remains
+open. Threads 04–17 are **not started**.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -785,7 +785,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | --- | --- | --- | --- | --- | --- |
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
-| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Local checks passed; open pending acceptance/delivery |
+| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Delivered; local Windows correction ready; hosted gate pending; open |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
@@ -892,7 +892,8 @@ retains the earlier masked failures. Current evidence is in the
 [acceptance record](#thread-02-acceptance-and-closure--19-october-2026): delivered
 correction `65305fb` passed all 12 cells, including standalone Windows formatting,
 117 tests per cell, and both independent artifact installs per cell. Thread 03
-is locally verified pending acceptance/delivery; Thread 04 remains not started.
+is delivered with a locally verified Windows correction awaiting delivery/CI;
+Thread 04 remains not started.
 
 **GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
@@ -957,8 +958,20 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 
 **Goal:** A read-only local project source producing honest normalized Apex records.
 
-**Depends on:** 02. **Status:** Locally implemented and verified; open pending
-maintainer acceptance/delivery. See the [handoff](#thread-03-handoff--19-october-2026).
+**Depends on:** 02. **Status:** Core delivered; Windows correction locally verified,
+pending delivery and corrected exact-commit CI.
+Acceptance remains pending. The [original handoff](#thread-03-handoff--19-october-2026)
+is historical; see the follow-up record below for current evidence.
+
+**Windows correction decision — 19 October 2026 (before coding):** Run
+`39298411328` at delivered merge `1f86032` has eight passing Ubuntu/macOS cells
+and four Windows failures. Pathname ctime can mean creation time while descriptor
+ctime means change time in supported Windows CPython. Permit only an exact
+descriptor birthtime bridge to path ctime when all other identity fields match.
+Keep raw descriptor before/after snapshots (including change time), exact path
+checks, links/containment guards, and bounded reads. Add synthetic regressions;
+do not round timestamps, bypass checks, or introduce skips. Preserve maintainer
+annotations. Corrected native Windows CI remains a delivery/acceptance gate.
 
 **Prerequisite gate satisfied:** Thread 02 core merged at `785b45d`; correction
 `65305fb` passed exact-commit run `39278236478`, including every standalone
@@ -2545,6 +2558,108 @@ Read back #3 as open with all four implementation tasks and verified local
 implementation/tests/docs/compatibility checks marked; Ready to merge/release
 unchecked. Original labels/assignment/milestone and native dependency edges are
 preserved. No maintainer acceptance or closure is claimed.
+
+### Thread 03 Windows CI follow-up — 19 October 2026
+
+**Status:** Core reviewed and delivered by the maintainer; bounded Windows
+correction prepared and locally verified. **Corrected delivery/hosted CI and
+final acceptance remain pending; #3 stays open.** This supersedes current-state
+wording in the historical Thread 03 handoff without changing its results/hashes.
+
+**Delivered baseline:** Clean local `main`, `origin/main`, and live GitHub main
+match merge [`1f86032bb08248e825417614f6aef0243e9d8fb0`](https://github.com/jeffshurtliff/obforce/commit/1f86032bb08248e825417614f6aef0243e9d8fb0),
+containing `d2a8a50`. Maintainer added postponed annotations and adjusted existing
+headers/code; all those changes are retained. Changed Python headers use the
+explicitly requested `GPT-6.1 Sol` identifier and 19 Oct 2026 date.
+
+**Actual hosted evidence:** Inspected every job/required step and full log in
+[run 39298411328, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39298411328)
+at exact merge SHA `1f86032`:
+
+| Cells | Verified outcome |
+| --- | --- |
+| Ubuntu/macOS, Python 3.12–3.15 (8) | 199 tests each, no skips; metadata/lock, Ruff lint/format, Bandit, fresh build, strict Twine, 16 independent artifact installs, whitespace passed |
+| Windows 3.12 | 12 failed, 186 passed, 1 skipped |
+| Windows 3.13 | 21 failed, 177 passed, 1 skipped |
+| Windows 3.14 | 12 failed, 186 passed, 1 skipped |
+| Windows 3.15 | 19 failed, 179 passed, 1 skipped |
+
+Every formatter passed (45 files already formatted), including Windows. All four
+Windows jobs failed in offline tests; build/Twine/independent installs/whitespace
+were skipped. The sole test skip is the existing unavailable native FIFO case.
+Failures are the path/descriptor pre-read refusal or its downstream edit-test
+assertion. No skipped artifact step is represented as a pass.
+
+**Cause and correction:** Supported Windows CPython can expose creation time in
+pathname `st_ctime_ns` and change time in descriptor `st_ctime_ns` for the same
+file; see [CPython #157671](https://github.com/python/cpython/issues/157671).
+Comparing them directly caused timing-dependent false refusals. The edit test
+could stop before its intended edit injection and then fail its preservation
+assertion. The narrow helper permits only a Windows descriptor birthtime that
+exactly matches path ctime with device/inode/mode/size/mtime unchanged. No rounding,
+skip, retry, or blanket ctime removal. Path snapshots remain exact; a separate
+raw descriptor snapshot now preserves its change-time guard before/after reading.
+The final descriptor is also matched against the path. Links/containment/limits,
+normalized records/hashes and offline/no-body-read boundaries remain unchanged.
+
+**Regression evidence:** A temporary isolated copy of delivered HEAD fails the
+new stable Windows-semantics read test with the exact original error. Corrected
+code passes it. Added 21 synthetic regression cases for Windows-only bridging,
+missing/incorrect/noninteger birthtime, all other identity fields, raw descriptor
+ctime/mtime/inode changes and birthtime changes, byte/mtime preservation and
+closed descriptors. These are deterministic local simulations, not native
+Windows execution. Existing source/XML safety tests remain enabled.
+
+**Actual local verification:** macOS 27.0.1 ARM64; Poetry 2.4.2. Full suites on
+Python 3.12.7 / 3.13.15 / 3.14.7 each report **220 passed, no skips**. Strict
+Poetry lock, Ruff lint/format (46 files), Bandit and whitespace pass. Combined
+3.14.7 statement/branch coverage is **96%** (766 statements, 282 branches;
+remaining gaps visible). Fresh correction r1 build/strict Twine, exact 16-member
+wheel/15-member sdist inspections, and two independent clean Python 3.14.7
+installs outside checkout pass the existing import/resource/model/dependency,
+offline source/parser, entry-point/refusal/no-write checks. Artifacts match
+current source and packaged README/pyproject/LICENSE bytes. No dependency,
+lockfile, workflow, license, other runtime module, or public command changed.
+
+**Correction candidates:** `<temporary>/obforce-thread03-windows-candidate-20261019-r1/`.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `obforce-0.1.0.dev0-py3-none-any.whl` | `91f12594bdbbe0ce3108038db9199a04e97ea99c5f4189b526af34701a9e4c5e` |
+| `obforce-0.1.0.dev0.tar.gz` | `9125a427fc4175b1161c34e5ce69c1ded0c02099049c081bc21566bdfbe7ebbe` |
+
+**Remaining gate:** Maintainer reviews/delivers this correction; inspect a new
+exact-commit run proving all four Windows Python 3.12–3.15 suites and their
+previously skipped build/Twine/independent-install checks, plus the other eight
+cells, pass. Rerunning old `1f86032` would not test this patch. No corrected
+hosted/native Windows result or local Python 3.15 result is claimed; native
+junction/reparse and full lifecycle gaps remain. No real org/vault/`sf` access.
+
+**Tracking/Git/handoff:** Six changed/new files remain unstaged/uncommitted on
+existing `main` at `1f86032`: source, integration/unit regressions, offline docs,
+changelog and this roadmap. #3 records the delivered core, actual failures/skips,
+local correction, and pending gate; implementation-complete is reopened for this
+follow-up and Ready to merge/release stays unchecked. Existing metadata and
+native dependencies are preserved. No issue creation, stage/commit/push, PR,
+closure, rerun, publication or later implementation. Thread 04 is next eligible
+under a separate request; **Threads 04–17 remain not started**.
+
+**Issue evidence:** [Investigation/start and correction decision](https://github.com/jeffshurtliff/obforce/issues/3#issuecomment-6273969222).
+The [verified correction handoff](https://github.com/jeffshurtliff/obforce/issues/3#issuecomment-6274046673)
+records the same local evidence, original failures/skips, and remaining gates.
+Read back #3 as open with implementation-complete/Ready to merge/release
+unchecked, verified local follow-up gates checked, and original issue metadata
+and native dependency links preserved.
+
+**IDE inspection follow-up — 19 October 2026:** Confirmed `local.os` is the
+imported standard-library module; PyCharm's unresolved-reference warning on
+the test's dynamic patch is not a missing import. Changed only the integration
+and unit namespace patches to `monkeypatch.setitem(vars(local), 'os', ...)`,
+which retains pytest restoration and module-local Windows emulation without
+changing shared `os.name` or runtime code. Focused source/identity tests and
+Ruff/whitespace checks pass locally. Python headers retain `GPT-6.1 Sol`.
+Existing artifact candidates are unaffected; corrected hosted Windows CI remains
+pending. All changes remain unstaged/uncommitted; Threads 04–17 not started.
 
 ## 12. Reference notes for implementers
 

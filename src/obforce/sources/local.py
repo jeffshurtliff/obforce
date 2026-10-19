@@ -52,6 +52,26 @@ def _identity(info: os.stat_result) -> tuple[int, ...]:
     return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
+def _matches_descriptor(expected: os.stat_result, opened: os.stat_result) -> bool:
+    """Match a descriptor to its path, allowing only the Windows ctime semantic split.
+
+    Windows CPython can report creation time as path ctime but change time as
+    descriptor ctime. An exact descriptor birthtime may bridge only that field;
+    device, inode, mode, size, and mtime still match without rounding. Callers
+    must also compare raw descriptor metadata before/after the read.
+
+    :param expected: Previously inspected no-follow pathname metadata.
+    :param opened: Full metadata from the opened file descriptor.
+    :returns: Whether identity and every comparable change indicator agree.
+    """
+    path_identity = _identity(expected)
+    descriptor_identity = _identity(opened)
+    if descriptor_identity == path_identity:
+        return True
+    birthtime = getattr(opened, 'st_birthtime_ns', None)
+    return os.name == 'nt' and type(birthtime) is int and (*descriptor_identity[:-1], birthtime) == path_identity
+
+
 class _Reader:
     """Check contained regular inputs and retain read-only concurrency preconditions."""
 
@@ -92,10 +112,12 @@ class _Reader:
         flags = os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_BINARY', 0)
         descriptor = os.open(path, flags)
         with os.fdopen(descriptor, 'rb') as stream:
-            if _identity(os.fstat(stream.fileno())) != _identity(before):
+            opened = os.fstat(stream.fileno())
+            if not _matches_descriptor(before, opened):
                 raise OperationalError('Local source file changed before reading')
             data = stream.read(limit + 1)
-            if _identity(os.fstat(stream.fileno())) != _identity(before):
+            after = os.fstat(stream.fileno())
+            if _identity(after) != _identity(opened) or not _matches_descriptor(before, after):
                 raise OperationalError('Local source file changed while reading')
         self.inspect(path)
         if len(data) > limit:

@@ -54,6 +54,15 @@ file/directory identities, sizes, and modification/change times are rechecked
 to detect intervening changes. These checks require a stable source checkout;
 they do not promise isolation from a hostile process racing filesystem operations.
 
+For Windows path-to-descriptor comparisons, CPython can expose creation time as
+pathname `st_ctime_ns` and change time as descriptor `st_ctime_ns` for the same
+file ([CPython #157671](https://github.com/python/cpython/issues/157671)). Only an
+exact integer descriptor `st_birthtime_ns` matching the pathname ctime can bridge
+this difference, with device, inode, mode, size, and mtime unchanged. The raw
+descriptor snapshot, including its own change time, is still compared before
+and after reading; full pathname preconditions are rechecked independently.
+No time rounding or ctime omission is used, and POSIX retains exact matching.
+
 Only acquisition-relevant manifest fields are interpreted: package paths and the
 project-level `namespace`. Unrelated DX/package settings are inert, with duplicate
 JSON keys and non-JSON numeric constants still rejected. This is not full

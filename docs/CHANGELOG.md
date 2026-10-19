@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal strict version-one TOML loading, config-relative paths, explicit source
+  selection, typed errors, and frozen terminal exit precedence.
+- Immutable component, independent coverage, relationship, and note-state records;
+  structured identities, collision refusal, availability-aware canonical hashes,
+  source binding, and graph/path/template invalidation fingerprints.
+- Configuration, coverage, and note ownership/schema contracts with fictional
+  examples and focused offline regression tests. No connectors, renderer,
+  state/vault publication, or public lifecycle commands are introduced.
+- Fresh artifact checks now explicitly include the four internal-contract modules
+  and exercise installed model imports/hashing in independent wheel/sdist installs.
 - Poetry/PEP 621 `0.1.0.dev0` foundation with Python `>=3.12`, Apache 2.0 metadata,
   and console/module help and installed-version reporting.
 - Offline CLI tests, Ruff/pytest/coverage/Bandit tooling, and fresh wheel/sdist

@@ -5,6 +5,10 @@ before changing files. They define scope, safety contracts, and the current thre
 The initial foundation exposes help and version only; collection, rendering, and
 vault mutation remain planned. The internal Python modules are not a stable public API.
 
+Thread 02 adds internal config/model validation; see [configuration](docs/CONFIGURATION.md),
+[coverage](docs/COVERAGE.md), and [note ownership](docs/NOTE_FORMAT.md) for frozen
+contracts and their implementation boundaries. The production CLI is unchanged.
+
 ## Development setup
 
 Use Python 3.12 or newer and Poetry 2.4.x or newer within Poetry 2.x. From the
@@ -71,10 +75,11 @@ wheel/sdist file lists and metadata, checks the unchanged root license against
 both archives, and installs each artifact independently in a fresh temporary
 virtual environment outside the checkout. Installation may download runtime and
 isolated build dependencies. It then checks imports, package-file access through
-`importlib.resources`, console/module help and version, rejection of future
-commands, dependency consistency, and no working-directory writes with external
-tools absent. There are no template/Bases assets yet; their installed resource
-checks belong to Threads 07 and 14. The checker never publishes or uploads artifacts.
+`importlib.resources`, installed internal model hashing, console/module help and 
+version, rejection of future commands, dependency consistency, and no 
+working-directory writes with external tools absent. There are no template/Bases 
+assets yet; their installed resource checks belong to Threads 07 and 14. The 
+checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

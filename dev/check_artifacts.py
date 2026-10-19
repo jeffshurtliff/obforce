@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     18 Oct 2026
+:Modified Date:     19 Oct 2026
 """
 
 import argparse
@@ -39,14 +39,14 @@ def _run(command: list[str], cwd: Path, environment: dict[str, str]) -> str:
 
 
 def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
-    """Enforce the deliberately small Thread 01 artifact content allowlist.
+    """Enforce the explicit foundation and internal-contract artifact allowlist.
 
     :param artifact: Locally built wheel or sdist to inspect without extraction.
     :param version: Expected static project version.
     :param license_bytes: Unmodified root license for exact comparison.
     :raises ValueError: If archive contents or metadata violate the allowlist.
     """
-    package_files = {'__init__.py', '__main__.py', 'cli.py'}
+    package_files = {'__init__.py', '__main__.py', 'cli.py', 'config.py', 'constants.py', 'errors.py', 'models.py'}
     if artifact.suffix == '.whl':
         metadata_root = f'obforce-{version}.dist-info/'
         expected = {f'obforce/{name}' for name in package_files} | {
@@ -122,7 +122,10 @@ def _check_install(artifact: Path, version: str) -> None:
             'from importlib.metadata import version; from importlib.resources import files; '
             f'assert version("obforce") == {version!r}; '
             'assert Path(obforce.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); '
-            'assert files("obforce").joinpath("cli.py").is_file()'
+            'assert files("obforce").joinpath("cli.py").is_file(); '
+            'from obforce.models import Component, ComponentKey, SourceBinding; '
+            'assert len(Component(SourceBinding("demo", "local"), '
+            'ComponentKey("demo", "ApexClass", None, "Example")).source_hash) == 64'
         )
         _run([str(python), '-I', '-c', probe], root, environment)
         work = root / 'work'

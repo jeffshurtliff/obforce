@@ -6,7 +6,8 @@
 
 **Status:** Thread 01 is **accepted and complete**, including the delivered
 Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
-as completed. Threads 02–17 are **not started**; Thread 02 is next eligible.
+as completed. Thread 02 is **ready for maintainer review**, implemented and
+validated locally with issue #2 open. Threads 03–17 are **not started**.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -347,7 +348,10 @@ can overwrite local files and depends on a project context.
 
 ### Normalized component and relationship records
 
-Freeze a versioned model in Thread 02 with at least:
+Thread 02 implements the version-one internal model below; exact normalization,
+availability, and hash inputs are frozen in [COVERAGE.md](../docs/COVERAGE.md).
+Acquisition, graph construction, rendering, and persisted-state loading remain
+with their owning later threads.
 
 | Record | Required concepts |
 | --- | --- |
@@ -456,10 +460,12 @@ values, consistent with the official
 graph/provenance objects in internal state and the generated body rather than
 unsupported nested property structures.
 
-Proposed generated fields include `sf_type`, `sf_full_name`, `sf_namespace`,
+The exact version-one generated Salesforce fields are `sf_type`, `sf_full_name`, `sf_namespace`,
 `sf_api_version`, `sf_status`, `sf_created_at`, `sf_created_by`,
 `sf_last_modified_at`, `sf_last_modified_by`, `sf_source_mode`,
-`sf_dependency_coverage`, and `sf_lifecycle`. Omit unknown audit values and explain
+`sf_dependency_coverage`, and `sf_lifecycle`. Unknown reserved `sf_*` properties
+require refusal. See [NOTE_FORMAT.md](../docs/NOTE_FORMAT.md) for the frozen
+ownership/schema contract; parsing/rendering remain planned. Omit unknown audit values and explain
 their availability in the generated section. Exclude unnecessary emails,
 usernames, URLs, org IDs, and raw record IDs from notes; state may retain the
 minimum identities needed for matching. Allow audit-name omission for privacy.
@@ -692,7 +698,7 @@ obforce build --config ./obforce.toml --dry-run
 obforce build --config ./obforce.toml
 ```
 
-Minimal proposed TOML:
+Version-one TOML supported by the internal loader (public lifecycle commands remain planned):
 
 ```toml
 schema_version = 1
@@ -730,13 +736,15 @@ notes plus source and dependency coverage. Detailed paths/names are opt-in where
 practical; never print raw API responses, credentials, or note content. Persisted
 logging and machine-readable report files are deferred.
 
-Proposed exit codes: `0` for a successful complete run or valid no-op, `1` for an
+Frozen exit codes: `0` for a successful complete run or valid no-op, `1` for an
 operational failure, `2` for invalid usage/configuration, `3` for conflicts or
 recovery-required state, and `4` for a completed operation with partial/unavailable
 requested coverage. An offline run can succeed at its declared local scope while
 explicitly reporting that org audit/dependency coverage is unavailable by design.
-Verify Click's usage behavior and freeze precedence for overlapping error classes
-in Thread 02. Never return a success code for a truncated requested live scan.
+Thread 02 verifies Click's usage/error behavior and freezes overlapping outcome
+precedence as **3, 2, 1, 4, 0**. Exact keys, path rules, selectors, and typed errors
+are in [CONFIGURATION.md](../docs/CONFIGURATION.md). Never return a success code
+for a truncated requested live scan. This contract adds no public commands.
 
 ## 8. Implementation threads
 
@@ -773,7 +781,7 @@ in Thread 02. Never return a success code for a truncated requested live scan.
 | ID | Thread | Dependencies | Phase | GitHub issue | Status |
 | --- | --- | --- | --- | --- | --- |
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
-| 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Not started |
+| 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Ready for maintainer review; local validation passed; uncommitted |
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
@@ -872,9 +880,12 @@ and local-only evidence remains recorded below as history. Issue #1 is closed.
 
 **Goal:** Validated configuration and versioned internal records before connectors.
 
-**Depends on:** 01. **Status:** Not started; prerequisite accepted and verified.
+**Depends on:** 01. **Status:** Ready for maintainer review; implemented/validated locally, uncommitted.
 See the [Thread 01 completion record](#thread-01-acceptance-and-closure--19-october-2026).
-Recheck actual code/current CI before implementation; Thread 02 is next eligible.
+Rechecked actual code/current CI before implementation; see the Thread 02 start record below.
+Final acceptance evidence is in the [Thread 02 handoff](#thread-02-handoff--19-october-2026).
+Issue #2 remains open; maintainer acceptance/delivery and hosted Thread 02
+validation remain pending. Threads 03/04 are explicitly not started.
 
 **GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
@@ -1696,7 +1707,7 @@ completed generation that the user later dislikes, use their independent backup
 or version history; v0.1.0 is not a general historical vault rollback tool.
 
 The focused metadata scope is confirmed. Remaining material decision points are
-live dependency API capability, exact schema/CLI contract freeze, native platform qualification, and
+live dependency API capability, supported YAML/template forms and public CLI delivery, native platform qualification, and
 release acceptance. Routine internal choices may be made within a requested
 thread. Changing ownership, deleting user content, weakening safety, or expanding
 public scope requires a recorded maintainer decision.
@@ -2044,6 +2055,174 @@ this tracking-only change. Only this roadmap update is unstaged/uncommitted on
 performed. The remote roadmap remains at its pushed version until this local
 tracking update is delivered separately. No implementation blocker remains for
 Thread 02, whose implementation is explicitly left to the new chat.
+
+### Thread 02 start and contract decisions — 19 October 2026
+
+**Baseline/gate:** Clean checkout, local `main`, and `origin/main` match live main
+`fc9e2b7e055b3efe60fbfcb411c5d74b94f860ab`. Foundation merge `7f3ceb1` is an
+ancestor of delivered correction `72471d2`. Re-read #2 and its sole direct
+prerequisite #1, including the native dependency edge and reciprocal link.
+Inspected run `39266996850` at the correction: all 12 jobs and every required
+test/build/Twine/independent-install step passed, including Windows 3.12–3.15.
+Original run `39261152793` remains a failure (eight Linux/macOS passes, four
+Windows failures). Current `fc9e2b7` has no workflow run/checks: the only change
+since the tested correction is this roadmap, excluded by preserved workflow
+filters. Application, tests, package tooling, and workflow are identical to the
+tested correction. This is verified prerequisite-code evidence, not a claim
+that CI ran at `fc9e2b7` or on the forthcoming uncommitted Thread 02 changes.
+
+**Scope:** Internal configuration/records/contracts and offline tests/docs only.
+No connectors, rendering, note parsing, state loading/publication, mutation
+commands, live org/vault access, or new dependencies. Threads 03/04 not started.
+
+**Decisions recorded before implementation:**
+
+- Schema/model/note/state/marker versions start at 1. Explicit config only;
+  required source mode and selector; strict keys/types at every TOML table;
+  no environment expansion/discovery/fallback. Root paths resolve from config
+  location; layout paths are portable vault-relative paths. Later publication
+  threads must perform filesystem/link/concurrency preflight too.
+- Freeze the proposed note property names and exact marker pair in constants;
+  all other properties remain user-owned. Unrecognized reserved `sf_*` fields
+  require refusal, not silent adoption. Note parsing remains Thread 08.
+- Canonical JSON is UTF-8, sorted object keys, compact separators, no nonfinite
+  numbers; record-owned unordered collections sort explicitly. Structured
+  workspace/type/namespace/name keys preserve case and Unicode. Reject duplicate
+  identities rather than deduplicating conflicting records. Distinguish absent,
+  unavailable, explicit null, empty, and false. Only allowlisted normalized
+  attributes enter source hashes; collection timestamps and host paths do not.
+- Bind workspace plus mode and verified live org ID (never alias); local source
+  identity is the configured workspace, not its machine path. Refuse cross-mode,
+  workspace, or org rebinding. No automatic live/offline reconciliation.
+- Render fingerprints include source, incoming/outgoing relationship and resolved
+  target-path inputs, generated template content, renderer/schema versions,
+  and relevant layout/options. Creation template content affects new notes only.
+- Exit precedence is conflict/recovery (3), invalid usage/config (2), operational
+  failure (1), requested incomplete coverage (4), then success (0). Validation
+  normally stops at the earliest failing phase; precedence resolves aggregated
+  outcomes without hiding recovery behind another error. Offline by-design
+  unavailable enrichment is reported without itself forcing exit 4.
+- Typed errors use Click's existing exception protocol for consistent terminal
+  exits; they perform no I/O and add no public commands. These remain private,
+  versioned internal contracts, not a stable public Python API.
+
+**Tracking/Git:** Issue #2 remains open pending acceptance; changes will remain
+unstaged/uncommitted. Exact verified checklist and final evidence follow after
+validation. Maintainer confirmed header model `GPT-6.1 Sol` for this chat.
+
+### Thread 02 handoff — 19 October 2026
+
+**Status/scope:** Ready for maintainer review, not accepted or delivered. Existing
+issue #2 stays open. Implemented only internal configuration, models, constants,
+typed errors, deterministic hashes, and contracts with offline tests. Production
+CLI still exposes help/version only. Threads 03 and 04 explicitly **not started**.
+
+**Prerequisite:** The start record above verifies foundation merge `7f3ceb1`,
+delivered Windows correction `72471d2`, and all 12 successful jobs/required steps
+in exact-commit run `39266996850`. Original run `39261152793` remains failed.
+Baseline `fc9e2b7` has no run/checks and differs only in the roadmap; this is not
+reported as a current-SHA CI pass. No hosted CI exists for this uncommitted work.
+
+**Files/behavior:** `src/obforce/{config,constants,errors,models}.py` provide strict
+bounded explicit TOML loading, config-relative native/portable relative paths,
+selector/overlap refusal, immutable normalized records, field availability,
+structured source identities, source binding, collision checks, canonical JSON
+and SHA-256, independent coverage/request intent, exact ownership/version/marker
+constants, render/graph/path invalidation, and exit precedence 3 > 2 > 1 > 4 > 0.
+`tests/unit/test_{config,models,errors}.py` exercise the contracts offline.
+`docs/{CONFIGURATION,COVERAGE,NOTE_FORMAT}.md` specify exact behavior and future
+boundaries with fictional examples. README, contributor guidance, changelog, and
+this roadmap are synchronized. `dev/check_artifacts.py` deliberately extends its
+exact allowlist to the four modules and probes installed model construction/hash.
+No new dependencies, source adapters, template rendering, note parsing, state
+document loading, vault publication, or public mutation commands were added.
+
+**Verified local acceptance:**
+
+- [x] Strict schema/key/type/source selection, config-relative/absolute paths,
+  no fallback, and no source/vault writes on valid or invalid explicit config.
+- [x] Component/coverage/relationship/note-state records, structured identity and
+  namespace/scope, allowlisted facts, independent unavailable/null/false/empty/zero,
+  collisions, ordering, and timestamp-independent semantic hashes.
+- [x] Exact property/marker/schema/source-switch/render contracts and tested Click
+  usage/operational outcomes and precedence, with production CLI unchanged.
+- [x] Three contract docs, changelog, reviewed compatibility, and synchronized
+  issue/roadmap evidence. No published stable contract was changed.
+- [ ] Maintainer acceptance, authorized delivery, and hosted Thread 02 validation.
+
+**Actual local evidence:** Native macOS 27.0.1 ARM64, Poetry 2.4.2. Reused the
+existing locked temporary environments on Python 3.12.7/3.13.15; repository `.venv`
+uses Python 3.14.7. No org, vault, Obsidian, or `sf` was accessed.
+
+| Check | Result |
+| --- | --- |
+| `poetry check --lock --strict` | Passed; dependency/lock bytes unchanged |
+| Ruff lint / format check | Passed; no new suppressions |
+| Offline pytest on 3.12.7 / 3.13.15 / 3.14.7 | **117 passed on each; no skips** |
+| Subprocess-aware 3.14.7 coverage | **96% combined statement/branch coverage**; 456 statements, 170 branches, remaining gaps reported, not hidden |
+| Bandit over `src/obforce` | Passed; no findings/suppressions |
+| Final fresh r4 build / strict Twine | Wheel and sdist passed |
+| Independent wheel/sdist installs | Two clean Python 3.14.7 environments outside checkout passed |
+| Artifact checks | Full exact file lists, imports/model hashing, package-file access, pip check, console/module help/version, future-command refusal, blocked runtime sockets/external tools, no working-directory writes |
+| Docs/review | Local links, fences, fictional TOML examples loaded without destination writes, exact ownership allowlist, LF/whitespace/privacy and changed/untracked review passed |
+| Preservation | Apache LICENSE, AGENTS.md, pyproject, lock, workflow, and existing CLI bytes match baseline |
+| `git diff --check` | Passed |
+
+**Artifact evidence:** Final candidates remain outside the checkout at
+`<temporary>/obforce-thread02-candidate-20261019-r4/`. Wheel: 12 members (seven
+source modules plus standard metadata/entry points/license); sdist: 11 members
+(seven source modules plus LICENSE, README, pyproject, PKG-INFO). Exact allowlists
+reject extras, duplicates, and sdist special/link members. No private `local/`,
+org/vault/state/recovery data, tests, developer tools, planning records, or
+workflow files are included. Both preserve root license bytes/Apache-2.0 metadata.
+
+| Final candidate | SHA-256 |
+| --- | --- |
+| `obforce-0.1.0.dev0-py3-none-any.whl` | `d1e84c5f989e863b183b1c2a2076411e20ebd13ff93d7e6f59e7fd7988863b54` |
+| `obforce-0.1.0.dev0.tar.gz` | `4e0a1a0867ac2e33017fd9db2125a985e98dc20a51fddd4efebbcfb76bb4a581` |
+
+**Findings/decisions:** No material scope/ownership deviation or unresolved
+decision. Recorded contract choices before coding. Review corrected boolean/int
+baseline equality, mixed-workspace batches, and a reproduced excessive-TOML-nesting
+raw recursion failure; focused regression tests pass. Creation-only candidate
+fingerprints are separate from the generated render hash saved on first build,
+avoiding a refresh invalidation caused solely by a creation-template change.
+Initial sandbox build r1 failed to reach PyPI; approved isolated dependency
+acquisition succeeded. Passed r2/r3 builds remain superseded by final r4 after
+README/review corrections; none is represented as the final artifact. Setup/build/
+installation used network access; application tests/smoke checks were offline.
+
+**Gaps/limits:** No hosted Thread 02 run, native Linux/Windows run, or local Python
+3.15 run. The symlink refusal case ran locally without skipping; other hosts may
+skip only that case if native symlink creation is unavailable, which must remain
+an explicit gap. No real Salesforce/vault/Obsidian, connector/process mocks,
+rendering, YAML preservation, transaction/recovery, scale, or full lifecycle
+qualification was performed; those belong to later threads. The foundation's
+passing hosted matrix does not qualify these new contracts across platforms.
+
+**Tracking/review/Git:** Existing issue #2 has start/progress and final verified
+checklist/handoff evidence; Ready to merge/release stays unchecked. Native
+prerequisite/dependent links, labels, assignment, and milestone are retained.
+Local roadmap status/index/contracts and this handoff are synchronized; its new
+changes are not on GitHub main until separately authorized delivery. All 15
+changed/new files remain unstaged/uncommitted on the existing
+`feature/2-thread-02-config-models-and-contracts` branch at `fc9e2b7`; no new
+issue, branch, commit, push, PR, closure, CI rerun, release, or publication.
+Final status/reflog review identified the existing feature branch; this work did
+not create or switch it. Earlier issue progress/handoff branch wording was
+corrected. `main`, `origin/main`, and checkout HEAD still share baseline `fc9e2b7`.
+
+**Issue evidence:** [Start/prerequisite verification](https://github.com/jeffshurtliff/obforce/issues/2#issuecomment-6269605100),
+[progress](https://github.com/jeffshurtliff/obforce/issues/2#issuecomment-6269805026),
+and [final checklist/handoff](https://github.com/jeffshurtliff/obforce/issues/2#issuecomment-6269881873).
+Read back #2 as open with all four implementation tasks and the verified
+implementation/tests/docs/compatibility checklist checked; Ready to merge/release
+unchecked. Original maintainer/codex/enhancement labels, maintainer assignment,
+v0.1.0 milestone, prerequisite #1, and direct dependents #3/#4 are preserved.
+
+**Next eligible work after acceptance/delivery verification and a new request:**
+Thread 03 / #3; Thread 04 / #4 also depends directly on this thread and may be
+requested independently. Both are explicitly **not started**.
 
 ## 12. Reference notes for implementers
 

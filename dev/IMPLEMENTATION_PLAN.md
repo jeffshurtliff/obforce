@@ -4,9 +4,9 @@
 
 **Target release:** `0.1.0`; initial development version: `0.1.0.dev0`
 
-**Status:** Thread 01 is **maintainer-reviewed, merged, and pushed**; its Windows
-CI test correction is locally validated and awaits delivery/hosted verification.
-Threads 02–17 are **not started**; Thread 02 must verify this prerequisite first.
+**Status:** Thread 01 is **accepted and complete**, including the delivered
+Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
+as completed. Threads 02–17 are **not started**; Thread 02 is next eligible.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -772,7 +772,7 @@ in Thread 02. Never return a success code for a truncated requested live scan.
 
 | ID | Thread | Dependencies | Phase | GitHub issue | Status |
 | --- | --- | --- | --- | --- | --- |
-| 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Reviewed/merged/pushed; Windows CI follow-up pending |
+| 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Not started |
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
@@ -816,8 +816,8 @@ functions; public mutation commands remain unavailable until their safety gates.
 
 **Goal:** An installable, reproducible Python package with safe development defaults.
 
-**Depends on:** None. **Status:** Maintainer-reviewed, merged/pushed; Windows CI
-follow-up locally validated, awaiting delivery and hosted verification.
+**Depends on:** None. **Status:** Accepted and complete; issue #1 closed.
+Correction delivered at `72471d2`; all 12 hosted cells passed.
 
 **GitHub issue:** [#1](https://github.com/jeffshurtliff/obforce/issues/1)
 
@@ -849,11 +849,11 @@ there is no fake build/sync command or accidental dependency on `sf`/Obsidian.
 strict Twine checks of fresh artifacts, installation outside the checkout, and
 artifact privacy/content inspection. No live connections.
 
-**Current evidence:** See the [original local handoff](#thread-01-handoff--18-october-2026)
-and [19 October merge/CI follow-up](#thread-01-merge-and-ci-follow-up--19-october-2026).
-The maintainer reviewed, committed, merged, and pushed the foundation. Eight hosted
-Linux/macOS cells passed; four Windows cells failed. The bounded test correction
-is uncommitted and its hosted verification is pending. Issue #1 stays open.
+**Current evidence:** See the [accepted completion record](#thread-01-acceptance-and-closure--19-october-2026).
+The foundation and Windows test correction are reviewed and delivered. Corrected
+commit `72471d2` passed all 12 Linux/macOS/Windows cells for Python 3.12–3.15,
+including 24 tests and independent wheel/sdist installs in each. Earlier failed
+and local-only evidence remains recorded below as history. Issue #1 is closed.
 
 **Copy-ready prompt:**
 
@@ -872,9 +872,9 @@ is uncommitted and its hosted verification is pending. Issue #1 stays open.
 
 **Goal:** Validated configuration and versioned internal records before connectors.
 
-**Depends on:** 01. **Status:** Not started. Verify delivery and passing Windows
-CI for the Thread 01 correction before implementation; see the
-[prerequisite follow-up](#thread-01-merge-and-ci-follow-up--19-october-2026).
+**Depends on:** 01. **Status:** Not started; prerequisite accepted and verified.
+See the [Thread 01 completion record](#thread-01-acceptance-and-closure--19-october-2026).
+Recheck actual code/current CI before implementation; Thread 02 is next eligible.
 
 **GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
@@ -911,12 +911,12 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 > it open pending maintainer acceptance; do not create duplicate tracking issues.
 >
 > Read AGENTS.md, CONTRIBUTING.md, and dev/IMPLEMENTATION_PLAN.md, including
-> the 19 October Thread 01 merge/CI follow-up. Verify the foundation merge
-> `7f3ceb1` and the subsequent Windows console-test correction against actual code
-> and current-commit CI. The original run `39261152793` passed eight Linux/macOS
-> cells but failed all four Windows cells. If the correction is not delivered or
-> its Windows CI is failing/unverified, report the prerequisite blocker and do
-> not start Thread 02 implementation. Do not equate merge/issue status with a pass.
+> the 19 October Thread 01 acceptance/closure record. Verify foundation merge
+> `7f3ceb1` and delivered correction `72471d2` against actual code. Run
+> `39266996850` passed all 12 Linux/macOS/Windows cells for Python 3.12–3.15,
+> including 24 tests and both artifact installs per cell. Recheck current-commit
+> CI and report any new prerequisite blocker before implementation. Preserve
+> the earlier failed run as historical evidence; issue closure alone is not proof.
 >
 > Implement only Thread 02: strict TOML loading and config-relative paths, source
 > selection and typed errors; normalized component/coverage/relationship/note-state
@@ -1994,6 +1994,56 @@ uncommitted and does not yet replace the GitHub main-branch version.
 **Next thread:** Thread 02 / issue #2, after the prerequisite repair is delivered
 and verified. Its copy-ready prompt above includes that gate. Thread 02 and all
 later threads remain **not started**.
+
+### Thread 01 acceptance and closure — 19 October 2026
+
+**Status:** Accepted and complete. The maintainer reviewed and pushed the
+correction, reported passing CI, and explicitly authorized updating/closing #1
+when verified. All Thread 01 acceptance and follow-up gates are satisfied;
+issue #1 is closed as completed. Thread 02 is next eligible and **not started**.
+This record supersedes pending/uncommitted wording in the historical handoffs.
+
+**Verified delivery:** Local `main`, local `origin/main`, and GitHub's live main
+matched correction commit
+[`72471d2a478e37ff7e93f095858d95bc619ec566`](https://github.com/jeffshurtliff/obforce/commit/72471d2a478e37ff7e93f095858d95bc619ec566).
+It includes the launcher test correction and follow-up docs after foundation
+merge `7f3ceb1`. The checkout was clean before this tracking-only update.
+
+**Hosted acceptance evidence:** Inspected completed push run
+[`39266996850`, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39266996850),
+its exact head SHA, all 12 job conclusions and required step results, and full
+logs. Every Ubuntu/macOS/Windows cell on Python 3.12, 3.13, 3.14, and 3.15 passed:
+
+- 24 tests per cell, including the corrected Windows console-script cases.
+- Poetry metadata/lock, Ruff lint/format, and Bandit source checks.
+- Fresh wheel/sdist builds and strict Twine checks.
+- Independent wheel and sdist installations, imports/package-file access,
+  dependency consistency, console/module smoke tests, future-command refusal,
+  blocked runtime sockets, and unchanged working directory (24 artifact installs
+  across the 12 cells). Windows artifact steps ran and passed this time.
+- Whitespace checks. No required verification step was skipped.
+
+The original failed run `39261152793` remains historical evidence; it has not
+been rewritten as a pass. The corrected run closes the specific Windows CI gap.
+These are hosted foundation results, not full future lifecycle/native filesystem
+qualification. Real Salesforce, vault, Obsidian, recovery, templates, dashboards,
+and scale checks remain outside Thread 01 and with their owning threads.
+
+**Closure evidence:** [Final issue handoff](https://github.com/jeffshurtliff/obforce/issues/1#issuecomment-6269433510); read back
+issue #1 as `closed` with reason `completed`, all checklist gates checked, and
+its direct dependent #2 still open.
+
+**Tracking/checks/Git:** Updated the roadmap's current status/index, Thread 01
+acceptance, and Thread 02 prerequisite/prompt. Updated #1's status/checklist,
+recorded the exact commit/run evidence, and closed it using the maintainer's
+explicit authorization. Preserved all historical comments, failures, and local
+candidate hashes. Documentation link/fence/privacy/consistency and
+`git diff --check` checks passed; no application tests or rebuild were needed for
+this tracking-only change. Only this roadmap update is unstaged/uncommitted on
+`main`; no new commit, push, PR, CI rerun, release, org access, or vault work was
+performed. The remote roadmap remains at its pushed version until this local
+tracking update is delivered separately. No implementation blocker remains for
+Thread 02, whose implementation is explicitly left to the new chat.
 
 ## 12. Reference notes for implementers
 

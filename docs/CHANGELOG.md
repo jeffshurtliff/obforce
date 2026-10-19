@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal read-only offline Apex acquisition, bounded safe XML via
+  Poetry-managed `defusedxml`, declared DX package/path validation, duplicate
+  refusal, source-preservation checks, and explicit local/partial coverage.
+- A fictional multi-package DX example, adversarial offline source/parser tests,
+  and acquisition limits/availability documentation. Apex bodies are never read
+  or used to infer dependencies; no public command or live access is added.
+- Artifact allowlists and independent installed smoke checks for offline source
+  and parser modules in both wheel and sdist installations.
 - Internal strict version-one TOML loading, config-relative paths, explicit source
   selection, typed errors, and frozen terminal exit precedence.
 - Immutable component, independent coverage, relationship, and note-state records;

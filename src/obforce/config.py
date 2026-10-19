@@ -7,6 +7,8 @@
 :Modified Date:     19 Oct 2026
 """
 
+from __future__ import annotations
+
 import re
 import tomllib
 import unicodedata

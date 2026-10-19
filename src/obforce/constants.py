@@ -15,6 +15,19 @@ MARKER_VERSION = 1
 RENDERER_VERSION = 1
 MAX_CONFIG_BYTES = 65_536
 
+# Offline acquisition limits are refusal boundaries, never truncation controls.
+MAX_PROJECT_BYTES = 65_536
+MAX_APEX_XML_BYTES = 65_536
+MAX_APEX_SOURCE_BYTES = 1_048_576
+MAX_LOCAL_ENTRIES = 50_000
+MAX_LOCAL_DEPTH = 32
+MAX_LOCAL_PACKAGES = 128
+MAX_LOCAL_XML_TOTAL_BYTES = 16_777_216
+MAX_XML_ELEMENTS = 256
+MAX_XML_DEPTH = 16
+SALESFORCE_METADATA_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata'
+LOCAL_APEX_METHOD = 'local-apex-xml-v1'
+
 GENERATED_START = '<!-- obforce:generated:start -->'
 GENERATED_END = '<!-- obforce:generated:end -->'
 IDENTITY_PROPERTIES = frozenset({'obforce_id', 'obforce_schema'})

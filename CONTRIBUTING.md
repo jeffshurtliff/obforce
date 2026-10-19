@@ -2,12 +2,14 @@
 
 Read [AGENTS.md](AGENTS.md) and the [implementation roadmap](dev/IMPLEMENTATION_PLAN.md)
 before changing files. They define scope, safety contracts, and the current thread.
-The initial foundation exposes help and version only; collection, rendering, and
-vault mutation remain planned. The internal Python modules are not a stable public API.
+The production CLI exposes help and version only; public collection workflows,
+rendering, and vault mutation remain planned. The internal Python modules are not a stable public API.
 
 Thread 02 adds internal config/model validation; see [configuration](docs/CONFIGURATION.md),
 [coverage](docs/COVERAGE.md), and [note ownership](docs/NOTE_FORMAT.md) for frozen
 contracts and their implementation boundaries. The production CLI is unchanged.
+Thread 03 adds internal [offline Apex acquisition](docs/OFFLINE_SOURCE.md) and a
+fictional multi-package DX sample; it adds no public command or live access.
 
 ## Development setup
 
@@ -24,8 +26,9 @@ poetry run python -m obforce --version
 The static version lives in `pyproject.toml`; CLI version reporting reads installed
 distribution metadata. Commit `poetry.lock` with approved dependency changes. Use
 `poetry add` or `poetry update`; never hand-edit the lockfile or add a parallel
-runtime requirements file. Click is the only initial runtime dependency. Jinja2,
-`ruamel.yaml`, and `defusedxml` wait for the threads that use them. Development tools
+runtime requirements file. Runtime dependencies are Click and `defusedxml` for
+explicit offline XML DTD/entity/external-reference refusal. Jinja2 and
+`ruamel.yaml` wait for the threads that use them. Development tools
 are pytest, pytest-cov, Ruff, Bandit, and Twine.
 
 ## Checks
@@ -85,7 +88,8 @@ both archives, and installs each artifact independently in a fresh temporary
 virtual environment outside the checkout. Installation may download runtime and
 isolated build dependencies. It then checks imports, package-file access through
 `importlib.resources`, installed internal model hashing, console/module help and 
-version, rejection of future commands, dependency consistency, and no 
+version, installed offline acquisition/parser checks, rejection of future commands,
+dependency consistency, and no
 working-directory writes with external tools absent. There are no template/Bases 
 assets yet; their installed resource checks belong to Threads 07 and 14. The 
 checker never publishes or uploads artifacts.

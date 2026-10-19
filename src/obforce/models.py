@@ -3,9 +3,11 @@
 :Module:            obforce.models
 :Synopsis:          Defines deterministic versioned internal source and note contracts
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Last Modified:     Jeff Shurtliff
 :Modified Date:     19 Oct 2026
 """
+
+from __future__ import annotations
 
 import hashlib
 import json

@@ -8,8 +8,9 @@
 Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
 as completed. Thread 02 is **accepted and complete**, including delivered
 correction `65305fb` and all 12 passing hosted cells with standalone Windows
-formatting checks. Issue #2 is closed as completed. Threads 03–17 are **not
-started**; Thread 03 is next eligible.
+formatting checks. Issue #2 is closed as completed. Thread 03 is **locally
+implemented and verified; pending maintainer acceptance/delivery**. Issue #3
+remains open. Threads 04–17 are **not started**.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
 
@@ -784,7 +785,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | --- | --- | --- | --- | --- | --- |
 | 01 | Foundation and developer workflow | None | A: foundations | [#1](https://github.com/jeffshurtliff/obforce/issues/1) | Accepted; closed; 12/12 hosted cells passed |
 | 02 | Configuration, models, and contracts | 01 | A | [#2](https://github.com/jeffshurtliff/obforce/issues/2) | Accepted; closed; corrected 12/12 hosted cells passed |
-| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Not started; prerequisite verified; next eligible |
+| 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Local checks passed; open pending acceptance/delivery |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Not started |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Not started |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
@@ -890,8 +891,8 @@ The [delivery/CI follow-up](#thread-02-delivery-and-ci-follow-up--19-october-202
 retains the earlier masked failures. Current evidence is in the
 [acceptance record](#thread-02-acceptance-and-closure--19-october-2026): delivered
 correction `65305fb` passed all 12 cells, including standalone Windows formatting,
-117 tests per cell, and both independent artifact installs per cell. Thread 03 is
-next eligible; Threads 03/04 are explicitly not started.
+117 tests per cell, and both independent artifact installs per cell. Thread 03
+is locally verified pending acceptance/delivery; Thread 04 remains not started.
 
 **GitHub issue:** [#2](https://github.com/jeffshurtliff/obforce/issues/2)
 
@@ -956,7 +957,8 @@ timestamp-independent hashes. CLI usage/operational exit-code tests.
 
 **Goal:** A read-only local project source producing honest normalized Apex records.
 
-**Depends on:** 02. **Status:** Not started.
+**Depends on:** 02. **Status:** Locally implemented and verified; open pending
+maintainer acceptance/delivery. See the [handoff](#thread-03-handoff--19-october-2026).
 
 **Prerequisite gate satisfied:** Thread 02 core merged at `785b45d`; correction
 `65305fb` passed exact-commit run `39278236478`, including every standalone
@@ -964,8 +966,24 @@ Windows formatting/test/artifact check. See the
 [Thread 02 acceptance record](#thread-02-acceptance-and-closure--19-october-2026).
 The copy-ready prompt below remains valid: its repair-verification requirement
 is satisfied by that delivery/run. Recheck actual code/current CI in the new
-thread; a green summary or closed issue alone is insufficient. Thread 03 remains
-not started until separately requested.
+thread; a green summary or closed issue alone is insufficient. Re-verified all
+12 corrected job logs before starting this requested Thread 03. Current main
+`5e86e03` differs from correction `65305fb` only in documentation; source, tests,
+dependencies, workflow, and artifact checker are identical. No pass is claimed
+for that later documentation SHA.
+
+**Decisions recorded before coding — 19 October 2026:** Validate only the
+acquisition-relevant DX manifest subset; unrelated settings remain inert.
+Declared package roots must exist, be contained/disjoint, and use safe portable
+relative paths. Scan class pairs in `classes` directories, independent of default
+package order. Project-level namespace supplies local identity; filenames do not
+imply namespaces. Missing pairs mean partial local inventory; unsafe, malformed,
+duplicate, unreadable, or over-limit inputs fail closed. Empty valid packages
+prove only an exhausted local scan. Add `defusedxml` through Poetry with explicit
+DTD/entity/external-reference refusal plus separate byte/structure/scan bounds.
+Never parse/retain/hash Apex bodies. Preserve normalized models and canonical
+hashes; audit is unavailable and relationships uncollected by design. No public
+CLI behavior or later thread is started.
 
 **GitHub issue:** [#3](https://github.com/jeffshurtliff/obforce/issues/3)
 
@@ -2424,6 +2442,109 @@ also has its direct prerequisite satisfied but requires its own new request.
 Read back issue #2 as `closed` with reason `completed`, completion and follow-up
 gates checked, original labels/assignment/milestone preserved, and #3's native
 prerequisite pointing to closed #2. No issue #3/#4 implementation or closure.
+
+### Thread 03 handoff — 19 October 2026
+
+**Status:** Locally implemented and verified; **not accepted or delivered**.
+Issue #3 remains open. Only Thread 03 was implemented. Threads 04–17 remain
+**not started**; no live access or public mutation command was introduced.
+
+**Prerequisites re-verified before coding:** Read #3, #2, transitive prerequisite
+#1, agent/contributor guidance, roadmap, and all three Thread 02 contract docs.
+Verified delivered LF/single-command correction `65305fb` after merge `785b45d`
+and all 12 required jobs/steps/full logs in exact-commit
+[run 39278236478, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39278236478).
+Every formatter reported 38 files already formatted; each job passed 117 tests,
+fresh build/Twine and both independent artifact installs. Original run
+`39275023920` still contains four real Windows formatter failures. Baseline local
+HEAD/live main `5e86e03` differs from tested `65305fb` only in docs; no hosted pass
+is claimed for that later path-filtered documentation SHA or this new local work.
+
+**Implemented checklist:**
+
+- [x] Explicit bounded DX manifest subset, existing/disjoint/contained declared
+  packages, project namespace/Selection, safe paths and supported Apex pairs.
+- [x] `defusedxml` through Poetry (`0.7.1` locked; no manual lock edits), explicit
+  DTD/entity/external refusal, independent XML/scan limits, typed safe failures.
+- [x] Existing immutable normalized records, canonical hashes and logical source
+  binding; no source body reads, timestamps as audit facts, or dependency guesses.
+- [x] Complete/partial **local** inventory; independent unavailable audit and
+  uncollected relationships by design. Missing pairs omit candidates and yield
+  partial outcome 4, even before selection filtering. Unsafe inputs refuse results.
+- [x] Fictional two-package project, attack fixture, focused tests, acquisition
+  documentation, existing docs/changelog updates and exact artifact allowlists.
+- [ ] Maintainer acceptance, authorized delivery, and hosted Thread 03 evidence.
+
+**Local evidence:** Native macOS 27.0.1 ARM64, Poetry 2.4.2. Reused existing
+temporary Python 3.12.7/3.13.15 environments, adding only the cached XML wheel
+after verifying its SHA-256 against the Poetry lock. Repository `.venv` uses
+Python 3.14.7. Runtime source tests prohibit sockets/process creation and remove
+external tools from PATH. No `sf`, authentication, real metadata/vault, or
+Obsidian access occurred.
+
+| Check | Actual result |
+| --- | --- |
+| `poetry check --lock --strict` | Passed |
+| Ruff lint / format | Passed; 45 files already formatted; no new suppressions |
+| Offline pytest 3.12.7 / 3.13.15 / 3.14.7 | **199 passed each, no skips** |
+| Subprocess-aware 3.14.7 coverage | **95% combined statement/branch**; 710 statements, 280 branches; parser 100%, source 93%; gaps visible |
+| Bandit over source | Passed, no findings/suppressions |
+| Fresh final r4 wheel/sdist / strict Twine | Passed both |
+| Independent final artifact installations | Two clean Python 3.14.7 environments outside checkout passed |
+| Artifact content | Exact 16-member wheel / 15-member sdist; source, packaged README/pyproject and root license bytes match current checkout |
+| Installed checks | Imports/resources, model hashes, dependency consistency, source/parser acquisition, both CLI entry points, future-command refusal, blocked sockets/absent tools, input preservation and no discovery writes |
+| Docs/review | Local links/fences, scope/limits/privacy/consistency, full changed/untracked review and whitespace passed |
+| Preservation | Apache LICENSE, AGENTS.md, existing CLI/config/models/errors, LF policy and maintainer workflow unchanged |
+
+**Final artifacts:** `<temporary>/obforce-thread03-candidate-20261019-r4/`.
+Exact allowlists add only `parsers/{__init__,apex}.py` and
+`sources/{__init__,local}.py`. No samples/tests/dev/private local/org/vault/state/
+recovery data enter the archives. Wheel and sdist independently retain Apache-2.0
+metadata and unchanged license bytes.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `obforce-0.1.0.dev0-py3-none-any.whl` | `380edf12ce439645b7bb02ad55f95558a61c0c15dff37bb8e7534baabed58e86` |
+| `obforce-0.1.0.dev0.tar.gz` | `658e405fa772801698f5dadc7db68dfb552d7374f0d919234b2aa03cb30e6a02` |
+
+**Decisions/review:** Decisions were recorded above and in the issue start
+comment before coding. Unrelated project settings are inert; this is not full DX
+schema validation or deploy/retrieve selection (`.forceignore` is not applied).
+Unknown bounded XML fields warn and remain unmodeled. Apex bodies are stat-checked
+only; source hashes cover normalized facts, not source-code changes. The existing
+scope hash excludes package manifests/paths and cannot prove comparable local
+scope. No local result establishes org absence. Stable-source preconditions are
+checked, without claiming isolation from hostile filesystem races. Review fixed
+unknown XML encoding escaping as a raw `LookupError`, portable root overlap, and
+stale README capability wording. Initial sandbox dependency/build acquisition
+could not reach PyPI; authorized isolated setup/build succeeded. Earlier r2/r3
+builds remain superseded; r3 passed independent checks before the final packaged
+README correction. Final r4 matches the final source/docs. Setup/build/install
+uses network; runtime probes and tests remain offline.
+
+**Gaps:** No hosted Thread 03 run, native Linux/Windows run, local Python 3.15,
+native Windows junction/reparse qualification, or live/org/vault/lifecycle tests.
+Symlink/hardlink/FIFO refusal ran locally without skips. Read-permission and
+intervening-edit failures are controlled synthetic injections. Full lifecycle,
+renderer, graph, templates, state/publication and recovery remain later work.
+No new platform-support or stable public Python API promise is made.
+
+**Git/tracking/handoff:** All changes remain unstaged/uncommitted on existing
+`main` at `5e86e03`. No new issue, branch, stage, commit, push, PR, closure, CI
+rerun, release, publication, or automation. Existing issue #3 retains its labels,
+assignment, milestone and native prerequisite/dependent graph. Its start,
+progress, verified checklist and handoff are synchronized with this roadmap;
+remote code/roadmap delivery remains for the maintainer. Acceptance and Ready to
+merge/release remain unchecked. Next eligible requested work is Thread 04 / #4,
+explicitly **not started**; all later threads are also **not started**.
+
+**Issue evidence:** [Start and prerequisite/decision record](https://github.com/jeffshurtliff/obforce/issues/3#issuecomment-6272708445),
+[implementation progress](https://github.com/jeffshurtliff/obforce/issues/3#issuecomment-6272832645),
+and [verified checklist/handoff](https://github.com/jeffshurtliff/obforce/issues/3#issuecomment-6272921606).
+Read back #3 as open with all four implementation tasks and verified local
+implementation/tests/docs/compatibility checks marked; Ready to merge/release
+unchecked. Original labels/assignment/milestone and native dependency edges are
+preserved. No maintainer acceptance or closure is claimed.
 
 ## 12. Reference notes for implementers
 

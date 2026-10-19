@@ -28,6 +28,17 @@ MAX_XML_DEPTH = 16
 SALESFORCE_METADATA_NAMESPACE = 'http://soap.sforce.com/2006/04/metadata'
 LOCAL_APEX_METHOD = 'local-apex-xml-v1'
 
+# CLI byte limits apply during collection, before decoding or JSON parsing.
+SF_TIMEOUT_SECONDS = 60
+SF_CLEANUP_SECONDS = 2
+MAX_SF_STDOUT_BYTES = 8_388_608
+MAX_SF_STDERR_BYTES = 65_536
+MAX_SF_JSON_DEPTH = 32
+MAX_SF_JSON_NODES = 100_000
+MAX_SF_RECORDS = 10_000
+MAX_SF_TARGET_CHARS = 256
+MAX_SF_QUERY_CHARS = 16_384
+
 GENERATED_START = '<!-- obforce:generated:start -->'
 GENERATED_END = '<!-- obforce:generated:end -->'
 IDENTITY_PROPERTIES = frozenset({'obforce_id', 'obforce_schema'})

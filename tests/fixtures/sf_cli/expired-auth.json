@@ -1,0 +1,1 @@
+{"name":"RefreshTokenAuthError","message":"Synthetic expired authentication; private-token private@example.invalid https://auth.invalid/secret","exitCode":1,"status":1,"stack":"Synthetic private stack","warnings":[]}

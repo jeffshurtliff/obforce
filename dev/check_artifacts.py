@@ -41,7 +41,7 @@ def _run(command: list[str], cwd: Path, environment: dict[str, str]) -> str:
 
 
 def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
-    """Enforce the explicit foundation, contract, and offline-source artifact allowlist.
+    """Enforce the explicit foundation, contract, offline-source, and CLI-boundary artifact allowlist.
 
     :param artifact: Locally built wheel or sdist to inspect without extraction.
     :param version: Expected static project version.
@@ -49,7 +49,9 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
     :raises ValueError: If archive contents or metadata violate the allowlist.
     """
     package_files = {'__init__.py', '__main__.py', 'cli.py', 'config.py', 'constants.py', 'errors.py', 'models.py'}
-    package_files.update({'parsers/__init__.py', 'parsers/apex.py', 'sources/__init__.py', 'sources/local.py'})
+    package_files.update(
+        {'parsers/__init__.py', 'parsers/apex.py', 'sources/__init__.py', 'sources/local.py', 'sources/sf_cli.py'}
+    )
     if artifact.suffix == '.whl':
         metadata_root = f'obforce-{version}.dist-info/'
         expected = {f'obforce/{name}' for name in package_files} | {
@@ -126,6 +128,10 @@ def _check_install(artifact: Path, version: str) -> None:
             f'assert version("obforce") == {version!r}; '
             'assert Path(obforce.__file__).resolve().is_relative_to(Path(sys.prefix).resolve()); '
             'assert files("obforce").joinpath("cli.py").is_file(); '
+            'from obforce.sources.sf_cli import Operation, _reply; '
+            'reply = _reply(Operation.QUERY, 0, '
+            'b\'{"status":0,"result":{"records":[],"totalSize":0,"done":false}}\', False); '
+            'assert reply.done is False and reply.total_size == 0; '
             'from obforce.models import Component, ComponentKey, SourceBinding; '
             'assert len(Component(SourceBinding("demo", "local"), '
             'ComponentKey("demo", "ApexClass", None, "Example")).source_hash) == 64'

@@ -31,6 +31,9 @@ Help/version need no Salesforce CLI, authentication, or running Obsidian.
 The internal [relationship graph](docs/RELATIONSHIPS.md) retains platform provenance,
 reciprocal references and stale evidence. Current collection cannot prove exhaustion
 and reports partial/unavailable coverage; runtime tests use synthetic replies only.
+The internal [candidate renderer](docs/RENDERING.md) adds installed Jinja defaults,
+bounded explicit overrides and deterministic new-note/generated-section strings.
+It preserves identity/ownership and coverage contracts without reading or writing notes.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

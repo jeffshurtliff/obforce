@@ -2,8 +2,8 @@
 
 Thread 02 freezes constants, normalized state records, and fingerprint inputs.
 It does not render or parse Markdown/YAML, discover notes, load state documents,
-reconcile moves, or publish files. Those behaviors remain planned for Threads
-07–13. This fictional note illustrates the version-one contract, not generated
+reconcile moves, or publish files. Thread 07 now [renders candidate strings](RENDERING.md); existing-note parsing,
+state/discovery, planning and publication remain Threads 08–13. This fictional note illustrates the version-one contract, not generated
 output from a working command.
 
 ```markdown
@@ -70,7 +70,7 @@ accessible live scope, not proven deletion. Dependency coverage uses the four
 statuses in [COVERAGE.md](COVERAGE.md). Audit display names are optional via
 `include_audit_names`; exclude unnecessary emails, usernames, org/record IDs,
 internal URLs, raw API data, and class bodies from notes. Quote wikilinks when
-stored as YAML values. Serialization/escaping remains Thread 07.
+stored as YAML values. Serialization/escaping is implemented for new candidates in Thread 07.
 
 ## Generated region
 
@@ -84,8 +84,8 @@ The exact reserved marker strings are:
 There must be exactly one ordered pair, each on its own line. Repeated, nested,
 missing, reversed, inline, or otherwise malformed markers are conflicts. Marker
 strings may not occur in source values or template content in a way that creates
-an extra marker or ambiguous boundary. This is a contract for the later parser
-and renderer, not a claim that Thread 02 validates note bytes.
+an extra marker or ambiguous boundary. Thread 07 validates its own generated/new candidates against this structure;
+existing-note parsing remains Thread 08.
 
 Only the bytes strictly between the validated marker lines are replaceable.
 Preserve the marker lines and all user body bytes outside them, including line
@@ -139,5 +139,9 @@ from one directed evidence set, retaining unresolved/unsupported endpoints as la
 Only explicitly supplied managed-note paths can supply link locations. Graph-only
 changes or a neighboring note move change graph fingerprints without changing
 component facts/source hashes or note ownership. Coverage/stale changes participate
-in invalidation too. Rendering, state/move discovery, preservation and publication
-remain their later threads; this graph neither adopts notes nor writes state.
+in invalidation too. Thread 07 renders these explicit mappings; state/move discovery, preservation
+and publication remain later threads; this graph neither adopts notes nor writes state.
+
+See [internal rendering](RENDERING.md) for engine-owned YAML/markers, finite Jinja
+overrides, candidate bounds, separate creation/generated hashes and independent
+coverage invalidation. Whole-new-note candidates must never replace existing notes.

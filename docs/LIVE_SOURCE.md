@@ -219,3 +219,7 @@ Documentation/source reads only, without executing `sf`:
 Synthetic fixture/test evidence does not establish actual Salesforce permission,
 installed CLI/Node/plugin compatibility, live exhaustion, native Windows sf
 execution, or full lifecycle safety. Those require separately authorized work.
+
+Thread 07 adds internal [candidate rendering](RENDERING.md) from these normalized
+records and graph results. It changes no live queries, transport, privacy controls
+or Windows sf refusal, and requires no real org access to test rendering.

@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     19 Oct 2026
+:Modified Date:     20 Oct 2026
 """
 
 from __future__ import annotations
@@ -60,6 +60,11 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'sources/relationships.py',
             'graph/__init__.py',
             'graph/dependencies.py',
+            'renderer/__init__.py',
+            'renderer/templates.py',
+            'renderer/notes.py',
+            'resources/templates/apex_created.md.j2',
+            'resources/templates/apex_generated.md.j2',
         }
     )
     if artifact.suffix == '.whl':
@@ -103,6 +108,11 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
         'Apache-2.0',
     ):
         raise ValueError('Unexpected distribution metadata')
+    repository = Path(__file__).resolve().parents[1]
+    for name in package_files:
+        member = f'obforce/{name}' if artifact.suffix == '.whl' else f'{root}src/obforce/{name}'
+        if content[member] != (repository / 'src/obforce' / name).read_bytes():
+            raise ValueError('Packaged source/resource differs from reviewed checkout')
     if actual_license != license_bytes:
         raise ValueError('Distribution license differs from root LICENSE')
     print(json.dumps({'artifact': artifact.name, 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest(), 'files': names}))
@@ -154,8 +164,8 @@ def _check_install(artifact: Path, version: str) -> None:
         (guard / 'sitecustomize.py').write_text(
             'import sys\n'
             'def deny_network(event, args):\n'
-            '    if event.startswith("socket."):\n'
-            '        raise RuntimeError("Network forbidden during artifact smoke tests")\n'
+            '    if event.startswith("socket.") or event in ("subprocess.Popen", "os.system", "os.posix_spawn"):\n'
+            '        raise RuntimeError("Network/process access forbidden during artifact smoke tests")\n'
             'sys.addaudithook(deny_network)\n',
             encoding='utf-8',
         )
@@ -235,6 +245,76 @@ with patch('obforce.sources.sf_cli.run_sf', side_effect=[identity, empty, empty,
 assert refreshed.graph.edges[0].stale and refreshed.coverage.outcome == 4
 assert a.source_hash == replace(a).source_hash
 """
+        # Rendering executes in each independent installation with runtime network
+        # and process access blocked. Compare full candidate bytes to the reviewed
+        # synthetic fixture, rather than merely asserting a self-consistent render.
+        render_probe = r"""
+import hashlib
+import sys
+from dataclasses import replace
+from importlib.resources import files
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from obforce.config import Options
+from obforce.models import (SourceBinding, Component, ComponentKey, FieldValue, Availability,
+    Coverage, CollectionCoverage, CoverageStatus, Selection)
+from obforce.graph.dependencies import DependencyGraph, Edge, Endpoint, Evidence
+from obforce.renderer.templates import load_template
+from obforce.renderer.notes import note_paths, render_new_note
+for event in ('socket.connect', 'subprocess.Popen'):
+    try:
+        sys.audit(event)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError('Runtime access guard is missing')
+binding = SourceBinding('fictional', 'local')
+a = Component(binding, ComponentKey('fictional', 'ApexClass', None, 'DemoService'),
+    {'api_version': FieldValue(Availability.VALUE, '68.0'), 'status': FieldValue(Availability.VALUE, 'Active')})
+complete = CollectionCoverage(CoverageStatus.COMPLETE, 'synthetic-local', pagination='exhausted', limit_reached=False)
+audit = CollectionCoverage(CoverageStatus.UNAVAILABLE, 'offline-audit', requested=False)
+relations = CollectionCoverage(CoverageStatus.NOT_COLLECTED, 'offline-relationships', requested=False)
+coverage = Coverage(binding, Selection(), complete, audit, relations)
+graph = DependencyGraph(binding, coverage.selection, relations)
+identity = '00000000-0000-4000-8000-000000000001'
+paths = note_paths([a])
+candidate = render_new_note(a, coverage, graph, identity=identity, managed_paths=paths)
+assert candidate == render_new_note(a, coverage, graph, identity=identity, managed_paths=paths)
+assert hashlib.sha256(candidate.text.encode()).hexdigest() == EXPECTED_RENDER_HASH
+assert candidate.generated.render_hash != candidate.creation_hash
+for name in ('apex_created.md.j2', 'apex_generated.md.j2'):
+    assert files('obforce').joinpath('resources', 'templates', name).read_text() == load_template(name).text
+with TemporaryDirectory(prefix='obforce-render-') as temporary:
+    directory = Path(temporary).resolve()
+    generated = load_template('apex_generated.md.j2')
+    (directory / generated.name).write_text(generated.text + '\nLocal presentation.\n', encoding='utf-8', newline='\n')
+    assert load_template(generated.name, directory).content_hash != generated.content_hash
+    assert load_template('apex_created.md.j2', directory).text == load_template('apex_created.md.j2').text
+    changed = render_new_note(a, coverage, graph, identity=identity, managed_paths=paths,
+        generated_template=load_template(generated.name, directory))
+    assert changed.generated.render_hash != candidate.generated.render_hash
+binding = SourceBinding('fictional', 'live', '00D000000000001EAA')
+a = replace(a, binding=binding, record_id='01p000000000001AAA')
+b = replace(a, key=replace(a.key, full_name='Other'), record_id='01p000000000002AAA')
+relations = CollectionCoverage(CoverageStatus.PARTIAL, 'synthetic-platform')
+coverage = replace(coverage, binding=binding, relationships=relations)
+def endpoint(c):
+    return Endpoint('ApexClass', None, c.key.full_name, c.record_id, c.key, 'resolved')
+edge = Edge(endpoint(a), endpoint(b), (Evidence('synthetic-platform', relations, stale=True),))
+graph = DependencyGraph(binding, coverage.selection, relations, (edge,))
+paths = note_paths([a,b])
+first = render_new_note(b, coverage, graph, identity=identity, managed_paths=paths)
+moved = render_new_note(b, coverage, graph, identity=identity, managed_paths={**paths,a.key:'Moved/A.md'})
+assert first.generated.source_hash == moved.generated.source_hash
+assert first.generated.render_hash != moved.generated.render_hash
+assert 'stale' in first.text and '[[Custom Code/Apex Classes/DemoService.md|DemoService]]' in first.text
+assert binding.org_id not in first.text and a.record_id not in first.text
+"""
+        expected_render_hash = hashlib.sha256(
+            (Path(__file__).resolve().parents[1] / 'tests/fixtures/rendered/DemoService.md').read_bytes()
+        ).hexdigest()
+        render_probe = render_probe.replace('EXPECTED_RENDER_HASH', repr(expected_render_hash))
+        _run([str(python), '-c', render_probe], work, environment)
         _run([str(python), '-c', live_probe], work, environment)
         _run([str(python), '-c', graph_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.

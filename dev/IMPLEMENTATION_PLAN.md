@@ -16,7 +16,8 @@ Thread 05 is **accepted and complete**, delivered at merge `85ba7cd` with all
 12 hosted cells passing their applicable checks. Issue #5 is closed as completed.
 Thread 06 is **accepted and complete**, delivered at merge `2aa8d2b` with all
 12 hosted cells passing their applicable checks. Issue #6 is closed as completed.
-Thread 07 is next eligible; Threads 07–17 remain **not started**. Windows sf
+Thread 07 is **implemented locally, pending maintainer acceptance** under the
+20 October 2026 request; #7 remains open. Threads 08–17 remain **not started**. Windows sf
 execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -796,7 +797,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Accepted and complete; #6 closed |
-| 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
+| 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Implemented locally; acceptance pending |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Not started |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Not started |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Not started |
@@ -1373,9 +1374,9 @@ record the release limitation; do not invent results or substitute static guesse
 
 **Goal:** Deterministic candidate notes from normalized data without vault writes.
 
-**Depends on:** 03, 06. **Status:** Not started; next eligible.
-Both prerequisites are accepted/closed. Verify actual code and exact-commit CI
-from the Thread 03 and Thread 06 acceptance records before implementation.
+**Depends on:** 03, 06. **Status:** Implemented locally; acceptance pending, #7 open.
+Both accepted/closed prerequisites, actual code and all exact-commit CI command
+logs were reverified before implementation; see the Thread 07 start/handoff record.
 
 **GitHub issue:** [#7](https://github.com/jeffshurtliff/obforce/issues/7)
 
@@ -3395,3 +3396,84 @@ The 11 Windows skips remain nine POSIX collector cases, one POSIX wrapper-symlin
 **Docs/Git/handoff:** Updated current roadmap status/index, Thread 06 acceptance record, Thread 07 eligibility/exact prompt, relationship/live/contributor guidance and changelog. Earlier start/progress/local handoff records remain historical, including their then-pending delivery/hosted evidence. This acceptance update is prose-only: local links/anchors/fences/consistency/privacy/whitespace and tracked/untracked diff review passed. No new application tests, builds or dependency installations were needed. Five documentation files remain unstaged/uncommitted on main at `2aa8d2b`; implementation is already delivered. No stage/commit/push/PR/merge/tag/rerun/release/publication, Salesforce/auth/vault access, other-chat action, delegation or later implementation occurred.
 
 Existing #6 enhancement/codex/maintainer labels, assignee, v0.1.0 milestone and native reciprocal #3/#5 → #6 → #7/#10 links are retained. #7 keeps its other prerequisite #3 and remains open/not started. No duplicate tracking issue or new prerequisite is introduced. **Next eligible: Thread 07 / #7 under a new request, explicitly NOT STARTED. Threads 07–17 and enhancement #18 remain NOT STARTED.**
+
+### Thread 07 start and pre-implementation decisions — 20 October 2026
+
+Started under the maintainer's explicit Thread 07 request. #7 stays OPEN pending acceptance; no duplicate issue or later thread is started.
+
+Prerequisites verified before code: #3/#6 accepted/closed, native #3/#6 → #7 → #8/#10 links, actual prerequisite code, and every required step/full command log in exact-merge runs 39302343644 (`6154b745ed56c819cad179daa61d0ba606bede3b`) and 39431345348 (`2aa8d2be362c86c3d8288f757b852bc98a867b2e`), attempt 1 each. All 12 cells in each passed metadata/lock, lint/format, tests, Bandit, fresh builds/Twine and both independent installs. Thread 03: Linux/macOS 220 passed, Windows 219 passed/1 skip. Thread 06: Linux/macOS 517 passed, Windows 506 passed/11 expected skips. Baseline `b75fb19` differs from the accepted Thread 06 merge only in acceptance documentation; runtime/tests/package inputs match. Historical failures remain historical. No new prerequisite blocker. Windows sf execution remains refused.
+
+Material decisions recorded before dependent implementation:
+
+- Exactly two known assets: `apex_created.md.j2` (new human body) and `apex_generated.md.j2` (generated facts/coverage/reciprocal references). Read defaults through importlib.resources. Explicit absolute override root only; known missing files fall back, invalid existing files/root/read failures refuse. Reject links/reparse points, multiply linked/special files, traversal and changed read identities; inspect known paths only.
+- Use Jinja2 with StrictUndefined, an immutable restricted sandbox, empty globals/tests/loader and explicit filters. Support only bounded text plus named section interpolation: no loops, calls, arithmetic, attributes, indexing, includes/imports/macros or arbitrary expressions. Required sections appear exactly once. The context contains only engine-produced primitive strings, with no model objects, IDs, raw data or helpers. This deliberately finite grammar prevents template-driven amplification; sandboxing alone is not a resource-security guarantee.
+- The engine constructs flat YAML using JSON scalar/list encodings (a YAML-compatible subset), validates the complete exact new envelope and owns caller-provided canonical UUID/schema/allowlisted sf_* properties and marker lines. No general YAML parser or ruamel.yaml dependency is needed here; existing-note YAML preservation stays Thread 08. Creation initializes the three required human sections and null technical_debt; explicit user defaults remain user-owned.
+- Portable paths use validated namespace directories and full-name filenames, with conservative NFC/casefold, prefix/file-directory and reserved-name collision refusal; explicit managed paths alone authorize link targets. Labels are escaped separately from path grammar; no new notes for unsupported/unresolved/external/unmapped endpoints. Graph evidence includes method, coverage and staleness without record/org IDs.
+- Bound template bytes (16 KiB each), AST nodes (256), primitive input text (4 KiB each), total input (2 MiB), mappings/components (10,000), incident edges (2,000), path depth/length, context (512 KiB), generated/body output (512 KiB each), and complete note (1 MiB). Fail with redacted typed errors before accepting any candidate; no truncation.
+- Reuse unchanged source/graph/render/creation hashes. Generated-template and incident/path changes invalidate generated output; creation changes affect new candidates only. No incidental dates or identity generation. Hashes never authorize overwriting edits.
+
+Official Jinja API/sandbox/changelog and publisher package metadata reviewed: https://jinja.palletsprojects.com/en/stable/api/ , https://jinja.palletsprojects.com/en/stable/sandbox/ , https://jinja.palletsprojects.com/en/stable/changes/ , https://pypi.org/project/Jinja2/ . Add the rendering dependency through Poetry, retaining its generated lock. No local/vendor_docs directory is present.
+
+Only internal candidate rendering is authorized. No existing-note parser, discovery/adoption, state loading, planner, publication/recovery, public lifecycle, real sf/Obsidian/auth/org/vault or transport expansion. Runtime tests remain synthetic/offline. Changes remain unstaged/uncommitted; Threads 08–17 and enhancement #18 remain NOT STARTED.
+
+**Thread 07 coverage invalidation clarification, before note implementation:**
+The accepted generated fingerprint takes source/graph/template inputs; component
+source hashes deliberately exclude coverage, while the accepted per-note graph
+fingerprint includes relationship coverage only. Rendering all three independent
+coverage records therefore needs a renderer-local composition: hash the accepted
+per-note graph fingerprint together with full normalized Coverage, then supply
+that digest as the existing render helper's graph input. Retain the original graph
+fingerprint separately on the candidate. This preserves every existing helper and
+source/graph contract while preventing inventory/audit-only coverage changes from
+leaving generated output falsely unchanged. No state format/loading or planner is
+introduced; a later consumer must retain the candidate's generated render hash.
+### Thread 07 progress — 20 October 2026
+
+Internal rendering is implemented, with 101 new synthetic cases and **618 passed/no skips** locally on macOS ARM64 / Python 3.14.7. Strict Poetry metadata/lock, Ruff lint/format and Bandit pass. No source/transport behavior or existing hash helper contract changed.
+
+The finite interpolation-only Jinja contract, engine-owned flat YAML/UUID/markers, required human/generated sections, audit omission/availability, reciprocal graph provenance/staleness, explicit link mappings and conservative namespace/path collisions are tested. Independent YAML parsing also verifies Unicode and keys such as `null`/`false`. Template defaults are installed resources; invalid existing overrides refuse rather than fall back.
+
+Coverage invalidation clarification recorded in the roadmap before note implementation: retain the accepted per-note graph fingerprint separately; compose it with complete independent Coverage for the existing render helper's graph input. This catches inventory/audit-only changes without changing source/graph/helper contracts. Creation-template edits affect only the new-note creation hash.
+
+Fresh wheel/sdist build and strict Twine passed. Exact archive/license/source/resource inspection and **both independent clean installations outside the checkout passed**, including full candidate-byte comparison, override/fallback, stale/incoming/move/hash/privacy checks, both entry points, unchanged source checks and no cwd artifacts. Runtime sockets/process launches are blocked; setup/downloads use the network. The first installed probe exposed a test-harness newline escape error; it was fixed without changing runtime code and both installs then passed. Final guard/portable-LF probe tightening is being rechecked before handoff. Archive allowlists now contain 26 wheel / 25 sdist members.
+
+Hosted evidence remains prerequisite-only: no hosted Thread 07 or native Linux/Windows/Python 3.15 rendering qualification is claimed. One new POSIX unsafe-link fixture is explicitly skipped on Windows; reparse refusal is separately synthetic, never native qualification. Real sf/Obsidian/auth/org/vault access is not used. Requested platform relationships remain partial/unavailable, including clean empty results; offline relationships remain not collected. Windows sf execution remains refused.
+
+Docs/changelog and roadmap are synchronized. All changes remain unstaged/uncommitted on the existing Thread 07 branch. #7 stays OPEN pending maintainer acceptance; no delivery/merge/release gate is checked. Threads 08–17 and enhancement #18 remain NOT STARTED.
+
+### Thread 07 handoff — 20 October 2026
+
+**Implemented locally; #7 stays OPEN pending maintainer acceptance, delivery and exact-commit hosted validation.** Only Thread 07 was implemented. All changes remain unstaged/uncommitted on the existing Thread 07 branch at baseline `b75fb1988e59920b709be7013ddc8a49871d4b27`. No stage, commit, push, PR, merge, CI rerun or publication occurred.
+
+**Prerequisites:** Before coding, rechecked accepted/closed #3/#6, actual prerequisite source and every required step/full log in exact-merge runs `39302343644` / `6154b745ed56c819cad179daa61d0ba606bede3b` and `39431345348` / `2aa8d2be362c86c3d8288f757b852bc98a867b2e`, attempt 1 each. All 12 cells per run passed applicable checks/builds/Twine/both installs; actual Windows skips and historical failed runs remain distinct. Current baseline differs from the accepted #6 merge only in acceptance docs. No new prerequisite blocker.
+
+**Changes:** Added `renderer/templates.py`, `renderer/notes.py`, two installed Jinja assets and a reviewed synthetic new-note fixture. Creation and generated rendering remain separate; the engine owns caller-supplied persistent UUID/schema, exact reserved flat YAML and marker envelope. Templates use bounded interpolation-only Jinja with strict undefined/sandbox/explicit filter and primitive serialized sections. Known explicit overrides precede defaults; absent files fall back, invalid existing files/roots and unsafe links fail. Unsafe paths, case/Unicode/namespace collisions, marker/ownership injection and excessive input/template/output fail before acceptance. Required human sections initialize with null debt; user-owned defaults retain explicit null/false/empty distinctions. Missing/null/unavailable audits are explained and unknown values omitted; privacy omission excludes audit names. Directed graph reciprocal views preserve method/coverage/staleness; only exact mapped supported endpoints become links. No body/org/record ID/raw endpoint projection.
+
+**Recorded decisions:** Material grammar/context/loading/serialization/path/bounds choices were recorded before implementation. The finite subset intentionally excludes general Jinja loops/calls/expressions/imports and model objects; sandboxing alone is not resource isolation. Standard-library JSON-compatible flat YAML avoids a runtime YAML parser. Poetry generated the Jinja2 `>=3.1.6,<4` lock addition (3.1.6, transitive MarkupSafe 3.0.4) after official contract review. Existing source/graph/render/creation helpers are unchanged. The candidate keeps the accepted per-note graph digest separately and composes it with independent full Coverage for the existing render helper's graph input, catching audit/inventory-only invalidation. Creation changes affect new candidates only; hashes never authorize overwrites.
+
+**Verified checklist:**
+
+- [x] All four implementation tasks and deterministic candidate acceptance scenario, including installed resources outside checkout/cwd, completed locally.
+- [x] 101 new synthetic rendering/security/availability/graph/path/template tests, including incoming-only/moved-target invalidation without source-hash changes; full suite **618 passed, no skips** on macOS 27.0.1 ARM64 / Python 3.14.7 / Poetry 2.4.2.
+- [x] Strict metadata/lock, Ruff lint/format (66 files), Bandit and whitespace passed; no new scanner suppressions/findings. Existing five transport/query annotations remain. Coverage run: 95% overall, notes 90%, templates 93%; gaps remain visible.
+- [x] Final fresh r2 wheel/sdist build, strict Twine, exact 26/25-member archive lists, unchanged Apache license and current packaged source/resource bytes passed.
+- [x] Both final independent clean Python 3.14.7 installs outside the checkout passed dependency consistency, imports/resources, complete synthetic candidate-byte comparison, overrides/fallback, stale/incoming/moved-path/hash/privacy checks, console/module entry points, offline preservation and no cwd writes. Runtime socket/process guards explicitly verified active. Network used only for setup/build/dependency acquisition.
+- [x] README/contributor/config/coverage/note/offline/live/relationship/rendering docs, changelog, roadmap status/index/decisions and handoff synchronized; changed Python headers retain Created By and requested GPT-6.1 Sol / 20 Oct 2026 attribution.
+- [x] Frozen model/config/source/parser/graph/CLI code and Apache license unchanged from the accepted merge; no offline/transport broadening.
+- [ ] Maintainer acceptance, delivery and exact-commit hosted Thread 07 validation.
+- [ ] Ready to merge / release acceptance gate; publication requires separate authorization.
+
+**Final r2 artifacts (temporary, not published):**
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Wheel | `4e567b4931328f3bc4c6574a316a55bd1ec890af843dfd35c3d6aa63db31160c` |
+| Sdist | `1825e449877f80a27f8443663f69aabdd828b758b21b6637e0d3e6f5cd697936` |
+
+The first installed rendering probe failed on an escaped-newline error in the test-only harness; it was corrected and both independent installs passed. Final portable-LF/active-guard tightening was then verified in both final installs. Earlier local runs/build attempts remain historical evidence, not relabeled successes.
+
+**Limits:** No hosted Thread 07, native Linux/Windows rendering, or local Python 3.12/3.13/3.15 execution was performed. One new POSIX unsafe-link fixture is expected to skip on Windows; reparse checks remain synthetic. Prerequisite Windows mock/refusal/installed results do not qualify Windows sf execution. No real sf/Obsidian/credentials/.env/auth discovery, CLI/plugin installation/update, org/metadata/vault access or private upload. Platform requested relationship coverage remains partial/unavailable because the allowlist cannot establish exhaustion, including clean empty results; offline remains explicitly not collected. No existing-note parser/patcher, discovery/adoption, state loading, planner, publication/recovery or public lifecycle command. Override reads require a stable local tree; no hostile filesystem race or OS resource isolation guarantee.
+
+**Tracking/Git:** Existing #7 labels, assignee, v0.1.0 milestone and reciprocal native #3/#6 → #7 → #8/#10 links are preserved. No duplicate issue, other chat or subagent was created. There are 23 intentional changed/new files, all unstaged/uncommitted; no application working-directory artifacts. The issue's implementation/test/docs/compatibility checklist is verified, with acceptance/readiness left unchecked.
+
+**Next eligible after Thread 07 acceptance/delivery verification and a new request: Thread 08 / #8, explicitly NOT STARTED. Threads 08–17 and enhancement #18 remain NOT STARTED.**

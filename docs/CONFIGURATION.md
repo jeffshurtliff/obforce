@@ -41,7 +41,7 @@ dashboards = "Dashboards"
 include_namespaced = false
 include_audit_names = true
 
-# Optional explicit override root; template loading remains Thread 07.
+# Optional explicit override root; internal candidate rendering only (Thread 07).
 [templates]
 directory = "./demo-templates"
 ```
@@ -127,3 +127,7 @@ magnitude. Recovery/conflicts must not be hidden by a later generic failure.
 A truncated requested live inventory cannot return success. By-design offline
 audit/dependency exclusions are reported explicitly but do not alone force 4.
 See [the independent coverage contract](COVERAGE.md).
+
+The internal [renderer](RENDERING.md) now loads only the two documented known
+assets from this explicit root, falling back per absent file to installed defaults.
+Invalid existing overrides refuse. No public generation command is introduced.

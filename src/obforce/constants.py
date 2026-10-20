@@ -4,7 +4,7 @@
 :Synopsis:          Defines versioned internal configuration and ownership contracts
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     19 Oct 2026
+:Modified Date:     20 Oct 2026
 """
 
 CONFIG_SCHEMA_VERSION = 1
@@ -83,3 +83,20 @@ RELATIONSHIP_TIMEOUT_SECONDS = 300
 MAX_RELATIONSHIP_LABEL_CHARS = 512
 MAX_GRAPH_EDGES = 20_000
 MAX_GRAPH_OBSERVATIONS = 40_000
+
+# Candidate rendering uses finite interpolation, never general template execution.
+TEMPLATE_SLOTS = {
+    'apex_created.md.j2': (),
+    'apex_generated.md.j2': ('metadata', 'coverage', 'references', 'referenced_by'),
+}
+MAX_TEMPLATE_BYTES = 16_384
+MAX_TEMPLATE_NODES = 256
+MAX_RENDER_TEXT_CHARS = 4_096
+MAX_RENDER_INPUT_BYTES = 2_097_152
+MAX_RENDER_INPUT_NODES = 100_000
+MAX_RENDER_COMPONENTS = 10_000
+MAX_RENDER_EDGES = 2_000
+MAX_RENDER_PATH_CHARS = 1_024
+MAX_RENDER_PATH_DEPTH = 32
+MAX_RENDER_SECTION_BYTES = 524_288
+MAX_NOTE_BYTES = 1_048_576

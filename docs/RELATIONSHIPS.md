@@ -16,7 +16,8 @@ FIFO case. Mocked graph/adapter/refusal and installed artifact checks do not
 qualify Windows sf execution or actual Salesforce capability/exhaustion. The
 release limitation below is retained. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
-Thread 07 is next eligible and remains not started.
+Thread 07 now adds internal [candidate rendering](RENDERING.md); acceptance is
+pending and #7 remains open.
 
 ## Direction, endpoints and provenance
 
@@ -200,4 +201,10 @@ Documentation/source reads only; no real `sf` invocation:
 Synthetic tests and installed mocks verify local behavior. They cannot establish
 actual org permissions, supported-type coverage, live exhaustion or Windows sf
 execution. Future live validation requires separate authorization for its target
-and operations. Enhancement #18 and Threads 07–17 remain not started.
+and operations. Enhancement #18 and Threads 08–17 remain not started.
+
+Thread 07 projects both graph directions into candidate notes with explicit
+managed paths, method/coverage/staleness and unresolved labels. No endpoint ID or
+raw payload is rendered. Existing per-note graph fingerprints remain unchanged;
+rendering composes them with independent coverage to catch audit/inventory-only
+output changes. This adds no collection, adoption, state or publication capability.

@@ -42,7 +42,9 @@ command, dependency or Windows transport is added. Thread 06 is accepted at merg
 independent installs. Linux/macOS each passed 517 tests; Windows each passed
 506 with 11 expected skips, without qualifying Windows sf execution. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
-Thread 07 is next eligible; Threads 07–17 and enhancement #18 remain not started.
+Thread 07 adds internal [candidate rendering](docs/RENDERING.md) with packaged
+Jinja defaults and explicit bounded overrides; local implementation is pending
+maintainer acceptance. Threads 08–17 and enhancement #18 remain not started.
 
 ## Development setup
 
@@ -59,10 +61,11 @@ poetry run python -m obforce --version
 The static version lives in `pyproject.toml`; CLI version reporting reads installed
 distribution metadata. Commit `poetry.lock` with approved dependency changes. Use
 `poetry add` or `poetry update`; never hand-edit the lockfile or add a parallel
-runtime requirements file. Runtime dependencies are Click and `defusedxml` for
-explicit offline XML DTD/entity/external-reference refusal. Jinja2 and
-`ruamel.yaml` wait for the threads that use them. Development tools
-are pytest, pytest-cov, Ruff, Bandit, and Twine.
+runtime requirements file. Runtime dependencies are Click, Jinja2 (candidate
+templates/sandbox), and `defusedxml` for explicit offline XML DTD/entity/external-
+reference refusal. `ruamel.yaml` remains deferred to existing-note preservation;
+candidate serialization uses a flat YAML-compatible JSON subset. Development
+tools are pytest, pytest-cov, Ruff, Bandit, and Twine.
 
 ## Checks
 
@@ -120,12 +123,13 @@ wheel/sdist file lists and metadata, checks the unchanged root license against
 both archives, and installs each artifact independently in a fresh temporary
 virtual environment outside the checkout. Installation may download runtime and
 isolated build dependencies. It then checks imports, package-file access through
-`importlib.resources`, installed internal model hashing, console/module help and 
+`importlib.resources`, installed internal model hashing, console/module help and
 version, installed offline acquisition/parser and synthetic CLI-envelope/live-adapter/
 relationship-graph checks, rejection of future commands, dependency consistency, and no
-working-directory writes with external tools absent. There are no template/Bases 
-assets yet; their installed resource checks belong to Threads 07 and 14. The 
-checker never publishes or uploads artifacts.
+working-directory writes with external tools absent. Thread 07 adds renderer
+modules and two explicitly allowlisted installed Jinja assets, full synthetic
+output comparison and runtime network/process refusal. Bases assets remain
+Thread 14. The checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

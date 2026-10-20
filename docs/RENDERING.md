@@ -194,3 +194,33 @@ Actual local, hosted and native gaps are recorded in the
 [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md). No live sf/org/vault or Windows
 sf execution qualification follows. Threads 08–17 and enhancement #18 remain
 not started; maintainer acceptance/delivery is separate from local success.
+
+
+## Thread 07 accepted delivery — 20 October 2026
+
+Thread 07 is accepted and complete; #7 is closed under maintainer authorization.
+Implementation `b4658eb0f878c71698e580801c118733a16b86df` was merged at
+`eedeff425bcd4921bef8756412826ce5a93b0165`. All 21 packaged source/resource files
+match the reviewed final candidate, and implementation/merge trees match.
+
+Every required step and full command log in
+[run 39440606470, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39440606470)
+was verified. All 12 Linux/macOS/Windows Python 3.12–3.15 cells passed. Linux/macOS
+passed 618 tests each without skips (95% coverage); Windows passed 606 with 12
+expected skips each (93% coverage). Every cell passed standalone strict lock,
+Ruff lint/format, Bandit, fresh build, strict Twine, exact archive/license/source/
+resource inspection, both independent installations and whitespace checks.
+All 24 installed probes passed full candidate-byte/resource/override/fallback/
+graph/move/privacy checks with active runtime socket/process guards and no cwd
+artifacts. Setup/download network use remains separate from offline runtime tests.
+
+The 12 Windows skips are nine POSIX collector cases, the POSIX wrapper-symlink
+case, unavailable FIFO case and POSIX unsafe-template-link fixture. Reparse
+refusal is synthetic. This does not qualify Windows sf execution, real Salesforce,
+hostile filesystem races, arbitrary Jinja, OS resource isolation or the later
+preservation/publication lifecycle. Relationship coverage limitations and all
+scope/privacy contracts remain unchanged. Historical local probe failures and
+older CI evidence retain their original status.
+
+See the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
+Thread 08 is next eligible and remains not started; no release is published.

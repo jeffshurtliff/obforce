@@ -18,8 +18,12 @@ All notable changes to this project will be documented in this file, following
 - Synthetic rendering/security/availability/collision regressions and reviewed
   candidate fixture; exact package/resource allowlists and independent wheel/sdist
   rendering checks outside the checkout with runtime network/process access blocked.
-  Thread 07 remains pending maintainer acceptance; #7 stays open. Threads 08–17
-  and enhancement #18 remain not started.
+  Thread 07 is accepted at implementation `b4658eb` / merge `eedeff4`; #7 is closed.
+  Exact-merge run `39440606470`, attempt 1, passed all 12 Python 3.12–3.15 cells:
+  Linux/macOS 618 passed each; Windows 606 passed/12 expected skips each. Every
+  standalone check, fresh build/Twine and both independent installs passed.
+  Windows sf execution remains refused. Thread 08 is next eligible; Threads
+  08–17 and enhancement #18 remain not started.
 
 - Internal directed platform relationship graph and bounded selected-ID outgoing/
   incoming adapter with reverified org identity, exact Apex endpoint resolution,

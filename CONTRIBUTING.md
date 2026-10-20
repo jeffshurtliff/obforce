@@ -43,8 +43,13 @@ independent installs. Linux/macOS each passed 517 tests; Windows each passed
 506 with 11 expected skips, without qualifying Windows sf execution. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
 Thread 07 adds internal [candidate rendering](docs/RENDERING.md) with packaged
-Jinja defaults and explicit bounded overrides; local implementation is pending
-maintainer acceptance. Threads 08–17 and enhancement #18 remain not started.
+Jinja defaults and explicit bounded overrides. Thread 07 is accepted at
+implementation `b4658eb` / merge `eedeff4`; exact-merge run `39440606470`, attempt 1,
+passed all 12 cells: Linux/macOS 618 passed each, Windows 606 passed/12 expected
+skips each. All checks/builds/Twine and 24 independent installs passed; Windows
+sf execution remains refused. See the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
+Thread 08 is next eligible; Threads 08–17 and enhancement #18 remain not started.
 
 ## Development setup
 

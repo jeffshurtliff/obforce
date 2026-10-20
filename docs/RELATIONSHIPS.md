@@ -16,8 +16,8 @@ FIFO case. Mocked graph/adapter/refusal and installed artifact checks do not
 qualify Windows sf execution or actual Salesforce capability/exhaustion. The
 release limitation below is retained. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
-Thread 07 now adds internal [candidate rendering](RENDERING.md); acceptance is
-pending and #7 remains open.
+Thread 07 adds accepted internal [candidate rendering](RENDERING.md), delivered
+at merge `eedeff4`; #7 is closed. Thread 08 remains not started.
 
 ## Direction, endpoints and provenance
 

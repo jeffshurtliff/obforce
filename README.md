@@ -28,6 +28,10 @@ poetry run python -m obforce --version
 ```
 
 Help/version need no Salesforce CLI, authentication, or running Obsidian.
+The internal [relationship graph](docs/RELATIONSHIPS.md) retains platform provenance,
+reciprocal references and stale evidence. Current collection cannot prove exhaustion
+and reports partial/unavailable coverage; runtime tests use synthetic replies only.
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private
 reporting. The existing [Apache 2.0 license](LICENSE) applies. Platform targets

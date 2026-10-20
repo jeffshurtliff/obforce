@@ -31,8 +31,14 @@ queries and independent coverage. Tests mock process collection; no real sf/org
 access or Windows transport qualification is claimed. No public command is added;
 Thread 05 is accepted with all 12 exact-merge hosted cells passing; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026)
-for actual counts/skips and artifact evidence. Thread 06 is next eligible and
-remains not started, as do later threads and enhancement #18.
+for actual counts/skips and artifact evidence.
+
+Thread 06 adds the internal [platform relationship graph](docs/RELATIONSHIPS.md),
+using bounded equality probes and exact source verification. Current MCD restrictions
+prevent exhaustion proof, so requested platform coverage remains partial/unavailable.
+Graph/stale/invalidation tests use synthetic metadata and mocked processes. No public
+command, dependency or Windows transport is added. Thread 06 awaits maintainer
+acceptance; Threads 07–17 and enhancement #18 remain not started.
 
 ## Development setup
 
@@ -111,8 +117,8 @@ both archives, and installs each artifact independently in a fresh temporary
 virtual environment outside the checkout. Installation may download runtime and
 isolated build dependencies. It then checks imports, package-file access through
 `importlib.resources`, installed internal model hashing, console/module help and 
-version, installed offline acquisition/parser and synthetic CLI-envelope/live-adapter checks, rejection of future commands,
-dependency consistency, and no
+version, installed offline acquisition/parser and synthetic CLI-envelope/live-adapter/
+relationship-graph checks, rejection of future commands, dependency consistency, and no
 working-directory writes with external tools absent. There are no template/Bases 
 assets yet; their installed resource checks belong to Threads 07 and 14. The 
 checker never publishes or uploads artifacts.

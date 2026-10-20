@@ -5,7 +5,8 @@ and validation helpers. Thread 03 now implements the internal
 [offline Apex source](OFFLINE_SOURCE.md), using these unchanged contracts.
 Thread 05 implements the internal [live Apex adapter](LIVE_SOURCE.md) with mocked
 process tests, verified org binding, bounded enumeration and optional scoped audit
-names. Dependency collection and graph building remain planned.
+names. Thread 06 adds internal [platform relationship probes and graph construction](RELATIONSHIPS.md),
+with explicit partial/unavailable coverage and synthetic tests.
 All examples below are fictional. These are
 versioned internal contracts, not a stable public Python API.
 
@@ -101,10 +102,13 @@ Platform-reported references are evidence of reported relationships, not proof
 of runtime behavior or comprehensive impact analysis. Unresolved endpoints stay
 labeled text and do not create component notes. Offline XML alone supplies no
 Apex code-reference proof. Failed refreshes must preserve prior edges as stale;
-this record can represent stale evidence but does not perform that refresh.
+the Thread 06 graph layer performs matching-source/scope stale preservation in memory.
 Thread 04 process contracts and Thread 05 inventory/audit capabilities/limits are
 documented in [SF_CLI.md](SF_CLI.md) and [LIVE_SOURCE.md](LIVE_SOURCE.md).
-Thread 06 relationship capabilities remain unimplemented.
+The [relationship adapter](RELATIONSHIPS.md) never claims complete platform coverage: current
+MCD restrictions prevent independent exhaustion proof under the fixed allowlist.
+Unresolved referencing endpoints use graph-specific evidence records; frozen
+Relationship/source/scope/hash contracts remain unchanged.
 
 ## Deterministic fingerprints
 
@@ -127,8 +131,9 @@ complete scan; coverage is always separate.
 The graph fingerprint sorts supplied relationship evidence and relevant resolved
 note paths. Direction, incoming/outgoing edges, coverage, staleness, unresolved
 labels, or a target move can change it without changing a component's own source
-hash. The later graph layer must supply all relevant incident edges/locations;
-this helper does not collect or derive them. Exact duplicate evidence is refused.
+hash. The Thread 06 graph layer supplies relevant incident edges/locations and composes
+this unchanged helper with unresolved-source descriptors and independent coverage;
+the helper itself does not collect or derive edges. Exact duplicate evidence is refused.
 
 The generated render fingerprint includes source/graph fingerprints, generated
 template content hash, model/note/marker/renderer versions, layout directories,

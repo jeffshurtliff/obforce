@@ -41,7 +41,7 @@ def _run(command: list[str], cwd: Path, environment: dict[str, str]) -> str:
 
 
 def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
-    """Enforce the explicit foundation, contract, offline-source, CLI-boundary and live-adapter artifact allowlist.
+    """Enforce the explicit foundation, contract, source, CLI-boundary and graph artifact allowlist.
 
     :param artifact: Locally built wheel or sdist to inspect without extraction.
     :param version: Expected static project version.
@@ -57,6 +57,9 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'sources/local.py',
             'sources/sf_cli.py',
             'sources/live.py',
+            'sources/relationships.py',
+            'graph/__init__.py',
+            'graph/dependencies.py',
         }
     )
     if artifact.suffix == '.whl':
@@ -197,7 +200,43 @@ assert result.coverage.outcome == 0 and result.coverage.binding.org_id == '00D00
 assert result.coverage.relationships.status == 'not_collected'
 assert len(result.inventory_hash) == 64
 """
+        graph_probe = """
+from dataclasses import replace
+from pathlib import Path
+from unittest.mock import patch
+from obforce.models import Component, ComponentKey, Coverage, CollectionCoverage, CoverageStatus, Selection, SourceBinding
+from obforce.sources.live import LiveInventory
+from obforce.sources.relationships import collect_relationships
+from obforce.sources.sf_cli import Reply
+binding = SourceBinding('demo', 'live', '00D000000000001EAA')
+complete = CollectionCoverage(CoverageStatus.COMPLETE, 'synthetic', pagination='exhausted', limit_reached=False)
+not_collected = CollectionCoverage(CoverageStatus.NOT_COLLECTED, 'not-collected', requested=False)
+a = Component(binding, ComponentKey('demo', 'ApexClass', None, 'ExampleA'), record_id='01p000000000001AAA')
+b = Component(binding, ComponentKey('demo', 'ApexClass', None, 'ExampleB'), record_id='01p000000000002AAA')
+inventory = LiveInventory((a, b), Coverage(binding, Selection(), complete, complete, not_collected))
+row = {'MetadataComponentId': a.record_id, 'MetadataComponentName': 'ExampleA',
+       'MetadataComponentNamespace': None, 'MetadataComponentType': 'ApexClass',
+       'RefMetadataComponentId': b.record_id, 'RefMetadataComponentName': 'ExampleB',
+       'RefMetadataComponentNamespace': None, 'RefMetadataComponentType': 'ApexClass'}
+identity = Reply({'records': [{'Id': binding.org_id}]}, done=True, total_size=1)
+edge = Reply({'records': [row]}, done=True, total_size=1)
+empty = Reply({'records': []}, done=True, total_size=0)
+with patch('obforce.sources.sf_cli.run_sf', side_effect=[identity, edge, empty, empty, edge]) as process:
+    result = collect_relationships(Path('/fictional/sf'), directory=Path.cwd(), target='fictional', inventory=inventory)
+assert process.call_count == 5 and len(result.graph.edges) == 1
+assert result.graph.references(a.key) == result.graph.referenced_by(b.key)
+assert result.coverage.inventory == complete and result.coverage.relationships.status == 'partial'
+assert result.coverage.outcome == 4 and inventory.coverage.relationships == not_collected
+paths = {a.key: 'A.md', b.key: 'B.md'}
+assert result.graph.note_fingerprint(a.key, paths) != result.graph.note_fingerprint(a.key, {**paths, b.key: 'Moved/B.md'})
+with patch('obforce.sources.sf_cli.run_sf', side_effect=[identity, empty, empty, empty, empty]):
+    refreshed = collect_relationships(Path('/fictional/sf'), directory=Path.cwd(), target='fictional',
+                                      inventory=inventory, previous=result.graph)
+assert refreshed.graph.edges[0].stale and refreshed.coverage.outcome == 4
+assert a.source_hash == replace(a).source_hash
+"""
         _run([str(python), '-c', live_probe], work, environment)
+        _run([str(python), '-c', graph_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.
         _run([str(python), '-c', offline_probe], root, environment)
         for command in ([str(console)], [str(python), '-m', 'obforce']):

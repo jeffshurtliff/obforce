@@ -1,0 +1,10 @@
+{
+  "MetadataComponentId": "01p000000000001AAA",
+  "MetadataComponentName": "FictionalService",
+  "MetadataComponentNamespace": null,
+  "MetadataComponentType": "ApexClass",
+  "RefMetadataComponentId": "01p000000000002AAA",
+  "RefMetadataComponentName": "FictionalHelper",
+  "RefMetadataComponentNamespace": null,
+  "RefMetadataComponentType": "ApexClass"
+}

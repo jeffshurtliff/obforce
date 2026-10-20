@@ -22,7 +22,7 @@ completed. Thread 08 is **accepted and complete**, delivered at merge `dba53ab`
 with all 12 exact-merge hosted cells passing applicable checks. Issue #8 is closed
 as completed. Thread 09 is **accepted and complete**, including Windows correction
 `890ced2` / merge `dff34a7` and all 12 exact-merge hosted cells. Issue #9 is closed
-as completed. Thread 10 is **locally implemented, pending acceptance**; #10 remains open.
+as completed. Thread 10 implementation is **delivered; CI correction pending acceptance**; #10 remains open.
 Threads 11–17 remain **not started**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
@@ -806,7 +806,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Accepted and complete; issue closed |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Accepted and complete; issue closed |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
-| 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Locally implemented; pending acceptance |
+| 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Delivered; macOS CI correction pending |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Not started |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
@@ -1581,7 +1581,7 @@ non-adoption behavior. State parsing never writes or repairs automatically.
 
 **Goal:** A complete deterministic preview of a build/refresh before any write.
 
-**Depends on:** 06, 07, 08, 09. **Status:** LOCALLY IMPLEMENTED; pending maintainer acceptance.
+**Depends on:** 06, 07, 08, 09. **Status:** DELIVERED; macOS CI correction pending; not accepted.
 All four prerequisites are accepted/closed; recheck actual code and exact-commit
 CI before implementation, including Thread 09 correction merge dff34a7 / run 39502679337.
 
@@ -4232,3 +4232,99 @@ settings changes occurred. Diff/untracked files/status reviewed. After Thread 10
 maintainer acceptance/delivery verification and a new request, the next thread
 is **Thread 11 / #11, explicitly NOT STARTED**. All later threads and enhancement
 #18 remain **NOT STARTED**.
+
+### Thread 10 macOS CI correction start — 20 October 2026
+
+Maintainer reviewed/pushed implementation 11af258, merged at
+725fe36875bc095f2745153d5d944afe37aa480c, and requested correction of the failed
+macOS Python 3.12 cell. Read all 12 job/step/full command logs in run 39507844963,
+attempt 1: Linux 1060 passed each; macOS 3.13–3.15 1058 passed/2 skipped each;
+Windows 1044 passed/16 skipped each. All standalone/build/Twine/archive/both-install
+checks passed in the 11 successful cells. macOS 3.12 had 1 failed/1057 passed/2
+skipped; build/Twine/install/whitespace were skipped. Its failure was the initial
+setup candidate before the test's late-state mutation, not that mutation's check.
+The historical failed run remains failed; #10 remains open.
+
+Before editing, a local instrumented loop reproduced a blocked initial plan at
+iteration 124 and captured the exact changed full lstat stamp on the shared
+system temporary ancestor. This establishes a concrete local environmental race;
+the old hosted assertion did not retain its conflicting path, so the same exact
+hosted cause cannot be proven retrospectively. The workflow let Python/pytest
+and installed probes use the OS-wide shared temp root, violating their quiescent
+synthetic-fixture assumption. The correction will give all CI steps after Python
+setup a fresh dedicated root beneath runner.temp via TMPDIR/TEMP/TMP. This avoids
+the busy system-temp ancestry for both tests and independent installed probes.
+Production reader/planner/Windows timestamp/parent checks will remain unchanged:
+no retries, timestamp rounding, skipped guard or relaxed comparison. Add a
+controlled sibling-churn regression and safe blocked-setup diagnostic; validate
+locally on Python 3.12 and the existing environment. Thread 11 and later and #18
+remain NOT STARTED. Changes stay unstaged/uncommitted on the existing fix branch.
+
+### Thread 10 macOS CI correction handoff — 20 October 2026
+
+**Correction ready for review; not delivered or accepted.** Implementation 11af258
+is delivered at merge 725fe36875bc095f2745153d5d944afe37aa480c. Existing issue #10
+remains OPEN. The failed exact-merge run 39507844963 attempt 1 remains failed:
+11 cells passed every required command and both installs (Linux 1060 passed;
+macOS 3.13–3.15 1058/2 skips; Windows 1044/16 skips), while macOS 3.12 had one
+blocked baseline setup, 1057 passed/2 skips and skipped downstream artifact gates.
+No failed/skipped command is counted as passed.
+
+**Cause/evidence:** The failing assertion precedes the test's injected late-state
+mutation. Local instrumented reproduction captured a full lstat change in the
+shared system-temp ancestor at initial-plan iteration 124. This proves a local
+shared-ancestor race matching the hosted symptom; the hosted assertion did not
+retain its particular observation, so that exact cause remains inferred there.
+The full parent guard was correctly refusing an unstable read environment.
+
+**Correction:** The workflow creates a fresh root under runner.temp after Python
+setup and exports TMPDIR/TEMP/TMP through GITHUB_ENV before Poetry installation.
+All later commands, fixtures, build setup and independent installed probes inherit
+it. A controlled regression verifies sibling churn still blocks a descendant
+vault and leaves a vault under a separate temporary ancestry clean. Baseline setup
+assertions now show only the bounded redacted plan report. No production source,
+reader/planner/stat comparison, Windows birthtime bridge, same-API guard, dependency,
+lockfile, package allowlist, source/transport, state wire/hash or license changed.
+No retry, guard bypass, rounding or new skip was added.
+
+**Executed checks:** Local macOS ARM64, separate locked Python **3.12.7** environment
+and existing **3.14.7** environment each passed **1059 tests / 2 existing case/NFC
+fixture skips**, 95% combined coverage. Both full suites passed under an explicit
+workspace temporary root; an earlier Python 3.12 full suite also passed under a
+/private/tmp-based root. Focused planner tests passed **125**. The workflow's exact
+POSIX shell/Python setup was executed against synthetic GITHUB_ENV; all three
+exports and Python 3.12 tempfile selection were checked. Metadata/strict lock,
+Ruff lint/format (79 files), Bandit and whitespace passed; Bandit retains five
+existing source/transport annotations and no findings/new suppressions.
+
+A fresh Python 3.12 build under the workspace temp environment passed strict
+Twine, exact 31-wheel/30-sdist archive/license/source/resource/README/metadata
+inspection, pip consistency, both entry points and both independent installed
+source/graph/render/parser/state/planner/report probes outside checkout/cwd.
+Runtime socket/process guards were active; build/pip setup network use is separate.
+Unchanged artifact SHA-256: wheel
+`0cab07da8e52cce86a9a1cc8be5294b97b1706aa68d219e179ebb93ee61b99cd`;
+sdist `b4236347d254a0611144f598a5b7ad2ac71aa9ab9a81d4694e8e15cc05cda906`.
+
+**Retained attempts/limits:** An early VIRTUAL_ENV-only setup selected an existing
+3.14 environment and is not Python 3.12 evidence; explicit temporary Poetry env
+selection subsequently verified 3.12.7. A guarded /private/tmp-based stress probe
+blocked at iteration 33 without capturing its specific conflicting observation;
+a later instrumented **1000-plan** run passed. Thus merely nesting under a busy
+system-temp location is not a guarantee of quiescent ancestry. The workflow
+instead uses workspace runner.temp; guards still intentionally refuse any actual
+ancestor change. The old hosted Python is 3.12.10, distinct from local 3.12.7.
+PowerShell/native Windows/Linux and corrected hosted matrix execution remain
+unavailable locally; no CI rerun was requested/performed. Historical failures,
+skips and prior local setup/probe attempts retain their original status. Windows
+sf stays refused; partial/unavailable requested relationships and offline not-
+collected behavior are unchanged. No live org/auth/credential/.env/Obsidian/real
+metadata/vault access, publication or later lifecycle work occurred.
+
+**Tracking/Git/next:** Docs/changelog and existing #10 progress/checklist/handoff
+are synchronized. Six focused files remain unstaged/uncommitted on
+`fix/10-thread-10-address-failed-macos-py312-ci-run` at 725fe36. No stage/commit/push/
+PR/merge/tag/release/publication, other-chat action or delegation occurred. After
+correction delivery, exact hosted verification and maintainer acceptance plus a
+new request, next is **Thread 11 / #11, NOT STARTED**. All later threads and #18
+remain **NOT STARTED**.

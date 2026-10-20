@@ -153,6 +153,15 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- CI now creates a fresh dedicated runner temporary root and exports TMPDIR,
+  TEMP and TMP for all subsequent setup, tests and independent artifact probes.
+  This avoids unrelated shared system-temp ancestor changes blocking synthetic
+  planner fixtures. A controlled sibling-churn regression keeps full parent
+  change refusal and proves isolation; blocked baseline setup now shows only the
+  redacted plan report. Production read guards, timestamps, state/hash/ownership
+  contracts and Windows sf refusal remain unchanged. Historical failed Thread 10
+  run `39507844963` remains failed; corrected hosted validation is pending.
+
 - Windows read-only state/note loading no longer treats different pathname and
   descriptor `st_ctime_ns` meanings as a file change. Cross-API comparisons require
   explicit matching creation time while retaining identity/type/link/size/mtime

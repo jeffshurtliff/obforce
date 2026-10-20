@@ -2,7 +2,10 @@
 
 Thread 05 implements `sources/live.py`, tested with synthetic CLI envelopes and
 mocked process collection only. It adds no public command, authentication,
-renderer, graph collector, state adoption, deletion planner, or vault writes.
+renderer, state adoption, deletion planner, or vault writes. A separately invoked
+Thread 06 [relationship adapter](RELATIONSHIPS.md) now consumes normalized live
+inventory and reverifies identity; `collect_live` itself still leaves relationships
+uncollected.
 Internal interfaces are not a stable Python API. The CLI still exposes only
 help/version. Windows `sf` execution remains refused by the unchanged
 [process boundary](SF_CLI.md); [enhancement #18](https://github.com/jeffshurtliff/obforce/issues/18)
@@ -17,7 +20,7 @@ installations. The Windows skips cover nine POSIX collector cases, the POSIX
 wrapper-symlink case and the unavailable FIFO case. Mocked adapter/refusal checks
 and hosted Windows results do not qualify Windows sf execution. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026).
-Thread 06 and later work remain not started.
+Thread 06 is implemented locally with review/hosted evidence pending; later work remains not started.
 
 ## Invocation and verified identity
 
@@ -164,8 +167,9 @@ Inventory, audit, and relationship coverage remain independent. Audit is complet
 only if inventory is exhausted and all requested date/name queries and fields
 are complete (observed null is known). With some known facts it is partial;
 otherwise unavailable. Complete empty scope has vacuously complete requested
-audit. Relationships are `not_collected`, `requested=false`; Thread 06 has not
-started. Any requested incomplete dimension produces outcome 4 through the
+audit. Relationships are `not_collected`, `requested=false` in `collect_live`;
+explicitly requested Thread 06 collection returns its own independent relationship
+coverage. Any requested incomplete dimension produces outcome 4 through the
 existing coverage contract. Combined errors retain precedence 3, 2, 1, 4, 0.
 Consumers must inspect coverage/outcome; returned rows or their hash are never a
 completeness certificate.

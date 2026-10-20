@@ -7,6 +7,20 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal directed platform relationship graph and bounded selected-ID outgoing/
+  incoming adapter with reverified org identity, exact Apex endpoint resolution,
+  explicit unsupported/external/unresolved sources and targets, deduplicated
+  provenance/coverage observations and matching-scope stale-edge preservation.
+  Graph-only changes and note moves invalidate incident graph fingerprints without
+  changing component source hashes. No new command, note type or dependency.
+- Synthetic relationship fixtures/regressions, documented current MCD restrictions
+  and release limitation: the fixed allowlist cannot prove exhaustion, so requested
+  platform relationships remain partial/unavailable, including clean empty replies.
+  Offline remains not collected; Windows sf execution remains refused. Explicit
+  wheel/sdist allowlists and independent installed graph/adapter mocks are extended.
+  Thread 06 is locally implemented pending maintainer acceptance and hosted evidence;
+  Threads 07–17 and enhancement #18 remain not started.
+
 - Internal live Apex inventory/audit adapter with explicit target and minimal org
   identity verification, configured/state mismatch refusal, bounded SELECT keyset
   enumeration and independent inventory/audit/relationship coverage. Optional
@@ -24,7 +38,8 @@ All notable changes to this project will be documented in this file, following
   model/ownership contracts remain unchanged. No dependencies added.
 - Explicit artifact allowlist and independent installed synthetic smoke checks
   extended to `sources/live.py`; live access and Windows sf qualification remain
-  unavailable. Thread 06/later threads and enhancement #18 are not started.
+  unavailable. The Thread 05 increment left relationships uncollected;
+  Thread 06 now provides a separately requested adapter as described above.
 
 - Internal allowlisted Salesforce CLI transport with explicit executable/target/
   working directory, byte bounds enforced during collection, timeouts, POSIX

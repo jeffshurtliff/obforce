@@ -86,16 +86,27 @@ class LiveInventory:
 class _Session:
     """Bound the entire operation as well as each accepted process invocation."""
 
-    def __init__(self, executable: Path, directory: Path, target: str) -> None:
+    def __init__(
+        self,
+        executable: Path,
+        directory: Path,
+        target: str,
+        *,
+        max_queries: int | None = None,
+        timeout: int | None = None,
+        stdout: int | None = None,
+    ) -> None:
         self.executable, self.directory, self.target = executable, directory, target
-        self.deadline = time.monotonic() + const.LIVE_TIMEOUT_SECONDS
+        self.max_queries = const.MAX_LIVE_QUERIES if max_queries is None else max_queries
+        self.stdout = const.MAX_LIVE_STDOUT_BYTES if stdout is None else stdout
+        self.deadline = time.monotonic() + (const.LIVE_TIMEOUT_SECONDS if timeout is None else timeout)
         self.calls = 0
         self.evidence: list[PageEvidence] = []
 
     def query(self, query: str, phase: str) -> tuple[list[dict[str, Any]], tuple[str, ...]]:
         """Execute only a fixed SELECT through run_sf; never follow returned endpoints."""
         remaining = self.deadline - time.monotonic()
-        if remaining <= 0 or self.calls >= const.MAX_LIVE_QUERIES:
+        if remaining <= 0 or self.calls >= self.max_queries:
             raise CoverageError('Live collection budget exhausted before coverage was established.')
         self.calls += 1
         reply = sf_cli.run_sf(
@@ -104,7 +115,7 @@ class _Session:
             directory=self.directory,
             target=self.target,
             query=query,
-            limits=sf_cli.Limits(timeout=min(remaining, const.SF_TIMEOUT_SECONDS), stdout=const.MAX_LIVE_STDOUT_BYTES),
+            limits=sf_cli.Limits(timeout=min(remaining, const.SF_TIMEOUT_SECONDS), stdout=self.stdout),
         )
         records = reply.data['records']
         evidence = PageEvidence(

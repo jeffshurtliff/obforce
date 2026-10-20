@@ -131,3 +131,13 @@ actual audit dates do. No-op bytes/mtimes must remain unchanged when later sync
 is implemented. Notes and their state must ultimately publish through the same
 recoverable transaction; per-file replacement alone is insufficient. This thread
 provides no vault writes, locks, journals, recovery, or publication commands.
+
+## Relationship invalidation boundary
+
+Thread 06's [internal graph](RELATIONSHIPS.md) derives References and Referenced By
+from one directed evidence set, retaining unresolved/unsupported endpoints as labels.
+Only explicitly supplied managed-note paths can supply link locations. Graph-only
+changes or a neighboring note move change graph fingerprints without changing
+component facts/source hashes or note ownership. Coverage/stale changes participate
+in invalidation too. Rendering, state/move discovery, preservation and publication
+remain their later threads; this graph neither adopts notes nor writes state.

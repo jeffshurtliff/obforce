@@ -14,7 +14,8 @@ hosted cells. Issue #3 is closed as completed. Thread 04 is **accepted and compl
 12 hosted cells passing their applicable checks. Issue #4 is closed as completed.
 Thread 05 is **accepted and complete**, delivered at merge `85ba7cd` with all
 12 hosted cells passing their applicable checks. Issue #5 is closed as completed.
-Thread 06 is next eligible; Threads 06–17 remain **not started**. Windows sf
+Thread 06 is **implemented locally and ready for maintainer review** under issue #6;
+acceptance, delivery and hosted evidence remain pending. Threads 07–17 remain **not started**. Windows sf
 execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -793,7 +794,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
-| 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Not started |
+| 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Ready for maintainer review; acceptance pending |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Not started |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Not started |
@@ -1306,7 +1307,9 @@ ordinary offline CI.
 
 **Goal:** Useful references with explicit evidence and incomplete-coverage handling.
 
-**Depends on:** 03, 05. **Status:** Not started; next eligible after accepted/delivered Threads 03 and 05.
+**Depends on:** 03, 05. **Status:** Implemented locally; ready for maintainer review.
+Issue #6 remains open; acceptance/delivery/hosted evidence are pending. See the
+[handoff](#thread-06-handoff--19-october-2026) and preimplementation decisions below.
 Both prerequisites are accepted/closed; verify current code and their exact-commit
 CI before implementation. Windows enhancement #18 is not a new prerequisite.
 
@@ -3270,3 +3273,76 @@ Existing #5 labels/assignment/v0.1.0 milestone and native reciprocal #4 -> #5 ->
 Read back #5 as closed with reason completed, implementation/acceptance gates checked,
 original metadata and reciprocal native dependencies preserved. #6 remains open
 and not started with prerequisites #3 and #5 accepted/closed.
+### Thread 06 start, prerequisite gate and decisions — 19 October 2026
+
+Starting only Thread 06 under the maintainer's request; #6 stays open for acceptance. Read #6 and prerequisite #3/#5, repository guidance, roadmap and configuration/coverage/note/offline/CLI/live contracts. No local/vendor_docs directory exists. Existing labels, assignment, v0.1.0 milestone and native reciprocal prerequisites #3/#5 and dependents #7/#10 match the roadmap.
+
+**Prerequisite gate passed before implementation:** Current main `61e442357a97618ae096924973ce69bf398650ab` contains accepted #3 correction `20bff7f` / merge `6154b74` and #5 implementation `a5b7269` / merge `85ba7cd`. Current source/tests/dependencies/workflow/artifact checker match the tested #5 merge; intervening changes are documentation only. Current HEAD has no separate run. Re-read every required step and full logs in exact-merge runs [39302343644, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39302343644) and [39325616681, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39325616681): all 12 cells passed standalone checks and fresh build/Twine/two independent installs. #3 Linux/macOS: 220 passed; Windows: 219 passed/1 skip per cell. #5 Linux/macOS: 441 passed; Windows: 430 passed/11 expected skips per cell. Historical failures are retained. Windows refusals/skips do not qualify Windows sf execution.
+
+**Material capability limitation, recorded before code:** Current official Tooling guide v68.0, Winter '27, updated 9 October 2026, printed pp. 643–648, still labels MetadataComponentDependency Beta/evaluation-only, allows Tooling queries from API 43.0, caps them at 2,000 records, excludes reports, and disallows ORDER BY, queryMore, COUNT(), OFFSET, name filters and range operators. Its general SOQL summary and field property flags contradict some object-specific restrictions; follow the specific restrictions. Apex examples establish direction/possible endpoints, not a comprehensive supported-type or permission matrix. General API Enabled/org access is required; the object chapter supplies no precise additional permission guarantee. No permission or capability discovery is authorized. Official CLI query source/schema at current main `a0cdb671f42af74e31a782c34c5cdcc22e1ea5b0` still auto-fetches, warns on missing records, and returns records/totalSize/done; it can make extra column-metadata requests. No installed CLI/Node/plugin capability is verified.
+
+**Decisions before dependent implementation:**
+
+- Source means referencing MetadataComponent*, target means referenced RefMetadataComponent*. Query exactly the eight endpoint fields through unchanged run_sf TOOLING_QUERY. Reverify Organization identity with Thread 05's fixed minimal query before relationships and require equality with the supplied live inventory binding; never trust alias alone.
+- Probe each selected validated 18-character Apex ID once in each direction using only ID equality AND fixed ApexClass type equality. No name interpolation, IN/range/keyset/ORDER BY/COUNT/OFFSET, arbitrary endpoint/continuation, Bulk API or transport expansion. Enumerate IDs deterministically with fixed query/record/byte/time budgets; one reply per probe, no unsupported pagination.
+- **Release limitation:** The allowlist cannot independently prove MCD exhaustion/type/permission completeness. Even clean empty replies and done=true remain partial, requested coverage (exit 4); no usable probe is unavailable. At the documented cap or any contradictory count/continuation/warning/extra-field signal, retain fixed safe evidence. Never manufacture complete platform coverage. A separate synthetic graph snapshot can exercise complete-empty semantics without granting the platform collector a completeness switch.
+- Preserve both endpoint descriptors, namespace/type/provenance and contradictory observations, including unsupported/unresolved/external referencing endpoints in incoming views. Add a graph-specific evidence record rather than changing frozen ComponentKey/Relationship/hash/ownership contracts. Only exact type/ID/name/namespace matches resolve supported Apex keys; links later require explicit validated managed-note paths. No new notes or source body analysis.
+- Deduplicate exact evidence deterministically; retain distinct evidence/coverage and stale records. Derive outgoing/incoming views from one graph, including self/cyclic edges. Prior in-memory graph reuse requires exactly matching verified source and selection; partial/unavailable refresh retains previous evidence stale with original provenance/coverage. State loading and publication remain later threads.
+- Per-note graph fingerprints include incident evidence, graph coverage and relevant supplied note locations. Graph changes invalidate both endpoints; moves invalidate neighbors without changing component source hashes. Offline acquisition remains unchanged/not_collected. Standard library only, no dependency additions or public commands.
+
+All runtime tests remain synthetic/offline. No real sf, auth/credential/.env discovery, CLI/plugin install/update, org/vault access, Windows transport, state loading or publication. Work remains unstaged/uncommitted; no stage/commit/push/PR/rerun/closure/publication or other chats/subagents. Thread 07–17 and enhancement #18 remain explicitly NOT STARTED.
+### Thread 06 implementation progress — 19 October 2026
+
+Implemented the internal graph and selected-ID two-direction relationship adapter. It reverifies actual org identity through the accepted process boundary, retains unresolved/unsupported/external endpoints on either side, deduplicates exact directed pairs with distinct provenance/coverage observations, preserves non-reaffirmed prior matching-source/scope evidence stale, and supplies reciprocal views plus graph/path/coverage invalidation. Existing component/source/scope/ownership contracts and offline behavior are unchanged. No new public command, note type, dependency or Windows transport.
+
+The preimplementation release limitation remains: current MCD restrictions prevent independently verified exhaustion. Platform collection always reports requested partial/unavailable coverage, even for clean empty replies, and never erases prior edges as authoritative emptiness. Query/page/record/byte/time limits, safe contradictory page evidence and existing typed error precedence are retained. Added relationship documentation and explicit artifact allowlist/installed graph-mock extensions.
+
+Current local macOS ARM64 suites: **507 passed each on Python 3.12.7, 3.13.15 and 3.14.7, no skips**. Strict Poetry metadata/lock, Ruff lint/format (58 files), and Bandit pass; combined 3.14 coverage is 96% (graph 89%, relationship adapter 91%, visible remaining gaps). Synthetic tests cover both directions/invalidation, cycles/self-edges, namespaces, unsupported/unresolved endpoints, scope/org conflicts, count/continuation/warning contradictions, cap/budget/failure/stale handling, privacy and source-hash stability. Final review and fresh build/Twine/archive/independent installation checks remain in progress; these counts are progress evidence, not acceptance.
+
+Hosted evidence remains the verified prerequisite baseline only. No hosted Thread 06, native Linux/Windows Thread 06, local Python 3.15, real sf/Node/plugin/auth/org/vault execution, Windows sf qualification, rendering/state/publication or lifecycle evidence is claimed. All work remains unstaged/uncommitted; #6 stays open. Threads 07–17 and enhancement #18 remain explicitly NOT STARTED.
+### Thread 06 handoff — 19 October 2026
+
+**Implemented locally and ready for maintainer review; #6 stays OPEN pending acceptance.** Only Thread 06 was implemented. No maintainer acceptance, delivered commit, hosted Thread 06 pass or publication is implied.
+
+**Prerequisite evidence:** Before coding, verified accepted/closed #3 and #5, actual code and all required steps/full logs for exact-merge runs `39302343644` / `6154b745ed56c819cad179daa61d0ba606bede3b` and `39325616681` / `85ba7cd725e2f246f39d6b11d18d431f4cc73d38`, attempt 1 each. Both passed all 12 cells. Current baseline `61e442357a97618ae096924973ce69bf398650ab` has documentation-only differences from the tested #5 merge and no separate run. Historical failed runs and Windows skips/refusals remain distinct evidence.
+
+**Changes:** `graph/dependencies.py` supplies explicit private endpoints and directed edges, exact Apex resolution, distinct provenance/coverage observations, reciprocal views, deterministic self/cycle/dedup behavior, matching-source/scope stale refresh and incident/path/coverage fingerprints. `sources/relationships.py` uses unchanged run_sf operations and reverified org identity, fixed eight-field selected-ID/type equality probes in each direction and finite budgets. `_Session` accepts internal budget overrides with unchanged Thread 05 defaults. Graph records support unresolved referencing sources without changing frozen ComponentKey/Relationship/component/source/scope/hash/ownership/state contracts. No component facts are mutated, note types invented, bodies collected or static guesses added. Prior resolved endpoints on retained stale evidence are historical mappings, not proof of current presence. Offline remains uncollected and unchanged.
+
+**Recorded release limitation:** Official current v68 Tooling guide pp. 643–648 confirms the 2,000-row Tooling cap, Beta/evaluation-only status, report exclusion and unsupported ORDER BY/queryMore/COUNT/OFFSET/name/range queries. Exact endpoint/type completeness and additional permission guarantees remain unverified. Generic field flags/SOQL summaries cannot override these restrictions. The fixed transport cannot independently prove exhaustion; every usable result, including clean empty replies, remains requested partial coverage, otherwise unavailable. No platform completeness switch or transport broadening is added. Prior non-reaffirmed matching-scope evidence is preserved stale; distinct contradictory evidence survives. Synthetic complete-empty replacement is tested separately and does not qualify live completeness.
+
+**Verified local checklist:**
+
+- [x] Current official API fields/direction/filter/endpoint/permission/pagination and CLI source/schema/wrapper reviewed; capability gaps and query/scope/prior-edge/coverage decisions recorded before code.
+- [x] Bounded best-effort adapter with explicit source recheck, honest partial/unavailable outcomes and unchanged typed errors/exit precedence; no arbitrary endpoint, default org or Windows execution.
+- [x] A → B reciprocal updates, duplicate/reordered observations, self/cycles/namespaces, unsupported/unresolved sources/targets, binding/scope mismatch, cap/budget/permission/capability/contradiction handling and stale preservation verified.
+- [x] Graph-only and moved-path invalidation, unchanged component hashes/offline behavior, privacy/redaction, canonical ID/injection refusal and no working-directory artifacts verified.
+- [x] Coverage/live/note/contributor/README/relationship docs, changelog and roadmap synchronized; no dependencies added; Apache license and lockfile unchanged.
+- [x] Fresh wheel/sdist allowlists deliberately extended; both independently installed and exercised outside the checkout.
+- [ ] Maintainer acceptance and delivery/exact-commit hosted Thread 06 validation.
+- [ ] Ready to merge/release acceptance gate; release publication remains separately authorized.
+
+**Actual local evidence — macOS 27.0.1 ARM64 / Poetry 2.4.2:**
+
+| Check | Result |
+| --- | --- |
+| Full offline pytest, Python 3.12.7 / 3.13.15 / 3.14.7 | **517 passed each, no skips**; 76 new Thread 06 cases |
+| Python 3.14.7 combined statement/branch coverage | **96% overall**; graph **90%**, relationship adapter **93%**; remaining gaps visible, no coverage suppressions |
+| `poetry check --lock --strict`, Ruff lint/format, Bandit | Passed; 59 files formatted; no scanner findings |
+| Fresh r2 build, strict Twine, exact archive inspection | Passed; **21 wheel / 20 sdist members**, exact unchanged Apache license and current packaged-source/README/pyproject byte matches |
+| Independent wheel and sdist clean Python 3.14.7 installs | **Both passed**: imports/resources/model hashes, synthetic CLI/live/relationship graph/stale/move checks, dependency consistency, both entry points, offline preservation and no-write probes |
+| Documentation/local links/fences, changed Python headers, privacy/diff and whitespace review | Passed; every changed/new Python header retains Created By and requested GPT-6.1 Sol / 19 Oct 2026 attribution |
+
+The first sandbox build could not reach PyPI; the fresh r2 build and independent installation setup succeeded with network-enabled build/dependency acquisition. Runtime checks remained offline and synthetic. One new line-specific B608 annotation covers the fixed projection/prefix and strictly validated alphanumeric 18-character ID interpolation; the accepted four annotations remain. Informational f-string nosec notices are not findings.
+
+Final r2 candidates remain in a temporary directory outside the checkout:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Wheel | `f2faea9b8281bee2ae27cc943a590def3b87692bac374fe87e2d11e866471a9a` |
+| Sdist | `8dadad007f90091065888558f042e02dc612d9e9db3690df34fef9d5049eb18e` |
+
+**Gaps and boundaries:** No hosted Thread 06, native Linux/Windows Thread 06 or local Python 3.15 result; no real sf/Node/plugin/auth/permission/type/live-exhaustion/org/vault or Windows sf execution qualification. No real sf invocation, credentials/.env/auth discovery, CLI/plugin installation/update or private data upload occurred. Source inspection is not installed capability evidence. No renderer, note/state discovery/loading/adoption/publication, deletion, recovery, public lifecycle or comprehensive impact/runtime proof is supplied. These remain separate evidence/tasks; #18 is outside v0.1.0 and not a prerequisite.
+
+**Git/tracking:** All 17 changed/new files remain unstaged/uncommitted on existing main at `61e4423`. No branch switch/create, stage/commit/push/PR/merge/tag/rerun/closure/release/publication/automation, duplicate issue, other chat or subagent. #6's implementation/test/docs/compatibility checklist is verified; Ready to merge/release remains unchecked. Existing enhancement/codex/maintainer labels, assignee, v0.1.0 milestone and native reciprocal #3/#5 → #6 → #7/#10 dependencies are preserved and read back. Local roadmap and public issue evidence agree; remote source/roadmap delivery remains pending maintainer action.
+
+**Next eligible after Thread 06 acceptance/delivery verification and a new request: Thread 07 / #7, explicitly NOT STARTED. Threads 07–17 and enhancement #18 remain NOT STARTED.**

@@ -72,3 +72,14 @@ MAX_LIVE_RECORDS = 10_000
 MAX_LIVE_QUERIES = 156
 LIVE_TIMEOUT_SECONDS = 300
 MAX_LIVE_STDOUT_BYTES = 262_144
+
+# Relationship probes cannot prove exhaustion: MCD forbids ordered/queryMore paging.
+RELATIONSHIP_METHOD = 'platform-mcd-equality-v1'
+MAX_RELATIONSHIP_QUERIES = 101  # Includes the minimal Organization identity query.
+MAX_RELATIONSHIP_RECORDS = 10_000  # Counts returned rows before deduplication.
+MAX_RELATIONSHIP_PAGE_RECORDS = 2_000  # Current documented Tooling cap, not exhaustion proof.
+MAX_RELATIONSHIP_STDOUT_BYTES = 1_048_576
+RELATIONSHIP_TIMEOUT_SECONDS = 300
+MAX_RELATIONSHIP_LABEL_CHARS = 512
+MAX_GRAPH_EDGES = 20_000
+MAX_GRAPH_OBSERVATIONS = 40_000

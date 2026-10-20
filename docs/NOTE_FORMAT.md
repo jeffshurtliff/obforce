@@ -284,8 +284,12 @@ access or Windows sf execution qualification follows. Thread 09 internal
 merge `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed
 all 12 cells and all 24 independent installs; see the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
-maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
+Thread 10 internal read-only planning/reporting is accepted, including correction
+`a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
+passed in exact-merge run `39510802449`, attempt 1; see the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
+Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
+remain NOT STARTED.
 
 Thread 10's existing-note candidates always call the preservation patcher after
 strict reconciliation; they never use whole-new-note templates. Lifecycle

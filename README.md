@@ -43,8 +43,11 @@ bounded read-only explicit synthetic-vault/state inputs, strict saved baselines
 and unique moved-note path candidates. Thread 10 adds internal complete read-only
 change plans, publication preconditions and bounded redacted reports. Plans retain
 strict ownership, coverage and no-write checks; no public lifecycle command,
-adoption, state write or filesystem publication is exposed. #10 remains open
-pending maintainer acceptance; Thread 11 and later are not started.
+adoption, state write or filesystem publication is exposed. Thread 10 is accepted
+and [#10](https://github.com/jeffshurtliff/obforce/issues/10) is closed after all 12
+exact-merge CI cells passed; see the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
+Thread 11 is next eligible and not started; later threads remain not started.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

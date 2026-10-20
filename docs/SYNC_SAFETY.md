@@ -177,8 +177,13 @@ read snapshots. Runtime socket/process audit guards stay active. Setup/build/pip
 downloads are separate network use. Actual results and native/hosted gaps are in
 the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md#thread-09-handoff--20-october-2026).
 Thread 09 is accepted, including delivered Windows correction `890ced2` / merge
-`dff34a7`; #9 is closed. Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
-maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
+`dff34a7`; #9 is closed. Thread 10 internal read-only planning/reporting is accepted,
+including correction
+`a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
+passed in exact-merge run `39510802449`, attempt 1; see the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
+Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
+remain NOT STARTED.
 No release/publication or Windows sf qualification is implied.
 
 
@@ -302,15 +307,15 @@ cache or temporary publication artifacts. No new dependency is needed.
 Thread 11 and all later threads and enhancement #18 remain NOT STARTED.
 
 
-## Thread 10 local candidate evidence
+## Thread 10 historical local candidate evidence
 
 Local macOS/Python 3.14.7 verification passed 1,058 tests with two existing
 case/NFC fixture skips (95% combined coverage), strict metadata/lock, Ruff,
 Bandit, fresh builds, strict Twine, exact archive inspection and both independent
 wheel/sdist installations. New installed probes compare fixed synthetic note/state
 hashes and no-write preservation with runtime network/process guards active.
-Thread 10 is locally implemented and #10 remains open pending maintainer
-acceptance; delivery and exact-commit hosted/native platform evidence are pending.
+At that local handoff, delivery and exact-commit hosted evidence were pending;
+the acceptance record below supersedes that status without changing those results.
 Historical failed tests/setup/network attempts are retained in the
 [Thread 10 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-handoff--20-october-2026).
 Thread 11 and later and enhancement #18 remain NOT STARTED.
@@ -328,5 +333,29 @@ before Poetry setup, so tests and independent artifact probes use quiescent
 ancestry. A controlled regression proves shared-parent changes still block and
 separate-root fixtures succeed. Production reader/planner and all Windows
 cross-API/same-API and parent change checks are unchanged. No retry or skip is
-added. The historical run remains failed; corrected hosted validation and #10
-acceptance remain pending. See the [correction handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-macos-ci-correction-handoff--20-october-2026).
+added. The historical run remains failed. Correction `a2132c3` / merge `6004c35`
+is delivered and accepted after the corrected 12-cell run below. See the [correction handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-macos-ci-correction-handoff--20-october-2026).
+
+
+## Thread 10 accepted delivery — 20 October 2026
+
+The maintainer reviewed/pushed the correction and authorized closure after full
+verification. Exact-merge run [39510802449](https://github.com/jeffshurtliff/obforce/actions/runs/39510802449),
+attempt 1, at `6004c35cee63ac2e24b9833bd986f320d95485d3` passed all 12 cells:
+Linux Python 3.12–3.15 each 1061 passed; macOS each 1059 passed/2 skipped;
+Windows each 1045 passed/16 skipped. Coverage was 95% on Linux/macOS and 94%
+on Windows. All required command logs were inspected: standalone strict
+metadata/lock, Ruff lint/format, Bandit, pytest, fresh build, strict Twine,
+exact 31-wheel/30-sdist archive checks, both guarded independent installs
+per cell (24 total) and whitespace passed. No required command was skipped.
+
+Earlier failed runs, local setup/probe failures and recorded test skips remain
+historical evidence. Quiet pytest logs do not enumerate every skip reason.
+Native ordinary-file reads, synthetic reparse/race tests and hosted package
+probes qualify only those tested boundaries; no Windows sf, hostile-race,
+writer, recovery, real org/vault or public lifecycle guarantee follows.
+Requested platform relationships remain partial/unavailable even after clean
+empty results; offline relationships remain not collected. No release or
+publication is implied. #10 is accepted and closed; Thread 11 is next eligible
+and NOT STARTED, along with later threads and enhancement #18. See the full
+[acceptance and handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).

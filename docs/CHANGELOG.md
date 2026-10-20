@@ -17,8 +17,13 @@ All notable changes to this project will be documented in this file, following
   before implementation. Synthetic tests and guarded independent installed probes
   verify exact no-write behavior and LF/CRLF/Windows timestamp semantics.
   No dependency, writer, public command, source/transport or state-wire/hash
-  change. Thread 10 remains open pending maintainer acceptance; Thread 11 and
-  later and enhancement #18 remain NOT STARTED.
+  change. Thread 10 is accepted, including correction `a2132c3` / merge
+  `6004c35`; #10 is closed. Exact-merge run `39510802449`, attempt 1, passed
+  all 12 cells: Linux 1061 passed each; macOS 1059 passed/2 skipped each;
+  Windows 1045 passed/16 skipped each. Every standalone gate, fresh build,
+  strict Twine, exact archive check and all 24 independent installs passed.
+  Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
+  remain NOT STARTED.
 
 - Internal strict version-one private state serialization/loading and bounded
   read-only managed-note discovery with conservative indicators. Exact saved
@@ -160,7 +165,11 @@ All notable changes to this project will be documented in this file, following
   change refusal and proves isolation; blocked baseline setup now shows only the
   redacted plan report. Production read guards, timestamps, state/hash/ownership
   contracts and Windows sf refusal remain unchanged. Historical failed Thread 10
-  run `39507844963` remains failed; corrected hosted validation is pending.
+  run `39507844963` remains failed, including skipped downstream gates in its
+  macOS 3.12 cell. Correction `a2132c3` / merge `6004c35` passed every required
+  command in all 12 cells of run `39510802449`, attempt 1; #10 is accepted
+  and closed. Historical local setup/probe failures remain recorded in the
+  [roadmap](../dev/IMPLEMENTATION_PLAN.md#thread-10-macos-ci-correction-handoff--20-october-2026).
 
 - Windows read-only state/note loading no longer treats different pathname and
   descriptor `st_ctime_ns` meanings as a file change. Cross-API comparisons require

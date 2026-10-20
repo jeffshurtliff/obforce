@@ -63,8 +63,12 @@ Exact-merge run `39502679337`, attempt 1, passed all 12 cells: Linux 935 passed
 each, macOS 933 passed/2 skipped each, Windows 920 passed/15 skipped each. Every
 standalone gate, fresh build/Twine/archive check and all 24 independent installs
 passed. See its [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
-maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
+Thread 10 internal read-only planning/reporting is accepted, including correction
+`a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
+passed in exact-merge run `39510802449`, attempt 1; see the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
+Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
+remain NOT STARTED.
 
 ## Development setup
 

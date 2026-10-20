@@ -19,7 +19,8 @@ release limitation below is retained. See the
 Thread 07 adds accepted internal [candidate rendering](RENDERING.md), delivered
 at merge `eedeff4`; #7 is closed. Thread 08 adds accepted in-memory
 [note preservation](NOTE_FORMAT.md), delivered at merge `dba53ab`; #8 is closed.
-Thread 09 is next eligible and remains NOT STARTED.
+Thread 09 adds internal [read-only state/move reconciliation](SYNC_SAFETY.md),
+pending acceptance; Threads 10–17 and #18 remain NOT STARTED.
 
 ## Direction, endpoints and provenance
 
@@ -59,7 +60,8 @@ metadata and must not be logged or copied into public reports.
 The graph-specific endpoint/evidence records support unresolved sources without
 changing frozen `ComponentKey`, `Relationship`, component/scope hashes, ownership
 or note/state schemas. The existing Relationship record continues to represent
-resolved-source evidence. State serialization/validation remains Thread 09.
+resolved-source evidence. Thread 09 separately supplies strict state serialization/validation
+and old/new managed path mappings; it never replaces stale relationship evidence.
 
 ## Fixed collection and independently verified identity
 
@@ -203,7 +205,7 @@ Documentation/source reads only; no real `sf` invocation:
 Synthetic tests and installed mocks verify local behavior. They cannot establish
 actual org permissions, supported-type coverage, live exhaustion or Windows sf
 execution. Future live validation requires separate authorization for its target
-and operations. Enhancement #18 and Threads 09–17 remain NOT STARTED.
+and operations. Enhancement #18 and Threads 10–17 remain NOT STARTED.
 
 Thread 07 projects both graph directions into candidate notes with explicit
 managed paths, method/coverage/staleness and unresolved labels. No endpoint ID or

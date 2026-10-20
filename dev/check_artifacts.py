@@ -65,6 +65,7 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'renderer/notes.py',
             'sync/__init__.py',
             'sync/notes.py',
+            'sync/state.py',
             'resources/templates/apex_created.md.j2',
             'resources/templates/apex_generated.md.j2',
         }
@@ -115,6 +116,10 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
         member = f'obforce/{name}' if artifact.suffix == '.whl' else f'{root}src/obforce/{name}'
         if content[member] != (repository / 'src/obforce' / name).read_bytes():
             raise ValueError('Packaged source/resource differs from reviewed checkout')
+    if artifact.suffix != '.whl':
+        for name in ('README.md', 'pyproject.toml'):
+            if content[f'{root}{name}'] != (repository / name).read_bytes():
+                raise ValueError('Packaged project document differs from reviewed checkout')
     if actual_license != license_bytes:
         raise ValueError('Distribution license differs from root LICENSE')
     print(json.dumps({'artifact': artifact.name, 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest(), 'files': names}))
@@ -398,6 +403,84 @@ for unsafe in (b'custom: 1\ncustom: 2\n', b'custom: !unsafe private-sentinel\n',
         assert 'private-sentinel' not in str(error)
     else:
         raise AssertionError('Unsafe YAML accepted')
+"""
+        preservation_probe += r"""
+import json
+import tempfile
+from pathlib import Path
+from obforce.sync.state import SavedNote, StateDocument, parse_state, serialize_state, load_state, reconcile_vault
+
+def snapshot(root):
+    return {p.relative_to(root).as_posix(): (p.stat().st_mtime_ns, p.read_bytes() if p.is_file() else None)
+            for p in [root, *root.rglob('*')]}
+
+for data in (raw, raw.replace(b'\n', b'\r\n')):
+    parsed = parse_note(data)
+    saved = SavedNote(state_for(parsed), parsed.region)
+    document = StateDocument(binding, coverage.selection, coverage, (saved,))
+    wire = serialize_state(document)
+    loaded = parse_state(wire)
+    assert serialize_state(loaded) == wire and loaded.notes[0].generated_region == parsed.region
+    assert b'technical_debt' not in wire and b'Fictional knowledge' not in wire
+    with tempfile.TemporaryDirectory(prefix='obforce-state-synthetic-') as temporary:
+        vault = Path(temporary).resolve()
+        state_path = vault / '.obforce/state.json'
+        state_path.parent.mkdir()
+        state_path.write_bytes(wire)
+        path = vault / saved.note.path
+        path.parent.mkdir(parents=True)
+        path.write_bytes(data)
+        (vault / 'Ordinary.md').write_text('Unrelated human narrative\n', encoding='utf-8')
+        before = snapshot(vault)
+        assert load_state(state_path) == loaded
+        result = reconcile_vault(vault, state_path, binding, coverage.selection, excluded_roots=())
+        assert not result.path_changes and serialize_state(result.state) == wire
+        assert snapshot(vault) == before
+        moved = vault / 'Moved.md'
+        path.rename(moved)
+        before = snapshot(vault)
+        result = reconcile_vault(vault, state_path, binding, coverage.selection, excluded_roots=())
+        assert result.path_changes[0].old_path == saved.note.path and result.path_changes[0].new_path == 'Moved.md'
+        candidate = result.state.notes[0]
+        assert candidate.note == replace(saved.note, path='Moved.md')
+        assert candidate.generated_region == saved.generated_region
+        assert patch_note(data, candidate.note, candidate.generated_region, original).content is data
+        assert snapshot(vault) == before
+        copy = vault / 'Copy.md'
+        copy.write_bytes(data)
+        before = snapshot(vault)
+        try:
+            reconcile_vault(vault, state_path, binding, coverage.selection, excluded_roots=())
+        except ConflictError as error:
+            assert error.exit_code == 3 and 'DemoService' not in str(error)
+        else:
+            raise AssertionError('Copied identity accepted')
+        assert snapshot(vault) == before
+        copy.unlink()
+        moved.write_bytes(data.replace(b'sf_status: Active', b'sf_status: Human'))
+        before = snapshot(vault)
+        try:
+            reconcile_vault(vault, state_path, binding, coverage.selection, excluded_roots=())
+        except ConflictError:
+            pass
+        else:
+            raise AssertionError('Generated edit accepted by reconciliation')
+        assert snapshot(vault) == before
+    for bad in (b'{"x":1,"x":1}', b'{"state_schema":99}', b'\xff', b'[' * 1000 + b']' * 1000):
+        try:
+            parse_state(bad)
+        except ConflictError as error:
+            assert error.exit_code == 3
+        else:
+            raise AssertionError('Unsafe state accepted')
+    malicious = json.loads(wire)
+    malicious['notes'][0]['note']['path'] = '../Escape.md'
+    try:
+        parse_state(json.dumps(malicious).encode())
+    except ConflictError:
+        pass
+    else:
+        raise AssertionError('State traversal accepted')
 """
         fixtures = Path(__file__).resolve().parents[1] / 'tests/fixtures/vaults'
         preservation_probe = preservation_probe.replace('NOTE_BYTES', repr((fixtures / 'hand_edited.md').read_bytes()))

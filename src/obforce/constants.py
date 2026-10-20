@@ -109,3 +109,13 @@ MAX_YAML_NODES = 4_096
 MAX_YAML_DEPTH = 2
 MAX_YAML_SCALAR_BYTES = 16_384
 MAX_YAML_LIST_ITEMS = 1_024
+
+# State/discovery limits bound private reads and candidate output, never publication.
+MAX_STATE_BYTES = 16_777_216
+MAX_STATE_DEPTH = 16
+MAX_STATE_NODES = 250_000
+MAX_STATE_TEXT_BYTES = 2_097_152
+MAX_STATE_NOTES = 10_000
+MAX_VAULT_ENTRIES = 50_000
+MAX_VAULT_READ_BYTES = 67_108_864
+CONTROL_DIRECTORIES = frozenset({'.git', '.obsidian', '.obforce'})

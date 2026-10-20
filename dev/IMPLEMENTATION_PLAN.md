@@ -20,7 +20,8 @@ Thread 07 is **accepted and complete**, delivered at merge `eedeff4` with all
 12 exact-merge hosted cells passing applicable checks. Issue #7 is closed as
 completed. Thread 08 is **accepted and complete**, delivered at merge `dba53ab`
 with all 12 exact-merge hosted cells passing applicable checks. Issue #8 is closed
-as completed. Thread 09 is next eligible; Threads 09–17 remain **not started**.
+as completed. Thread 09 is **implemented locally**, pending maintainer acceptance; #9 remains open.
+Threads 10–17 remain **not started**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -802,7 +803,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Accepted and complete; #6 closed |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Accepted and complete; issue closed |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Accepted and complete; issue closed |
-| 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Not started |
+| 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Implemented locally; open pending acceptance |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Not started |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Not started |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
@@ -1512,7 +1513,7 @@ schemas, generated-property edits, and unsafe content. No filesystem publication
 
 **Goal:** Reliable ownership and note-move matching independent of filenames.
 
-**Depends on:** 08. **Status:** Not started; next eligible.
+**Depends on:** 08. **Status:** Implemented locally; #9 open pending acceptance.
 Thread 08 is accepted/closed at merge `dba53ab`; see its
 [acceptance record](#thread-08-acceptance-and-closure--20-october-2026).
 Recheck actual source and exact-commit CI before implementing Thread 09.
@@ -3721,3 +3722,163 @@ The 12 Windows skips remain nine POSIX collector cases, one POSIX wrapper-symlin
 - [x] Maintainer authorized closure; #8 checklist/current status, current docs, roadmap status/index/acceptance and exact Thread 09 prompt synchronized.
 
 **Docs/Git/tracking/handoff:** This acceptance update changes six documentation files only, with local link/anchor/fence/consistency/privacy/whitespace and diff/untracked review. No application tests/builds/dependency installs were rerun; hosted evidence above validates the delivered application. Docs remain unstaged/uncommitted on main at `dba53ab`; implementation is delivered. No stage/commit/push/PR/merge/tag/CI rerun/release/publication, real Salesforce/auth/vault access, other chat, subagent or later-thread implementation occurred. Existing #8 labels, assignee, v0.1.0 milestone and native #7 → #8 → #9/#10 links are preserved; #9 remains open/not started with direct prerequisite #8, without duplicate tracking. **Next eligible: Thread 09 / #9 under a new request, explicitly NOT STARTED. Threads 09–17 and enhancement #18 remain NOT STARTED.**
+
+
+### Thread 09 start and contract — 20 October 2026
+
+Only Thread 09 is started, under explicit maintainer authorization. Rechecked #9,
+its native #8 prerequisite and #10 dependent, accepted #8 and linked #7/#3/#6
+records, actual immutable models, parser, renderer and graph contracts. Exact
+implementation d79f5e2 / merge dba53ab trees match; current c3a5402 changes only
+acceptance docs. Every job, required step and full command log in run 39453887153,
+attempt 1 at dba53ab was rechecked: Linux/macOS 744 passed per cell, Windows 732
+passed/12 expected skips per cell; all 12 standalone gates, fresh builds/Twine,
+archive checks and 24 independent installs passed. No new prerequisite blocker.
+Vendor-doc directory absent; GitMCP returned no documentation; authenticated gh
+provided issue/log evidence after an initial restricted-network failure. Prior
+failed CI/local setup/parser/probe outcomes remain historical.
+
+Before dependent code, recorded the exact wire/minimum-fields, saved exact-byte
+baseline envelope, binding/selection/coverage, deterministic encoding, discovery
+indicators/exclusions/empty-state/moves/conflicts, filesystem assumptions and all
+finite limits in [SYNC_SAFETY](../docs/SYNC_SAFETY.md). NoteState and accepted hash
+contracts remain unchanged. No dependency addition. No writes/public lifecycle,
+batch planner, adoption/migration, transport, locking/journal/recovery. Tests use
+synthetic vaults only; all changes stay unstaged/uncommitted and #9 stays open.
+Windows sf remains refused; partial/unavailable platform and uncollected offline
+relationships unchanged. Threads 10–17 and enhancement #18 explicitly NOT STARTED.
+
+
+### Thread 09 progress — 20 October 2026
+
+Implemented internal sync/state.py: unchanged immutable NoteState plus exact saved
+bytes, strict finite wire validation/serialization, explicit read-only state/vault
+inputs, conservative managed indicators, complete bounded discovery, redacted
+conflicts and deterministic unique-move path candidates. No source absence or
+publication decisions. Added synthetic property/body/identity/schema/source/scope,
+links/reparse/special/hard-link, traversal/race/partial-read, portable collision,
+empty-state/non-adoption and LF/CRLF regressions. Neighbor graph invalidation uses
+both directions and preserves saved source/graph/render hashes. Extended exact
+package allowlist and guarded installed parser/state/reconciliation probe.
+
+First focused run: 135 passed, 2 skipped, 4 failures (three test tuple mutations
+and missing serialization note-count recheck). Corrected all four. An expanded
+run exposed a graph fixture missing its required endpoint ID and discovered-path
+errors retaining ModelError; fixed fixture and changed discovered-path refusal to
+ConflictError. Subsequent full suite: 910 passed, 2 filesystem-representation
+skips, 95% aggregate/94% state coverage. Synthetic case/NFC collision tests pass
+independently. An intermediate formatter check failed after a test edit and was
+corrected. Further offline-evidence/invalid-text refinements are under final
+verification. Metadata/lock, lint, Bandit and whitespace passed; existing scanner
+annotations unchanged. Initial fresh r1 build failed during restricted-network
+PyPI setup; final fresh build/install verification pending. No failure is relabeled
+as a pass; historical prerequisite failures are retained.
+
+#9 remains open pending acceptance; work unstaged/uncommitted. Runtime tests are
+offline and synthetic. Windows sf remains refused, requested platform coverage
+partial/unavailable even when empty, offline relationships not collected.
+Threads 10–17 and enhancement #18 explicitly NOT STARTED.
+
+
+### Thread 09 handoff — 20 October 2026
+
+**Implemented locally; #9 stays OPEN pending maintainer acceptance, delivery and
+exact-commit hosted validation.** Only Thread 09 was implemented. All 14 changed/
+new files remain unstaged/uncommitted on main at baseline c3a5402. No stage,
+commit, push, PR, merge, tag, CI rerun, package upload or publication occurred.
+
+**Prerequisites:** Before code, read #9, accepted/closed #8 and linked prerequisite
+records, native #8 → #9 → #10 links, repository guidance and requested design docs.
+Rechecked actual parser/model/renderer/graph code and implementation d79f5e2 /
+merge dba53ab tree identity. Every job/required step/full command log in run
+39453887153 attempt 1 at that merge passed: Linux/macOS 744 passed per cell,
+Windows 732 passed/12 expected skips per cell, all standalone checks, fresh
+builds/Twine/archive inspection and 24 independent guarded installs. Current
+baseline changes only acceptance docs. No prerequisite blocker. No vendor-doc
+directory. Historical failed CI/local/setup/probe outcomes remain historical.
+
+**Changes:** Added internal sync/state.py, finite constants, 173 synthetic test
+cases and docs/SYNC_SAFETY.md. Strict version-one UTF-8 JSON uses exact key/type/
+schema checks, duplicate-key detection, lexical depth and primitive/node/byte
+bounds, canonical sorted deterministic output and canonical base64 exact saved
+LF/CRLF generated bytes. The unchanged immutable NoteState and strict generated
+property baseline/SHA-256 remain intact. Both current generated values and exact
+saved bytes must match; no digest authorizes rebase/overwrite. Unknown/contradictory
+state, invalid IDs/hashes/bindings/scope and duplicate IDs/keys/paths refuse.
+No human regions or user-owned properties are serialized as baselines.
+
+Explicit bounded read-only state loading and full vault discovery reject unsafe
+ancestors, links/junctions/reparse/special files/hard links, portable collisions,
+partial scans/read failures and observed file/parent changes. Control directories
+are excluded; only the explicit expected state document is read separately.
+Conservative obforce/sf_ indicators require valid tracked ownership, including
+malformed/edited identities. Ordinary notes remain unadopted. Missing state is
+allowed only with explicit initial=True and an empty managed scope; corrupt/empty/
+unknown state never establishes ownership. All read/no-op/failure paths preserve
+bytes/mtimes/tree. Atime and native/read-race limits are documented honestly.
+
+Unique in-vault UUID moves retain key/content/baselines/prior hashes and change
+only candidate paths. Deterministic immutable paths and explicit key/old/new
+changes feed existing incoming/outgoing graph and render invalidation. Tests
+verify both neighboring directions change fingerprints while source hashes stay
+unchanged. No source inventory/absence decision is evaluated; vanished tracked
+notes conflict independently of source observation. Exact workspace/local/live/
+canonical verified org/selection matches are enforced. Saved independent scope
+and coverage evidence remain intact; offline audit unavailable and relationships
+not collected. No component is deleted/marked missing or stale edges replaced.
+Creation-template behavior and renderer-local graph-plus-independent-Coverage
+composition remain unchanged.
+
+**Verified checklist:**
+
+- [x] All four original Thread 09 implementation tasks and unique-move/conflict/non-adoption acceptance scenario completed locally.
+- [x] Final full suite **915 passed, 2 skipped**, including **171 passed / 2 skipped new cases**; macOS 27.0.1 ARM64, Python 3.14.7, Poetry 2.4.2. Combined coverage 95%, sync/state 93%; defensive uncovered paths remain visible.
+- [x] The two skips are native case/NFC fixture creation on this filesystem; independent synthetic case/NFC collision refusals pass. Native FIFO, symlink/hardlink and injected reparse/read-race tests pass locally; injection is not Windows qualification.
+- [x] Strict Poetry metadata/lock, Ruff lint/format (74 files), Bandit and tracked/new-file whitespace checks passed. No new findings/suppressions; five existing narrow source/transport annotations remain.
+- [x] Final fresh **r4** wheel/sdist build, strict Twine and exact **29 wheel / 28 sdist** member/license/source/resource inspection passed; sync/state.py deliberately allowlisted. Sdist README/pyproject bytes also match checkout.
+- [x] Both final independent clean artifact installs outside checkout/cwd passed dependency/import/resource/model/entry-point/source/graph/render/parser/state/loading/reconciliation probes, exact LF/CRLF baselines feeding patch_note, no-op/moves, edited/copied identity and malicious JSON/path refusal, exact byte/mtime/tree snapshots and no cwd artifacts. Socket/process audit guards explicitly active; setup/build/pip downloads are separate network use.
+- [x] Requested docs/changelog/roadmap and existing #9 start/progress/checklist/handoff synchronized. Accepted NoteState/hash/config/errors/source/parser/graph/renderer/CLI/resource code, Poetry metadata/lock, Apache licensing and maintainer changes preserved; no runtime dependency added. All changed/new Python headers retain requested GPT-6.1 Sol / 20 Oct 2026 attribution.
+- [ ] Maintainer acceptance, delivery and exact-commit hosted Thread 09 validation.
+- [ ] Ready to merge / release acceptance gate; no delivery/publication authorization implied.
+
+**Final r4 artifacts (temporary; not published):**
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Wheel | `0d1fa2ffffd00d1c80294678bd72d9a331e1af18785bcf86dc5096ffd55d1c07` |
+| Sdist | `a30b7da012241f8740ba24e1aa93ecbb81bcebd26ef6932ef2b5867b0ff1ea9e` |
+
+Initial restricted-network GitHub/build/install setup attempts failed; authenticated
+network-enabled retries passed. GitMCP returned no docs and the GitHub connector
+could not post (403); authorized gh reads/comments succeeded. First test failures
+(tuple-mutation fixture, missing serializer note-count recheck, missing graph
+endpoint ID and discovered-path error class) were corrected, retaining their
+actual failed outcomes. An intermediate formatter failure was corrected. r2/r3
+build candidates were superseded after validation/document refinements; r3
+install setup failed under restricted network, and archive review found its README
+predated the concurrent docs edit. The checker now verifies README/pyproject too.
+Final r4 was built after packaged inputs settled and both independent installs
+passed. No failed setup/probe is reported as runtime success. Final test review added a
+synthetic reserved-name scan and explicit native Windows symlink-privilege/reserved-
+fixture skips when those fixtures cannot be created; these are capability gaps,
+not qualification evidence. Final full suite then passed 915/2 as recorded above.
+
+**Limits:** No hosted Thread 09 run, native Linux/Windows state run or local Python
+3.12/3.13/3.15 run. No live sf/Obsidian/auth/credentials/.env/org/metadata/real-vault
+access or CLI/plugin changes. Windows sf stays refused; prerequisite skips and
+synthetic reparse results do not qualify execution. Requested platform
+relationships remain partial/unavailable because exhaustion cannot be established,
+including clean empty results; offline stays not collected. Finite read checks
+require a stable trusted local tree and are not hostile race isolation, an atomic
+snapshot or publication safety. Conservative indicators can refuse ordinary notes
+for review; they never adopt them. All explicit source/template/application roots
+must be caller-supplied for overlap refusal.
+
+**Tracking/Git/next:** Existing #9 labels, assignee, v0.1.0 milestone and native
+#8 → #9 → #10 dependencies preserved; no duplicate issue. #9 remains OPEN pending
+acceptance. Diff/untracked/status reviewed; all 14 files unstaged/uncommitted on
+main at c3a5402. No public lifecycle, batch planner/reporting, filesystem/state
+publication, locks, journals, recovery, adoption/migration, transport work or other
+chat/subagent. **Next eligible after Thread 09 acceptance/delivery verification and
+a new request: Thread 10 / #10, explicitly NOT STARTED. Threads 10–17 and
+enhancement #18 remain NOT STARTED.**

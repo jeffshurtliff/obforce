@@ -3,7 +3,8 @@
 Thread 02 freezes constants, normalized state records, and fingerprint inputs.
 Thread 07 [renders candidate strings](RENDERING.md); Thread 08 now parses and
 patches caller-supplied managed-note bytes internally as described below. State
-loading/discovery, planning and publication remain Threads 09–13. This fictional
+loading/discovery and unique move reconciliation are internal Thread 09 work
+([safety contract](SYNC_SAFETY.md)); planning/publication remain Threads 10–13. This fictional
 note illustrates the version-one contract, not output from a public command.
 
 ```markdown
@@ -112,9 +113,11 @@ and supported note schema. User-owned properties are forbidden in that baseline.
 
 Mappings are copied and read-only so callers cannot mutate a previously hashed
 record. State schema/UUID/path/digest validation exists for supplied records.
-The future `.obforce/state.json` document remains private, with schema validation,
-duplicate-key/ID/path detection, bounded loading, missing/corrupt state refusal,
-and identity reconciliation belonging to Thread 09. Constructing a `NoteState`
+The private `.obforce/state.json` wire envelope is implemented internally in
+Thread 09, including strict duplicate-key/ID/path validation, bounded loading,
+missing/corrupt state refusal and identity reconciliation. It wraps the unchanged
+NoteState with exact saved generated-region bytes encoded as canonical base64;
+see [SYNC_SAFETY](SYNC_SAFETY.md). Constructing a `NoteState`
 is not evidence of a valid discovered vault or safe recovery state.
 
 A unique moved note retains its UUID and source key. Its changed path invalidates
@@ -140,7 +143,7 @@ Only explicitly supplied managed-note paths can supply link locations. Graph-onl
 changes or a neighboring note move change graph fingerprints without changing
 component facts/source hashes or note ownership. Coverage/stale changes participate
 in invalidation too. Thread 07 renders these explicit mappings; Thread 08 supplies
-in-memory preservation. State/move discovery and publication remain later threads;
+in-memory preservation. Thread 09 adds read-only state/move discovery; publication remains later work;
 this graph neither adopts notes nor writes state.
 
 See [internal rendering](RENDERING.md) for engine-owned YAML/markers, finite Jinja
@@ -275,5 +278,6 @@ merge `dba53ab`; #8 is closed. Exact-merge run `39453887153`, attempt 1, passed 
 build/Twine and all 24 independent guarded installs passed. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026)
 for actual evidence and retained historical failures/skips. No real sf/org/vault
-access or Windows sf execution qualification follows. Thread 09 is next eligible;
-Threads 09–17 and enhancement #18 remain NOT STARTED.
+access or Windows sf execution qualification follows. Thread 09 internal
+[state reconciliation](SYNC_SAFETY.md) remains pending acceptance; Threads 10–17
+and enhancement #18 remain NOT STARTED.

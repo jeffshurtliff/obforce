@@ -40,8 +40,11 @@ in-memory patches while preserving supported user content. It adds no discovery,
 state loading, filesystem publication or public command.
 Thread 09 adds internal [state validation and identity reconciliation](docs/SYNC_SAFETY.md):
 bounded read-only explicit synthetic-vault/state inputs, strict saved baselines
-and unique moved-note path candidates. No adoption, planner, state writes,
-filesystem publication or public lifecycle command is exposed.
+and unique moved-note path candidates. Thread 10 adds internal complete read-only
+change plans, publication preconditions and bounded redacted reports. Plans retain
+strict ownership, coverage and no-write checks; no public lifecycle command,
+adoption, state write or filesystem publication is exposed. #10 remains open
+pending maintainer acceptance; Thread 11 and later are not started.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

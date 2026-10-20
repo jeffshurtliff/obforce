@@ -5,7 +5,8 @@ Thread 07 implements deterministic **candidate** rendering in
 not a stable public Python API or a generation command. The CLI still exposes
 help/version only. The renderer reads no existing note and performs no patching,
 adoption or publication. Thread 09 separately adds internal read-only
-[state/move reconciliation](SYNC_SAFETY.md); planning/recovery remain later work.
+[state/move reconciliation](SYNC_SAFETY.md); Thread 10 adds internal read-only
+planning while publication/recovery remain later work.
 A complete new-note candidate must never be applied to an existing note.
 Thread 08 separately supplies
 [bounded in-memory preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
@@ -197,7 +198,7 @@ may use the network; runtime probes do not.
 Actual local, hosted and native gaps are recorded in the
 [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md). No live sf/org/vault or Windows
 sf execution qualification follows. Thread 09 internal state reconciliation is
-accepted; #9 is closed. Threads 10–17 and enhancement #18 remain not started.
+accepted; #9 is closed. Thread 10 planning is described below; Threads 11–17 and enhancement #18 remain not started.
 
 
 ## Thread 07 accepted delivery — 20 October 2026
@@ -234,5 +235,16 @@ Thread 09 adds accepted internal [state/move reconciliation](SYNC_SAFETY.md),
 including correction `890ced2` / merge `dff34a7`. #9 is closed; exact-merge run
 `39502679337`, attempt 1, passed all 12 cells and 24 independent installs. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 is next eligible; Threads 10–17 and enhancement #18 remain NOT STARTED.
+Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
+maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
 No release is published.
+
+Thread 10 always renders accepted generated candidates for existing notes against
+all reconciled/current paths and independently supplied coverage, then applies
+only preservation patches. This catches source, incoming/outgoing graph, moved
+target, generated-template, options/layout and renderer-contract invalidation.
+Equal hashes never bypass baseline checks. Whole-note creation and its separate
+fingerprint apply only to new components; existing notes ignore creation assets.
+The planner retains stale graph evidence with the accepted refresh helper.
+See [complete read-only planning](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026)
+for caller inputs, output limits and the publication boundary.

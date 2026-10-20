@@ -328,7 +328,7 @@ def _candidate(candidate: GeneratedCandidate, state: NoteState) -> Mapping[str, 
                 'sf_lifecycle',
             }
             <= candidate.properties.keys()
-            or candidate.properties.get('sf_lifecycle') != 'active'
+            or candidate.properties.get('sf_lifecycle') not in {'active', 'missing'}
             or candidate.properties.get('sf_dependency_coverage') not in {status.value for status in CoverageStatus}
         ):
             raise ModelError('Invalid generated candidate')

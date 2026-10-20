@@ -63,7 +63,8 @@ Exact-merge run `39502679337`, attempt 1, passed all 12 cells: Linux 935 passed
 each, macOS 933 passed/2 skipped each, Windows 920 passed/15 skipped each. Every
 standalone gate, fresh build/Twine/archive check and all 24 independent installs
 passed. See its [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 is next eligible; Threads 10–17 and enhancement #18 remain NOT STARTED.
+Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
+maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup
 
@@ -154,6 +155,10 @@ expected-output comparison, exact CRLF baselines, user preservation
 and typed conflict/unsafe-input checks under the same runtime guards. Thread 09
 adds sync/state.py deliberately and installed wire/loading/no-op/move/conflict probes
 with exact byte/mtime/tree preservation. All synthetic setup is outside checkout/cwd.
+Thread 10 deliberately adds sync/planner.py and sync/reporting.py, with a shared
+`dev/probe_planner.py` acceptance probe. Each independent install checks fixed
+synthetic note/state hashes, stable UUIDs, no-op/update/move/conflict plans, bounded
+reporting and exact byte/mtime/tree preservation under active runtime guards.
 No state writes or publication are implemented. Bases assets
 remain Thread 14. The checker never publishes or uploads artifacts.
 

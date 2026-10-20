@@ -1,10 +1,10 @@
 # Note ownership and state contract
 
 Thread 02 freezes constants, normalized state records, and fingerprint inputs.
-It does not render or parse Markdown/YAML, discover notes, load state documents,
-reconcile moves, or publish files. Thread 07 now [renders candidate strings](RENDERING.md); existing-note parsing,
-state/discovery, planning and publication remain Threads 08–13. This fictional note illustrates the version-one contract, not generated
-output from a working command.
+Thread 07 [renders candidate strings](RENDERING.md); Thread 08 now parses and
+patches caller-supplied managed-note bytes internally as described below. State
+loading/discovery, planning and publication remain Threads 09–13. This fictional
+note illustrates the version-one contract, not output from a public command.
 
 ```markdown
 ---
@@ -85,7 +85,7 @@ There must be exactly one ordered pair, each on its own line. Repeated, nested,
 missing, reversed, inline, or otherwise malformed markers are conflicts. Marker
 strings may not occur in source values or template content in a way that creates
 an extra marker or ambiguous boundary. Thread 07 validates its own generated/new candidates against this structure;
-existing-note parsing remains Thread 08.
+Thread 08 independently validates supplied existing bytes too.
 
 Only the bytes strictly between the validated marker lines are replaceable.
 Preserve the marker lines and all user body bytes outside them, including line
@@ -99,7 +99,7 @@ unsafe tags, malformed frontmatter, and unsupported YAML structures block the
 batch before any publication. No fallback destructive repair or force mode.
 User prose and supported custom YAML structure/comments/types/quoting must be
 preserved. Universal byte-identical frontmatter preservation is not promised;
-Thread 08 must establish supported round-trip forms and refuse unsafe forms.
+Thread 08 supports the bounded round-trip forms below and refuses unsafe forms.
 
 ## Internal state and invalidation
 
@@ -139,9 +139,135 @@ from one directed evidence set, retaining unresolved/unsupported endpoints as la
 Only explicitly supplied managed-note paths can supply link locations. Graph-only
 changes or a neighboring note move change graph fingerprints without changing
 component facts/source hashes or note ownership. Coverage/stale changes participate
-in invalidation too. Thread 07 renders these explicit mappings; state/move discovery, preservation
-and publication remain later threads; this graph neither adopts notes nor writes state.
+in invalidation too. Thread 07 renders these explicit mappings; Thread 08 supplies
+in-memory preservation. State/move discovery and publication remain later threads;
+this graph neither adopts notes nor writes state.
 
 See [internal rendering](RENDERING.md) for engine-owned YAML/markers, finite Jinja
 overrides, candidate bounds, separate creation/generated hashes and independent
 coverage invalidation. Whole-new-note candidates must never replace existing notes.
+
+
+## Internal existing-note parsing and preservation (Thread 08)
+
+`sync/notes.py` accepts immutable caller-supplied note bytes. `parse_note` returns
+an immutable observation with exact generated-region bytes and hash, properties,
+and byte offsets. `patch_note` also requires a validated **in-memory** `NoteState`,
+the exact saved generated-region bytes, and an accepted Thread 07
+`GeneratedCandidate`. A whole `NewNoteCandidate` is refused. There is no file/path
+input, state-file loading, note/vault discovery, adoption, move reconciliation,
+batch planner, publication, locking, journal, recovery or public lifecycle command.
+The source binding/selection and provenance of the accepted renderer candidate
+remain the caller's responsibility; candidate hashes are not authentication.
+
+The parser verifies an existing canonical lowercase UUID, integer schema 1,
+the exact reserved allowlist above, and one ordered generated marker pair at
+column zero on separate terminated lines. Unknown `sf_*` keys and any other
+`obforce:` occurrence are ambiguous and refused, including occurrences in YAML,
+inline/repeated/reversed/nested/malformed markers. It never invents an ID or
+infers a rename. Identity/schema edits and source-key/mode mismatches refuse.
+
+Before every patch, **both** current owned properties and current marker-interior
+bytes must equal their saved baselines. The saved bytes must also match the
+state's SHA-256. FieldValue comparisons retain exact types and presence:
+absent, null, false, integer zero, empty string and empty list differ. An
+unavailable baseline entry cannot stand in for a present null note property.
+Even unchanged metadata, matching incoming source/render hashes, or a current
+body hash matching a modified state digest cannot bypass the exact byte comparison.
+There is no force mode or destructive fallback.
+
+### Supported frontmatter and finite parsing
+
+A note must be UTF-8 without a BOM/preamble, NUL or bare CR, starting with an exact
+`---` line and ending its frontmatter with another exact `---` line. Delimiters
+must be terminated. Alternate YAML document delimiters, directives and multiple
+YAML documents are unsupported. Unescaped Unicode newline characters/BOM inside
+frontmatter are refused; ordinary Unicode text is supported.
+
+The root is a block mapping with simple, nonempty, single-line string keys at
+column zero. Quoted keys are supported, including `"null"` and `"false"`; explicit
+`?` keys, complex keys and non-string keys are refused. Duplicate keys are refused.
+
+| Form | Supported behavior |
+| --- | --- |
+| User scalars | Strings, null, booleans, integers up to 64 magnitude bits, finite floats and YAML dates/datetimes; exact original spelling stays in the note |
+| Owned scalars | String, null, boolean or bounded integer; strict normalized types match the existing FieldValue contract |
+| Lists | Empty or strings only, flow or block; arbitrary lists/nested lists/maps are refused |
+| Strings | Plain/single/double quoted, literal/folded multiline, Unicode, chomping/indentation indicators accepted by the parser |
+| Comments/presentation | Supported comments, blank lines, order, quoting, indentation and multiline style in user entries are retained by leaving their source bytes untouched |
+| Unsupported YAML | All explicit tags, including standard tags, anchors, aliases, merge keys, sets, binary, nested maps, nonfinite floats and arbitrary object constructors are refused |
+
+`ruamel.yaml` is resolved by Poetry as `ruamel-yaml >=0.19.1,<0.20.0`, locked to
+0.19.1 without an optional C extension. Each pass uses fresh pure Python
+`YAML(typ='rt')` instances, quotes preserved and duplicate keys disabled. The
+round-trip loader derives from its safe loader and adds no Python constructors.
+A bounded token scan rejects references/tags/directives before loading. Streaming
+events enforce depth, node and scalar limits before composition/construction;
+the library's own depth guard counts scalar leaves too. Loaded values are
+validated against the flat subset, never silently stringified or discarded.
+
+| Refusal bound | Maximum |
+| --- | --- |
+| Input note / output note | 1 MiB each |
+| Input frontmatter / output frontmatter | 64 KiB each |
+| Properties | 128 |
+| Scanner tokens | 8,192 |
+| Parse nodes | 4,096 |
+| Collection depth | 2 (root mapping plus a flat sequence) |
+| Each scalar / key | 16 KiB UTF-8 |
+| Each list | 1,024 strings |
+
+Incoming candidates retain Thread 07's stricter rendering bounds, section/template
+validation, scalar types, hashes and required owned identity/source fields.
+Bounds refuse rather than truncate. This is finite in-process parsing, not OS
+resource isolation or universal YAML support. Official contracts reviewed on
+20 October 2026: [round-trip API](https://yaml.dev/doc/ruamel.yaml/api/),
+[preservation details](https://yaml.dev/doc/ruamel.yaml/detail/),
+[publisher metadata](https://pypi.org/project/ruamel.yaml/),
+[YAML 1.2.2](https://yaml.org/spec/1.2.2/) and
+[Obsidian properties](https://obsidian.md/help/properties).
+
+### Patch and byte policies
+
+Round-trip node/token source spans select only changed owned values or omitted
+owned key/value entries. Changed values use the accepted flat JSON-compatible
+YAML encoding. Existing owned key positions remain; newly available keys append
+in sorted order. Unchanged owned entries also retain their original bytes.
+Comments inside replaced/deleted owned spans survive as standalone comments in
+place; an unsupported comment boundary refuses. A comment attached to a deleted
+owned value may therefore lose that association, while retaining its text/order.
+No user entry is passed through a YAML dumper or the creation template.
+This is a precise supported-subset guarantee, not universal byte-identical
+frontmatter: changed/deleted/new owned entries can change spelling/spacing and
+comment placement. No-op returns the original bytes object exactly. A generated-
+body-only update leaves the complete frontmatter bytes untouched.
+
+Both frontmatter (including delimiters) and the marker/interior envelope must be
+individually uniform LF or CRLF. They may use different uniform conventions.
+Mixed endings within either envelope refuse, including a mixed generated region
+that happens to match its baseline. Mixed LF/CRLF in human body regions is allowed
+and preserved verbatim. Incoming LF generated text is adapted only to the existing
+marker ending. Marker-line bytes, all outside-body bytes, the final newline's
+presence/absence and human whitespace remain exact; no document-wide normalization.
+The returned baseline/hash cover the resulting exact interior bytes, so a CRLF
+output normally differs from the renderer's LF `region_hash`.
+
+`NotePatch` contains only candidate bytes, the next exact property/body baselines,
+exact region SHA-256, unchanged candidate source/graph/render digests, and a
+byte-change flag. It neither writes nor constructs a state document. The entire
+candidate is reparsed and checked against incoming properties/region and retained
+user values before return. All nonreserved properties remain user-owned, including
+custom `type`, tags, aliases, business fields and every `technical_debt*` property.
+Absent/null/false assessments, severity/status and review dates are never inferred
+or replaced with creation defaults. Unavailable/absent/null incoming audits follow
+the accepted renderer's omission contract: remove omitted owned keys, rather than
+inventing null. Audit-name omission remains effective in properties and generated
+text; human-authored content is preserved.
+
+Malformed/unsupported notes, invalid markers, edited baselines and identity
+conflicts raise concise redacted `ConflictError` (3). Invalid caller/candidate
+contracts raise `ModelError` (2), with identity conflicts retaining 3. Parser
+messages, note snippets and local paths are never displayed. Existing outcome
+precedence stays 3, 2, 1, 4, 0. Local synthetic and installed-artifact evidence is
+recorded in the roadmap; no hosted Thread 08 or live/native sf qualification is
+implied. Threads 09–17 and enhancement #18 remain NOT STARTED.

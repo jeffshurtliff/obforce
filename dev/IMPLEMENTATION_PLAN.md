@@ -18,7 +18,9 @@ Thread 06 is **accepted and complete**, delivered at merge `2aa8d2b` with all
 12 hosted cells passing their applicable checks. Issue #6 is closed as completed.
 Thread 07 is **accepted and complete**, delivered at merge `eedeff4` with all
 12 exact-merge hosted cells passing applicable checks. Issue #7 is closed as
-completed. Thread 08 is next eligible; Threads 08–17 remain **not started**.
+completed. Thread 08 is **implemented locally**, with 744 passing synthetic tests
+and fresh independent wheel/sdist checks; #8 remains open pending acceptance,
+delivery and exact-commit hosted validation. Threads 09–17 remain **not started**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -799,7 +801,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Accepted and complete; #6 closed |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Accepted and complete; issue closed |
-| 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Not started |
+| 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Implemented locally; acceptance/hosted pending |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Not started |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Not started |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Not started |
@@ -1439,10 +1441,13 @@ and filename collisions, template traversal, and bounded rendering failures.
 
 **Goal:** Safe reading/patching of managed notes while retaining human content.
 
-**Depends on:** 07. **Status:** Not started; next eligible.
+**Depends on:** 07. **Status:** Implemented locally; #8 open pending acceptance
+and exact-commit hosted validation. See the
+[Thread 08 handoff](#thread-08-handoff--20-october-2026).
 Thread 07 is accepted/closed at merge `eedeff4`; see its
 [acceptance record](#thread-07-acceptance-and-closure--20-october-2026).
-Recheck actual source and exact-commit CI before implementing Thread 08.
+Actual source and exact-commit CI rechecked before code; see the
+[Thread 08 start record](#thread-08-start-and-decisions--20-october-2026).
 
 **GitHub issue:** [#8](https://github.com/jeffshurtliff/obforce/issues/8)
 
@@ -3531,3 +3536,137 @@ The 12 Windows skips are nine POSIX collector cases, one POSIX wrapper-symlink c
 **Docs/Git/tracking/handoff:** Updated roadmap current/index/thread status and acceptance record, exact Thread 08 kickoff/eligibility, contributor/rendering/relationship guidance and changelog. Earlier start/progress/local handoff records are historical, including their then-pending hosted evidence. This acceptance update is prose-only: local link/anchor/fence/consistency/privacy/whitespace and tracked/untracked diff review passed. No application tests/builds/dependency installations were rerun. Five documentation files remain unstaged/uncommitted on main at `eedeff4`; implementation is delivered. No stage/commit/push/PR/merge/tag/CI rerun/release/publication/real Salesforce/auth/vault access, other chat, subagent or later-thread implementation occurred.
 
 Existing #7 enhancement/codex/maintainer labels, assignee, v0.1.0 milestone and reciprocal native #3/#6 → #7 → #8/#10 links are preserved. #8 remains open/not started with direct prerequisite #7; no duplicate issue or new prerequisite is introduced. **Next eligible: Thread 08 / #8 under a new request, explicitly NOT STARTED. Threads 08–17 and enhancement #18 remain NOT STARTED.**
+
+### Thread 08 start and decisions — 20 October 2026
+
+Started under the explicit maintainer request; #8 remains OPEN pending acceptance.
+Before code, rechecked #8 and direct prerequisite #7 (accepted/closed), its linked
+#3/#6 records, native prerequisite links, actual renderer/model/source inputs and
+all jobs, required steps and full command logs in run `39440606470`, attempt 1,
+head `eedeff425bcd4921bef8756412826ce5a93b0165`. All 12 cells passed: Linux/macOS
+618 each; Windows 606 passed/12 expected skips each. Every standalone lock/lint/
+format/Bandit/build/Twine/archive/both-install/whitespace gate passed. Implementation
+`b4658eb` and merge trees match; current `761beb8` differs only in acceptance docs.
+Historical failures and earlier local probe failures retain their original status.
+No new prerequisite blocker. No `local/vendor_docs/` directory is present.
+
+Material contract recorded before dependent implementation:
+
+- Internal caller-supplied immutable UTF-8 bytes, validated in-memory NoteState and
+  accepted Thread 07 GeneratedCandidate only. No filesystem reads/writes, discovery,
+  adoption, state loading, identity/move reconciliation, planner or lifecycle command.
+- Add `ruamel.yaml` through Poetry using the publisher's available current release;
+  record the actual resolved version/constraint after resolution. Use a fresh pure
+  Python `YAML(typ='rt')` per parse, duplicate keys disabled, quotes preserved. Its
+  round-trip API derives from the safe loader, without arbitrary Python constructors.
+  Reject all explicit tags/directives, anchors, aliases and merge keys before load.
+- One initial `---` line and one exact closing `---` line; no BOM, preamble, bare CR,
+  NUL or invalid UTF-8. Root is an implicit block mapping with simple string keys.
+  Support flat string/null/boolean/64-bit integer/finite float/date/datetime user
+  scalars and lists of strings, flow/block lists, comments, order, quoted/plain and
+  literal/folded multiline strings. Refuse nested/complex keys/maps/lists, custom
+  tags, sets, binary, nonfinite values and unsupported forms without coercion.
+- Finite refusal limits: note/output 1 MiB; frontmatter/output 64 KiB; 128 properties;
+  8,192 scanner tokens; 4,096 parse nodes; depth 2 (root map plus flat sequence);
+  scalar text 16 KiB and lists 1,024 items. Check before constructing YAML objects;
+  no alias/merge expansion. Byte, token, event and output bounds are independent.
+- Preserve supported user YAML bytes through round-trip parser source-span splices,
+  not whole-document dumping. Replace changed owned values with JSON-compatible
+  flat YAML; retain comments from changed spans as standalone comment lines if
+  necessary. Delete omitted owned keys, retaining their comments. Append newly
+  available owned keys deterministically. Reparse/validate the entire result and
+  verify unchanged user values before returning. Changed owned presentation can
+  normalize; no promise of universally byte-identical frontmatter.
+- Validate canonical persistent UUID, integer schema 1 and exact owned allowlist;
+  unknown sf_* names, identity/schema edits and invalid structures are conflicts.
+  Validate exactly one ordered marker pair at column zero on separate lines;
+  any other obforce: occurrence is ambiguous and refused. Preserve marker bytes.
+- Compare BOTH strict FieldValue owned-property baselines (absent/null/false/empty
+  remain distinct) AND exact generated-interior bytes with caller-supplied saved
+  bytes and NoteState SHA-256, before accepting even a hash-matching incoming update.
+  Identity/schema/source-key mismatch refuses; hashes never override edited content.
+- Frontmatter and marker/interior endings must each be uniform LF or CRLF and agree
+  within those generated boundaries; refuse mixed frontmatter/interior endings.
+  Human body may mix LF/CRLF and is preserved exactly. Incoming LF region is adapted
+  to the existing marker ending; save/hash the resulting exact bytes. A true no-op
+  returns the original bytes object, regardless of hash/template presentation changes.
+- All nonreserved properties remain user-owned, including every technical_debt*
+  value, review date, tags, aliases and type. Do not infer assessments or defaults.
+  Candidate audit omission removes owned keys without inventing nulls. Creation
+  templates never participate. Retain all accepted source/graph/render/creation
+  contracts and independent-Coverage composition; no transport/collection change.
+- Invalid managed content/baseline edits use redacted ConflictError (exit 3); invalid
+  caller/candidate contracts use ModelError (exit 2). No raw content, paths or parser
+  diagnostics in displayed errors; existing outcome precedence is unchanged.
+
+Official contracts checked on 20 October 2026:
+[ruamel round-trip API](https://yaml.dev/doc/ruamel.yaml/api/),
+[preservation details](https://yaml.dev/doc/ruamel.yaml/detail/),
+[publisher metadata](https://pypi.org/project/ruamel.yaml/),
+[YAML 1.2.2](https://yaml.org/spec/1.2.2/) and
+[Obsidian properties](https://obsidian.md/help/properties).
+Runtime tests remain offline/synthetic; setup/dependency acquisition can use network.
+Windows sf execution remains refused; platform relationships remain partial/unavailable,
+including empty results, and offline relationships not collected. No real Salesforce,
+Obsidian, credentials, metadata or vault access. Changes stay unstaged/uncommitted;
+Threads 09–17 and enhancement #18 remain explicitly NOT STARTED.
+
+
+**Thread 08 dependency/line-ending clarification:** Poetry resolved
+`ruamel-yaml >=0.19.1,<0.20.0` to 0.19.1, without optional C extensions. The first
+restricted-network resolver attempt failed; the authorized network-enabled Poetry
+retry generated the lock and installed successfully. Frontmatter and marker/interior
+envelopes are each uniform, independently LF or CRLF; they may differ from each
+other. Mixed human body endings are opaque/preserved. Structural depth 2 is enforced
+by events; ruamel's additional guard is 3 because it also counts scalar leaves.
+The initial local parser probe exposed that distinction and was corrected before
+all 96 focused synthetic tests passed. No prerequisite or scope blocker was found.
+### Thread 08 progress — 20 October 2026
+
+The internal parser/patcher and synthetic fixtures are implemented. Full local suite: **744 passed, no skips**, macOS ARM64 / Python 3.14.7 / Poetry 2.4.2, including **126 new preservation cases**; combined coverage 95%, sync/notes 94%. Strict Poetry metadata/lock, Ruff lint/format (71 files), Bandit and whitespace passed. Existing five narrow transport/query scanner annotations remain; no new findings/suppressions.
+
+Both strict property and exact-byte region baselines gate patches, independent of incoming hashes. Safe-derived pure round-trip YAML uses bounded scanner/events and exact source spans; unknown reserved keys, tags/references/merges, duplicate/complex/nested structures, malformed markers, identity/schema edits and excessive inputs/outputs refuse with redacted typed diagnostics. Supported custom YAML, comments/order/quotes/multiline/Unicode, user prose, technical-debt absence/null/false and review decisions survive; CRLF outputs return exact adapted-byte baselines. No-op returns original bytes. Audit omission/privacy and creation-only template changes are tested.
+
+Extended edge probes found block-scalar header comments use a different round-trip token representation and indentless lists need an indentation adjustment when replaced by scalar values. Both are handled and now covered in LF/CRLF regressions. An intermediate local edit accidentally classified scalar tokens as forbidden; that local test run failed, was corrected, and all 744 tests subsequently passed. Initial parser depth and restricted-network setup/build failures remain historical, not relabeled successes.
+
+Poetry resolved/locked `ruamel-yaml >=0.19.1,<0.20.0` to 0.19.1 without optional C extensions. Fresh r2 wheel/sdist build and strict Twine passed; exact allowlists deliberately include both sync modules. Independent installed probes are in progress with synthetic byte snapshots, active runtime network/process guards and no cwd artifacts. Setup/build/dependency downloads may use network.
+
+Docs/changelog/roadmap are synchronized. Accepted source/graph/render/creation helpers, renderer-local graph-plus-independent-Coverage composition, source/transport behavior and Apache licensing remain unchanged. Platform relationships remain partial/unavailable, including clean empty results; offline remains not collected. Windows sf execution remains refused. No real sf/Obsidian/auth/org/vault/private-data access or public lifecycle/state/discovery/adoption/planner/publication/recovery.
+
+#8 stays OPEN pending maintainer acceptance and new exact-commit hosted evidence. Work remains unstaged/uncommitted; no CI rerun or delivery action. Threads 09–17 and enhancement #18 remain explicitly NOT STARTED.
+
+### Thread 08 handoff — 20 October 2026
+
+**Implemented locally; #8 remains OPEN pending maintainer acceptance, delivery and exact-commit hosted validation.** Only Thread 08 was implemented. All 17 changed/new files remain unstaged/uncommitted on main at baseline `761beb8`. No stage, commit, push, PR, merge, CI rerun, package upload or publication occurred.
+
+**Prerequisites:** Before implementation, rechecked #8, accepted/closed #7 and its linked #3/#6 prerequisites, native dependency links, actual source/model/render inputs, implementation `b4658eb0f878c71698e580801c118733a16b86df` / merge `eedeff425bcd4921bef8756412826ce5a93b0165` tree identity, and every job/required step/full command log in run `39440606470`, attempt 1 at that merge. All 12 cells passed standalone gates/builds/Twine/both installs: Linux/macOS 618 passed each; Windows 606 passed/12 expected skips each. Current baseline changes only acceptance docs. No new prerequisite blocker; no vendor-doc directory. Historical failed runs/local probes retain their actual outcomes.
+
+**Changes and acceptance behavior:** Added internal `sync/notes.py` and its package header, finite parsing constants, 126 synthetic regression cases and two fictional hand-edited/expected note fixtures. The parser accepts caller-supplied immutable bytes only; the patcher requires validated in-memory NoteState, exact saved region bytes and an accepted GeneratedCandidate. Canonical persistent UUID/integer schema, frozen reserved allowlist and exact ordered marker pair are validated. Both strict property values and exact generated-body bytes must match saved baselines before patching, regardless of incoming hashes. Identity/source-key/schema edits, malformed markers/frontmatter, unknown sf_* properties, duplicate/complex/nested YAML, explicit tags/references/merges, unsupported types and excessive input/output refuse with concise redacted typed failures. No identity invention, adoption, rename inference, force mode or fallback repair.
+
+Pure round-trip YAML source spans replace only clean owned values/omitted entries and marker interiors. Supported user YAML values/comments/order/quotes/multiline/Unicode, custom type/tags/aliases/business fields, every technical_debt* value and review decision survive. Changed/deleted owned entries can normalize representation or retain their comments as standalone lines; no whole-note creation template or YAML dumping. Exact marker/outside-body bytes and no-op original bytes survive. Uniform LF/CRLF envelopes are independent, mixed generated/frontmatter envelopes refuse, and mixed human endings remain opaque. Returned body baselines/hash cover actual adapted bytes, including CRLF. Audit omission removes keys per the accepted candidate contract; privacy and absent/null/false/empty distinctions remain intact. No hashes/helper semantics changed.
+
+**Recorded contract/dependency:** Supported YAML/forms, safe-derived round-trip API, official sources, encoding/endings/marker rules, baseline comparisons and finite byte/property/token/node/depth/scalar/list/output limits were recorded before dependent implementation. Poetry generated `ruamel-yaml >=0.19.1,<0.20.0`, locked 0.19.1 without optional C extensions. No lockfile hand-edit or unrelated dependency update. Precise round-trip limits are documented in NOTE_FORMAT; no universal YAML, OS resource isolation or frontmatter byte-identity promise.
+
+**Verified checklist:**
+
+- [x] All four original implementation tasks and synthetic audit-update/preservation/conflict acceptance scenario completed locally.
+- [x] Full final suite **744 passed, no skips**, including **126 new** preservation cases; macOS 27.0.1 ARM64 / Python 3.14.7 / Poetry 2.4.2. Combined coverage 95%; sync/notes 94%; uncovered defensive paths remain visible.
+- [x] Strict Poetry metadata/lock, Ruff lint/format (71 files), Bandit and whitespace passed. No new scanner findings/suppressions; five existing source/transport query annotations remain. New/untracked files were independently whitespace-checked too.
+- [x] Fresh r2 wheel/sdist build, strict Twine and exact **28 wheel / 27 sdist** member/license/source/resource inspection passed; both sync modules deliberately allowlisted.
+- [x] Both final independent clean Python 3.14.7 installs outside checkout/cwd passed dependency/import/resource/model/entry-point/source/graph/render checks and complete expected preservation output, CRLF baselines/no-op, custom YAML/debt/comments, conflicts and unsafe-input refusal. Runtime socket/process guards explicitly active; no cwd artifacts. Setup/build/dependency downloads use network only outside runtime probes.
+- [x] Docs/changelog/roadmap status/index/start/progress/contracts/handoff and #8 checklist synchronized; frozen model/config/errors/source/parser/graph/renderer/resource/CLI code and Apache license unchanged. All changed/new Python headers use requested GPT-6.1 Sol / 20 Oct 2026 attribution.
+- [ ] Maintainer acceptance, delivery and exact-commit hosted Thread 08 validation.
+- [ ] Ready to merge / release acceptance gate; separate authorization required for delivery/publication.
+
+**Final r2 artifacts (temporary; not published):**
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Wheel | `dba4ff5842afaadce192cfbce4a4acd941f94caed43972529b3a4a7e7674df20` |
+| Sdist | `cb8ca01bd813e3c975e4d722ce4b2c2082e6b8ac86dc54efdb62d7d48af11e72` |
+
+Initial restricted-network Poetry/build/install attempts failed during setup, then authorized network-enabled retries passed. The initial depth probe exposed ruamel counting scalar leaves; intermediate block-comment/indentless probes exposed supported-form gaps. Those gaps and an intermediate scalar-token classification edit were corrected; their failed local outcomes remain historical. All final gates above passed. A final fixture whitespace cleanup moved deliberate trailing-space input construction into a test; focused tests and both independent installed probes then passed again. No application behavior was weakened to clear a check.
+
+**Limits and preserved boundaries:** No hosted Thread 08, native Linux/Windows preservation run or local Python 3.12/3.13/3.15 execution was performed. Prerequisite Windows skips/refusals and synthetic reparse checks do not qualify Windows sf execution, which remains refused. Requested platform relationships remain partial/unavailable because exhaustion cannot be established, including clean empty results; offline relationships remain not collected. Accepted source/graph/render/creation helpers and renderer-local graph-plus-independent-Coverage composition are unchanged. Candidate source-binding/selection provenance remains the caller's responsibility; hashes are not authentication. No public lifecycle, vault/note discovery/adoption, state loading, identity/move reconciliation, batch planner, filesystem publication, locking, journal or recovery. No real sf/Obsidian/auth/credential/.env/org/metadata/vault access, CLI/plugin installation/update, private upload, other chat or subagent.
+
+**Tracking/Git/next:** Existing #8 labels, assignee, v0.1.0 milestone and native #7 → #8 → #9/#10 links preserved; no duplicate tracking issue. All implementation/test/docs/compatibility gates are checked locally, readiness/acceptance remain unchecked and #8 remains OPEN. Reviewable diff and untracked files inspected; all 17 files unstaged/uncommitted. Next eligible after Thread 08 acceptance/delivery verification and a new request: **Thread 09 / #9, explicitly NOT STARTED. Threads 09–17 and enhancement #18 remain NOT STARTED.**

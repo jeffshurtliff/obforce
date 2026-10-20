@@ -63,6 +63,8 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'renderer/__init__.py',
             'renderer/templates.py',
             'renderer/notes.py',
+            'sync/__init__.py',
+            'sync/notes.py',
             'resources/templates/apex_created.md.j2',
             'resources/templates/apex_generated.md.j2',
         }
@@ -315,6 +317,94 @@ assert binding.org_id not in first.text and a.record_id not in first.text
         ).hexdigest()
         render_probe = render_probe.replace('EXPECTED_RENDER_HASH', repr(expected_render_hash))
         _run([str(python), '-c', render_probe], work, environment)
+        # Existing-note parsing/patching runs only on embedded fictional bytes,
+        # in each independent install with the same active runtime guards.
+        preservation_probe = r"""
+import hashlib
+import sys
+from dataclasses import replace
+from obforce.models import (SourceBinding, Component, ComponentKey, FieldValue, Availability,
+    Coverage, CollectionCoverage, CoverageStatus, Selection, NoteState)
+from obforce.graph.dependencies import DependencyGraph
+from obforce.renderer.notes import render_generated, note_paths
+from obforce.sync.notes import parse_note, patch_note
+from obforce.errors import ConflictError
+for event in ('socket.connect', 'subprocess.Popen'):
+    try:
+        sys.audit(event)
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError('Runtime access guard is missing')
+raw = NOTE_BYTES
+expected = EXPECTED_PATCH_HASH
+binding = SourceBinding('fictional', 'local')
+a = Component(binding, ComponentKey('fictional', 'ApexClass', None, 'DemoService'),
+    {'api_version': FieldValue(Availability.VALUE, '68.0'), 'status': FieldValue(Availability.VALUE, 'Active')})
+complete = CollectionCoverage(CoverageStatus.COMPLETE, 'synthetic-local', pagination='exhausted', limit_reached=False)
+audit = CollectionCoverage(CoverageStatus.UNAVAILABLE, 'offline-audit', requested=False)
+relations = CollectionCoverage(CoverageStatus.NOT_COLLECTED, 'offline-relationships', requested=False)
+coverage = Coverage(binding, Selection(), complete, audit, relations)
+graph = DependencyGraph(binding, coverage.selection, relations)
+identity = '00000000-0000-4000-8000-000000000001'
+def candidate(component):
+    return render_generated(component, coverage, graph, identity=identity, managed_paths=note_paths([component]))
+original = candidate(a)
+changed = candidate(replace(a, attributes={**a.attributes,
+    'last_modified_at': FieldValue(Availability.VALUE, '2026-10-20T12:00:00Z')}))
+def state_for(note):
+    return NoteState(identity, binding, a.key, 'Custom Code/Apex Classes/DemoService.md',
+        original.source_hash, original.graph_hash, original.render_hash,
+        note.generated_properties, note.region_hash)
+for data in (raw, raw.replace(b'\n', b'\r\n')):
+    note = parse_note(data)
+    state = state_for(note)
+    saved = state.canonical()
+    assert patch_note(data, state, note.region, original).content is data
+    result = patch_note(data, state, note.region, changed)
+    after = parse_note(result.content)
+    assert result.changed
+    assert result.content[after.front_end:after.region_start] == data[note.front_end:note.region_start]
+    assert result.content[after.region_end:] == data[note.region_end:]
+    assert result.generated_region_hash == after.region_hash
+    assert result.generated_region == after.region
+    assert after.properties['technical_debt'] is None
+    assert after.properties['technical_debt_assessed'] is False
+    assert after.properties['tags'] == ('my-tag', 'second')
+    assert b'# custom tags' in result.content and b"type: 'team_record'" in result.content
+    assert b'  Unicode: caf' in result.content
+    assert state.canonical() == saved
+    next_state = replace(state, generated_properties=result.generated_properties,
+        generated_region_hash=result.generated_region_hash)
+    assert patch_note(result.content, next_state, result.generated_region, changed).content is result.content
+    if data is raw:
+        assert hashlib.sha256(result.content).hexdigest() == expected
+    else:
+        assert result.generated_region_hash != changed.region_hash
+    for edited in (data.replace(b'sf_status: Active', b'sf_status: Human'),
+                   data.replace(b'## Salesforce Metadata', b'## Human edit')):
+        try:
+            patch_note(edited, state, note.region, original)
+        except ConflictError as error:
+            assert error.exit_code == 3 and 'DemoService' not in str(error)
+        else:
+            raise AssertionError('Generated edit accepted')
+for unsafe in (b'custom: 1\ncustom: 2\n', b'custom: !unsafe private-sentinel\n',
+               b'custom: &anchor [*anchor]\n', b'<<: {custom: private-sentinel}\n',
+               b'custom: {nested: private-sentinel}\n'):
+    try:
+        parse_note(raw.replace(b'obforce_schema: 1\n', b'obforce_schema: 1\n' + unsafe))
+    except ConflictError as error:
+        assert 'private-sentinel' not in str(error)
+    else:
+        raise AssertionError('Unsafe YAML accepted')
+"""
+        fixtures = Path(__file__).resolve().parents[1] / 'tests/fixtures/vaults'
+        preservation_probe = preservation_probe.replace('NOTE_BYTES', repr((fixtures / 'hand_edited.md').read_bytes()))
+        preservation_probe = preservation_probe.replace(
+            'EXPECTED_PATCH_HASH', repr(hashlib.sha256((fixtures / 'expected_updated.md').read_bytes()).hexdigest())
+        )
+        _run([str(python), '-c', preservation_probe], work, environment)
         _run([str(python), '-c', live_probe], work, environment)
         _run([str(python), '-c', graph_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.

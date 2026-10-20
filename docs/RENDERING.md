@@ -3,10 +3,12 @@
 Thread 07 implements deterministic **candidate** rendering in
 `renderer/templates.py` and `renderer/notes.py`. This is an internal interface,
 not a stable public Python API or a generation command. The CLI still exposes
-help/version only. No existing note is read, parsed, adopted, patched or written;
-state loading, planning, publication and recovery remain later work. A complete
-new-note candidate must never be applied to an existing note. Thread 08 owns
-existing-note parsing and preservation and remains not started.
+help/version only. The renderer reads no existing note and performs no patching,
+adoption or publication; state loading/planning/recovery remain later work.
+A complete new-note candidate must never be applied to an existing note.
+Thread 08 separately supplies
+[bounded in-memory preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
+for caller-supplied bytes and saved baselines.
 
 ## Inputs, identity and output
 
@@ -163,7 +165,8 @@ new-note `creation_fingerprint`. No override root, checkout path, template mtime
 response ordering, incidental timestamp or newly generated identity enters output.
 An incoming-only edge or neighboring move invalidates affected output even when
 the component source hash stays unchanged. Hash equality never authorizes
-replacing edited generated content; baseline/preservation checks remain later work.
+replacing edited generated content; Thread 08 compares both saved property and
+exact-byte body baselines before patching.
 
 ## Dependency and verification evidence
 
@@ -192,7 +195,7 @@ may use the network; runtime probes do not.
 
 Actual local, hosted and native gaps are recorded in the
 [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md). No live sf/org/vault or Windows
-sf execution qualification follows. Threads 08–17 and enhancement #18 remain
+sf execution qualification follows. Threads 09–17 and enhancement #18 remain
 not started; maintainer acceptance/delivery is separate from local success.
 
 
@@ -223,4 +226,5 @@ scope/privacy contracts remain unchanged. Historical local probe failures and
 older CI evidence retain their original status.
 
 See the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
-Thread 08 is next eligible and remains not started; no release is published.
+Thread 08 now provides bounded supplied-byte preservation, pending maintainer
+acceptance. Thread 09 and later threads remain NOT STARTED; no release is published.

@@ -1017,3 +1017,130 @@ def test_deterministic_property_and_wire_order_and_actual_byte_limit(example):
     fields = {**document.notes[0].note.generated_properties, 'sf_status': FieldValue(Availability.VALUE, '\ud800')}
     with pytest.raises(ConflictError):
         SavedNote(replace(document.notes[0].note, generated_properties=fields), document.notes[0].generated_region)
+
+
+def test_windows_descriptor_ctime_can_differ_from_path_creation_time(tmp_path, monkeypatch):
+    """Reproduce CPython's different Windows pathname/descriptor ctime meanings."""
+    path = (tmp_path / 'synthetic.md').resolve()
+    path.write_bytes(b'Fictional content\n')
+    before = tree(tmp_path)
+    original_lstat, original_fstat = Path.lstat, os.fstat
+    cross_api = module._cross_api_stamp
+    monkeypatch.setattr(module, '_cross_api_stamp', lambda info: cross_api(info, windows=True))
+
+    def observation(info, *, descriptor):
+        fields = {name: getattr(info, name) for name in dir(info) if name.startswith('st_')}
+        fields.update(st_birthtime_ns=10, st_ctime_ns=20 if descriptor else 10)
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(Path, 'lstat', lambda p: observation(original_lstat(p), descriptor=False))
+    monkeypatch.setattr(os, 'fstat', lambda fd: observation(original_fstat(fd), descriptor=True))
+    reader = module._Reader()
+    assert reader.read(path, const.MAX_NOTE_BYTES) == b'Fictional content\n'
+    reader.finish()
+    monkeypatch.undo()
+    assert tree(tmp_path) == before
+
+
+@pytest.mark.parametrize('field', ['st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_birthtime_ns'])
+def test_windows_cross_api_still_refuses_changed_file_evidence(tmp_path, monkeypatch, field):
+    path = (tmp_path / 'synthetic.md').resolve()
+    path.write_bytes(b'Fictional content\n')
+    before = tree(tmp_path)
+    original_lstat, original_fstat = Path.lstat, os.fstat
+    cross_api = module._cross_api_stamp
+    monkeypatch.setattr(module, '_cross_api_stamp', lambda info: cross_api(info, windows=True))
+
+    def observation(info, *, descriptor):
+        fields = {name: getattr(info, name) for name in dir(info) if name.startswith('st_')}
+        fields.update(st_birthtime_ns=10, st_ctime_ns=20 if descriptor else 10)
+        if descriptor:
+            fields[field] += 1
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(Path, 'lstat', lambda p: observation(original_lstat(p), descriptor=False))
+    monkeypatch.setattr(os, 'fstat', lambda fd: observation(original_fstat(fd), descriptor=True))
+    with pytest.raises(ConflictError):
+        module._Reader().read(path, const.MAX_NOTE_BYTES)
+    monkeypatch.undo()
+    assert tree(tmp_path) == before
+
+
+@pytest.mark.parametrize('changed', ['path-ctime', 'parent-ctime', 'descriptor-ctime', 'descriptor-birthtime', 'reparse'])
+def test_windows_same_api_changes_still_refuse(tmp_path, monkeypatch, changed):
+    path = (tmp_path / 'synthetic.md').resolve()
+    path.write_bytes(b'Fictional content\n')
+    before = tree(tmp_path)
+    original_lstat, original_fstat = Path.lstat, os.fstat
+    cross_api = module._cross_api_stamp
+    monkeypatch.setattr(module, '_cross_api_stamp', lambda info: cross_api(info, windows=True))
+    path_calls, fd_calls = {}, 0
+
+    def by_path(p):
+        info = original_lstat(p)
+        fields = {name: getattr(info, name) for name in dir(info) if name.startswith('st_')}
+        fields.update(st_birthtime_ns=10, st_ctime_ns=10)
+        path_calls[p] = path_calls.get(p, 0) + 1
+        target = path.parent if changed == 'parent-ctime' else path
+        if changed in {'path-ctime', 'parent-ctime'} and p == target and path_calls[p] > 1:
+            fields['st_ctime_ns'] += 1
+        return SimpleNamespace(**fields)
+
+    def by_fd(fd):
+        nonlocal fd_calls
+        fd_calls += 1
+        info = original_fstat(fd)
+        fields = {name: getattr(info, name) for name in dir(info) if name.startswith('st_')}
+        fields.update(st_birthtime_ns=10, st_ctime_ns=20)
+        if fd_calls > 1:
+            if changed == 'descriptor-ctime':
+                fields['st_ctime_ns'] += 1
+            elif changed == 'descriptor-birthtime':
+                fields['st_birthtime_ns'] += 1
+            elif changed == 'reparse':
+                fields['st_file_attributes'] = stat.FILE_ATTRIBUTE_REPARSE_POINT
+        return SimpleNamespace(**fields)
+
+    monkeypatch.setattr(Path, 'lstat', by_path)
+    monkeypatch.setattr(os, 'fstat', by_fd)
+    reader = module._Reader()
+    with pytest.raises(ConflictError):
+        reader.read(path, const.MAX_NOTE_BYTES)
+        reader.finish()
+    monkeypatch.undo()
+    assert tree(tmp_path) == before
+
+
+@pytest.mark.parametrize('birthtime', [None, True, '10'])
+def test_windows_cross_api_requires_explicit_integer_birthtime(birthtime):
+    fields = dict(st_dev=1, st_ino=2, st_mode=stat.S_IFREG, st_nlink=1, st_size=3, st_mtime_ns=4, st_ctime_ns=5)
+    if birthtime is not None:
+        fields['st_birthtime_ns'] = birthtime
+    with pytest.raises(ConflictError, match='Required read creation time is unavailable'):
+        module._cross_api_stamp(SimpleNamespace(**fields), windows=True)
+
+
+def test_posix_cross_api_retains_ctime_comparison():
+    fields = dict(st_dev=1, st_ino=2, st_mode=stat.S_IFREG, st_nlink=1, st_size=3, st_mtime_ns=4, st_ctime_ns=5)
+    before = SimpleNamespace(**fields)
+    after = SimpleNamespace(**{**fields, 'st_ctime_ns': 6})
+    assert module._cross_api_stamp(before, windows=False) != module._cross_api_stamp(after, windows=False)
+
+
+def test_native_state_rewrite_and_note_rename_preserve_clean_reads(example, tmp_path):
+    _, document = example
+    vault, state_path, path = vault_at(tmp_path, example)
+    for index in range(3):
+        state_path.write_bytes(serialize_state(document))
+        os.utime(state_path, ns=(1_000_000_000, 1_000_000_000 + index))
+        moved = vault / f'Moved{index}.md'
+        path.rename(moved)
+        moved.write_bytes(moved.read_bytes().replace(b'Fictional knowledge', b'Updated knowledge'))
+        os.utime(moved, ns=(1_000_000_000, 1_000_000_000 + index))
+        before = tree(vault)
+        result = reconcile(vault, state_path, document)
+        assert result.paths[document.notes[0].note.key] == moved.name
+        assert result.state.notes[0].note == replace(document.notes[0].note, path=moved.name)
+        assert load_state(state_path) == document
+        assert tree(vault) == before
+        path = moved

@@ -406,9 +406,21 @@ for unsafe in (b'custom: 1\ncustom: 2\n', b'custom: !unsafe private-sentinel\n',
 """
         preservation_probe += r"""
 import json
+import os
 import tempfile
+from types import SimpleNamespace
 from pathlib import Path
 from obforce.sync.state import SavedNote, StateDocument, parse_state, serialize_state, load_state, reconcile_vault
+from obforce.sync.state import _cross_api_stamp, _stamp
+
+# Exercise the known Windows API timestamp difference in each installed artifact.
+fields = dict(st_dev=1, st_ino=2, st_mode=0o100644, st_nlink=1, st_size=3,
+              st_mtime_ns=4, st_ctime_ns=10, st_birthtime_ns=10)
+by_path = SimpleNamespace(**fields)
+by_fd = SimpleNamespace(**{**fields, 'st_ctime_ns': 20})
+assert _stamp(by_path) != _stamp(by_fd)
+assert _cross_api_stamp(by_path, windows=True) == _cross_api_stamp(by_fd, windows=True)
+assert _cross_api_stamp(by_path, windows=False) != _cross_api_stamp(by_fd, windows=False)
 
 def snapshot(root):
     return {p.relative_to(root).as_posix(): (p.stat().st_mtime_ns, p.read_bytes() if p.is_file() else None)
@@ -427,6 +439,8 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         state_path = vault / '.obforce/state.json'
         state_path.parent.mkdir()
         state_path.write_bytes(wire)
+        state_path.write_bytes(wire)
+        os.utime(state_path, ns=(1_000_000_000, 1_000_000_000))
         path = vault / saved.note.path
         path.parent.mkdir(parents=True)
         path.write_bytes(data)
@@ -438,6 +452,8 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         assert snapshot(vault) == before
         moved = vault / 'Moved.md'
         path.rename(moved)
+        moved.write_bytes(data)
+        os.utime(moved, ns=(1_000_000_000, 1_000_000_000))
         before = snapshot(vault)
         result = reconcile_vault(vault, state_path, binding, coverage.selection, excluded_roots=())
         assert result.path_changes[0].old_path == saved.note.path and result.path_changes[0].new_path == 'Moved.md'

@@ -381,6 +381,22 @@ def _stamp(info: os.stat_result) -> tuple[int, ...]:
     return (info.st_dev, info.st_ino, info.st_mode, info.st_nlink, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
+def _cross_api_stamp(info: os.stat_result, *, windows: bool = os.name == 'nt') -> tuple[int, ...]:
+    """Compare timestamps with the same meaning across pathname/descriptor APIs.
+
+    Windows pathname ctime can mean creation while descriptor ctime means change
+    time. Require explicit birthtime for that comparison. Repeated observations
+    through the same API still use the full ctime-bearing stamp; POSIX is unchanged.
+    """
+    stamp = _stamp(info)
+    if not windows:
+        return stamp
+    birthtime = getattr(info, 'st_birthtime_ns', None)
+    if type(birthtime) is not int:
+        raise ConflictError('Required read creation time is unavailable')
+    return (*stamp[:-1], birthtime)
+
+
 def _safe(info: os.stat_result) -> None:
     if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT:
         raise ConflictError('Unsafe read path link or reparse point')
@@ -427,10 +443,16 @@ class _Reader:
         with os.fdopen(os.open(path, flags), 'rb') as stream:
             descriptor = os.fstat(stream.fileno())
             _safe(descriptor)
-            if _stamp(before) != _stamp(descriptor):
+            if _cross_api_stamp(before) != _cross_api_stamp(descriptor):
                 raise ConflictError('Read descriptor changed')
             raw = stream.read(limit + 1)
-            if _stamp(descriptor) != _stamp(os.fstat(stream.fileno())) or len(raw) != before.st_size:
+            after = os.fstat(stream.fileno())
+            _safe(after)
+            if (
+                _stamp(descriptor) != _stamp(after)
+                or _cross_api_stamp(descriptor) != _cross_api_stamp(after)
+                or len(raw) != before.st_size
+            ):
                 raise ConflictError('Read file changed or exceeded bound')
         self.total += len(raw)
         self.observe(path)

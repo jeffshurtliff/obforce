@@ -136,6 +136,15 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Windows read-only state/note loading no longer treats different pathname and
+  descriptor `st_ctime_ns` meanings as a file change. Cross-API comparisons require
+  explicit matching creation time while retaining identity/type/link/size/mtime
+  checks, full ctime checks within each API, and post-read birthtime/reparse checks.
+  Added synthetic positive/adversarial regressions, native rewritten/renamed-file
+  fixtures and independent installed probes. POSIX behavior, saved baselines,
+  source/transport behavior and Windows sf refusal remain unchanged. Corrected
+  native Windows CI validation remains pending a newly pushed exact-commit run.
+
 - Offline reads now handle Windows CPython's pathname creation-time versus
   descriptor change-time semantics through an exact birthtime comparison,
   preserving all other identity fields, raw descriptor before/after guards,

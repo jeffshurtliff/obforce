@@ -409,6 +409,7 @@ class _Reader:
 
     def __init__(self) -> None:
         self.snapshots: dict[Path, tuple[int, ...] | None] = {}
+        self.digests: dict[Path, str] = {}
         self.total = 0
 
     def observe(self, path: Path, *, missing: bool = False) -> os.stat_result | None:
@@ -455,12 +456,17 @@ class _Reader:
             ):
                 raise ConflictError('Read file changed or exceeded bound')
         self.total += len(raw)
+        self.digests[path] = hashlib.sha256(raw).hexdigest()
         self.observe(path)
         return raw
 
     def finish(self) -> None:
         for path in tuple(self.snapshots):
             self.observe(path, missing=self.snapshots[path] is None)
+
+    def preconditions(self) -> tuple[ReadObservation, ...]:
+        """Freeze private same-API observations for later complete-plan revalidation."""
+        return tuple(ReadObservation(path, self.snapshots[path], self.digests.get(path)) for path in sorted(self.snapshots))
 
 
 def load_state(path: Path) -> StateDocument | None:
@@ -506,6 +512,19 @@ class PathChange:
 
 
 @dataclass(frozen=True, repr=False)
+class ReadObservation:
+    """Retain an explicit path, same-API lstat stamp and optional exact read digest.
+
+    A missing stamp requires continued absence. This is a private precondition,
+    not an atomic snapshot or authorization to publish.
+    """
+
+    path: Path
+    stamp: tuple[int, ...] | None
+    content_hash: str | None
+
+
+@dataclass(frozen=True, repr=False)
 class Reconciliation:
     """Return deterministic immutable candidate state/paths and current parsed observations."""
 
@@ -514,6 +533,8 @@ class Reconciliation:
     path_changes: tuple[PathChange, ...]
     observations: Mapping[str, ParsedNote]
     initial: bool
+    preconditions: tuple[ReadObservation, ...] = ()
+    state_bytes: bytes | None = None
 
 
 def reconcile_vault(
@@ -562,11 +583,15 @@ def reconcile_vault(
         # Use this reader for state too, so final scan checks include its observations.
         control = reader.observe(vault / '.obforce', missing=True)
         document = None
+        state_bytes = None
         if control is not None:
             if not stat.S_ISDIR(control.st_mode):
                 raise ConflictError('Invalid state control directory')
             if reader.observe(state_path, missing=True) is not None:
-                document = parse_state(reader.read(state_path, const.MAX_STATE_BYTES))
+                state_bytes = reader.read(state_path, const.MAX_STATE_BYTES)
+                document = parse_state(state_bytes)
+        else:
+            reader.observe(state_path, missing=True)
         if document is not None:
             require_same_source(document.binding, binding)
             if document.selection != selection:
@@ -628,7 +653,7 @@ def reconcile_vault(
             if observations or not initial:
                 raise ConflictError('Missing state cannot establish managed ownership')
             reader.finish()
-            return Reconciliation(None, MappingProxyType({}), (), MappingProxyType({}), True)
+            return Reconciliation(None, MappingProxyType({}), (), MappingProxyType({}), True, reader.preconditions())
         if observations.keys() != {saved.note.obforce_id for saved in document.notes}:
             raise ConflictError('Tracked notes vanished or untracked managed notes exist')
         saved_notes, changes, paths = [], [], {}
@@ -655,7 +680,15 @@ def reconcile_vault(
         candidate = replace(document, notes=tuple(saved_notes))
         serialize_state(candidate)  # Enforce the candidate output bound before returning it.
         reader.finish()
-        return Reconciliation(candidate, MappingProxyType(paths), tuple(changes), MappingProxyType(observations), False)
+        return Reconciliation(
+            candidate,
+            MappingProxyType(paths),
+            tuple(changes),
+            MappingProxyType(observations),
+            False,
+            reader.preconditions(),
+            state_bytes,
+        )
     except UnicodeError:
         raise ConflictError('Unsupported vault path encoding') from None
     except OSError:

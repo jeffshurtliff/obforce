@@ -1,4 +1,4 @@
-# Internal state and identity reconciliation (Thread 09)
+# Internal state, reconciliation and read-only planning
 
 ## Pre-implementation contract — 20 October 2026
 
@@ -177,8 +177,9 @@ read snapshots. Runtime socket/process audit guards stay active. Setup/build/pip
 downloads are separate network use. Actual results and native/hosted gaps are in
 the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md#thread-09-handoff--20-october-2026).
 Thread 09 is accepted, including delivered Windows correction `890ced2` / merge
-`dff34a7`; #9 is closed. Thread 10 is next eligible; Threads 10–17 and enhancement
-#18 remain NOT STARTED. No release/publication or Windows sf qualification is implied.
+`dff34a7`; #9 is closed. Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
+maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
+No release/publication or Windows sf qualification is implied.
 
 
 ## Thread 09 accepted delivery — 20 October 2026
@@ -220,4 +221,96 @@ relationships remain not collected. No new scope, dependency, state wire/hash
 contract or public command is introduced by acceptance.
 
 See the [roadmap acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-The next eligible work is Thread 10 under a new request; it is NOT STARTED.
+Thread 10 was subsequently authorized; its recorded contract and candidate work follow.
+
+## Thread 10 pre-implementation planner contract — 20 October 2026
+
+`plan_changes` accepts explicit absolute vault/state/excluded-root paths, an
+immutable tuple of current normalized Components, independent Coverage, a current
+DependencyGraph and optional matching prior graph, Layout/Options, already loaded
+optional TemplateAssets, explicit initial intent and independently verified live
+org ID. No config, cwd/home, auth or source discovery occurs. Existing notes also require
+a matching previous graph whose per-note hashes match saved paths/state; graph
+evidence cannot be reconstructed from hashes. `comparable_live_inventory=False`
+is the default; a positive caller attestation of comparable accessible inventory
+scope is additionally required for missing proposals, independently of collection
+outcomes and the enforced binding/selection/method checks. Retained normalized
+Components are required exactly for saved keys absent from current inventory;
+each retained source hash must match saved state. State cannot reconstruct source
+facts. All current and retained records must match binding and selection.
+
+New identities use UUIDv5 with namespace `bdc896b6-c99e-571e-bf41-35e33fd18eab`
+and canonical JSON of binding plus component key. This deterministic initial
+policy uses no randomness, path, record ID, timestamp or collection ordering.
+Existing UUIDs always win; uniqueness is checked across old and new candidates.
+The UUID is an ownership identifier, not a secret or authenticity proof.
+
+Immutable ChangeAction records carry kind, key/UUID/path, prior path, content and
+state-change flags, candidate bytes and SavedNote. Actions sort by canonical key;
+one primary action per component: create, move, missing, update, no_op, with that
+priority when effects coexist. Move means an already observed unique in-vault
+UUID move and candidate path reconciliation, never a rename operation. Missing
+means a transition to missing after positively complete comparable supported live
+inventory (`live-apex-keyset-v1`, exhausted, no limit); all other absences retain
+prior lifecycle. No deletion exists. Changed-scope/binding inputs refuse before
+absence evaluation. Each action has independent content/state flags; hash-only
+invalidation may require state change without note-byte change. Existing notes
+use only generated patches, even on creation-template changes. Both exact saved
+properties and exact LF/CRLF region bytes gate every plan regardless of hashes.
+
+ChangePlan carries ordered actions, refreshed immutable graph, candidate state
+and serialized state bytes, state_changed, immutable read/publication preconditions,
+independent coverage and a typed safe diagnostic/outcome. Planning stops at the
+first invalid phase; conflict yields one global conflict action, invalid/read
+failure yields none. Every blocked result discards all candidate bytes/state,
+graph and preconditions, so it cannot authorize partial application. Counts are
+primary-action counts only and sum to the action count, not effects or files.
+Coverage incompleteness alone is outcome 4 and does not block a valid candidate;
+existing precedence remains 3, 2, 1, 4, 0. Reports return strings/results internally;
+there are no lifecycle CLI additions. Reports expose counts, fixed diagnostic
+codes, facet status/request/warning counts and optional ordinal/UUID/action/flags.
+They never expose content, source names, host/relative paths, raw warnings,
+methods, audit identities, credentials or state documents. Private result reprs
+omit content and paths. No automatic logging or external upload occurs.
+
+Preconditions retain accepted lstat observations (device/inode/mode/link count,
+size/mtime/ctime), exact content SHA-256 for reads, explicit missing paths, state,
+note and directory/ancestor observations including excluded roots. The planner
+extends the same observation set to proposed targets/parents and moved old paths,
+validates existing/proposed portable spellings and file/parent occupancy together,
+and rechecks the whole set after rendering and serialization. The accepted
+Windows birthtime cross-API bridge and full same-API ctime checks remain intact.
+A later writer must revalidate every observation/content digest and the complete
+scope/binding/ownership contract under its own guard and recovery protocol.
+These observations are not an atomic filesystem snapshot or write permission.
+
+| Planner/report limit | Maximum |
+| --- | --- |
+| Current plus retained components / actions | 10,000 / 10,000 |
+| Current/prior/refreshed graph | Existing 20,000 edges / 40,000 evidence observations each |
+| Aggregate normalized source plus graph input | 16 MiB |
+| Candidate note bytes plus state output | 64 MiB total; existing 1 MiB per note / 16 MiB state |
+| Read/publication observations | 400,000 |
+| Detailed report actions / report UTF-8 bytes | 1,000 / 256 KiB |
+
+Existing strict state/discovery/parser/template/render/path bounds apply
+independently. Limits refuse, never silently truncate. Caller models/inputs,
+source files, vault bytes/mtimes/tree and state remain unchanged on success,
+no-op, blocked and failure paths. Synthetic fixture setup may write before
+snapshots; planning/reporting never create config/vault/state/lock/journal/log/
+cache or temporary publication artifacts. No new dependency is needed.
+Thread 11 and all later threads and enhancement #18 remain NOT STARTED.
+
+
+## Thread 10 local candidate evidence
+
+Local macOS/Python 3.14.7 verification passed 1,058 tests with two existing
+case/NFC fixture skips (95% combined coverage), strict metadata/lock, Ruff,
+Bandit, fresh builds, strict Twine, exact archive inspection and both independent
+wheel/sdist installations. New installed probes compare fixed synthetic note/state
+hashes and no-write preservation with runtime network/process guards active.
+Thread 10 is locally implemented and #10 remains open pending maintainer
+acceptance; delivery and exact-commit hosted/native platform evidence are pending.
+Historical failed tests/setup/network attempts are retained in the
+[Thread 10 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-handoff--20-october-2026).
+Thread 11 and later and enhancement #18 remain NOT STARTED.

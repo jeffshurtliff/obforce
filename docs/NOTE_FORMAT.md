@@ -4,7 +4,8 @@ Thread 02 freezes constants, normalized state records, and fingerprint inputs.
 Thread 07 [renders candidate strings](RENDERING.md); Thread 08 now parses and
 patches caller-supplied managed-note bytes internally as described below. State
 loading/discovery and unique move reconciliation are internal Thread 09 work
-([safety contract](SYNC_SAFETY.md)); planning/publication remain Threads 10–13. This fictional
+([safety contract](SYNC_SAFETY.md)); Thread 10 adds internal read-only planning.
+Publication remains Threads 11–13. This fictional
 note illustrates the version-one contract, not output from a public command.
 
 ```markdown
@@ -283,4 +284,16 @@ access or Windows sf execution qualification follows. Thread 09 internal
 merge `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed
 all 12 cells and all 24 independent installs; see the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 is next eligible; Threads 10–17 and enhancement #18 remain NOT STARTED.
+Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
+maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
+
+Thread 10's existing-note candidates always call the preservation patcher after
+strict reconciliation; they never use whole-new-note templates. Lifecycle
+validation accepts only the already supported `active` and `missing` values;
+the planner alone proposes missing after the positive comparable supported live
+inventory gate in [SYNC_SAFETY](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026).
+Both strict owned-property and exact saved-byte comparisons still gate changes.
+Source/graph/render hashes retain their meanings; lifecycle candidate values are
+compared directly too. User-only changes and creation-template edits cause no
+note/state churn. Hash-only generated invalidation can update candidate state
+while retaining exact original note bytes. No publication is implemented.

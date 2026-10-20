@@ -145,3 +145,13 @@ loads/discovers config, resolves auth/default orgs, or uses cwd/home discovery.
 The caller must supply disjoint source/template/application roots for overlap
 refusal and independently verified canonical org identity for live bindings.
 No public config/state initialization or migration command is added.
+
+Thread 10's internal `plan_changes` takes explicit normalized source/coverage/
+graph inputs and absolute vault/state/excluded roots. Templates are already
+loaded explicit assets; no config/source/template/auth discovery occurs during
+planning. Existing saved graph and retained absent-component facts are explicit
+inputs, never reconstructed from current notes. The comparable accessible-live-
+inventory attestation defaults false. See the [planner contract](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026)
+for finite bounds, immutable preconditions, blocked results and safe report fields.
+`report_plan` returns text/outcome without printing or writing. No new config
+key or public command is introduced; outcome precedence remains 3, 2, 1, 4, 0.

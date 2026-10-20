@@ -168,3 +168,23 @@ It accepts no source inventory and makes no absence/deletion/lifecycle decisions
 A vanished tracked note is an ownership conflict; an unobserved source component
 is a different question for later planning. Move results retain saved hashes
 and provide paths/old-new changes for existing graph/renderer invalidation.
+
+## Thread 10 planning and absence
+
+The internal [planner](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026)
+requires exact saved binding/selection and independently verified live org ID.
+The explicit `comparable_live_inventory` attestation defaults false and describes
+accessible scope, independently of collection status. Missing proposals require
+that attestation, current complete exhausted/no-limit/no-warning inventory using
+`live-apex-keyset-v1`, and matching saved method/API-version evidence. Local,
+partial, unavailable, changed-method/version or noncomparable inventory retains
+prior lifecycle. A vanished tracked file always conflicts. No notes are deleted.
+
+Every tracked component absent from current inventory requires explicit retained
+normalized facts matching its saved source hash. Every existing plan also requires
+a previous graph whose incident hashes/paths and coverage match saved state.
+The planner uses accepted stale refresh semantics and re-renders all retained
+notes against reconciled paths and independent current coverage. It never turns
+empty platform probes into complete relationships or offline XML into edges.
+Reports show each coverage dimension independently with fixed safe warnings/status
+and counts; raw warning text and audit identities stay out of diagnostics.

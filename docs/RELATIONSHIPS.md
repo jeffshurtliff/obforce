@@ -23,7 +23,8 @@ Thread 09 adds accepted internal [read-only state/move reconciliation](SYNC_SAFE
 including correction `890ced2` / merge `dff34a7`; #9 is closed. Exact-merge run
 `39502679337`, attempt 1, passed all 12 cells and 24 independent installs; see the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 is next eligible; Threads 10–17 and #18 remain NOT STARTED.
+Thread 10 now supplies internal read-only planning/reporting; #10 is open pending
+maintainer acceptance. Threads 11–17 and enhancement #18 remain NOT STARTED.
 
 ## Direction, endpoints and provenance
 
@@ -208,10 +209,19 @@ Documentation/source reads only; no real `sf` invocation:
 Synthetic tests and installed mocks verify local behavior. They cannot establish
 actual org permissions, supported-type coverage, live exhaustion or Windows sf
 execution. Future live validation requires separate authorization for its target
-and operations. Enhancement #18 and Threads 10–17 remain NOT STARTED.
+and operations. Enhancement #18 and Threads 11–17 remain NOT STARTED.
 
 Thread 07 projects both graph directions into candidate notes with explicit
 managed paths, method/coverage/staleness and unresolved labels. No endpoint ID or
 raw payload is rendered. Existing per-note graph fingerprints remain unchanged;
 rendering composes them with independent coverage to catch audit/inventory-only
 output changes. This adds no collection, adoption, state or publication capability.
+
+Thread 10 requires explicit previous graph evidence matching saved per-note
+hashes at saved paths; a hash cannot reconstruct lost relationship provenance.
+Current partial/unavailable refreshes preserve old observations stale through
+`refresh_graph`. Reconciled unique UUID moves feed both directions of graph/render
+invalidation. No filename/record-ID rename inference or filesystem rename occurs.
+The complete candidate plan retains the refreshed graph in memory for the caller's
+next comparison; the accepted state wire stays unchanged. Persisting graph
+provenance requires a later explicit design decision; this thread adds no storage.

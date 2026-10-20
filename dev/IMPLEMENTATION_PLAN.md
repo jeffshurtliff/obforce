@@ -14,8 +14,9 @@ hosted cells. Issue #3 is closed as completed. Thread 04 is **accepted and compl
 12 hosted cells passing their applicable checks. Issue #4 is closed as completed.
 Thread 05 is **accepted and complete**, delivered at merge `85ba7cd` with all
 12 hosted cells passing their applicable checks. Issue #5 is closed as completed.
-Thread 06 is **implemented locally and ready for maintainer review** under issue #6;
-acceptance, delivery and hosted evidence remain pending. Threads 07–17 remain **not started**. Windows sf
+Thread 06 is **accepted and complete**, delivered at merge `2aa8d2b` with all
+12 hosted cells passing their applicable checks. Issue #6 is closed as completed.
+Thread 07 is next eligible; Threads 07–17 remain **not started**. Windows sf
 execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -794,7 +795,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 03 | Offline Apex source | 02 | B: source data | [#3](https://github.com/jeffshurtliff/obforce/issues/3) | Accepted; closed; corrected 12/12 hosted cells passed |
 | 04 | Salesforce CLI process boundary | 02 | B | [#4](https://github.com/jeffshurtliff/obforce/issues/4) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
 | 05 | Live Apex inventory and audit enrichment | 04 | B | [#5](https://github.com/jeffshurtliff/obforce/issues/5) | Accepted; closed; 12/12 hosted cells passed; Windows sf refused |
-| 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Ready for maintainer review; acceptance pending |
+| 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Accepted and complete; #6 closed |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Not started |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Not started |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Not started |
@@ -1307,11 +1308,12 @@ ordinary offline CI.
 
 **Goal:** Useful references with explicit evidence and incomplete-coverage handling.
 
-**Depends on:** 03, 05. **Status:** Implemented locally; ready for maintainer review.
-Issue #6 remains open; acceptance/delivery/hosted evidence are pending. See the
-[handoff](#thread-06-handoff--19-october-2026) and preimplementation decisions below.
-Both prerequisites are accepted/closed; verify current code and their exact-commit
-CI before implementation. Windows enhancement #18 is not a new prerequisite.
+**Depends on:** 03, 05. **Status:** Accepted and complete; #6 closed as completed.
+Implementation `d1134fa` / merge `2aa8d2b` passed all 12 exact-merge hosted cells
+in run `39431345348`, attempt 1. See the
+[acceptance record](#thread-06-acceptance-and-closure--20-october-2026); the
+[local handoff](#thread-06-handoff--19-october-2026) remains historical.
+The recorded MCD exhaustion limitation and Windows sf refusal remain in force.
 
 **GitHub issue:** [#6](https://github.com/jeffshurtliff/obforce/issues/6)
 
@@ -1371,7 +1373,9 @@ record the release limitation; do not invent results or substitute static guesse
 
 **Goal:** Deterministic candidate notes from normalized data without vault writes.
 
-**Depends on:** 03, 06. **Status:** Not started.
+**Depends on:** 03, 06. **Status:** Not started; next eligible.
+Both prerequisites are accepted/closed. Verify actual code and exact-commit CI
+from the Thread 03 and Thread 06 acceptance records before implementation.
 
 **GitHub issue:** [#7](https://github.com/jeffshurtliff/obforce/issues/7)
 
@@ -1402,15 +1406,31 @@ and filename collisions, template traversal, and bounded rendering failures.
 
 **Copy-ready prompt:**
 
-> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/7 and its linked
-> prerequisite issues. Keep this existing issue updated with start/progress,
-> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
-> it open pending maintainer acceptance; do not create duplicate tracking issues.
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/7 and its linked prerequisite issues. Keep this existing issue updated with start/progress, verified checklist, and handoff evidence, synchronized with the roadmap. Leave it open pending maintainer acceptance; do not create duplicate tracking issues.
 >
-> Implement only Thread 07. Add installed-package templates and deterministic
-> rendering with the defined ownership and safety contract. Test synthetic output,
-> overrides, escaping, and wheel/sdist resource access. Do not publish notes into
-> an existing vault or implement sync. Leave changes uncommitted.
+> Read AGENTS.md, CONTRIBUTING.md, dev/IMPLEMENTATION_PLAN.md, docs/CONFIGURATION.md, docs/COVERAGE.md, docs/NOTE_FORMAT.md, docs/OFFLINE_SOURCE.md, docs/LIVE_SOURCE.md, and docs/RELATIONSHIPS.md. Check relevant local/vendor_docs/ if present. Verify prerequisite code and exact-commit CI before implementation; report any new blocker before coding.
+>
+> Thread 07 directly depends on Threads 03 / #3 and 06 / #6, both accepted and closed. Thread 03 correction 20bff7fb0dd3bcace76ceec05c2564725d3bde00 was merged at 6154b745ed56c819cad179daa61d0ba606bede3b; run 39302343644, attempt 1, passed all 12 cells. Thread 06 implementation d1134fad0c9dfe2b83a28d411f403f04c9582333 was merged at 2aa8d2be362c86c3d8288f757b852bc98a867b2e; run 39431345348, attempt 1, passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells: 517 tests per Linux/macOS cell; 506 passed and 11 expected skips per Windows cell. Standalone formatting, fresh builds, strict Twine, and both independent artifact installs passed in every cell. Recheck current code/CI and preserve historical failed runs. Windows skips/refusal tests do not qualify Windows sf execution.
+>
+> Implement only Thread 07: internal packaged creation and generated-section Jinja templates and deterministic candidate rendering for supported ApexClass notes. Use the accepted normalized source, coverage, graph, identity/ownership/marker and hash contracts. Add no public lifecycle command, existing-note parser/patcher, state loading, note discovery/adoption, change planner, publication or recovery. Record material template/context/loading/serialization/path/bounds decisions before dependent implementation.
+>
+> Load installed default assets through importlib.resources, independent of the checkout and working directory. Resolve each known template from an explicitly configured local override first; absent override files may fall back to packaged defaults, but existing invalid overrides must fail. Restrict template names, loaders, roots and contexts; refuse traversal, unsafe links/escapes and untrusted discovery. Use strict undefined handling, a restricted Jinja sandbox and explicit filters with primitive normalized data only. No arbitrary imports, side-effecting Python objects, filesystem/process/network helpers or templates discovered from metadata. Treat explicit templates as user-selected local code-like input; document that sandboxing alone does not prevent resource exhaustion. Enforce finite input/template/render/output bounds and safe typed failures before any candidate is accepted.
+>
+> Keep creation and generated rendering separate. The engine controls caller-supplied persistent note identity, reserved properties and exactly one valid generated marker pair; templates cannot redefine ownership, duplicate reserved keys, invent identities or remove required structure. Creation initializes Business Context, Known Issues / Technical Debt, and Additional Information. Existing-note preservation remains Thread 08: never rerender or overwrite an existing whole note through the creation template. Keep all user properties, tags, aliases and technical_debt* fields user-owned after creation; unassessed debt remains absent/null, never inferred or coerced to false.
+>
+> Serialize valid flat YAML and context-appropriate escaped Markdown/wikilinks. Validate complete new-note candidates and generated-region candidates against the frozen property/schema/marker contracts. Refuse duplicate keys, unsafe structures, marker injection, invalid identities/paths and ambiguous namespace/case/Unicode/reserved-name collisions. Omit unavailable audit values and explain availability; preserve absent/null/false distinctions and audit-name omission. Do not include Apex bodies, org/record IDs, internal URLs, raw responses or unnecessary personal data in note output.
+>
+> Derive References and Referenced By from the same accepted directed graph, preserving provenance, staleness and independent coverage. Only matching supported endpoints with explicit validated managed-note paths may become internal links; unsupported, unresolved, external or unmapped endpoints remain clearly labeled text without new component notes. Platform-reported references are not runtime proof or comprehensive impact analysis. Preserve Thread 06's release limitation: requested platform relationships remain partial/unavailable because exhaustion cannot be established under the fixed allowlist, including clean empty results. Offline relationships remain explicitly not collected. Do not broaden collection or transport.
+>
+> Use the existing source/graph/render/creation fingerprints without changing their contracts. Generated-template content and relevant graph/path changes invalidate generated output; creation-template changes affect new-note candidates only. Keep output deterministic across response ordering, repeated renders, checkout location and installed artifacts; do not add incidental timestamps or regenerate identity during rendering. Hash equality never authorizes overwriting edited generated content.
+>
+> Test synthetic deterministic Apex candidates, namespaced/unresolved/stale/cyclic references, incoming-only and moved-target invalidation, unchanged component hashes, missing/null/omitted audits, null debt defaults, reserved-property and marker enforcement, YAML/link/Markdown injection, namespace/path collisions, override precedence/fallback/error behavior, strict undefined/context restrictions, traversal/unsafe links and bounded rendering failures. Verify installed templates and rendering from fresh independent wheel and sdist installs outside the checkout, with no network/process access during runtime tests and no unintended working-directory artifacts.
+>
+> Preserve maintainer changes, Apache licensing and unchanged offline/source/transport behavior. Add justified rendering dependencies through Poetry, using verified current official documentation/source contracts; never hand-edit poetry.lock or invent pins. Follow AGENTS.md Python headers, preserving Created By, using the actual generating model in Jeff Shurtliff (via <actual-model-identifier>) and the current local date. Update applicable docs, docs/CHANGELOG.md and the roadmap handoff. Run applicable metadata/lock, Ruff, pytest, Bandit, whitespace and fresh build/Twine/archive-inspection/independent installation checks, deliberately extending asset/package allowlists. Separate local, mocked, hosted, skipped and unavailable evidence.
+>
+> Keep runtime tests offline and synthetic. Do not invoke real sf or Obsidian, inspect credentials/.env, discover auth, install/update CLI/plugins, authenticate, query an org, execute Apex, deploy, access real metadata/vaults, alter .obsidian settings or upload private data. Windows sf execution remains refused; enhancement #18 is outside v0.1.0 and is not a prerequisite or authorization for Windows transport.
+>
+> Leave changes unstaged/uncommitted and #7 open for acceptance. Do not create issues, stage, commit, push, open a PR, close issues, rerun CI or publish. Leave Thread 08 and all later threads, and enhancement #18, explicitly not started. Do not create or message other chats or spawn subagents.
 
 ### Thread 08 — Existing-note parsing and preservation
 
@@ -3346,3 +3366,32 @@ Final r2 candidates remain in a temporary directory outside the checkout:
 **Git/tracking:** All 17 changed/new files remain unstaged/uncommitted on existing main at `61e4423`. No branch switch/create, stage/commit/push/PR/merge/tag/rerun/closure/release/publication/automation, duplicate issue, other chat or subagent. #6's implementation/test/docs/compatibility checklist is verified; Ready to merge/release remains unchecked. Existing enhancement/codex/maintainer labels, assignee, v0.1.0 milestone and native reciprocal #3/#5 → #6 → #7/#10 dependencies are preserved and read back. Local roadmap and public issue evidence agree; remote source/roadmap delivery remains pending maintainer action.
 
 **Next eligible after Thread 06 acceptance/delivery verification and a new request: Thread 07 / #7, explicitly NOT STARTED. Threads 07–17 and enhancement #18 remain NOT STARTED.**
+### Thread 06 acceptance and closure — 20 October 2026
+
+**Accepted and complete.** The maintainer reviewed/pushed Thread 06, confirmed passing CI and requested closure if complete. Actual implementation, delivered identity and all hosted gates are verified; #6 is closed as completed. Thread 07 is next eligible and remains **not started**. No release/publication is implied.
+
+**Delivered identity:** Implementation `d1134fad0c9dfe2b83a28d411f403f04c9582333`, merged at `2aa8d2be362c86c3d8288f757b852bc98a867b2e`. Clean local main, origin/main and live GitHub main matched that merge before this documentation update. Implementation/merge trees match, and all 16 packaged Python source files match the reviewed final r2 wheel bytes. Directed graph/provenance/reciprocal/stale/invalidation behavior, fixed read-only relationship queries and verified source binding remain as reviewed; no maintainer changes were discarded.
+
+**Exact-commit hosted evidence:** Inspected every job, required step and full command log in [run 39431345348, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39431345348), head `2aa8d2be362c86c3d8288f757b852bc98a867b2e`:
+
+| Cells | Verified outcome |
+| --- | --- |
+| Linux/macOS, Python 3.12–3.15 (8) | **517 passed per cell, no skips**; 96% combined coverage |
+| Windows, Python 3.12–3.15 (4) | **506 passed, 11 expected skips per cell**; 93% combined coverage |
+| Every cell | Standalone strict metadata/lock, Ruff lint/format (59 files), Bandit, fresh wheel/sdist build, strict Twine, both independent artifact installs and whitespace passed |
+
+All 24 independent artifact installations passed exact archive/license/import/resource/model checks, mocked CLI/live/relationship graph/stale/moved-path smoke checks, dependency consistency, console/module entry points, offline source preservation and no-discovery-write probes. All required steps ran successfully; job conclusions conceal no formatter failure. Five narrow reviewed Bandit annotations remain (the subprocess pair, inventory/audit SOQL pair and fixed relationship SOQL); informational f-string nosec notices are not findings. Historical failed CI and earlier local candidate/build attempts remain recorded.
+
+The 11 Windows skips remain nine POSIX collector cases, one POSIX wrapper-symlink case and the unavailable FIFO case. Hosted Windows mocked adapter/graph/envelope/refusal and installed artifact results do **not** qualify Windows sf execution. Linux/macOS fictional-child collector tests executed; no real sf/Node/plugin/auth/org/vault or full lifecycle evidence follows. The MCD exhaustion/type/permission limitation remains: requested platform relationships are partial/unavailable, even for clean empty replies. Complete-empty graph replacement is synthetic contract testing only. Offline relationships remain uncollected. No static guesses, Body collection, new metadata notes, transport expansion or runtime-impact/comprehensive coverage claim is added. Enhancement #18 remains outside v0.1.0 and is not a prerequisite.
+
+**Verified acceptance gates:**
+
+- [x] All four original implementation tasks and synthetic A → B/stale-failure acceptance criteria met, with precise collection limitations retained.
+- [x] Maintainer review/push and actual implementation/merge/final candidate source identity verified.
+- [x] All 12 exact-merge hosted suites, required standalone checks, fresh build/Twine and 24 independent installs passed; actual Windows skips retained.
+- [x] Frozen config/identity/hash/scope/ownership, offline behavior and accepted transport/refusal contracts preserved; no dependencies or public commands added.
+- [x] Maintainer authorized closure; existing issue checklist, documentation, roadmap status/index and exact Thread 07 kickoff prompt synchronized.
+
+**Docs/Git/handoff:** Updated current roadmap status/index, Thread 06 acceptance record, Thread 07 eligibility/exact prompt, relationship/live/contributor guidance and changelog. Earlier start/progress/local handoff records remain historical, including their then-pending delivery/hosted evidence. This acceptance update is prose-only: local links/anchors/fences/consistency/privacy/whitespace and tracked/untracked diff review passed. No new application tests, builds or dependency installations were needed. Five documentation files remain unstaged/uncommitted on main at `2aa8d2b`; implementation is already delivered. No stage/commit/push/PR/merge/tag/rerun/release/publication, Salesforce/auth/vault access, other-chat action, delegation or later implementation occurred.
+
+Existing #6 enhancement/codex/maintainer labels, assignee, v0.1.0 milestone and native reciprocal #3/#5 → #6 → #7/#10 links are retained. #7 keeps its other prerequisite #3 and remains open/not started. No duplicate tracking issue or new prerequisite is introduced. **Next eligible: Thread 07 / #7 under a new request, explicitly NOT STARTED. Threads 07–17 and enhancement #18 remain NOT STARTED.**

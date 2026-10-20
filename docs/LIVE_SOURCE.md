@@ -20,7 +20,9 @@ installations. The Windows skips cover nine POSIX collector cases, the POSIX
 wrapper-symlink case and the unavailable FIFO case. Mocked adapter/refusal checks
 and hosted Windows results do not qualify Windows sf execution. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026).
-Thread 06 is implemented locally with review/hosted evidence pending; later work remains not started.
+Thread 06 is accepted at merge `2aa8d2b` with all 12 exact-merge hosted cells
+passing; its [relationship adapter documentation](RELATIONSHIPS.md) retains the
+partial/unavailable coverage limitation. Thread 07 and later work remain not started.
 
 ## Invocation and verified identity
 

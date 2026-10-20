@@ -37,8 +37,12 @@ Thread 06 adds the internal [platform relationship graph](docs/RELATIONSHIPS.md)
 using bounded equality probes and exact source verification. Current MCD restrictions
 prevent exhaustion proof, so requested platform coverage remains partial/unavailable.
 Graph/stale/invalidation tests use synthetic metadata and mocked processes. No public
-command, dependency or Windows transport is added. Thread 06 awaits maintainer
-acceptance; Threads 07–17 and enhancement #18 remain not started.
+command, dependency or Windows transport is added. Thread 06 is accepted at merge
+`2aa8d2b`: all 12 exact-merge hosted cells passed checks/builds/Twine and both
+independent installs. Linux/macOS each passed 517 tests; Windows each passed
+506 with 11 expected skips, without qualifying Windows sf execution. See the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
+Thread 07 is next eligible; Threads 07–17 and enhancement #18 remain not started.
 
 ## Development setup
 

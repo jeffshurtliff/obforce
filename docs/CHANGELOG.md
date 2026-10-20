@@ -18,8 +18,13 @@ All notable changes to this project will be documented in this file, following
   platform relationships remain partial/unavailable, including clean empty replies.
   Offline remains not collected; Windows sf execution remains refused. Explicit
   wheel/sdist allowlists and independent installed graph/adapter mocks are extended.
-  Thread 06 is locally implemented pending maintainer acceptance and hosted evidence;
-  Threads 07–17 and enhancement #18 remain not started.
+  Accepted at implementation `d1134fa` / merge `2aa8d2b`: exact-commit run
+  `39431345348`, attempt 1, passed all 12 Python 3.12–3.15 hosted cells;
+  Linux/macOS each 517 passed, Windows each 506 passed/11 expected skips.
+  Standalone checks, fresh builds/Twine and 24 independent artifact installs
+  passed. #6 is closed as completed; the relationship coverage limitation and
+  Windows sf refusal remain. Thread 07 is next eligible; Threads 07–17 and
+  enhancement #18 remain not started.
 
 - Internal live Apex inventory/audit adapter with explicit target and minimal org
   identity verification, configured/state mismatch refusal, bounded SELECT keyset

@@ -3,8 +3,20 @@
 Thread 06 adds `sources/relationships.py` and `graph/dependencies.py`, with synthetic
 fixtures and mocked CLI collection. There is no public command, real org
 validation, static analysis, new component note type, state loading or publication.
-Internal interfaces are versioned implementation details. Thread 06 remains open
-for maintainer acceptance; hosted evidence for this change is pending delivery.
+Internal interfaces are versioned implementation details. Thread 06 is accepted
+and delivered at implementation `d1134fa` / merge `2aa8d2b`; #6 is closed as completed.
+
+Exact-merge [run 39431345348, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39431345348)
+passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells. Linux/macOS each reported
+517 passed; Windows each reported 506 passed/11 expected skips. Every cell passed
+standalone metadata/lock, lint, formatting, Bandit, fresh builds, strict Twine,
+both independent artifact installations and whitespace. The Windows skips are
+nine POSIX collector cases, one POSIX wrapper-symlink case and the unavailable
+FIFO case. Mocked graph/adapter/refusal and installed artifact checks do not
+qualify Windows sf execution or actual Salesforce capability/exhaustion. The
+release limitation below is retained. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
+Thread 07 is next eligible and remains not started.
 
 ## Direction, endpoints and provenance
 

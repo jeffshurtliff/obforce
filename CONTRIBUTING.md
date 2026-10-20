@@ -49,7 +49,10 @@ passed all 12 cells: Linux/macOS 618 passed each, Windows 606 passed/12 expected
 skips each. All checks/builds/Twine and 24 independent installs passed; Windows
 sf execution remains refused. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
-Thread 08 is next eligible; Threads 08–17 and enhancement #18 remain not started.
+Thread 08 adds internal [managed-note byte parsing/preservation](docs/NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
+with bounded safe round-trip YAML, strict saved property/body comparisons and
+source-span patches. It has local synthetic verification only and remains pending
+maintainer acceptance. Threads 09–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup
 
@@ -68,8 +71,9 @@ distribution metadata. Commit `poetry.lock` with approved dependency changes. Us
 `poetry add` or `poetry update`; never hand-edit the lockfile or add a parallel
 runtime requirements file. Runtime dependencies are Click, Jinja2 (candidate
 templates/sandbox), and `defusedxml` for explicit offline XML DTD/entity/external-
-reference refusal. `ruamel.yaml` remains deferred to existing-note preservation;
-candidate serialization uses a flat YAML-compatible JSON subset. Development
+reference refusal. Thread 08 adds `ruamel-yaml >=0.19.1,<0.20.0` (locked 0.19.1)
+for bounded pure round-trip parsing and source spans; no optional C extension.
+Candidate serialization continues to use a flat YAML-compatible JSON subset. Development
 tools are pytest, pytest-cov, Ruff, Bandit, and Twine.
 
 ## Checks
@@ -133,8 +137,11 @@ version, installed offline acquisition/parser and synthetic CLI-envelope/live-ad
 relationship-graph checks, rejection of future commands, dependency consistency, and no
 working-directory writes with external tools absent. Thread 07 adds renderer
 modules and two explicitly allowlisted installed Jinja assets, full synthetic
-output comparison and runtime network/process refusal. Bases assets remain
-Thread 14. The checker never publishes or uploads artifacts.
+output comparison and runtime network/process refusal. Thread 08 deliberately
+adds both sync modules and installed synthetic parsing/patching probes, complete
+expected-output comparison, exact CRLF baselines, user preservation
+and typed conflict/unsafe-input checks under the same runtime guards. Bases assets
+remain Thread 14. The checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

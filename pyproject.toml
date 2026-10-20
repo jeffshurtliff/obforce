@@ -12,7 +12,12 @@ license = "Apache-2.0"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["click (>=8.5,<9)", "defusedxml (>=0.7.1,<0.8.0)", "jinja2 (>=3.1.6,<4)"]
+dependencies = [
+    "click (>=8.5,<9)",
+    "defusedxml (>=0.7.1,<0.8.0)",
+    "jinja2 (>=3.1.6,<4)",
+    "ruamel-yaml (>=0.19.1,<0.20.0)",
+]
 classifiers = [
     "Development Status :: 1 - Planning",
     "Environment :: Console",
@@ -83,5 +88,5 @@ dev = [
     "pytest-cov (>=7.1,<8)",
     "ruff (>=0.17.1,<0.18)",
     "bandit (>=1.9.4,<2)",
-    "twine (>=7,<8)"
+    "twine (>=7,<8)",
 ]

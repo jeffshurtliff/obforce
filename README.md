@@ -34,6 +34,10 @@ and reports partial/unavailable coverage; runtime tests use synthetic replies on
 The internal [candidate renderer](docs/RENDERING.md) adds installed Jinja defaults,
 bounded explicit overrides and deterministic new-note/generated-section strings.
 It preserves identity/ownership and coverage contracts without reading or writing notes.
+Internal [note preservation](docs/NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
+parses caller-supplied bytes, checks both saved generated baselines and constructs
+in-memory patches while preserving supported user content. It adds no discovery,
+state loading, filesystem publication or public command.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

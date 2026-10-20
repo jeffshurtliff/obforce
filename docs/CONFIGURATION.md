@@ -131,3 +131,9 @@ See [the independent coverage contract](COVERAGE.md).
 The internal [renderer](RENDERING.md) now loads only the two documented known
 assets from this explicit root, falling back per absent file to installed defaults.
 Invalid existing overrides refuse. No public generation command is introduced.
+
+
+Thread 08 [parses and patches caller-supplied note bytes](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
+using in-memory state/baselines only. It adds no config keys, command, file loading
+or vault discovery. Unsupported/edited managed content raises redacted conflict
+3; invalid caller contracts use 2. Existing precedence and source controls remain.

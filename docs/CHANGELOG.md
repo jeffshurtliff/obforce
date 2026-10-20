@@ -7,6 +7,21 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal bounded parsing and preservation patches for caller-supplied managed-note
+  bytes, validated in-memory state and accepted generated candidates. Both strict
+  owned-property and exact-byte generated-body baselines gate every patch; identity,
+  schema, unsupported YAML/markers and generated edits refuse with redacted errors.
+  Round-trip source spans retain supported user YAML/comments/order/quotes/styles
+  and exact outside-body bytes; LF/CRLF, mixed-envelope refusal, no-op identity,
+  audit omission/privacy and technical-debt distinctions are explicit and tested.
+- Poetry-generated `ruamel-yaml >=0.19.1,<0.20.0` dependency/lock (0.19.1), synthetic
+  hand-edited/expected notes, parser/patch regressions and deliberate sync package
+  allowlists with guarded independent wheel/sdist installed probes. No public
+  lifecycle, discovery/adoption, state loading, planner, filesystem publication,
+  locking, journal or recovery. Thread 08 awaits maintainer acceptance; Threads
+  09–17 and enhancement #18 remain NOT STARTED. Source/transport/hash contracts,
+  coverage limitations, Windows sf refusal and Apache licensing are unchanged.
+
 - Internal deterministic ApexClass new-note and generated-section candidate rendering
   with installed Jinja assets, explicit per-file overrides, finite sandboxed
   interpolation, flat YAML serialization, escaped labels/validated managed links,
@@ -22,8 +37,8 @@ All notable changes to this project will be documented in this file, following
   Exact-merge run `39440606470`, attempt 1, passed all 12 Python 3.12–3.15 cells:
   Linux/macOS 618 passed each; Windows 606 passed/12 expected skips each. Every
   standalone check, fresh build/Twine and both independent installs passed.
-  Windows sf execution remains refused. Thread 08 is next eligible; Threads
-  08–17 and enhancement #18 remain not started.
+  Windows sf execution remains refused. This records Thread 07 acceptance;
+  the subsequent Thread 08 increment is described above.
 
 - Internal directed platform relationship graph and bounded selected-ID outgoing/
   incoming adapter with reverified org identity, exact Apex endpoint resolution,

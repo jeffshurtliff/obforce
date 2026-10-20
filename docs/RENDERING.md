@@ -4,7 +4,8 @@ Thread 07 implements deterministic **candidate** rendering in
 `renderer/templates.py` and `renderer/notes.py`. This is an internal interface,
 not a stable public Python API or a generation command. The CLI still exposes
 help/version only. The renderer reads no existing note and performs no patching,
-adoption or publication; state loading/planning/recovery remain later work.
+adoption or publication. Thread 09 separately adds internal read-only
+[state/move reconciliation](SYNC_SAFETY.md); planning/recovery remain later work.
 A complete new-note candidate must never be applied to an existing note.
 Thread 08 separately supplies
 [bounded in-memory preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
@@ -195,8 +196,8 @@ may use the network; runtime probes do not.
 
 Actual local, hosted and native gaps are recorded in the
 [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md). No live sf/org/vault or Windows
-sf execution qualification follows. Threads 09–17 and enhancement #18 remain
-not started; maintainer acceptance/delivery is separate from local success.
+sf execution qualification follows. Thread 09 internal state reconciliation
+remains pending acceptance; Threads 10–17 and enhancement #18 remain not started.
 
 
 ## Thread 07 accepted delivery — 20 October 2026
@@ -229,4 +230,5 @@ See the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-a
 Thread 08 supplies accepted [bounded supplied-byte preservation](NOTE_FORMAT.md),
 delivered at merge `dba53ab`; #8 is closed. Its exact-merge 12-cell acceptance is
 recorded in the [roadmap](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026).
-Thread 09 is next eligible and remains NOT STARTED; no release is published.
+Thread 09 adds internal [state/move reconciliation](SYNC_SAFETY.md), pending
+acceptance. Threads 10–17 and enhancement #18 remain NOT STARTED; no release is published.

@@ -38,6 +38,10 @@ Internal [note preservation](docs/NOTE_FORMAT.md#internal-existing-note-parsing-
 parses caller-supplied bytes, checks both saved generated baselines and constructs
 in-memory patches while preserving supported user content. It adds no discovery,
 state loading, filesystem publication or public command.
+Thread 09 adds internal [state validation and identity reconciliation](docs/SYNC_SAFETY.md):
+bounded read-only explicit synthetic-vault/state inputs, strict saved baselines
+and unique moved-note path candidates. No adoption, planner, state writes,
+filesystem publication or public lifecycle command is exposed.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

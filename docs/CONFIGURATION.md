@@ -137,3 +137,11 @@ Thread 08 [parses and patches caller-supplied note bytes](NOTE_FORMAT.md#interna
 using in-memory state/baselines only. It adds no config keys, command, file loading
 or vault discovery. Unsupported/edited managed content raises redacted conflict
 3; invalid caller contracts use 2. Existing precedence and source controls remain.
+
+
+Thread 09 separately accepts explicit absolute vault/state paths and normalized
+binding/selection for internal [read-only reconciliation](SYNC_SAFETY.md). It never
+loads/discovers config, resolves auth/default orgs, or uses cwd/home discovery.
+The caller must supply disjoint source/template/application roots for overlap
+refusal and independently verified canonical org identity for live bindings.
+No public config/state initialization or migration command is added.

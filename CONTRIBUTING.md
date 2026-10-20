@@ -119,6 +119,15 @@ Ruff targets Python 3.12, 130 columns, single-quoted ordinary strings,
 triple-double-quoted docstrings, spaces, and LF. Use type hints at boundaries and
 the Python headers in AGENTS.md, with the actual generating model and local date.
 
+CI prepares a fresh directory under `runner.temp` after Python setup, exporting
+`TMPDIR`, `TEMP` and `TMP` before Poetry installation. Subsequent test fixtures,
+build setup and independent installed probes use that root rather than the busy
+system-wide temporary directory. Full ancestor metadata checks intentionally
+refuse changes during observation; unrelated entries in a shared ancestor can
+therefore block an otherwise clean synthetic plan. Tests must run under a
+quiescent temporary ancestry. This environment isolation does not change the
+production read contract, add retries, skip guards or qualify hostile races.
+
 The repository `.gitattributes` keeps text checkouts LF on Windows as well as
 POSIX hosts, retaining automatic binary detection. Each CI environment-selection,
 installation, and validation command runs in its own step so a later successful

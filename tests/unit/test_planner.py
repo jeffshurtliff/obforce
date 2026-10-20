@@ -100,7 +100,7 @@ def plan(vault, components, coverage, graph, **kwargs):
 
 def seed_baseline(vault, candidate, *, ending=b'\n', human=False):
     """Explicit synthetic fixture setup only; never application publication code."""
-    assert not candidate.blocked
+    assert not candidate.blocked, report_plan(candidate).text
     saved = []
     for action in candidate.actions:
         raw = action.content.replace(b'\n', ending)
@@ -962,3 +962,37 @@ def test_report_malformed_result_refuses_with_redacted_typed_error(initial, fiel
     with pytest.raises(ModelError) as caught:
         report_plan(replace(candidate, **{field: value}))
     assert 'private-sentinel' not in str(caught.value)
+
+
+def test_busy_system_temp_ancestor_blocks_but_separate_runner_temp_stays_clean(tmp_path, monkeypatch):
+    """Keep full parent checks while isolating fixtures from unrelated temp churn."""
+    system_temp = tmp_path / 'shared-system-temp'
+    runner_temp = tmp_path / 'dedicated-runner-temp'
+    system_temp.mkdir()
+    runner_temp.mkdir()
+    shared_vault, isolated_vault = system_temp / 'vault', runner_temp / 'vault'
+    shared_vault.mkdir()
+    isolated_vault.mkdir()
+    components, coverage, graph = source()
+    inputs = (tuple(item.canonical() for item in components), coverage.canonical(), graph)
+    original = module.render_new_note
+    count = 0
+
+    def unrelated_sibling(*args, **kwargs):
+        nonlocal count
+        candidate = original(*args, **kwargs)
+        count += 1
+        (system_temp / f'unrelated-{count}').mkdir()
+        # Make the simulated concurrent directory change explicit on every host.
+        stamp = system_temp.stat()
+        os.utime(system_temp, ns=(stamp.st_atime_ns, stamp.st_mtime_ns + 10_000_000))
+        return candidate
+
+    monkeypatch.setattr(module, 'render_new_note', unrelated_sibling)
+    shared_before, isolated_before = tree(shared_vault), tree(isolated_vault)
+    assert_blocked(plan(shared_vault, components, coverage, graph, initial=True))
+    isolated = plan(isolated_vault, components, coverage, graph, initial=True)
+    assert not isolated.blocked, report_plan(isolated).text
+    assert all(action.kind == ActionKind.CREATE for action in isolated.actions)
+    assert tree(shared_vault) == shared_before and tree(isolated_vault) == isolated_before
+    assert (tuple(item.canonical() for item in components), coverage.canonical(), graph) == inputs

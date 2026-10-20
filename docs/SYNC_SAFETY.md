@@ -314,3 +314,19 @@ acceptance; delivery and exact-commit hosted/native platform evidence are pendin
 Historical failed tests/setup/network attempts are retained in the
 [Thread 10 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-handoff--20-october-2026).
 Thread 11 and later and enhancement #18 remain NOT STARTED.
+
+
+## Thread 10 temporary-root CI correction
+
+Implementation 11af258 was delivered at merge 725fe36. Exact-merge run
+39507844963, attempt 1, passed 11 cells and failed macOS Python 3.12 during
+initial synthetic baseline setup, before the requested late-state race. A local
+instrumented reproduction identified unrelated shared system-temp ancestor
+metadata changes; the hosted assertion did not preserve the specific observation.
+CI now prepares a fresh root beneath runner.temp and exports TMPDIR/TEMP/TMP
+before Poetry setup, so tests and independent artifact probes use quiescent
+ancestry. A controlled regression proves shared-parent changes still block and
+separate-root fixtures succeed. Production reader/planner and all Windows
+cross-API/same-API and parent change checks are unchanged. No retry or skip is
+added. The historical run remains failed; corrected hosted validation and #10
+acceptance remain pending. See the [correction handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-macos-ci-correction-handoff--20-october-2026).

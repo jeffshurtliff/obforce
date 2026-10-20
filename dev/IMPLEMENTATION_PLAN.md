@@ -20,7 +20,8 @@ Thread 07 is **accepted and complete**, delivered at merge `eedeff4` with all
 12 exact-merge hosted cells passing applicable checks. Issue #7 is closed as
 completed. Thread 08 is **accepted and complete**, delivered at merge `dba53ab`
 with all 12 exact-merge hosted cells passing applicable checks. Issue #8 is closed
-as completed. Thread 09 is **implemented locally**, pending maintainer acceptance; #9 remains open.
+as completed. Thread 09 is delivered at `ff05ef6`; its Windows CI correction is
+**verified locally**, pending a corrected exact-commit hosted run and maintainer acceptance; #9 remains open.
 Threads 10–17 remain **not started**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
@@ -803,7 +804,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 06 | Platform relationships and normalized graph | 03, 05 | B | [#6](https://github.com/jeffshurtliff/obforce/issues/6) | Accepted and complete; #6 closed |
 | 07 | Packaged templates and note rendering | 03, 06 | C: safe proposals | [#7](https://github.com/jeffshurtliff/obforce/issues/7) | Accepted and complete; issue closed |
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Accepted and complete; issue closed |
-| 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Implemented locally; open pending acceptance |
+| 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Delivered; Windows correction verified locally; hosted/acceptance pending |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Not started |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Not started |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
@@ -1513,7 +1514,8 @@ schemas, generated-property edits, and unsafe content. No filesystem publication
 
 **Goal:** Reliable ownership and note-move matching independent of filenames.
 
-**Depends on:** 08. **Status:** Implemented locally; #9 open pending acceptance.
+**Depends on:** 08. **Status:** Delivered at ff05ef6; Windows correction verified locally,
+with corrected hosted validation and acceptance pending; #9 stays open.
 Thread 08 is accepted/closed at merge `dba53ab`; see its
 [acceptance record](#thread-08-acceptance-and-closure--20-october-2026).
 Recheck actual source and exact-commit CI before implementing Thread 09.
@@ -3882,3 +3884,116 @@ publication, locks, journals, recovery, adoption/migration, transport work or ot
 chat/subagent. **Next eligible after Thread 09 acceptance/delivery verification and
 a new request: Thread 10 / #10, explicitly NOT STARTED. Threads 10–17 and
 enhancement #18 remain NOT STARTED.**
+
+
+### Thread 09 Windows CI investigation — 20 October 2026
+
+The maintainer reviewed/pushed implementation 08e967a, merged at
+ff05ef61a817591ccaa2efd4e108d365a57e1772, and requested investigation/fixes for
+Windows CI. Read the supplied traceback, clean current checkout and every job/
+required step/full command log in run 39500770363 attempt 1 at that merge.
+Linux Python 3.12–3.15: 917 passed each, no skips; macOS: 915 passed/2 native
+filesystem-representation skips each. All eight passed standalone gates and both
+independent installs. Windows Python 3.12: 6 failed/896 passed/15 skipped;
+3.13: 9/893/15; 3.14: 7/895/15; 3.15: 6/896/15. Every failure is the same
+ConflictError at the pathname/descriptor stamp comparison. Metadata/lock, lint,
+format and Bandit passed on Windows; later build/Twine/independent installation/
+whitespace steps were skipped, not passed. No other exception class was found.
+Skip reasons were not enumerated by this quiet pytest invocation. Keep the failed
+run and previous local-only handoff as historical evidence; #9 remains open.
+
+A new synthetic regression reproduces the exact failure before correction.
+CPython's Windows pathname stat/lstat compatibility layer reports creation time
+as st_ctime_ns, while fstat can report metadata change time; they need not match
+for an unchanged file. Verified official os documentation, CPython 3.14.7 source
+and upstream issue 157671. Before dependent correction, record this internal
+comparison policy: cross-API Windows observations compare matching device/inode,
+mode/link-count/size/mtime and explicit birthtime_ns, refusing unavailable birthtime;
+retain full ctime stamps for same-API path rechecks and descriptor-before/after
+checks. POSIX comparisons stay unchanged. This corrects an invalid comparison;
+no bypass, fallback, sleep/retry, identity/baseline/hash, ownership or transport
+change. Add positive and adversarial regression coverage plus installed probes.
+Native corrected Windows evidence will require a newly pushed exact-commit run;
+no push/commit/CI rerun is authorized here. Windows sf stays refused and Thread 10,
+later threads and #18 remain NOT STARTED. Changes remain unstaged/uncommitted.
+
+
+### Thread 09 Windows correction handoff — 20 October 2026
+
+**Corrected locally; #9 remains OPEN pending corrected exact-commit hosted
+validation and maintainer acceptance.** Maintainer-delivered implementation
+08e967a / merge ff05ef61a817591ccaa2efd4e108d365a57e1772 trees match. The six-file
+correction remains unstaged/uncommitted on main at ff05ef6. No stage, commit,
+push, PR, CI rerun, closure, publication, other chat or subagent action occurred.
+
+**Failed hosted evidence retained:** Reviewed the supplied traceback and every
+job/required step/full command log in [run 39500770363, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39500770363)
+at ff05ef6. Linux Python 3.12–3.15 passed 917 tests per cell; macOS passed 915/2
+skipped per cell. All eight passed standalone checks/builds/Twine/archive inspection
+and both independent installs. Windows all passed strict lock, lint, format and
+Bandit, then failed at the same invalid pathname/descriptor stamp comparison:
+
+| Windows Python | Failed | Passed | Skipped |
+| --- | --- | --- | --- |
+| 3.12 | 6 | 896 | 15 |
+| 3.13 | 9 | 893 | 15 |
+| 3.14 | 7 | 895 | 15 |
+| 3.15 | 6 | 896 | 15 |
+
+Every reported exception was ConflictError('Read descriptor changed'); no other
+exception class was found. Later Windows build/Twine/independent-install/whitespace
+steps were skipped after pytest failure. The quiet logs do not enumerate skip
+reasons, and skipped checks are not passed evidence. This run stays failed;
+original local-only and older prerequisite failures keep their actual outcomes.
+
+**Cause and correction:** Official CPython source and upstream issue 157671 show
+that Windows lstat ctime can be creation time while fstat ctime can be metadata
+change time. The original state reader compared these different quantities.
+A deterministic synthetic test reproduced the exact failure before the fix.
+The correction compares device/inode, mode, link count, size, mtime and explicit
+integer birthtime across the Windows APIs, refusing missing/invalid birthtime.
+Repeated pathname/parent observations and descriptor-before/after checks retain
+full ctime; descriptor birthtime and safe type/reparse/hard-link constraints are
+rechecked after reading too. POSIX full-ctime comparison remains unchanged.
+This follows the existing offline source's recognized Windows semantic split
+without changing that accepted source/transport code. No fallback, timing sleep,
+retry, rounding, baseline adoption or overwrite bypass.
+
+**Changes:** Focused sync/state.py correction; 18 new regression cases in
+unit/test_state.py; installed helper and rewritten-state/renamed-rewritten-note
+probes in dev/check_artifacts.py; SYNC_SAFETY, CHANGELOG and this roadmap updated.
+Positive native/synthetic cases preserve exact bytes/mtimes/tree and input records.
+Adversarial cases still refuse changed device/inode/mode/link-count/size/mtime/
+birthtime, missing/noninteger birthtime, same-API path/parent/descriptor ctime
+changes, post-read birthtime changes and injected reparse flags. No skips added.
+
+**Verified local checklist:**
+
+- [x] Reproduced the old failure before coding the correction; cause/policy recorded before implementation.
+- [x] Focused state suite **189 passed, 2 native filesystem-representation skips**; final full suite **933 passed, 2 skipped** on macOS 27.0.1 ARM64 / Python 3.14.7 / Poetry 2.4.2. Combined coverage 95%; state 93%.
+- [x] Strict Poetry metadata/lock, Ruff lint/format (74 files), Bandit and whitespace passed. Five existing narrow source/transport annotations unchanged; no new findings/suppressions.
+- [x] Fresh corrected wheel/sdist build, strict Twine, exact 29-wheel/28-sdist member/license/source/resource/README/metadata inspection and both independent clean installs outside checkout/cwd passed. Runtime socket/process guards, installed timestamp regression/probes and no-cwd-artifact/byte/mtime/tree assertions all passed; setup/build/pip download network use stays separate.
+- [x] Saved state wire/NoteState/property/byte/hash, identity/ownership/user/debt/privacy, graph/render/coverage, config/CLI, source/transport, dependency/lock and Apache contracts preserved. Changed Python headers retain requested GPT-6.1 Sol / 20 Oct 2026 attribution.
+- [x] Existing #9 investigation/checklist/handoff synchronized; metadata/native dependencies preserved. All six files remain unstaged/uncommitted; no duplicate tracking.
+- [ ] Corrected native Windows/Linux hosted exact-commit tests/builds/independent installs and other Python versions; no new CI was run.
+- [ ] Maintainer acceptance and closure readiness; #9 remains open.
+
+**Fresh correction artifacts (temporary; not published):**
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Wheel | `2eb677eaa462faaba053d559186474c1e0ac0ca18e7ef7d4c2552144688d2f32` |
+| Sdist | `c84284d1e85d71271be6dadfcf4aa8b0e451292952b5be257f9b0857d0e1d1f7` |
+
+**Remaining evidence and scope:** Synthetic Windows API observations on macOS
+are regression evidence, not a native corrected Windows result. A new maintainer-
+pushed commit/run must establish the fix on all four Windows cells and reach the
+previously skipped artifact steps; no commit/push/rerun is authorized here.
+Read-side stable trusted-tree/race limitations remain; no public lifecycle,
+planner, state/vault publication, locking, journal, recovery or adoption/migration
+was introduced. No real sf/Obsidian/auth/credential/.env/org/metadata/vault access.
+Windows sf remains refused. Platform relationships remain partial/unavailable
+even after clean empty results; offline relationships remain not collected.
+**Next eligible after Thread 09 acceptance/delivery verification and a new request:
+Thread 10 / #10, explicitly NOT STARTED. Threads 10–17 and enhancement #18 remain
+NOT STARTED.**

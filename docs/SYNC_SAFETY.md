@@ -97,7 +97,18 @@ must supply every source/template/application root, not infer them from cwd.
 
 Reads use lstat plus descriptor identity/size/mtime/ctime/link/mode checks,
 no-follow/nonblocking flags where available, bounded reads, parent snapshots and
-final whole-scan rechecks. Missing/changed files or parents, unreadable directories
+final whole-scan rechecks. Cross-API Windows pathname/descriptor comparisons use
+explicit integer `st_birthtime_ns` for creation time alongside device/inode,
+mode/link-count/size/mtime; unavailable birthtime refuses. Windows `st_ctime_ns`
+can mean creation for lstat and metadata change for fstat, so those two values
+are not compared to each other. Full ctime remains in repeated path observations
+and descriptor-before/after checks; descriptor birthtime and safety are rechecked
+after reading too. POSIX retains its full ctime comparison. See the official
+[Python stat timestamp contract](https://docs.python.org/3.12/library/os.html#os.stat_result.st_birthtime_ns),
+[CPython 3.14.7 pathname compatibility code](https://github.com/python/cpython/blob/v3.14.7/Modules/posixmodule.c#L2152-L2154),
+[descriptor timestamp source](https://github.com/python/cpython/blob/v3.14.7/Python/fileutils.c#L1037-L1041)
+and [upstream issue 157671](https://github.com/python/cpython/issues/157671).
+Missing/changed files or parents, unreadable directories
 and partial iteration refuse. Permission/I/O errors are redacted OperationalError
 (1); unsafe/corrupt state, note/path/source conflicts are ConflictError (3);
 invalid explicit caller inputs are ModelError (2). Existing exit precedence
@@ -159,7 +170,9 @@ case variants of the extension are scanned for damaged managed indicators.
 Fresh independent wheel/sdist probes exercise installed parser round trips, exact
 LF/CRLF saved bytes feeding patch_note, loading, no-op/move candidates, edited and
 duplicate identity refusal, malicious JSON/path refusal and exact bytes/mtimes/tree
-preservation. Synthetic vault setup writes are outside the checkout/cwd and precede
+preservation, including rewritten-state and renamed/rewritten-note timestamps.
+Synthetic Windows cross-API stamp regressions also run from each install.
+Synthetic vault setup writes are outside the checkout/cwd and precede
 read snapshots. Runtime socket/process audit guards stay active. Setup/build/pip
 downloads are separate network use. Actual results and native/hosted gaps are in
 the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md#thread-09-handoff--20-october-2026).

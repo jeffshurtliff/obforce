@@ -226,5 +226,7 @@ scope/privacy contracts remain unchanged. Historical local probe failures and
 older CI evidence retain their original status.
 
 See the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
-Thread 08 now provides bounded supplied-byte preservation, pending maintainer
-acceptance. Thread 09 and later threads remain NOT STARTED; no release is published.
+Thread 08 supplies accepted [bounded supplied-byte preservation](NOTE_FORMAT.md),
+delivered at merge `dba53ab`; #8 is closed. Its exact-merge 12-cell acceptance is
+recorded in the [roadmap](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026).
+Thread 09 is next eligible and remains NOT STARTED; no release is published.

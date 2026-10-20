@@ -268,6 +268,12 @@ Malformed/unsupported notes, invalid markers, edited baselines and identity
 conflicts raise concise redacted `ConflictError` (3). Invalid caller/candidate
 contracts raise `ModelError` (2), with identity conflicts retaining 3. Parser
 messages, note snippets and local paths are never displayed. Existing outcome
-precedence stays 3, 2, 1, 4, 0. Local synthetic and installed-artifact evidence is
-recorded in the roadmap; no hosted Thread 08 or live/native sf qualification is
-implied. Threads 09–17 and enhancement #18 remain NOT STARTED.
+precedence stays 3, 2, 1, 4, 0. Thread 08 is accepted at implementation `d79f5e2` /
+merge `dba53ab`; #8 is closed. Exact-merge run `39453887153`, attempt 1, passed all
+12 Linux/macOS/Windows Python 3.12–3.15 cells: 744 passed per Linux/macOS cell,
+732 passed/12 expected skips per Windows cell. Every standalone gate, fresh
+build/Twine and all 24 independent guarded installs passed. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026)
+for actual evidence and retained historical failures/skips. No real sf/org/vault
+access or Windows sf execution qualification follows. Thread 09 is next eligible;
+Threads 09–17 and enhancement #18 remain NOT STARTED.

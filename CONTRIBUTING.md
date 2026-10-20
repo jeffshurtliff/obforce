@@ -51,8 +51,12 @@ sf execution remains refused. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
 Thread 08 adds internal [managed-note byte parsing/preservation](docs/NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
 with bounded safe round-trip YAML, strict saved property/body comparisons and
-source-span patches. It has local synthetic verification only and remains pending
-maintainer acceptance. Threads 09–17 and enhancement #18 remain NOT STARTED.
+source-span patches. Thread 08 is accepted at implementation `d79f5e2` / merge
+`dba53ab`; run `39453887153`, attempt 1, passed all 12 cells: Linux/macOS 744 passed
+each; Windows 732 passed/12 expected skips each. Every standalone check, fresh
+build/Twine and all 24 independent installs passed; Windows sf remains refused.
+See its [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026).
+Thread 09 is next eligible; Threads 09–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup
 

@@ -18,8 +18,12 @@ All notable changes to this project will be documented in this file, following
   hand-edited/expected notes, parser/patch regressions and deliberate sync package
   allowlists with guarded independent wheel/sdist installed probes. No public
   lifecycle, discovery/adoption, state loading, planner, filesystem publication,
-  locking, journal or recovery. Thread 08 awaits maintainer acceptance; Threads
-  09–17 and enhancement #18 remain NOT STARTED. Source/transport/hash contracts,
+  locking, journal or recovery. Thread 08 is accepted at implementation `d79f5e2` /
+  merge `dba53ab`; #8 is closed. Exact-merge run `39453887153`, attempt 1, passed
+  all 12 cells: Linux/macOS 744 passed each; Windows 732 passed/12 expected skips
+  each. All standalone checks, fresh builds/Twine and 24 independent installs
+  passed. Thread 09 is next eligible; Threads 09–17 and enhancement #18 remain
+  NOT STARTED. Source/transport/hash contracts,
   coverage limitations, Windows sf refusal and Apache licensing are unchanged.
 
 - Internal deterministic ApexClass new-note and generated-section candidate rendering

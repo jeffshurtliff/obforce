@@ -17,7 +17,9 @@ qualify Windows sf execution or actual Salesforce capability/exhaustion. The
 release limitation below is retained. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
 Thread 07 adds accepted internal [candidate rendering](RENDERING.md), delivered
-at merge `eedeff4`; #7 is closed. Thread 08 remains not started.
+at merge `eedeff4`; #7 is closed. Thread 08 adds accepted in-memory
+[note preservation](NOTE_FORMAT.md), delivered at merge `dba53ab`; #8 is closed.
+Thread 09 is next eligible and remains NOT STARTED.
 
 ## Direction, endpoints and provenance
 
@@ -201,7 +203,7 @@ Documentation/source reads only; no real `sf` invocation:
 Synthetic tests and installed mocks verify local behavior. They cannot establish
 actual org permissions, supported-type coverage, live exhaustion or Windows sf
 execution. Future live validation requires separate authorization for its target
-and operations. Enhancement #18 and Threads 08–17 remain not started.
+and operations. Enhancement #18 and Threads 09–17 remain NOT STARTED.
 
 Thread 07 projects both graph directions into candidate notes with explicit
 managed paths, method/coverage/staleness and unresolved labels. No endpoint ID or

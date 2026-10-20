@@ -16,8 +16,12 @@ All notable changes to this project will be documented in this file, following
   Unrelated notes are never adopted. Added synthetic regressions, explicit finite
   safety contracts and guarded independent installed state/parser probes. No new
   dependency, public lifecycle, planner, state writes, publication, locking, journal
-  or recovery. Thread 09 is pending acceptance; #9 stays open. Threads 10–17 and
-  enhancement #18 remain NOT STARTED.
+  or recovery. Thread 09 is accepted, including Windows correction `890ced2` / merge
+  `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed all 12
+  cells: Linux 935 passed each, macOS 933 passed/2 skipped each, Windows 920
+  passed/15 skipped each. Every standalone gate/build/Twine/archive check and
+  all 24 independent installs passed. Thread 10 is next eligible; Threads 10–17
+  and enhancement #18 remain NOT STARTED.
 
 - Internal bounded parsing and preservation patches for caller-supplied managed-note
   bytes, validated in-memory state and accepted generated candidates. Both strict
@@ -143,7 +147,10 @@ All notable changes to this project will be documented in this file, following
   Added synthetic positive/adversarial regressions, native rewritten/renamed-file
   fixtures and independent installed probes. POSIX behavior, saved baselines,
   source/transport behavior and Windows sf refusal remain unchanged. Corrected
-  native Windows CI validation remains pending a newly pushed exact-commit run.
+  native Windows read tests/builds/independent installs passed in all four
+  Python 3.12–3.15 cells of exact-merge run `39502679337`, attempt 1. Historical
+  failed run `39500770363` and actual skips remain historical; this does not
+  qualify Windows sf execution, hostile read races or publication.
 
 - Offline reads now handle Windows CPython's pathname creation-time versus
   descriptor change-time semantics through an exact birthtime comparison,

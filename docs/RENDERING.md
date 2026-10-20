@@ -196,8 +196,8 @@ may use the network; runtime probes do not.
 
 Actual local, hosted and native gaps are recorded in the
 [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md). No live sf/org/vault or Windows
-sf execution qualification follows. Thread 09 internal state reconciliation
-remains pending acceptance; Threads 10–17 and enhancement #18 remain not started.
+sf execution qualification follows. Thread 09 internal state reconciliation is
+accepted; #9 is closed. Threads 10–17 and enhancement #18 remain not started.
 
 
 ## Thread 07 accepted delivery — 20 October 2026
@@ -230,5 +230,9 @@ See the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-a
 Thread 08 supplies accepted [bounded supplied-byte preservation](NOTE_FORMAT.md),
 delivered at merge `dba53ab`; #8 is closed. Its exact-merge 12-cell acceptance is
 recorded in the [roadmap](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026).
-Thread 09 adds internal [state/move reconciliation](SYNC_SAFETY.md), pending
-acceptance. Threads 10–17 and enhancement #18 remain NOT STARTED; no release is published.
+Thread 09 adds accepted internal [state/move reconciliation](SYNC_SAFETY.md),
+including correction `890ced2` / merge `dff34a7`. #9 is closed; exact-merge run
+`39502679337`, attempt 1, passed all 12 cells and 24 independent installs. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
+Thread 10 is next eligible; Threads 10–17 and enhancement #18 remain NOT STARTED.
+No release is published.

@@ -19,8 +19,11 @@ release limitation below is retained. See the
 Thread 07 adds accepted internal [candidate rendering](RENDERING.md), delivered
 at merge `eedeff4`; #7 is closed. Thread 08 adds accepted in-memory
 [note preservation](NOTE_FORMAT.md), delivered at merge `dba53ab`; #8 is closed.
-Thread 09 adds internal [read-only state/move reconciliation](SYNC_SAFETY.md),
-pending acceptance; Threads 10–17 and #18 remain NOT STARTED.
+Thread 09 adds accepted internal [read-only state/move reconciliation](SYNC_SAFETY.md),
+including correction `890ced2` / merge `dff34a7`; #9 is closed. Exact-merge run
+`39502679337`, attempt 1, passed all 12 cells and 24 independent installs; see the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
+Thread 10 is next eligible; Threads 10–17 and #18 remain NOT STARTED.
 
 ## Direction, endpoints and provenance
 

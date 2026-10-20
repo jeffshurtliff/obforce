@@ -279,5 +279,8 @@ build/Twine and all 24 independent guarded installs passed. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026)
 for actual evidence and retained historical failures/skips. No real sf/org/vault
 access or Windows sf execution qualification follows. Thread 09 internal
-[state reconciliation](SYNC_SAFETY.md) remains pending acceptance; Threads 10–17
-and enhancement #18 remain NOT STARTED.
+[state reconciliation](SYNC_SAFETY.md) is accepted, including correction `890ced2` /
+merge `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed
+all 12 cells and all 24 independent installs; see the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
+Thread 10 is next eligible; Threads 10–17 and enhancement #18 remain NOT STARTED.

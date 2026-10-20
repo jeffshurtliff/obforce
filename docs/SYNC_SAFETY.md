@@ -176,5 +176,48 @@ Synthetic vault setup writes are outside the checkout/cwd and precede
 read snapshots. Runtime socket/process audit guards stay active. Setup/build/pip
 downloads are separate network use. Actual results and native/hosted gaps are in
 the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md#thread-09-handoff--20-october-2026).
-Thread 09 remains pending maintainer acceptance; Threads 10–17 and enhancement #18
-are NOT STARTED. No release/publication or Windows sf qualification is implied.
+Thread 09 is accepted, including delivered Windows correction `890ced2` / merge
+`dff34a7`; #9 is closed. Thread 10 is next eligible; Threads 10–17 and enhancement
+#18 remain NOT STARTED. No release/publication or Windows sf qualification is implied.
+
+
+## Thread 09 accepted delivery — 20 October 2026
+
+The maintainer reviewed/pushed the implementation and Windows correction, confirmed
+passing CI and authorized closure if complete. Correction
+`890ced229722318764d87d8b525a932c72addfc7` was merged at
+`dff34a7eb806622331e4770de38cbf0e470d322a`. Implementation/merge trees match; all
+24 reviewed package source/resource files match the delivered checkout. #9 is
+accepted and closed as completed.
+
+Every job, required step and full command log in
+[run 39502679337, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39502679337)
+was verified at that merge. All 12 Python 3.12–3.15 cells passed:
+
+| Host | Suite outcome per cell |
+| --- | --- |
+| Linux | 935 passed, no skips |
+| macOS | 933 passed, 2 skipped |
+| Windows | 920 passed, 15 skipped |
+
+Every cell passed strict metadata/lock, Ruff lint/format, Bandit, fresh wheel/sdist
+build, strict Twine, exact 29-wheel/28-sdist archive/license/source/resource/README/
+metadata inspection, both independent installs and whitespace. All 24 installed
+probes verified parser/state/patch/reconciliation, LF/CRLF, rewritten/renamed input
+reads, timestamp semantics and byte/mtime/tree preservation with runtime socket/
+process guards active and no cwd artifacts. Setup/download network use is separate.
+No failed or skipped command is hidden by a green job summary.
+
+The original [failed Windows run 39500770363](https://github.com/jeffshurtliff/obforce/actions/runs/39500770363)
+and prior local setup/probe failures retain their outcomes. macOS's two native
+case/NFC fixture skips and Windows's 15 recorded skips remain visible; quiet pytest
+logs do not enumerate Windows per-test skip reasons. Native ordinary-file reads,
+injected reparse/race tests and synthetic Salesforce process responses establish
+only their tested boundaries. Windows sf stays refused; hostile race isolation,
+public writes, locks/journals/recovery and live org behavior remain unqualified.
+Platform relationships remain partial/unavailable even when empty; offline
+relationships remain not collected. No new scope, dependency, state wire/hash
+contract or public command is introduced by acceptance.
+
+See the [roadmap acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
+The next eligible work is Thread 10 under a new request; it is NOT STARTED.

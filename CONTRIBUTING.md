@@ -29,7 +29,10 @@ Thread 05 adds the internal [live Apex inventory/audit adapter](docs/LIVE_SOURCE
 with explicit verified identity, bounded SELECT pagination, scoped optional audit
 queries and independent coverage. Tests mock process collection; no real sf/org
 access or Windows transport qualification is claimed. No public command is added;
-Thread 06 and later work remain not started.
+Thread 05 is accepted with all 12 exact-merge hosted cells passing; see the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026)
+for actual counts/skips and artifact evidence. Thread 06 is next eligible and
+remains not started, as do later threads and enhancement #18.
 
 ## Development setup
 

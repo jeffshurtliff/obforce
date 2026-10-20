@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file, following
   enumeration and independent inventory/audit/relationship coverage. Optional
   display-name queries are scoped to selected Apex IDs; omission sends no name
   query. No Body, User scan, auth discovery, rebinding or public command.
+  Accepted at implementation `a5b7269` / merge `85ba7cd`: exact-commit run
+  `39325616681`, attempt 1, passed all 12 hosted Python 3.12–3.15 cells;
+  Linux/macOS each 441 passed, Windows each 430 passed/11 expected skips.
+  Standalone checks, fresh builds/Twine and 24 independent artifact installs
+  passed. Windows sf execution remains refused; #5 is closed as completed.
 - Synthetic process-response fixtures and live-adapter regression coverage for
   pagination contradictions, finite collection budgets, namespace selection,
   permission/field failures, privacy, validation, duplicate identities and hashes.

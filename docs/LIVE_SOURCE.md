@@ -8,6 +8,17 @@ help/version. Windows `sf` execution remains refused by the unchanged
 [process boundary](SF_CLI.md); [enhancement #18](https://github.com/jeffshurtliff/obforce/issues/18)
 is outside v0.1.0 and is not a prerequisite for this adapter.
 
+Thread 05 is accepted and delivered at merge `85ba7cd`. Exact-commit
+[run 39325616681, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39325616681)
+passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells: Linux/macOS each
+reported 441 passed; Windows each reported 430 passed/11 expected skips. Every
+cell passed standalone checks, fresh build/Twine and both independent artifact
+installations. The Windows skips cover nine POSIX collector cases, the POSIX
+wrapper-symlink case and the unavailable FIFO case. Mocked adapter/refusal checks
+and hosted Windows results do not qualify Windows sf execution. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026).
+Thread 06 and later work remain not started.
+
 ## Invocation and verified identity
 
 The internal caller supplies the explicit absolute trusted executable, existing

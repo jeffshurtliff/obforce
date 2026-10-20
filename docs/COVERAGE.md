@@ -144,3 +144,11 @@ note state even on initial creation, so a creation-template edit never invalidat
 existing notes. No hashes grant permission to overwrite an edited baseline.
 Hash equality is an integrity aid, not authentication, encryption, or proof of
 safe publication. See [note ownership](NOTE_FORMAT.md).
+
+## Candidate rendering boundary
+
+Thread 07 [renders internal candidates](RENDERING.md) with these unchanged records.
+It retains the accepted source and graph hashes and composes the per-note graph
+digest with full independent Coverage for the existing render helper graph input.
+This catches inventory/audit-only coverage changes without altering source hashes
+or graph helper contracts. It does not publish or authorize overwriting baselines.

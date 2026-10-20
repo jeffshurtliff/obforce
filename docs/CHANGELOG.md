@@ -7,6 +7,20 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal deterministic ApexClass new-note and generated-section candidate rendering
+  with installed Jinja assets, explicit per-file overrides, finite sandboxed
+  interpolation, flat YAML serialization, escaped labels/validated managed links,
+  marker/ownership enforcement and separate creation/generated invalidation.
+  Full independent coverage participates in render invalidation; source/graph/hash
+  helper contracts and source/transport behavior remain unchanged. Poetry adds
+  Jinja2 with its generated lock and transitive MarkupSafe. No lifecycle command,
+  existing-note parser, state, planner, publication or recovery is added.
+- Synthetic rendering/security/availability/collision regressions and reviewed
+  candidate fixture; exact package/resource allowlists and independent wheel/sdist
+  rendering checks outside the checkout with runtime network/process access blocked.
+  Thread 07 remains pending maintainer acceptance; #7 stays open. Threads 08–17
+  and enhancement #18 remain not started.
+
 - Internal directed platform relationship graph and bounded selected-ID outgoing/
   incoming adapter with reverified org identity, exact Apex endpoint resolution,
   explicit unsupported/external/unresolved sources and targets, deduplicated

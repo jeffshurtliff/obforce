@@ -4,7 +4,7 @@
 :Synopsis:          Defines versioned internal configuration and ownership contracts
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 CONFIG_SCHEMA_VERSION = 1
@@ -131,7 +131,7 @@ PLANNER_UUID_NAMESPACE = 'bdc896b6-c99e-571e-bf41-35e33fd18eab'
 CONTROL_DIRECTORIES = frozenset({'.git', '.obsidian', '.obforce'})
 
 # Internal transaction/recovery refusal limits; not public tuning options.
-TRANSACTION_SCHEMA_VERSION = 1
+TRANSACTION_SCHEMA_VERSION = 2
 MAX_TRANSACTION_FILES = 128
 MAX_TRANSACTION_BYTES = 33_554_432
 MAX_JOURNAL_BYTES = 16_777_216

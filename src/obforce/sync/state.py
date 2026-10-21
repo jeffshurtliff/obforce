@@ -4,7 +4,7 @@
 :Synopsis:          Validates private state and reconciles read-only synthetic vault observations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -410,6 +410,9 @@ class _Reader:
     def __init__(self) -> None:
         self.snapshots: dict[Path, tuple[int, ...] | None] = {}
         self.digests: dict[Path, str] = {}
+        # Internal descriptor evidence; intentionally absent from state wire and
+        # accepted planner ReadObservation values. Transactions persist it separately.
+        self.file_stamps: dict[Path, tuple[int, ...]] = {}
         self.total = 0
 
     def observe(self, path: Path, *, missing: bool = False) -> os.stat_result | None:
@@ -446,6 +449,9 @@ class _Reader:
             _safe(descriptor)
             if _cross_api_stamp(before) != _cross_api_stamp(descriptor):
                 raise ConflictError('Read descriptor changed')
+            stamp = _stamp(descriptor)
+            if path in self.file_stamps and self.file_stamps[path] != stamp:
+                raise ConflictError('Historical read descriptor changed')
             raw = stream.read(limit + 1)
             after = os.fstat(stream.fileno())
             _safe(after)
@@ -455,6 +461,7 @@ class _Reader:
                 or len(raw) != before.st_size
             ):
                 raise ConflictError('Read file changed or exceeded bound')
+            self.file_stamps[path] = stamp
         self.total += len(raw)
         self.digests[path] = hashlib.sha256(raw).hexdigest()
         self.observe(path)

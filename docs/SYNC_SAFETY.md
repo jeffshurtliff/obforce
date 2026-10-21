@@ -395,7 +395,7 @@ its bytes/identity are valid. Any journal, staging residue or unknown control en
 blocks ordinary writes. Invalid/incomplete lock initialization requires manual
 resolution. The lock coordinates cooperating Obforce writers, not arbitrary editors.
 
-**Private journal schema 1.** UTF-8 canonical JSON plus LF; exact keys, duplicate
+**Original private journal schema 1 (superseded by schema 2 below).** UTF-8 canonical JSON plus LF; exact keys, duplicate
 key/depth/node/type/version checks, bounded before parsing. Root fields are
 `journal_schema`, `transaction_id`, `lock_token`, `vault_identity`,
 `control_identity`, `phase`, `entries`, `directories`, `guards`, `work_stamp`.
@@ -529,3 +529,52 @@ be recorded as refused test mutations, not skipped or treated as successful edit
 Subprocess failure diagnostics will include only fixed transaction result text
 and captured bounded stderr, so a pre-checkpoint refusal stays distinguishable
 from a missing checkpoint. No native Windows correction pass is claimed yet.
+
+## Thread 11 Windows recovery observation correction — 21 October 2026
+
+Recorded before dependent implementation. Run 39670042028 attempt 1 at merge
+bde1225b51512e8eba2e5d9513f205a11c198125 exposed a safety gap: Windows pathname
+ctime can remain creation time after an in-place same-byte rewrite and restored
+mtime. A fresh descriptor read alone compares against the edited file, not the
+historical publication observation. Recovery must retain that historical change
+observation, rather than infer unchanged ownership from bytes and creation time.
+
+Private journal **schema 2** adds required `file_guards`: bounded records of
+vault-relative `path` and full seven-integer **descriptor** `stamp` (device,
+inode, mode, links, size, mtime_ns, ctime_ns). Persist every hashed regular-file
+observation except the self-referential journal/journal.next: notes, state,
+writer.lock, immutable before/after images and live transfer copies. Exact
+membership is derived from the existing journal guards and entry evidence;
+missing, extra, duplicate, malformed or contradictory records refuse recovery.
+The existing journal byte/depth/node/guard bounds apply to this collection too.
+Schema 1 is unsupported and retained for manual resolution, without migration or
+reconstruction. Accepted state JSON, NoteState, hashes and planner observations
+remain unchanged. No dependency or native API binding is added.
+
+Retain full same-API pathname and descriptor stamps independently, linked by the
+accepted Windows birthtime bridge. The bounded reader exposes descriptor stamps
+from its existing verified read; transaction guards retain/recheck them across
+reads and recovery. Only explicitly mutated paths may acquire new descriptor
+baselines. Lock reads retain the continuously held owning handle. Persist these
+observations before publication and revalidate before rollback/committed cleanup,
+including same-byte edits with restored mtime. Descriptor observations recovered
+from the journal remain active under the writer guard. No retry, timestamp
+rounding, sleep, new skip, or weakening of parent/path/content checks is allowed.
+
+Publication order, commit point, lock lifetime, crash windows, fsync/durability,
+cleanup ownership and all previous finite limits remain as recorded above.
+This is conservative local-filesystem evidence, not an atomic snapshot, hostile
+writer exclusion, guaranteed detection of forged/coarse filesystem timestamps,
+or atomic multi-file replacement. Native Windows correction validation remains
+pending. Windows sf remains refused; Threads 12–17 and #18 remain NOT STARTED.
+
+References: [Python stat timestamp semantics](https://docs.python.org/3/library/os.html#os.stat_result),
+[CPython Windows descriptor stamps](https://github.com/python/cpython/blob/3.12/Python/fileutils.c),
+[pathname compatibility conversion](https://github.com/python/cpython/blob/3.12/Modules/posixmodule.c),
+and [Windows ChangeTime](https://learn.microsoft.com/windows/win32/api/winbase/ns-winbase-file_basic_info).
+
+Local correction verification: 1246 passed/2 existing skips on macOS ARM64 /
+Python 3.14.7, 20 focused added cases, all static checks and both fresh independent
+installed artifact probes passed. Hosted corrected Windows verification remains
+pending; see the [current handoff](../dev/IMPLEMENTATION_PLAN.md#thread-11-windows-recovery-correction-handoff--21-october-2026)
+for exact evidence, retained failures/skips, hashes and acceptance gates.

@@ -341,7 +341,9 @@ def test_malicious_journal_refuses_without_writes(inputs, monkeypatch, mutation)
     if mutation == 'version':
         data['journal_schema'] = 99
     elif mutation == 'duplicate':
-        raw = raw.replace(b'"journal_schema":1', b'"journal_schema":1,"journal_schema":1')
+        key = f'"journal_schema":{const.TRANSACTION_SCHEMA_VERSION}'.encode()
+        assert key in raw
+        raw = raw.replace(key, key + b',' + key)
     elif mutation in {'traversal', 'absolute', 'control'}:
         data['entries'][0]['path'] = {'traversal': '../Outside.md', 'absolute': '/Outside.md', 'control': '.obsidian/Core.md'}[
             mutation
@@ -842,3 +844,162 @@ def test_owned_lock_windows_cross_api_and_same_api_guards(inputs, monkeypatch, c
     else:
         with pytest.raises(ConflictError):
             owner.read()
+
+
+@pytest.fixture
+def windows_timestamp_api(monkeypatch):
+    """Model pathname creation ctime and descriptor change ctime on every host."""
+    from types import SimpleNamespace
+
+    from obforce.sync import state
+
+    original_lstat, original_fstat = module.Path.lstat, os.fstat
+    births = {}
+
+    def observation(info, pathname=False):
+        values = {name: getattr(info, name) for name in dir(info) if name.startswith('st_')}
+        birth = births.setdefault((info.st_dev, info.st_ino), getattr(info, 'st_birthtime_ns', info.st_ctime_ns))
+        values['st_birthtime_ns'] = birth
+        if pathname:
+            values['st_ctime_ns'] = birth
+        return SimpleNamespace(**values)
+
+    cross_api = state._cross_api_stamp
+    monkeypatch.setattr(module.Path, 'lstat', lambda path: observation(original_lstat(path), True))
+    monkeypatch.setattr(os, 'fstat', lambda fd: observation(original_fstat(fd)))
+    monkeypatch.setattr(state, '_cross_api_stamp', lambda info: cross_api(info, windows=True))
+    monkeypatch.setattr(module, '_cross_api_stamp', state._cross_api_stamp)
+
+
+@pytest.mark.parametrize('which', ['published', 'unpublished', 'state', 'before', 'after', 'transfer', 'lock'])
+def test_windows_same_bytes_recovery_requires_historical_descriptor(inputs, monkeypatch, windows_timestamp_api, which):
+    initial = publish_plan(inputs.plan(), inputs)
+    assert initial.status == TransactionStatus.COMMITTED, initial.text
+    request = changed(inputs)
+    journal = pause_at_ready(request, monkeypatch, boundary='transfer' if which == 'transfer' else 'published', index=0)
+    record = json.loads(journal.read_bytes())
+    relative = {
+        'published': record['entries'][0]['path'],
+        'unpublished': record['entries'][1]['path'],
+        'state': '.obforce/state.json',
+        'before': '.obforce/transaction/0000.before',
+        'after': '.obforce/transaction/0000.after',
+        'transfer': '.obforce/transaction/0000.transfer',
+        'lock': '.obforce/writer.lock',
+    }[which]
+    assert relative in {item['path'] for item in record['file_guards']}
+    target = inputs.vault / relative
+    raw, stamp = target.read_bytes(), target.lstat()
+    target.write_bytes(raw)
+    os.utime(target, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+    assert module._stamp(target.lstat()) == module._stamp(stamp)
+    before = tree(inputs.vault)
+    for preview in (True, False):
+        result = recover(inputs, preview=preview)
+        assert result.recovery_required and result.outcome == ExitCode.CONFLICT, result.text
+        assert tree(inputs.vault) == before
+
+
+def test_windows_unavailable_descriptor_change_time_refuses(inputs, monkeypatch):
+    from types import SimpleNamespace
+
+    from obforce.errors import ConflictError
+
+    target = inputs.vault / 'Ordinary.md'
+    target.write_bytes(b'Human bytes\n')
+    reader = module._Reader()
+    reader.read(target, 100)
+    guard = module._Guard(reader.preconditions())
+    original = module._Reader.read
+
+    def unavailable(current, path, limit):
+        raw = original(current, path, limit)
+        current.file_stamps[path] = (*current.file_stamps[path][:-1], 0)
+        return raw
+
+    platform_os = SimpleNamespace(**vars(os))
+    platform_os.name = 'nt'
+    monkeypatch.setattr(module, 'os', platform_os)
+    monkeypatch.setattr(module._Reader, 'read', unavailable)
+    before = tree(inputs.vault)
+    with pytest.raises(ConflictError, match='change time is unavailable'):
+        guard.check()
+    assert tree(inputs.vault) == before
+
+
+@pytest.mark.parametrize('boundary', ['replace_before', 'rollback_before', 'cleanup_before'])
+def test_windows_same_bytes_intervention_under_guard(inputs, monkeypatch, windows_timestamp_api, boundary):
+    assert publish_plan(inputs.plan(), inputs).status == TransactionStatus.COMMITTED
+    request = changed(inputs)
+    plan = request.plan()
+    target = inputs.vault / plan.actions[0].path
+    if boundary != 'replace_before':
+        pause_at_ready(
+            request,
+            monkeypatch,
+            boundary='published' if boundary == 'rollback_before' else 'commit',
+            index=0 if boundary == 'rollback_before' else -1,
+        )
+    fired = False
+    edited = None
+
+    def edit(name, index=-1):
+        nonlocal fired, edited
+        if name == boundary and index == 0 and not fired:
+            fired = True
+            raw, stamp = target.read_bytes(), target.lstat()
+            target.write_bytes(raw)
+            os.utime(target, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+            edited = tree(inputs.vault, owner=active_owner[0])
+
+    # Only the same process's owning handle may read writer.lock on Windows.
+    active_owner = []
+    original_enter = module._Lock.__enter__
+
+    def enter(owner):
+        result = original_enter(owner)
+        active_owner[:] = [owner]
+        return result
+
+    monkeypatch.setattr(module._Lock, '__enter__', enter)
+    monkeypatch.setattr(module, '_checkpoint', edit)
+    result = publish_plan(plan, request) if boundary == 'replace_before' else recover(inputs)
+    assert fired and result.recovery_required and result.outcome == ExitCode.CONFLICT, result.text
+    assert tree(inputs.vault) == edited
+    monkeypatch.setattr(module, '_checkpoint', lambda *args: None)
+    assert recover(inputs).recovery_required
+    assert tree(inputs.vault) == edited
+
+
+@pytest.mark.parametrize(
+    'mutation', ['legacy', 'missing', 'duplicate', 'extra', 'stamp', 'bool', 'directory', 'mismatch', 'oversized']
+)
+def test_descriptor_journal_evidence_is_required_and_bounded(inputs, monkeypatch, mutation):
+    journal = pause_at_ready(inputs, monkeypatch)
+    record = json.loads(journal.read_bytes())
+    files = record['file_guards']
+    if mutation == 'legacy':
+        record['journal_schema'] = 1
+        del record['file_guards']
+    elif mutation == 'missing':
+        files.pop()
+    elif mutation == 'duplicate':
+        files[-1] = files[0]
+    elif mutation == 'extra':
+        files[0]['path'] = '../outside'
+    elif mutation == 'stamp':
+        files[0]['stamp'].pop()
+    elif mutation == 'bool':
+        files[0]['stamp'][-1] = True
+    elif mutation == 'directory':
+        files[0]['stamp'][2] = record['work_stamp'][2]
+    elif mutation == 'mismatch':
+        files[0]['stamp'][1] += 1
+    else:
+        files[0]['stamp'][-1] = 1 << 129
+    journal.write_bytes(json.dumps(record).encode())
+    before = tree(inputs.vault)
+    for preview in (True, False):
+        result = recover(inputs, preview=preview)
+        assert result.recovery_required and result.outcome == ExitCode.CONFLICT, result.text
+        assert tree(inputs.vault) == before

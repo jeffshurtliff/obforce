@@ -50,10 +50,14 @@ exact-merge CI cells passed; see the
 Thread 11 adds internal bounded [transaction/recovery primitives](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026),
 with explicit caller inputs, independent plan validation, kernel writer guard,
 same-filesystem staging, before-images, journaled note/state replacement and
-conservative rollback/cleanup. This increment is pending maintainer acceptance;
-there is no public build/sync/recover command or end-to-end lifecycle. Ambiguous
-crash evidence is retained for manual resolution. Native transaction and power-loss
-qualification remain limited to the evidence in the roadmap. Threads 12–17 and
+conservative rollback/cleanup. Thread 11 is accepted, including recovery correction
+`4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run `39676435834`,
+attempt 2, has all 12 cells and 24 independent installs passing; see the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026).
+There is no public init/build/sync/recover
+command or end-to-end lifecycle yet. Ambiguous crash evidence is retained for
+manual resolution. Hosted synthetic transaction results do not establish
+power-loss, hostile-race or Windows sf guarantees. Threads 12–17 and
 Windows sf enhancement #18 remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,

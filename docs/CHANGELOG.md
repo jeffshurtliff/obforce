@@ -17,8 +17,14 @@ All notable changes to this project will be documented in this file, following
   crashes/edits retain explicit recovery-required evidence. Synthetic fault and
   subprocess-death/concurrency tests, package allowlist and guarded independent
   installed probes are included. No dependency, accepted state-wire/hash/ownership/
-  coverage/source/transport change or public lifecycle command. #11 remains open
-  pending maintainer acceptance; Threads 12–17 and #18 remain NOT STARTED. Native
+  coverage/source/transport change or public lifecycle command. Thread 11 is accepted
+  at recovery correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final run
+  `39676435834`, attempt 2, has all 12 cells passing: Linux 1248 passed each;
+  macOS 1246 passed/2 skipped each; Windows 1232 passed/16 skipped each. All required
+  commands and 24 independent installs passed. Eleven successful attempt-1 logs
+  are retained; macOS 3.14 completed in attempt 2 after its earlier cancellation
+  with no runner/steps and unavailable log. Historical failed attempts/runs and
+  skipped gates retain their outcomes. Threads 12–17 and #18 remain NOT STARTED. Native
   transaction/platform and power-loss limits remain explicit in SYNC_SAFETY.md.
 
 - Internal complete deterministic read-only change planner and bounded redacted
@@ -182,7 +188,8 @@ All notable changes to this project will be documented in this file, following
   regressions and both independent installed recovery probes. Run 39670042028
   at bde1225 remains historically failed on Windows (1 failed/1211 passed/16
   skipped per cell; downstream artifact gates skipped), while Linux/macOS passed.
-  Corrected hosted Windows evidence and maintainer acceptance remain pending.
+  Corrected hosted Windows evidence and maintainer acceptance are now recorded in
+  the [Thread 11 acceptance](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026).
 
 - Windows transaction guards no longer reopen their own byte-locked writer file
   through a second handle. Validation retains the continuous owning descriptor,
@@ -194,7 +201,7 @@ All notable changes to this project will be documented in this file, following
   lock-held snapshots respect Windows handle access and OS-denied lock renames
   remain tested refusals. No lock/journal/state-wire change, retry, bypass, skip,
   dependency or transport expansion. Failed run 39610229702 remains historical;
-  corrected native Windows CI and maintainer acceptance are pending.
+  the later schema-2 correction passed the accepted matrix recorded above.
 
 - CI now creates a fresh dedicated runner temporary root and exports TMPDIR,
   TEMP and TMP for all subsequent setup, tests and independent artifact probes.

@@ -25,13 +25,12 @@ as completed. Thread 09 is **accepted and complete**, including Windows correcti
 as completed. Thread 10 is **accepted and complete**, including temporary-root
 correction `a2132c3` / merge `6004c35` and all 12 exact-merge hosted cells in
 run `39510802449`, attempt 1. Issue #10 is closed as completed.
-Thread 11's initial implementation is delivered at merge `9edcb2b`; run
-`39610229702` passed Linux/macOS but failed all four Windows cells. The lock-read
-correction was delivered as 78c7ee1 / merge bde1225. Run 39670042028 passed
-Linux/macOS but failed the same-byte recovery-edit case in every Windows cell.
-The descriptor-observation/schema 2 correction is implemented and verified locally, pending
-corrected delivery/native Windows evidence and maintainer acceptance;
-Threads 12–17 remain **NOT STARTED**.
+Thread 11 is **accepted and complete**, including recovery correction `4aaeb0f` /
+merge `2995f93` and final exact-merge run `39676435834`, attempt 2: all 12 cells
+and 24 independent installs passed. Issue #11 is closed as completed. Eleven cells
+retain successful attempt-1 logs; macOS 3.14 completed in attempt 2 after its earlier
+cancelled/no-runner/no-step attempt with unavailable log. Historical failed runs
+and skips remain recorded. Threads 12–17 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -815,7 +814,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Accepted and complete; issue closed |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
-| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Schema 2 recovery correction local; pending delivery/CI/acceptance |
+| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
@@ -1655,7 +1654,11 @@ refusal, template changes, and deterministic count/result precedence.
 
 **Goal:** Recoverable bounded publication primitives before public vault writes.
 
-**Depends on:** 10 (accepted and closed). **Status:** Schema 2 recovery correction implemented locally; pending delivery/CI/acceptance.
+**Depends on:** 10 (accepted and closed). **Status:** Accepted and complete; #11 closed.
+
+[Exact delivery/CI acceptance](#thread-11-acceptance-and-closure--21-october-2026)
+includes both Windows corrections and the full final hosted matrix. Historical
+failed runs/local handoffs below retain their original outcomes and then-current status.
 
 Implementation authorized on 20 October 2026; see the latest Thread 11 handoff.
 The launch prompt below records the authorized scope.
@@ -1719,7 +1722,11 @@ publication, and recovery no-op/dry-run behavior. Record native platform gaps.
 
 **Goal:** The first complete user journey from configuration to a managed vault.
 
-**Depends on:** 11. **Status:** Not started.
+**Depends on:** 11 (accepted and closed). **Status:** Not started.
+
+The prerequisite is accepted at correction `4aaeb0f` / merge `2995f93`, final
+run `39676435834` attempt 2. Recheck actual code and exact command evidence before
+implementation; see the [acceptance record](#thread-11-acceptance-and-closure--21-october-2026).
 
 **GitHub issue:** [#12](https://github.com/jeffshurtliff/obforce/issues/12)
 
@@ -1748,17 +1755,27 @@ project, then open readable notes; an existing nonempty destination is untouched
 missing prerequisites, noninteractive use, repeat-build refusal, rollback, dry-run
 tree snapshots, clean installed package, and source-tree preservation.
 
-**Copy-ready prompt:**
+**Copy-ready prompt (Thread 12 remains NOT STARTED):**
 
-> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/12 and its linked
-> prerequisite issues. Keep this existing issue updated with start/progress,
-> verified checklist, and handoff evidence, synchronized with the roadmap. Leave
-> it open pending maintainer acceptance; do not create duplicate tracking issues.
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/12 and prerequisite #11, following linked #10 and earlier evidence as needed. Keep the existing #12 updated with start/progress, verified checklist and handoff evidence synchronized with the roadmap. Leave #12 open pending maintainer acceptance; do not create duplicate tracking issues.
 >
-> Implement only Thread 12 after verifying the transaction tests. Expose init,
-> initial build, and recovery using the established contracts. Demonstrate the
-> offline synthetic quickstart and mocked live flow. Do not implement refresh,
-> adopt arbitrary vaults, query real orgs, or publish. Leave changes uncommitted.
+> Read AGENTS.md, CONTRIBUTING.md, dev/IMPLEMENTATION_PLAN.md, docs/CONFIGURATION.md, docs/SYNC_SAFETY.md, docs/NOTE_FORMAT.md, docs/RENDERING.md, docs/COVERAGE.md, docs/OFFLINE_SOURCE.md, docs/LIVE_SOURCE.md, docs/SF_CLI.md and docs/RELATIONSHIPS.md. Check relevant local/vendor_docs/ if present. Verify actual prerequisite code, current issue/native dependencies and exact-commit CI command logs before implementation; report any new blocker before coding. Preserve any uncommitted acceptance documentation.
+>
+> Thread 11 / #11 is accepted and closed. Recovery correction 4aaeb0f9481f1c306a9089426f40413f0e53be69 was merged at 2995f93949aaf298cfc6f377ac8b25aa3e17a7ad; their trees match. Run 39676435834, final attempt 2, has all 12 Linux/macOS/Windows Python 3.12–3.15 cells successful: Linux 1248 passed each; macOS 1246 passed/2 skipped each; Windows 1232 passed/16 skipped each. Every required metadata/lock, Ruff lint/format, Bandit, pytest, fresh build, strict Twine, exact archive check, both independent artifact installs and whitespace check passed. Eleven cells retain successful attempt-1 execution logs; macOS 3.14 completed in attempt 2. Attempt 1 remains historically failed with that cell cancelled, no assigned runner/steps and unavailable log; do not invent its cause. Retain failed runs 39610229702 and 39670042028, older failures, skips and local setup/probe refusals. Preserve isolated TMPDIR/TEMP/TMP CI setup and full guards. Hosted synthetic transactions do not qualify Windows sf, hostile races, power-loss, native ACLs or atomic multi-file publication.
+>
+> Implement only Thread 12: public init, initial build and recovery, with focused orchestration in cli.py and sync/engine.py and necessary tests/docs. Init must require mutually exclusive explicit source selection, preserve config-relative path rules, create config without overwriting existing files, and provide a write-free preview. Build must connect accepted source/graph/render/planner/writer primitives, require an absent or empty destination, refuse unrelated files, existing managed history, source/template/application overlap and repeated builds, and support a truly write-free dry-run. Expose validated recovery preview and explicit rollback/committed cleanup without source acquisition; retain clear bounded diagnostics for incomplete or unsafe evidence. Add a fictional offline quickstart and end-to-end initial-build tests; exercise live orchestration only through mocks and explicit verified org identity.
+>
+> Before dependent implementation, record exact CLI syntax/defaults, explicit config/source selection, safe config serialization/publication, absent-destination/parent creation and ownership, write-free preview of missing destinations, guarded setup/cleanup, recovery operation selection, finite bounds and error/coverage precedence 3, 2, 1, 4, 0. Resolve these against the writer's existing requirement for an existing explicit vault; do not bypass parent guards to create it. Record material deviations before implementing dependent work. Preserve accepted config, NoteState, state-wire/hash, UUID, source/workspace/org/scope, independent coverage, renderer-local graph composition and private journal schema 2 contracts. Prior graph snapshots remain explicit inputs, never persisted or reconstructed from saved hashes. Schema 1 recovery journals remain unsupported retained evidence; no migration or guessing.
+>
+> Use explicit paths and synthetic temporary projects/vaults only. No implicit config/vault/home/auth discovery. Refuse traversal/escape/overlap, unsafe links/junctions/reparse/special/hard-linked files, unowned or case/Unicode/reserved-name/file-parent collisions, corrupt/unknown/missing state beside managed notes, ambiguous identity and unreadable/changed observations. Retain full pathname and historical descriptor change stamps, Windows birthtime bridging, continuous owning-handle lock reads, immediate precondition/hash/absence checks, exact transaction-owned parent deltas, same-filesystem staging/before-images and constrained cleanup. Preserve intervening edits and explicit recovery-required evidence. No atomic snapshot or atomic multi-file claim. Preview/dry-run/recovery preview must create no config/vault/state/lock/journal/log/cache/staging artifacts; no-op primitives preserve bytes/mtimes. Keep caller inputs and source/config/unrelated/.obsidian snapshots unchanged except the explicitly authorized initial config/vault output. Preserve all user-owned content/properties, including technical_debt* fields; never regenerate an existing note through a creation template or adopt an existing vault.
+>
+> Test console and module commands, help, noninteractive use, relative/absolute paths with spaces, source exclusivity, invalid config, missing prerequisites, absent/empty/nonempty destinations, repeat-build refusal, partial coverage and bounded exit results, dry-run tree snapshots, interruption/recovery, concurrent writers and intervening edits during setup/publication/rollback/cleanup. Prove refusal preserves human data and source trees. Synthetic subprocess interruption tests are authorized; application runtime network and unapproved process execution are not. Test installed init/build/recover and accepted lower-level behavior from fresh independent wheel/sdist installs outside checkout/cwd with active runtime guards and no cwd artifacts. Deliberately extend archive allowlists if adding sync/engine.py. Run applicable Poetry metadata/lock, Ruff, pytest, Bandit, whitespace, fresh build/Twine/archive and independent-install checks. Distinguish local, mocked, hosted, skipped and unavailable/native evidence; no retries around races, weakened guards or broad skips.
+>
+> Preserve maintainer changes, Apache licensing and source/transport behavior. Justify any necessary dependency through Poetry; never hand-edit poetry.lock or invent pins. Follow AGENTS.md Python headers: preserve Created By, use Jeff Shurtliff (via GPT-6.1 Sol) for changed/new Last Modified headers and the current local date. Update applicable docs, docs/CHANGELOG.md, quickstart/examples and roadmap handoff.
+>
+> Do not implement sync/refresh/missing-reactivation lifecycle, graph persistence, adoption/migration, automatic note deletion, dashboards, backup or Git integration. Do not begin Thread 13 or later. Do not invoke real sf or Obsidian, inspect credentials/.env, discover auth, authenticate, install/update CLI/plugins, query an org, execute Apex, deploy, access real metadata/vaults, alter real .obsidian settings or upload private data. Windows sf execution remains refused; enhancement #18 is outside v0.1.0 and is not a prerequisite or transport authorization.
+>
+> Leave changes unstaged/uncommitted and #12 open for acceptance. Do not create issues, stage, commit, push, open a PR, close issues, rerun CI or publish. Leave Thread 13 and later and enhancement #18 explicitly NOT STARTED. Do not create/message other chats or spawn subagents.
 
 ### Thread 13 — Public refresh and missing-component lifecycle
 
@@ -4648,3 +4665,27 @@ Limits: no corrected hosted Windows/Linux or additional local Python qualificati
 Eight files remain unstaged/uncommitted on the existing fix branch at baseline bde1225. No stage, commit, push, PR, CI rerun, publication, issue closure, real sf/Obsidian/auth/credential/.env/org/metadata/vault/settings access, private upload, subagent or other-chat action. #10 remains closed, #11 open and native #10 -> #11 -> #12 links remain unchanged. **Next eligible only after #11 acceptance/delivery/exact corrected CI and a new request: Thread 12 / #12, NOT STARTED. Threads 12–17 and enhancement #18 remain NOT STARTED.**
 
 Issue synchronization verified after handoff: [start](https://github.com/jeffshurtliff/obforce/issues/11#issuecomment-6326256289), [verified handoff](https://github.com/jeffshurtliff/obforce/issues/11#issuecomment-6326492262), and current issue body agree with this record. #11 remains open with enhancement/codex/maintainer/security labels, assignee jeffshurtliff, milestone 1 and unchanged reciprocal #10/#12 dependency links.
+
+
+### Thread 11 acceptance and closure — 21 October 2026
+
+The maintainer requested closure if complete. Thread 11 meets its bounded internal acceptance criteria and is accepted as complete; #11 is closed as completed under that authorization.
+
+- [x] Recovery correction `4aaeb0f9481f1c306a9089426f40413f0e53be69` is merged at `2995f93949aaf298cfc6f377ac8b25aa3e17a7ad`; correction/merge trees match, and live/local main match that merge.
+- [x] Reviewed all 12 final job/step/full command logs in [run 39676435834, attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/39676435834/attempts/2). Linux Python 3.12–3.15 each **1248 passed**; macOS each **1246 passed/2 skipped**; Windows each **1232 passed/16 skipped**. All final matrix job conclusions and required steps are successful.
+- [x] Every cell passed isolated-temp setup, locked environment install, standalone strict Poetry metadata/lock, Ruff lint/format (83 files), Bandit, pytest, fresh build, strict Twine, exact 32-wheel/31-sdist source/resource/license/README/metadata inspection, both independent installed probes and whitespace. **All 24 independent installs in the accepted matrix passed** outside checkout/cwd with runtime socket/process denial, including same-byte recovery ownership probes. Setup/download network use is distinct from offline application runtime. Artifact hashes are per-build evidence, not a cross-platform reproducibility claim.
+- [x] Final attempt 2 carries forward eleven successful attempt-1 execution logs; their isolated temp/artifact paths end in `-1`. macOS 3.14 has an attempt-2 execution with paths ending in `-2`. Attempt 1 remains historically FAILED: eleven success conclusions and one cancelled macOS 3.14 cell (job 119487397357), no assigned runner or command steps. Its log returns 404 BlobNotFound and the cancellation cause is unavailable; no application failure/pass is inferred for it. The eleven available successful historical logs were also reviewed. No new CI rerun was initiated during this acceptance update.
+- [x] Delivered code/tests meet all four implementation tasks: explicit independently revalidated complete planner inputs; continuous kernel writer ownership; full pathname/hash/historical descriptor/birthtime/parent guards; same-filesystem staging, bounded before-images and strict private schema-2 journal; notes then state publication and persisted commit; read-only recovery preview, conservative rollback and constrained committed cleanup. Fully recorded interruptions restore consistency or retain explicit recovery-required evidence. Intervening human edits, including same-byte/restored-mtime changes, refuse destructive recovery. Schema 1 is retained as unsupported; state wire and accepted ownership/source/coverage/UUID/hash contracts are unchanged.
+- [x] Historical failed runs 39610229702 and 39670042028 remain failed with their original skipped downstream gates. Older failed prerequisite runs, local setup/probe refusals, duplicate-key fixture correction, and all skipped evidence remain recorded. Quiet pytest output does not enumerate every skip reason; no missing native evidence is relabeled as a pass.
+- [x] Hosted synthetic Windows transaction/lock/interruption/recovery/package tests now pass for the tested boundaries. This does not qualify Windows sf execution, real Salesforce/Obsidian/vault access, Windows private-root ACL/directory-fsync durability, power-loss, hostile editor exclusion, forged/coarse timestamps, atomic snapshots or atomic multi-file replacement. Conservative/manual-resolution crash windows remain intentional. Windows sf stays refused and #18 stays outside v0.1.0.
+- [x] Existing labels, assignee, milestone and native #10 -> #11 -> #12 links preserved. Direct prerequisite #10 is closed. Docs/changelog/roadmap/current status/verified checklist and exact next-thread launch prompt synchronized. Historical handoffs keep their then-current pending/uncommitted statements; this record supersedes those gates without changing their outcomes. Ready-to-merge/release denotes acceptance of the delivered increment, not release/publication permission.
+
+Acceptance changes are prose only and remain unstaged/uncommitted. Link/anchor/fence/privacy/consistency/whitespace and diff/status checks passed; no new application tests, builds, dependencies, source/transport changes or public commands were needed. No stage/commit/push/PR/merge/tag/CI rerun/release/publication, live sf/Obsidian/auth/org/real-vault access, private upload, other-chat or subagent action occurred during acceptance.
+
+**Next eligible only after a new implementation request: Thread 12 / #12, NOT STARTED.** Its exact prompt is prepared in the local roadmap, covering public init/initial build/recovery with synthetic offline and mocked live tests only. Thread 13 and later and enhancement #18 remain NOT STARTED. Local acceptance documentation has not been pushed.
+
+Closure verified via GitHub after the update: #11 is closed with state_reason
+completed; labels enhancement/codex/maintainer/security, assignee jeffshurtliff
+and milestone 1 are unchanged. Native #10 (closed) -> #11 (closed) -> #12 (open)
+links, including #12’s reciprocal prerequisite, remain intact.
+[Acceptance/closure comment](https://github.com/jeffshurtliff/obforce/issues/11#issuecomment-6327267264).

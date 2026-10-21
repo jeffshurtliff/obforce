@@ -182,8 +182,11 @@ including correction
 `a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
 passed in exact-merge run `39510802449`, attempt 1; see the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 adds internal bounded transaction/recovery primitives, pending maintainer
-acceptance; see [the transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
+Thread 11 internal bounded transaction/recovery primitives are accepted, including
+correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
+`39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
+see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
+[transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
 Threads 12–17 and enhancement #18 remain NOT STARTED.
 No release/publication or Windows sf qualification is implied.
 
@@ -305,7 +308,8 @@ source files, vault bytes/mtimes/tree and state remain unchanged on success,
 no-op, blocked and failure paths. Synthetic fixture setup may write before
 snapshots; planning/reporting never create config/vault/state/lock/journal/log/
 cache or temporary publication artifacts. No new dependency is needed.
-Thread 11 and all later threads and enhancement #18 remain NOT STARTED.
+At that Thread 10 design checkpoint, Thread 11 and later and #18 were NOT STARTED;
+the Thread 11 acceptance record below supersedes that historical status.
 
 
 ## Thread 10 historical local candidate evidence
@@ -319,7 +323,7 @@ At that local handoff, delivery and exact-commit hosted evidence were pending;
 the acceptance record below supersedes that status without changing those results.
 Historical failed tests/setup/network attempts are retained in the
 [Thread 10 handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-handoff--20-october-2026).
-Thread 11 and later and enhancement #18 remain NOT STARTED.
+At that local handoff, Thread 11 and later and #18 were NOT STARTED.
 
 
 ## Thread 10 temporary-root CI correction
@@ -357,14 +361,16 @@ probes qualify only those tested boundaries; no Windows sf, hostile-race,
 writer, recovery, real org/vault or public lifecycle guarantee follows.
 Requested platform relationships remain partial/unavailable even after clean
 empty results; offline relationships remain not collected. No release or
-publication is implied. #10 is accepted and closed; Thread 11 is next eligible
-and NOT STARTED, along with later threads and enhancement #18. See the full
+publication is implied. #10 is accepted and closed. At its acceptance, Thread 11
+was next eligible and NOT STARTED; the Thread 11 acceptance below supersedes that
+status. Later threads and #18 remain NOT STARTED. See the full
 [acceptance and handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
 
 ## Thread 11 pre-implementation transaction contract — 20 October 2026
 
-This records the internal design before dependent implementation. Thread 11 is in
-progress, not accepted. Public lifecycle commands, source acquisition, graph
+This records the historical internal design before dependent implementation.
+Thread 11 was then in progress; its acceptance record below is now authoritative.
+Public lifecycle commands, source acquisition, graph
 storage, automatic note removal, adoption, backup and Git integration stay out of
 scope. No dependency or accepted NoteState/state-wire/hash change is intended.
 
@@ -528,7 +534,9 @@ lock must use that same validated owner handle too; OS-denied lock renames must
 be recorded as refused test mutations, not skipped or treated as successful edits.
 Subprocess failure diagnostics will include only fixed transaction result text
 and captured bounded stderr, so a pre-checkpoint refusal stays distinguishable
-from a missing checkpoint. No native Windows correction pass is claimed yet.
+from a missing checkpoint. At that correction checkpoint, no native Windows pass
+was claimed; the accepted
+run below now supplies hosted synthetic Windows evidence for the tested boundaries.
 
 ## Thread 11 Windows recovery observation correction — 21 October 2026
 
@@ -565,8 +573,9 @@ Publication order, commit point, lock lifetime, crash windows, fsync/durability,
 cleanup ownership and all previous finite limits remain as recorded above.
 This is conservative local-filesystem evidence, not an atomic snapshot, hostile
 writer exclusion, guaranteed detection of forged/coarse filesystem timestamps,
-or atomic multi-file replacement. Native Windows correction validation remains
-pending. Windows sf remains refused; Threads 12–17 and #18 remain NOT STARTED.
+or atomic multi-file replacement. Native Windows validation was pending at this
+pre-implementation checkpoint; the acceptance record below supersedes that gate.
+Windows sf remains refused; Threads 12–17 and #18 remain NOT STARTED.
 
 References: [Python stat timestamp semantics](https://docs.python.org/3/library/os.html#os.stat_result),
 [CPython Windows descriptor stamps](https://github.com/python/cpython/blob/3.12/Python/fileutils.c),
@@ -575,6 +584,42 @@ and [Windows ChangeTime](https://learn.microsoft.com/windows/win32/api/winbase/n
 
 Local correction verification: 1246 passed/2 existing skips on macOS ARM64 /
 Python 3.14.7, 20 focused added cases, all static checks and both fresh independent
-installed artifact probes passed. Hosted corrected Windows verification remains
-pending; see the [current handoff](../dev/IMPLEMENTATION_PLAN.md#thread-11-windows-recovery-correction-handoff--21-october-2026)
+installed artifact probes passed. Hosted verification was pending at that local
+handoff; the acceptance record below supersedes that gate. See the [historical handoff](../dev/IMPLEMENTATION_PLAN.md#thread-11-windows-recovery-correction-handoff--21-october-2026)
 for exact evidence, retained failures/skips, hashes and acceptance gates.
+
+
+## Thread 11 accepted delivery — 21 October 2026
+
+Thread 11 is accepted and #11 is closed after maintainer-authorized verification.
+Recovery correction `4aaeb0f9481f1c306a9089426f40413f0e53be69` is merged at
+`2995f93949aaf298cfc6f377ac8b25aa3e17a7ad`; trees match.
+[Run 39676435834, final attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/39676435834/attempts/2)
+has all 12 Python 3.12–3.15 cells successful: Linux 1248 passed each; macOS
+1246 passed/2 skipped each; Windows 1232 passed/16 skipped each. Every required
+standalone check, fresh build/Twine/exact 32/31 archive inspection, both independent
+installed probes per cell (24 total) and whitespace passed. Full command logs
+were inspected, including installed same-byte recovery refusal with active runtime
+socket/process guards and no cwd writes. Setup downloads are separate network use.
+
+Eleven cells retain successful attempt-1 execution logs; macOS 3.14 completed
+in attempt 2. Attempt 1 remains failed with that cell cancelled, no assigned
+runner/steps and unavailable log (404 BlobNotFound); its cause is not inferred.
+Earlier failed runs 39610229702 and 39670042028, skipped gates, local failures and
+all skips retain their original outcomes. Historical pending status above is
+superseded, not relabeled as passing evidence.
+
+Private schema 2, full pathname and historical descriptor/birthtime/hash/parent
+guards, continuous owning-lock reads and conservative rollback/cleanup are
+accepted for the tested synthetic boundaries. State wire and ownership/source/
+coverage/hash/UUID contracts stay unchanged. Schema 1 remains unsupported retained
+evidence. No public command, source acquisition, graph storage, adoption or
+automatic deletion is introduced. Hosted results do not qualify Windows sf,
+private-root ACLs/directory-fsync durability, power-loss, hostile editors, forged/
+coarse timestamps, atomic snapshots or atomic multi-file replacement. Ambiguous
+crashes still require retained evidence/manual resolution.
+
+See the [acceptance and handoff](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026)
+for exact gates, history and the Thread 12 launch prompt. Thread 12 is next eligible
+only after a new request and remains NOT STARTED. Threads 13–17 and #18 remain
+NOT STARTED. No release/publication authorization follows.

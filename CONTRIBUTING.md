@@ -67,8 +67,11 @@ Thread 10 internal read-only planning/reporting is accepted, including correctio
 `a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
 passed in exact-merge run `39510802449`, attempt 1; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 adds internal bounded transaction/recovery primitives, pending maintainer
-acceptance; see [the transaction contract](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
+Thread 11 internal bounded transaction/recovery primitives are accepted, including
+correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
+`39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
+see the [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
+[transaction contract](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
 Threads 12–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup

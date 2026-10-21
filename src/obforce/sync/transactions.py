@@ -54,6 +54,7 @@ _ROOT_KEYS = frozenset(
         'directories',
         'guards',
         'work_stamp',
+        'file_guards',
     }
 )
 _ENTRY_KEYS = frozenset({'path', 'before', 'after', 'original', 'published', 'restored', 'transfer', 'intent'})
@@ -180,23 +181,31 @@ def _sync_directory(path: Path) -> None:
 class _Guard:
     """Recheck full observations and accept only exact named directory-entry deltas."""
 
-    def __init__(self, observations: tuple[ReadObservation, ...]) -> None:
+    def __init__(self, observations: tuple[ReadObservation, ...], file_stamps: dict[Path, tuple[int, ...]] | None = None) -> None:
         self.stamps = {item.path: item.stamp for item in observations}
         self.hashes = {item.path: item.content_hash for item in observations if item.content_hash is not None}
         self.owner: _Lock | None = None
+        self.file_stamps = dict(file_stamps or {})
 
     def check(self) -> None:
         reader = _Reader()
         reader.snapshots.update(self.stamps)
+        reader.file_stamps.update(self.file_stamps)
         for path, digest in self.hashes.items():
-            raw = (
-                self.owner.read()
-                if self.owner is not None and path == self.owner.path
-                else reader.read(path, max(const.MAX_STATE_BYTES, const.MAX_JOURNAL_BYTES))
-            )
+            if self.owner is not None and path == self.owner.path:
+                raw = self.owner.read()
+                stamp = _stamp(self.owner._observation)
+                if path in reader.file_stamps and reader.file_stamps[path] != stamp:
+                    raise ConflictError('Historical lock descriptor changed')
+                reader.file_stamps[path] = stamp
+            else:
+                raw = reader.read(path, max(const.MAX_STATE_BYTES, const.MAX_JOURNAL_BYTES))
+            if os.name == 'nt' and reader.file_stamps[path][-1] <= 0:
+                raise ConflictError('Required descriptor change time is unavailable')
             if _hash(raw) != digest:
                 raise ConflictError('Observed bytes changed')
         reader.finish()
+        self.file_stamps.update(reader.file_stamps)
 
     def observe(self, path: Path, raw: bytes | None = None) -> None:
         stamp = _lstat(path)
@@ -236,6 +245,7 @@ class _Guard:
         self.stamps.update(updates)
         for path in paths:
             self.hashes.pop(path, None)
+            self.file_stamps.pop(path, None)
         if data:
             self.hashes.update((path, _hash(raw)) for path, raw in data.items())
         self.check()
@@ -443,6 +453,11 @@ def _save(journal: dict, vault: Path, guard: _Guard, *, first: bool = False) -> 
                 raise ConflictError('Created directory identity changed')
             record['stamp'] = current
     journal['guards'] = _guards(guard, vault)
+    if any(vault / relative not in guard.file_stamps for relative in _expected_files(journal)):
+        raise ConflictError('Missing historical descriptor observation')
+    journal['file_guards'] = [
+        {'path': relative, 'stamp': guard.file_stamps[vault / relative]} for relative in sorted(_expected_files(journal))
+    ]
     work = vault / '.obforce/transaction'
     journal['work_stamp'] = _lstat(work)
     raw = (canonical_json(journal) + '\n').encode('utf-8')
@@ -624,6 +639,7 @@ def publish_plan(plan: ChangePlan, inputs: TransactionInputs, *, preview: bool =
                 'directories': [],
                 'guards': [],
                 'work_stamp': None,
+                'file_guards': [],
             }
             evidence = True
             _save(journal, vault, guard, first=True)
@@ -835,7 +851,41 @@ def _decode_journal(raw: bytes) -> dict:
                 raise ConflictError('Invalid digest observation')
     if '.' not in seen:
         raise ConflictError('Missing vault observation')
+    expected = _expected_files(document)
+    files = document['file_guards']
+    if type(files) is not list or len(files) > const.MAX_TRANSACTION_GUARDS or len(files) != len(expected):
+        raise ConflictError('Invalid descriptor observation collection')
+    seen = set()
+    for observation in files:
+        _keys(observation, {'path', 'stamp'})
+        path = observation['path']
+        if type(path) is not str or path not in expected or path in seen:
+            raise ConflictError('Unrelated or ambiguous descriptor observation')
+        seen.add(path)
+        stamp = _wire_stamp(observation['stamp'])
+        prior = expected[path]
+        if prior is not None and stamp[:-1] != tuple(prior[:-1]):
+            raise ConflictError('Contradictory descriptor observation')
     return document
+
+
+def _expected_files(journal: dict) -> dict[str, tuple[int, ...] | list[int] | None]:
+    """Derive exact regular-file membership; journals cannot choose arbitrary paths."""
+    files = {item['path']: item['stamp'] for item in journal['guards'] if item['hash'] is not None}
+    files['.obforce/writer.lock'] = None
+    for index, entry in enumerate(journal['entries']):
+        stamp = entry['restored'] or entry['published'] or entry['original']
+        if stamp is not None:
+            files[entry['path']] = stamp
+        else:
+            files.pop(entry['path'], None)
+        for label in ('before', 'after'):
+            blob = entry[label]
+            if blob is not None and blob['stamp'] is not None and not blob['removed']:
+                files[f'.obforce/transaction/{index:04d}.{label}'] = blob['stamp']
+        if entry['transfer'] is not None:
+            files[f'.obforce/transaction/{index:04d}.transfer'] = entry['transfer']
+    return files
 
 
 def _read_blob(path: Path, blob: dict, reader: _Reader) -> bytes:
@@ -955,6 +1005,7 @@ def _load_recovery(vault: Path, state_path: Path, excluded_roots: tuple[Path, ..
         raise
     except (OperationalError, UnicodeError, TypeError, ValueError, AttributeError, KeyError, IndexError, RecursionError):
         raise ConflictError('Invalid journal evidence') from None
+    reader.file_stamps.update((vault / item['path'], tuple(item['stamp'])) for item in journal['file_guards'])
     if _identity(_lstat(vault)) != tuple(journal['vault_identity']) or _identity(_lstat(control)) != tuple(
         journal['control_identity']
     ):
@@ -1041,7 +1092,9 @@ def _load_recovery(vault: Path, state_path: Path, excluded_roots: tuple[Path, ..
             raise ConflictError('Removed directory reappeared')
     _semantics(journal, contents, vault, reader)
     reader.finish()
-    return journal, _Guard(reader.preconditions())
+    guard = _Guard(reader.preconditions(), reader.file_stamps)
+    guard.check()
+    return journal, guard
 
 
 def _remove_blob(journal: dict, vault: Path, guard: _Guard, index: int, label: str) -> None:

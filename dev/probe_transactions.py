@@ -9,6 +9,8 @@
 
 from __future__ import annotations
 
+import json
+import os
 import sys
 import tempfile
 from dataclasses import replace
@@ -158,6 +160,28 @@ def main() -> None:
         assert publish_plan(updated.plan(), updated).status == TransactionStatus.NO_OP
         assert snapshot(vault) == before
         assert (request.components, request.coverage.canonical(), request.graph) == inputs_before
+        assert (snapshot(source), snapshot(obsidian), (vault / 'Ordinary.md').stat().st_mtime_ns) == protected
+        # Retained evidence must also protect an in-place identical rewrite whose
+        # mtime is restored. On Windows pathname ctime alone cannot detect it.
+        revised = replace(request, initial=False, previous_graph=request.graph)
+        module._checkpoint = stop
+        try:
+            assert publish_plan(revised.plan(), revised).recovery_required
+        finally:
+            module._checkpoint = original_checkpoint
+        journal = json.loads((request.state_path.parent / 'journal.json').read_bytes())
+        assert journal['journal_schema'] == 2
+        relative = journal['entries'][0]['path']
+        assert relative in {item['path'] for item in journal['file_guards']}
+        target = vault / relative
+        raw, stamp = target.read_bytes(), target.stat()
+        target.write_bytes(raw)
+        os.utime(target, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+        before = snapshot(vault)
+        for preview in (True, False):
+            result = recover_transaction(vault, request.state_path, excluded_roots=(source,), preview=preview)
+            assert result.recovery_required and result.outcome == 3, result.text
+            assert snapshot(vault) == before
         assert (snapshot(source), snapshot(obsidian), (vault / 'Ordinary.md').stat().st_mtime_ns) == protected
 
 

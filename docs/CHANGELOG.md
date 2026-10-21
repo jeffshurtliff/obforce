@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file, following
   accepted planner inputs. Independently regenerate/compare complete candidates,
   then recheck exact bytes/identities/absence and full parents under a persistent
   kernel writer guard. Same-filesystem immutable before/after blobs and tracked
-  transfer copies, version-one bounded journal, deterministic notes-then-state
+  transfer copies, version-two bounded journal, deterministic notes-then-state
   publication and persisted commit point support conservative local rollback and
   committed cleanup. Recovery preview and no-op create no artifacts; ambiguous
   crashes/edits retain explicit recovery-required evidence. Synthetic fault and
@@ -170,6 +170,19 @@ All notable changes to this project will be documented in this file, following
 - Contributor/security guidance and explicit foundation limitations.
 
 ### Fixed
+
+- Retain historical full descriptor change-time observations across transaction
+  guards and recovery. On Windows, an identical in-place rewrite with restored
+  mtime can retain the entire pathname creation-time stamp; recovery now refuses
+  that intervening edit, including state, before-images, staged/transfer files and
+  committed cleanup. Private journal schema 2 requires exact bounded descriptor
+  evidence; schema 1 is retained as unsupported rather than migrated or guessed.
+  Accepted state/planner wire, full pathname/parent guards, birthtime bridging and
+  continuous owning-lock reads remain intact. Added synthetic Windows-semantics
+  regressions and both independent installed recovery probes. Run 39670042028
+  at bde1225 remains historically failed on Windows (1 failed/1211 passed/16
+  skipped per cell; downstream artifact gates skipped), while Linux/macOS passed.
+  Corrected hosted Windows evidence and maintainer acceptance remain pending.
 
 - Windows transaction guards no longer reopen their own byte-locked writer file
   through a second handle. Validation retains the continuous owning descriptor,

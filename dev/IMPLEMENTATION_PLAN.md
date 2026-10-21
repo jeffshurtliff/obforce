@@ -27,8 +27,11 @@ correction `a2132c3` / merge `6004c35` and all 12 exact-merge hosted cells in
 run `39510802449`, attempt 1. Issue #10 is closed as completed.
 Thread 11's initial implementation is delivered at merge `9edcb2b`; run
 `39610229702` passed Linux/macOS but failed all four Windows cells. The lock-read
-correction is implemented locally, pending delivery/native Windows validation and maintainer
-acceptance; Threads 12–17 remain **NOT STARTED**.
+correction was delivered as 78c7ee1 / merge bde1225. Run 39670042028 passed
+Linux/macOS but failed the same-byte recovery-edit case in every Windows cell.
+The descriptor-observation/schema 2 correction is implemented and verified locally, pending
+corrected delivery/native Windows evidence and maintainer acceptance;
+Threads 12–17 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -812,7 +815,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Accepted and complete; issue closed |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
-| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Windows correction local; pending delivery/CI/acceptance |
+| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Schema 2 recovery correction local; pending delivery/CI/acceptance |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
@@ -1652,7 +1655,7 @@ refusal, template changes, and deterministic count/result precedence.
 
 **Goal:** Recoverable bounded publication primitives before public vault writes.
 
-**Depends on:** 10 (accepted and closed). **Status:** Windows correction implemented locally; pending delivery/CI/acceptance.
+**Depends on:** 10 (accepted and closed). **Status:** Schema 2 recovery correction implemented locally; pending delivery/CI/acceptance.
 
 Implementation authorized on 20 October 2026; see the latest Thread 11 handoff.
 The launch prompt below records the authorized scope.
@@ -4588,3 +4591,60 @@ Correction acceptance gates:
 this correction's delivered commit/merge and exact passing CI logs; original
 39610229702 is failed evidence and cannot qualify #12. No later work or #18 is
 authorized by this correction.
+
+### Thread 11 Windows recovery correction start — 21 October 2026
+
+Maintainer requested correction of the remaining Windows failure. Baseline is
+clean merge bde1225b51512e8eba2e5d9513f205a11c198125 on existing
+fix/11-thread-11-fix-windows-recovery-failure. Rechecked actual transaction/state
+code, root guidance, prior contracts, #10 closed / #11 open / #12 open and both
+native dependency directions. local/vendor_docs is absent. No new prerequisite
+blocker. Thread 11 acceptance is blocked by the recovery safety gap below.
+
+Inspected all 12 job/step/full command logs of exact-merge run 39670042028 attempt 1.
+Linux Python 3.12–3.15: 1228 passed each; macOS: 1226 passed/2 skipped each; all
+required checks and both independent artifact installs passed in those eight
+cells. Windows: 1 failed/1211 passed/16 skipped each, exclusively the same_bytes
+intervening recovery edit; metadata/lock/Ruff/Bandit passed, downstream fresh
+build/Twine/archive/independent installs/whitespace skipped. Prior 39610229702,
+39507844963, local probe/setup failures and skips retain their original outcomes.
+The owning-lock correction 78c7ee1 merged bde1225 now reaches the Windows death
+boundaries; the remaining failure is independently unsafe recovery ownership.
+
+Before dependent work recorded the [schema 2 correction contract](../docs/SYNC_SAFETY.md#thread-11-windows-recovery-observation-correction--21-october-2026).
+Persist/recheck full descriptor observations alongside existing pathname guards;
+refuse schema 1 rather than silently extending it. State/planner/UUID/coverage/
+source contracts stay unchanged. No public command, scope expansion or new
+prerequisite. #11 remains open; Thread 12 and later and #18 remain NOT STARTED.
+
+
+### Thread 11 Windows recovery correction handoff — 21 October 2026
+
+Thread 11 Windows recovery correction is implemented and locally verified; #11 remains OPEN pending corrected delivery/native Windows CI and maintainer acceptance.
+
+The remaining failure was a recovery ownership gap: Windows pathname creation time plus restored mtime and identical bytes could match the saved observation after an intervening rewrite. A deterministic injected-Windows regression reproduced acceptance before the correction. The bounded reader now retains full descriptor stamps from its existing verified read; transaction guards compare historical descriptor stamps across reads, publication, recovery and cleanup. Full pathname/parent/hash checks, Windows birthtime bridging and the continuously held owning-lock descriptor remain intact. Only explicitly mutated paths receive new descriptor baselines.
+
+Private journal schema 2 requires an exact bounded `file_guards` collection derived from notes/state/lock/blob/transfer evidence. Missing, extra, duplicate, malformed, contradictory and oversized evidence refuses. Schema 1 remains retained as unsupported evidence for manual resolution; no migration or baseline guessing. Accepted state JSON/NoteState/planner observations, UUID/source/org/scope/coverage/renderer/graph contracts are unchanged. No dependency, public command, source/transport change, weakened guard, retry, rounding or new skip.
+
+Verified local macOS ARM64 / Python 3.14.7 / Poetry 2.4.2:
+- [x] Twenty new focused cases: Windows same-byte/restored-mtime edits to published/unpublished notes, state, before/after/transfer/lock evidence; interventions during publication/rollback/committed cleanup; unavailable change-time refusal; malicious/legacy/invalid/bounded descriptor records.
+- [x] Final clean full suite: **1246 passed / 2 existing case-NFC skips**, 92% combined / 84% transaction coverage. A preceding diagnostic full run also passed 1246/2; no diagnostic plugin in the final run.
+- [x] Strict Poetry metadata/lock, Ruff lint/format (83 files), Bandit and whitespace passed. No new security finding/suppression; five existing source/transport annotations retained.
+- [x] Fresh wheel/sdist, strict Twine, exact 32-wheel/31-sdist archive/source/resource/license/README/metadata checks, pip consistency and both independent fresh installs outside checkout/cwd passed. Installed planner/report/parser/state/transaction/recovery and same-byte ownership probes ran under active runtime socket/process denial with no cwd artifacts. Dependency setup network use is separate.
+- [x] Docs/changelog/roadmap and existing issue status/checklist/handoff synchronized; metadata and native dependencies preserved.
+- [ ] Corrected delivery identity and exact-commit hosted Windows/all-matrix command verification.
+- [ ] Maintainer acceptance/closure.
+
+Fresh candidate SHA-256:
+- Wheel: `edbd155ecf8fe83d54a17270871bbbca947e5ed2dedd135109a2ae0567d1a2f5`.
+- Sdist: `0baf1401bada0bb1d0c808fd57c27c73102c95258e55d0ed214d3464ade53f65`.
+
+Historical exact-merge [run 39670042028 attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39670042028) at bde1225b51512e8eba2e5d9513f205a11c198125 remains FAILED: all 12 full job/command logs inspected. Linux Python 3.12–3.15 each 1228 passed; macOS each 1226 passed/2 skipped, all standalone checks and both artifact installs passed. Windows each 1 failed/1211 passed/16 skipped; metadata/lock/Ruff/Bandit passed and downstream build/Twine/archive/installs/whitespace skipped. The previous owning-lock correction 78c7ee1 merged bde1225 reaches the Windows interruption boundaries; it does not make the whole run passing. All older failures/skips remain historical.
+
+Retained local investigation failures: the new pre-correction regression failed as expected; a schema-version-specific duplicate-key fixture needed its literal updated (1 failed/15 passed). An expanded transaction/process run recorded 1 failed/185 passed at a recorded recovery boundary; a workspace diagnostic full run recorded 1 failed/1244 passed/2 skipped at initial setup; a workspace clean full run recorded 1 failed/1245 passed/2 skipped at initial setup. Exact changed observations were not captured, so shared ancestry remains an inference, not a proven cause. A subsequent transaction-only diagnostic run passed 143 cases. Moving all test temporary ancestry outside the checkout was followed by diagnostic and clean full passes above, with all guards retained; no production retry or test skip was added.
+
+Limits: no corrected hosted Windows/Linux or additional local Python qualification yet; local Windows timestamp injection is distinct from native execution. Windows directory fsync/ACL qualification, power-loss and hostile-editor/final-syscall-race guarantees remain unavailable. No atomic snapshot/multi-file claim; forged/coarse timestamps remain outside these trusted local-root guarantees. Windows sf stays refused.
+
+Eight files remain unstaged/uncommitted on the existing fix branch at baseline bde1225. No stage, commit, push, PR, CI rerun, publication, issue closure, real sf/Obsidian/auth/credential/.env/org/metadata/vault/settings access, private upload, subagent or other-chat action. #10 remains closed, #11 open and native #10 -> #11 -> #12 links remain unchanged. **Next eligible only after #11 acceptance/delivery/exact corrected CI and a new request: Thread 12 / #12, NOT STARTED. Threads 12–17 and enhancement #18 remain NOT STARTED.**
+
+Issue synchronization verified after handoff: [start](https://github.com/jeffshurtliff/obforce/issues/11#issuecomment-6326256289), [verified handoff](https://github.com/jeffshurtliff/obforce/issues/11#issuecomment-6326492262), and current issue body agree with this record. #11 remains open with enhancement/codex/maintainer/security labels, assignee jeffshurtliff, milestone 1 and unchanged reciprocal #10/#12 dependency links.

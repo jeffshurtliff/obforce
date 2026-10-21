@@ -502,3 +502,30 @@ blocked with the original typed outcome. If the commit and all cleanup completed
 but a final reporting/checkpoint failure occurs, the result records committed
 with a non-success outcome and no recovery-required flag. It does not invent
 a journal or claim silent success. Otherwise actual retained evidence is explicit.
+
+## Thread 11 Windows lock-read correction — 21 October 2026
+
+Before changing dependent code, the correction retains the existing lock token,
+byte-zero nonblocking Windows range, POSIX flock, journal schema and state wire.
+Do not move the range, unlock temporarily or skip full guards. The owning `_Lock`
+will retain its descriptor and original full descriptor observation while the
+kernel guard is held. `_Guard.check` will read only that lock through the owning
+descriptor; all other paths still use the accepted bounded reader. Every lock
+check must seek to zero, bound/read the exact canonical token bytes, verify the
+expected digest, compare full same-API descriptor/path stamps before/after and
+retain the Windows cross-API birthtime comparison. Detach the borrowed ownership
+reference before closing on both normal exit and failed entry. The kernel lock
+must remain held continuously during publication/recovery and every check.
+
+The existing Windows run failed before fault injection, not at the requested
+process-death boundary. A deterministic offline second-handle-denial regression
+reproduces the same operational refusal before this correction. Microsoft states
+that even the locking process cannot access the region through a second handle:
+[LockFileEx remarks](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfileex).
+Python documents that [msvcrt.locking](https://docs.python.org/3/library/msvcrt.html#msvcrt.locking)
+locks from the current descriptor position. Test snapshots made while owning a
+lock must use that same validated owner handle too; OS-denied lock renames must
+be recorded as refused test mutations, not skipped or treated as successful edits.
+Subprocess failure diagnostics will include only fixed transaction result text
+and captured bounded stderr, so a pre-checkpoint refusal stays distinguishable
+from a missing checkpoint. No native Windows correction pass is claimed yet.

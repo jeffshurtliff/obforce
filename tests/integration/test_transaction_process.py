@@ -4,7 +4,7 @@
 :Synopsis:          Injects synthetic process death and concurrent kernel-lock ownership
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -71,7 +71,8 @@ vault = Path(sys.argv[1])
 initial = sys.argv[4] == 'true'
 if not initial:
     request = make_inputs(vault)
-    assert publish_plan(request.plan(), request).status == TransactionStatus.COMMITTED
+    setup = publish_plan(request.plan(), request)
+    assert setup.status == TransactionStatus.COMMITTED, setup.text
 baseline = {p.relative_to(vault).as_posix(): base64.b64encode(p.read_bytes()).decode('ascii')
             for p in vault.rglob('*') if p.is_file()}
 (vault.parent / 'baseline.json').write_text(json.dumps(baseline))
@@ -80,8 +81,8 @@ def die(boundary, index=-1):
     if (boundary, index) == (sys.argv[2], int(sys.argv[3])):
         os._exit(97)
 module._checkpoint = die
-publish_plan(request.plan(), request)
-raise AssertionError('Death boundary was not reached')
+result = publish_plan(request.plan(), request)
+raise AssertionError('Death boundary was not reached; ' + result.text)
 """
     )
     environment = dict(os.environ, PYTHONDONTWRITEBYTECODE='1')
@@ -121,7 +122,9 @@ def test_kernel_lock_releases_on_process_death(tmp_path):
 import os, time
 vault = Path(sys.argv[1])
 request = make_inputs(vault)
-assert publish_plan(request.plan(), request).status == TransactionStatus.COMMITTED
+setup = publish_plan(request.plan(), request)
+assert setup.status == TransactionStatus.COMMITTED, setup.text
+(vault.parent / 'baseline-lock').write_bytes((vault / '.obforce/writer.lock').read_bytes())
 request = make_inputs(vault, initial=False)
 with module._Lock(vault / '.obforce', module._Guard(request.plan().preconditions)):
     (vault.parent / 'ready').write_bytes(b'ready')
@@ -131,21 +134,32 @@ with module._Lock(vault / '.obforce', module._Guard(request.plan().preconditions
     process = subprocess.Popen(
         [sys.executable, '-I', '-c', script, str(vault)], cwd=tmp_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
+    child_output = (b'', b'')
     try:
         deadline = time.monotonic() + 10
         while not (tmp_path / 'ready').exists() and process.poll() is None and time.monotonic() < deadline:
             time.sleep(0.01)
-        assert (tmp_path / 'ready').exists()
+        if not (tmp_path / 'ready').exists():
+            if process.poll() is None:
+                process.kill()
+            child_output = process.communicate(timeout=10)
+            raise AssertionError('Lock holder was not ready; ' + child_output[1].decode()[:4096])
         contender = (
             _SETUP
             + _GUARD
             + """
 vault = Path(sys.argv[1])
 request = make_inputs(vault, initial=False)
-before = snapshot(vault)
+# Windows denies reading another owner's locked byte. Snapshot its full
+# pathname stamp here; compare its exact pre-lock bytes after owner death below.
+def contender_snapshot():
+    lock = vault / '.obforce/writer.lock'
+    return {p: (module._lstat(p), p.read_bytes() if p.is_file() and p != lock else None)
+            for p in (vault, *vault.rglob('*'))}
+before = contender_snapshot()
 result = publish_plan(request.plan(), request)
 assert result.status == TransactionStatus.BLOCKED and result.outcome == 3, result.text
-assert snapshot(vault) == before
+assert contender_snapshot() == before
 """
         )
         second = subprocess.run(
@@ -155,7 +169,8 @@ assert snapshot(vault) == before
     finally:
         if process.poll() is None:
             process.kill()
-        process.communicate(timeout=10)
+        child_output = process.communicate(timeout=10)
+    assert (vault / '.obforce/writer.lock').read_bytes() == (tmp_path / 'baseline-lock').read_bytes()
     # The same persistent lock inode/token is reusable after the kernel released it.
     resume = (
         _SETUP
@@ -163,7 +178,8 @@ assert snapshot(vault) == before
         + """
 vault = Path(sys.argv[1])
 request = make_inputs(vault, initial=False)
-assert publish_plan(request.plan(), request).status == TransactionStatus.COMMITTED
+setup = publish_plan(request.plan(), request)
+assert setup.status == TransactionStatus.COMMITTED, setup.text
 """
     )
     final = subprocess.run(

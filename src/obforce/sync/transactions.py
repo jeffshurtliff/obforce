@@ -4,7 +4,7 @@
 :Synopsis:          Provides bounded internal publication and conservative recovery primitives
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -183,12 +183,17 @@ class _Guard:
     def __init__(self, observations: tuple[ReadObservation, ...]) -> None:
         self.stamps = {item.path: item.stamp for item in observations}
         self.hashes = {item.path: item.content_hash for item in observations if item.content_hash is not None}
+        self.owner: _Lock | None = None
 
     def check(self) -> None:
         reader = _Reader()
         reader.snapshots.update(self.stamps)
         for path, digest in self.hashes.items():
-            raw = reader.read(path, max(const.MAX_STATE_BYTES, const.MAX_JOURNAL_BYTES))
+            raw = (
+                self.owner.read()
+                if self.owner is not None and path == self.owner.path
+                else reader.read(path, max(const.MAX_STATE_BYTES, const.MAX_JOURNAL_BYTES))
+            )
             if _hash(raw) != digest:
                 raise ConflictError('Observed bytes changed')
         reader.finish()
@@ -256,9 +261,13 @@ class _Lock:
     def __init__(self, control: Path, guard: _Guard) -> None:
         self.path, self.guard, self.descriptor = control / 'writer.lock', guard, None
         self.token = None
+        self._observation = None
+        self._raw = None
 
     def __enter__(self) -> _Lock:
         guard, path = self.guard, self.path
+        if guard.owner is not None:
+            raise ConflictError('Writer guard already has an owning descriptor')
         if _lstat(path) is None:
             raw = ('obforce-lock-v1 ' + str(uuid4()) + '\n').encode('ascii')
             guard.change(lambda: _write_new(path, raw), (path,), data={path: raw})
@@ -293,19 +302,64 @@ class _Lock:
             if len(raw) != 53 or not raw.startswith(b'obforce-lock-v1 ') or raw[-1:] != b'\n':
                 raise ConflictError('Invalid persistent lock')
             token = raw[16:-1].decode('ascii')
-            if str(UUID(token)) != token or _stamp(info) != _stamp(os.fstat(descriptor)):
+            after = os.fstat(descriptor)
+            _safe(after)
+            if str(UUID(token)) != token or _stamp(info) != _stamp(after) or _cross_api_stamp(info) != _cross_api_stamp(after):
                 raise ConflictError('Lock ownership changed')
+            self.descriptor, self.token = descriptor, token
+            self._observation, self._raw = info, raw
+            guard.owner = self
             guard.observe(path, raw)
             guard.check()
             _checkpoint('lock')
         except BaseException:
+            if guard.owner is self:
+                guard.owner = None
+            self.descriptor = None
             os.close(descriptor)
             raise
-        self.descriptor, self.token = descriptor, token
         return self
 
+    def read(self) -> bytes:
+        """Validate lock bytes through the continuously held owning descriptor.
+
+        Windows denies another handle access to our locked byte. This is not a
+        read exemption: exact bytes, full same-API stamps and cross-API birthtime
+        identity must still agree before and after every bounded descriptor read.
+        """
+        if self.descriptor is None or self.guard.owner is not self or self._observation is None:
+            raise ConflictError('Writer guard descriptor is not owned')
+        path_before = self.path.lstat()
+        before = os.fstat(self.descriptor)
+        _safe(path_before)
+        _safe(before)
+        if (
+            _stamp(path_before) != self.guard.stamps[self.path]
+            or _stamp(before) != _stamp(self._observation)
+            or _cross_api_stamp(before) != _cross_api_stamp(self._observation)
+            or _cross_api_stamp(path_before) != _cross_api_stamp(before)
+        ):
+            raise ConflictError('Writer guard observation changed')
+        os.lseek(self.descriptor, 0, os.SEEK_SET)
+        raw = os.read(self.descriptor, 128)
+        after, path_after = os.fstat(self.descriptor), self.path.lstat()
+        _safe(after)
+        _safe(path_after)
+        if (
+            raw != self._raw
+            or _stamp(before) != _stamp(after)
+            or _cross_api_stamp(before) != _cross_api_stamp(after)
+            or _stamp(path_before) != _stamp(path_after)
+            or _cross_api_stamp(path_after) != _cross_api_stamp(after)
+        ):
+            raise ConflictError('Writer guard bytes or identity changed')
+        return raw
+
     def __exit__(self, *args: object) -> None:
-        os.close(self.descriptor)
+        if self.guard.owner is self:
+            self.guard.owner = None
+        descriptor, self.descriptor = self.descriptor, None
+        os.close(descriptor)
 
 
 def _roots(vault: Path, state_path: Path, excluded_roots: tuple[Path, ...]) -> _Reader:

@@ -4,7 +4,7 @@
 :Synopsis:          Exercises bounded synthetic publication, interruption and conservative recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -46,9 +46,12 @@ def offline(monkeypatch):
     monkeypatch.setattr(subprocess, 'Popen', deny)
 
 
-def tree(root):
+def tree(root, owner=None):
     return {
-        p.relative_to(root).as_posix(): (p.lstat().st_mtime_ns, p.read_bytes() if p.is_file() else None)
+        p.relative_to(root).as_posix(): (
+            p.lstat().st_mtime_ns,
+            (owner.read() if owner is not None and p == owner.path else p.read_bytes()) if p.is_file() else None,
+        )
         for p in (root, *root.rglob('*'))
     }
 
@@ -388,6 +391,7 @@ def test_publication_intervening_edits_never_overwritten(inputs, monkeypatch, wh
     target = inputs.state_path if which == 'state' else inputs.vault / plan.actions[0].path
     human = b'Human intervening private edit\n'
     fired = False
+    rename_refused = []
 
     def edit(name, index=-1):
         nonlocal fired
@@ -402,13 +406,24 @@ def test_publication_intervening_edits_never_overwritten(inputs, monkeypatch, wh
             (target.parent / 'Human.md').write_bytes(human)
         else:
             path = inputs.state_path.parent / 'writer.lock'
-            path.rename(path.with_name('human-lock'))
+            try:
+                path.rename(path.with_name('human-lock'))
+            except PermissionError as error:
+                if getattr(error, 'winerror', None) not in {32, 33}:
+                    raise
+                rename_refused.append(True)
+                raise
             path.write_bytes(human)
 
     monkeypatch.setattr(module, '_checkpoint', edit)
     result = publish_plan(plan, request)
-    assert fired and result.recovery_required and result.outcome == 3, result.text
+    assert fired and result.recovery_required, result.text
+    assert result.outcome == (1 if rename_refused else 3), result.text
     monkeypatch.setattr(module, '_checkpoint', lambda *args: None)
+    if rename_refused:
+        assert recover(inputs).status == TransactionStatus.ROLLED_BACK
+        assert not (inputs.state_path.parent / 'human-lock').exists()
+        return
     before = tree(inputs.vault)
     assert recover(inputs).recovery_required
     assert tree(inputs.vault) == before
@@ -492,11 +507,11 @@ def test_lock_content_and_ownership_are_required(inputs, monkeypatch):
     plan = request.plan()
     lock = inputs.state_path.parent / 'writer.lock'
     raw = lock.read_bytes()
-    with module._Lock(lock.parent, module._Guard(plan.preconditions)):
-        before = tree(inputs.vault)
+    with module._Lock(lock.parent, module._Guard(plan.preconditions)) as owner:
+        before = tree(inputs.vault, owner)
         result = publish_plan(plan, request)
         assert result.outcome == 3 and not result.recovery_required
-        assert tree(inputs.vault) == before
+        assert tree(inputs.vault, owner) == before
     assert lock.read_bytes() == raw
     lock.write_bytes(b'Invalid lock\n')
     before = tree(inputs.vault)
@@ -657,3 +672,173 @@ def test_stale_and_unsafe_candidate_complete_refusal(inputs, mutation):
     result = publish_plan(plan, request)
     assert result.status == TransactionStatus.BLOCKED and result.outcome == 3, result.text
     assert tree(inputs.vault) == before
+
+
+def test_mandatory_lock_reads_reuse_the_owning_handle(inputs, monkeypatch):
+    """Model Windows denial of a second handle reading our own locked byte."""
+    path = inputs.state_path.parent / 'writer.lock'
+    owner = [None]
+    reopens = []
+    original_read, original_close = module.os.read, module.os.close
+    original_bounded_read = module._Reader.read
+
+    def descriptor_read(descriptor, length):
+        raw = original_read(descriptor, length)
+        if raw.startswith(b'obforce-lock-v1 '):
+            owner[0] = descriptor
+        return raw
+
+    def descriptor_close(descriptor):
+        if descriptor == owner[0]:
+            owner[0] = None
+        return original_close(descriptor)
+
+    def bounded_read(reader, candidate, limit):
+        if candidate == path and owner[0] is not None:
+            reopens.append(True)
+            raise PermissionError(13, 'Synthetic mandatory byte-lock read denial')
+        return original_bounded_read(reader, candidate, limit)
+
+    monkeypatch.setattr(module.os, 'read', descriptor_read)
+    monkeypatch.setattr(module.os, 'close', descriptor_close)
+    monkeypatch.setattr(module._Reader, 'read', bounded_read)
+    result = publish_plan(inputs.plan(), inputs)
+    assert result.status == TransactionStatus.COMMITTED, result.text
+    assert not reopens and owner[0] is None
+
+
+def test_windows_denied_lock_rename_is_a_refused_edit(inputs, monkeypatch):
+    original = module.Path.rename
+
+    def denied(path, target):
+        if path.name == 'writer.lock':
+            error = PermissionError(13, 'Synthetic Windows sharing refusal')
+            error.winerror = 32
+            raise error
+        return original(path, target)
+
+    monkeypatch.setattr(module.Path, 'rename', denied)
+    test_publication_intervening_edits_never_overwritten(inputs, monkeypatch, 'lock', 'replace_before')
+
+
+@pytest.mark.parametrize('field', ['st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns'])
+def test_owned_lock_retains_full_descriptor_change_guards(inputs, monkeypatch, field):
+    from types import SimpleNamespace
+
+    from obforce.errors import ConflictError
+
+    assert publish_plan(inputs.plan(), inputs).status == TransactionStatus.COMMITTED
+    request = changed(inputs)
+    guard = module._Guard(request.plan().preconditions)
+    with module._Lock(inputs.state_path.parent, guard) as owner:
+        original = module.os.fstat
+
+        def changed_stat(descriptor):
+            value = original(descriptor)
+            if descriptor != owner.descriptor:
+                return value
+            values = {name: getattr(value, name) for name in dir(value) if name.startswith('st_')}
+            values[field] += 1
+            return SimpleNamespace(**values)
+
+        monkeypatch.setattr(module.os, 'fstat', changed_stat)
+        with pytest.raises(ConflictError):
+            guard.check()
+
+
+def test_owned_lock_bytes_and_lifetime_are_validated(inputs):
+    from obforce.errors import ConflictError
+
+    assert publish_plan(inputs.plan(), inputs).status == TransactionStatus.COMMITTED
+    request = changed(inputs)
+    guard = module._Guard(request.plan().preconditions)
+    with module._Lock(inputs.state_path.parent, guard) as owner:
+        raw = owner.read()
+        # The owning handle itself can edit the byte; validation must catch it.
+        os.lseek(owner.descriptor, 0, os.SEEK_SET)
+        os.write(owner.descriptor, b'X')
+        with pytest.raises(ConflictError):
+            guard.check()
+        assert raw.startswith(b'obforce-lock-v1 ')
+    assert guard.owner is None and owner.descriptor is None
+    with pytest.raises(ConflictError):
+        owner.read()
+
+
+def test_failed_lock_entry_detaches_and_closes(inputs, monkeypatch):
+    from obforce.errors import ConflictError
+
+    assert publish_plan(inputs.plan(), inputs).status == TransactionStatus.COMMITTED
+    guard = module._Guard(changed(inputs).plan().preconditions)
+    owner = module._Lock(inputs.state_path.parent, guard)
+    descriptors = []
+
+    def fail(boundary, index=-1):
+        if boundary == 'lock':
+            descriptors.append(owner.descriptor)
+            raise OSError('Synthetic entry interruption')
+
+    monkeypatch.setattr(module, '_checkpoint', fail)
+    with pytest.raises(OSError):
+        with owner:
+            raise AssertionError('Failed entry returned')
+    assert guard.owner is None and owner.descriptor is None
+    with pytest.raises(OSError):
+        os.fstat(descriptors[0])
+    with pytest.raises(ConflictError):
+        owner.read()
+
+
+@pytest.mark.parametrize('change', ['none', 'ctime', 'birthtime', 'missing_birthtime'])
+def test_owned_lock_windows_cross_api_and_same_api_guards(inputs, monkeypatch, change):
+    """Inject Windows pathname creation-time versus descriptor change-time semantics."""
+    import stat
+    from types import SimpleNamespace
+
+    from obforce.errors import ConflictError
+    from obforce.sync.state import _cross_api_stamp
+
+    path = inputs.state_path.parent / 'writer.lock'
+    raw = b'obforce-lock-v1 00000000-0000-4000-8000-000000000001\n'
+    values = dict(
+        st_dev=1,
+        st_ino=2,
+        st_mode=stat.S_IFREG | 0o600,
+        st_nlink=1,
+        st_size=len(raw),
+        st_mtime_ns=20,
+        st_ctime_ns=30,
+        st_birthtime_ns=50,
+    )
+    pathname = SimpleNamespace(**values)
+    descriptor = SimpleNamespace(**{**values, 'st_ctime_ns': 40})
+    guard = module._Guard(())
+    guard.stamps[path] = module._stamp(pathname)
+    owner = module._Lock(path.parent, guard)
+    owner.descriptor, owner._observation, owner._raw = 17, descriptor, raw
+    guard.owner = owner
+    calls = []
+
+    def fstat(fd):
+        assert fd == 17
+        calls.append(True)
+        updated = dict(descriptor.__dict__)
+        if len(calls) > 1:
+            if change == 'ctime':
+                updated['st_ctime_ns'] += 1
+            elif change == 'birthtime':
+                updated['st_birthtime_ns'] += 1
+            elif change == 'missing_birthtime':
+                del updated['st_birthtime_ns']
+        return SimpleNamespace(**updated)
+
+    monkeypatch.setattr(module.Path, 'lstat', lambda self: pathname)
+    monkeypatch.setattr(module.os, 'fstat', fstat)
+    monkeypatch.setattr(module.os, 'lseek', lambda fd, pos, whence: 0)
+    monkeypatch.setattr(module.os, 'read', lambda fd, length: raw)
+    monkeypatch.setattr(module, '_cross_api_stamp', lambda info: _cross_api_stamp(info, windows=True))
+    if change == 'none':
+        assert owner.read() == raw
+    else:
+        with pytest.raises(ConflictError):
+            owner.read()

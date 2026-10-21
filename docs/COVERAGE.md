@@ -188,3 +188,9 @@ notes against reconciled paths and independent current coverage. It never turns
 empty platform probes into complete relationships or offline XML into edges.
 Reports show each coverage dimension independently with fixed safe warnings/status
 and counts; raw warning text and audit identities stay out of diagnostics.
+
+Thread 11 can publish a valid partial-coverage plan and retains outcome 4. It does
+not use partial/offline/unavailable coverage as proof of absence or deletion.
+Conflict/invalid/operational outcomes retain precedence 3, 2, 1, 4, 0; transaction
+recovery acquires no source data and restores exact saved coverage with the prior
+state when ownership permits rollback.

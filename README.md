@@ -47,7 +47,14 @@ adoption, state write or filesystem publication is exposed. Thread 10 is accepte
 and [#10](https://github.com/jeffshurtliff/obforce/issues/10) is closed after all 12
 exact-merge CI cells passed; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 is next eligible and not started; later threads remain not started.
+Thread 11 adds internal bounded [transaction/recovery primitives](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026),
+with explicit caller inputs, independent plan validation, kernel writer guard,
+same-filesystem staging, before-images, journaled note/state replacement and
+conservative rollback/cleanup. This increment is pending maintainer acceptance;
+there is no public build/sync/recover command or end-to-end lifecycle. Ambiguous
+crash evidence is retained for manual resolution. Native transaction and power-loss
+qualification remain limited to the evidence in the roadmap. Threads 12–17 and
+Windows sf enhancement #18 remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

@@ -68,6 +68,7 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'sync/state.py',
             'sync/planner.py',
             'sync/reporting.py',
+            'sync/transactions.py',
             'resources/templates/apex_created.md.j2',
             'resources/templates/apex_generated.md.j2',
         }
@@ -508,6 +509,8 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         _run([str(python), '-c', preservation_probe], work, environment)
         planner_probe = (Path(__file__).with_name('probe_planner.py')).read_text(encoding='utf-8')
         _run([str(python), '-c', planner_probe], work, environment)
+        transaction_probe = Path(__file__).with_name('probe_transactions.py').read_text(encoding='utf-8')
+        _run([str(python), '-c', transaction_probe], work, environment)
         _run([str(python), '-c', live_probe], work, environment)
         _run([str(python), '-c', graph_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.

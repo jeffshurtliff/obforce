@@ -7,6 +7,20 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Internal bounded transaction writer/recovery primitives consuming explicit
+  accepted planner inputs. Independently regenerate/compare complete candidates,
+  then recheck exact bytes/identities/absence and full parents under a persistent
+  kernel writer guard. Same-filesystem immutable before/after blobs and tracked
+  transfer copies, version-one bounded journal, deterministic notes-then-state
+  publication and persisted commit point support conservative local rollback and
+  committed cleanup. Recovery preview and no-op create no artifacts; ambiguous
+  crashes/edits retain explicit recovery-required evidence. Synthetic fault and
+  subprocess-death/concurrency tests, package allowlist and guarded independent
+  installed probes are included. No dependency, accepted state-wire/hash/ownership/
+  coverage/source/transport change or public lifecycle command. #11 remains open
+  pending maintainer acceptance; Threads 12–17 and #18 remain NOT STARTED. Native
+  transaction/platform and power-loss limits remain explicit in SYNC_SAFETY.md.
+
 - Internal complete deterministic read-only change planner and bounded redacted
   reports with typed create/update/no-op/move/missing/conflict actions, candidate
   bytes/state and immutable publication preconditions. Reuses strict saved
@@ -22,8 +36,7 @@ All notable changes to this project will be documented in this file, following
   all 12 cells: Linux 1061 passed each; macOS 1059 passed/2 skipped each;
   Windows 1045 passed/16 skipped each. Every standalone gate, fresh build,
   strict Twine, exact archive check and all 24 independent installs passed.
-  Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
-  remain NOT STARTED.
+  Thread 11 is described above; Threads 12–17 and enhancement #18 remain NOT STARTED.
 
 - Internal strict version-one private state serialization/loading and bounded
   read-only managed-note discovery with conservative indicators. Exact saved
@@ -38,7 +51,7 @@ All notable changes to this project will be documented in this file, following
   `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed all 12
   cells: Linux 935 passed each, macOS 933 passed/2 skipped each, Windows 920
   passed/15 skipped each. Every standalone gate/build/Twine/archive check and
-  all 24 independent installs passed. Thread 10 is described above; Threads 11–17
+  all 24 independent installs passed. Thread 10 is described above; Threads 12–17
   and enhancement #18 remain NOT STARTED.
 
 - Internal bounded parsing and preservation patches for caller-supplied managed-note
@@ -56,7 +69,7 @@ All notable changes to this project will be documented in this file, following
   merge `dba53ab`; #8 is closed. Exact-merge run `39453887153`, attempt 1, passed
   all 12 cells: Linux/macOS 744 passed each; Windows 732 passed/12 expected skips
   each. All standalone checks, fresh builds/Twine and 24 independent installs
-  passed. Subsequent state/planner work is recorded above; Threads 11–17 and enhancement #18
+  passed. Subsequent state/planner work is recorded above; Threads 12–17 and enhancement #18
   remain NOT STARTED. Source/transport/hash contracts,
   coverage limitations, Windows sf refusal and Apache licensing are unchanged.
 

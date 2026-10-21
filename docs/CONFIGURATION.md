@@ -155,3 +155,10 @@ inventory attestation defaults false. See the [planner contract](SYNC_SAFETY.md#
 for finite bounds, immutable preconditions, blocked results and safe report fields.
 `report_plan` returns text/outcome without printing or writing. No new config
 key or public command is introduced; outcome precedence remains 3, 2, 1, 4, 0.
+
+Thread 11 adds internal transaction/recovery calls with explicit absolute paths and
+caller-supplied planner inputs. No config key, discovery, public command or auth
+access is added. A persistent private writer.lock may remain after an actual
+transaction; no-op and both previews create nothing. Recovery receives explicit
+vault/state/excluded roots and reads only validated local journal evidence. See
+[transaction safety](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).

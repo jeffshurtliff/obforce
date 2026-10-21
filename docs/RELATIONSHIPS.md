@@ -27,8 +27,9 @@ Thread 10 internal read-only planning/reporting is accepted, including correctio
 `a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
 passed in exact-merge run `39510802449`, attempt 1; see the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
-remain NOT STARTED.
+Thread 11 adds internal bounded transaction/recovery primitives, pending maintainer
+acceptance; see [the transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
+Threads 12–17 and enhancement #18 remain NOT STARTED.
 
 ## Direction, endpoints and provenance
 
@@ -229,3 +230,9 @@ invalidation. No filename/record-ID rename inference or filesystem rename occurs
 The complete candidate plan retains the refreshed graph in memory for the caller's
 next comparison; the accepted state wire stays unchanged. Persisting graph
 provenance requires a later explicit design decision; this thread adds no storage.
+
+Thread 11 adds internal publication/recovery only. Prior/current graph snapshots
+remain explicit transient planner inputs; no graph state persistence or saved
+baseline reconstruction is added. Recovery performs no platform collection.
+Partial/unavailable platform relationships, offline not-collected coverage and
+Windows sf refusal remain unchanged.

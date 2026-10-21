@@ -67,8 +67,9 @@ Thread 10 internal read-only planning/reporting is accepted, including correctio
 `a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
 passed in exact-merge run `39510802449`, attempt 1; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
-remain NOT STARTED.
+Thread 11 adds internal bounded transaction/recovery primitives, pending maintainer
+acceptance; see [the transaction contract](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
+Threads 12–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup
 
@@ -172,8 +173,13 @@ Thread 10 deliberately adds sync/planner.py and sync/reporting.py, with a shared
 `dev/probe_planner.py` acceptance probe. Each independent install checks fixed
 synthetic note/state hashes, stable UUIDs, no-op/update/move/conflict plans, bounded
 reporting and exact byte/mtime/tree preservation under active runtime guards.
-No state writes or publication are implemented. Bases assets
-remain Thread 14. The checker never publishes or uploads artifacts.
+Thread 11 deliberately adds `sync/transactions.py` and `dev/probe_transactions.py`.
+Both independent installs exercise complete plan authority, guarded note/state
+publication, state-only UUID moves, no-op/preview, recovery rollback, intervening
+user content preservation and exact source/ordinary/.obsidian/input snapshots.
+Application runtime socket/process guards remain active; synthetic subprocess
+death/concurrent-writer tests run only in the authorized test suite. Public lifecycle
+commands remain absent. Bases assets remain Thread 14. The checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

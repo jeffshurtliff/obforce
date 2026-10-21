@@ -1,4 +1,4 @@
-# Internal state, reconciliation and read-only planning
+# Internal state, reconciliation, planning and transactions
 
 ## Pre-implementation contract — 20 October 2026
 
@@ -182,8 +182,9 @@ including correction
 `a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
 passed in exact-merge run `39510802449`, attempt 1; see the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 is next eligible and NOT STARTED; later threads and enhancement #18
-remain NOT STARTED.
+Thread 11 adds internal bounded transaction/recovery primitives, pending maintainer
+acceptance; see [the transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
+Threads 12–17 and enhancement #18 remain NOT STARTED.
 No release/publication or Windows sf qualification is implied.
 
 
@@ -359,3 +360,145 @@ empty results; offline relationships remain not collected. No release or
 publication is implied. #10 is accepted and closed; Thread 11 is next eligible
 and NOT STARTED, along with later threads and enhancement #18. See the full
 [acceptance and handoff](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
+
+## Thread 11 pre-implementation transaction contract — 20 October 2026
+
+This records the internal design before dependent implementation. Thread 11 is in
+progress, not accepted. Public lifecycle commands, source acquisition, graph
+storage, automatic note removal, adoption, backup and Git integration stay out of
+scope. No dependency or accepted NoteState/state-wire/hash change is intended.
+
+**Explicit callers and authority.** `TransactionInputs` contains explicit absolute
+vault/state/excluded paths and the same normalized components, coverage, graph,
+retained components, previous graph, verified org identity, comparison attestation,
+initial flag, options/layout and already loaded templates as the accepted planner.
+`publish_plan(plan, inputs, preview=False)` independently plans from those inputs,
+requires the complete candidate and immutable preconditions to agree, then repeats
+all reads/absence/parent checks under the guard. Constructed, blocked, conflicting,
+inconsistent, over-bound or stale candidates provide no authority. Outcome 4 is a
+valid partial-coverage result, not evidence of absence. Only accepted preservation
+patch bytes replace existing notes. Moves reconcile already user-moved UUID paths;
+no filesystem rename of a managed note is requested. Prior graph remains an
+explicit transient caller input. No-op and preview perform reads only, creating
+nothing and preserving exact note/state bytes and mtimes.
+
+**Guard and lifetime.** Explicit vault must already exist. The only control area is
+vault/.obforce; no cwd/home/config/auth lookup. A bounded regular single-link
+`writer.lock` contains a versioned canonical UUID token. POSIX nonblocking flock
+or Windows nonblocking byte-range locking holds an open descriptor for the entire
+mutation/recovery call. Full pathname/descriptor checks surround acquisition;
+changing/removing/replacing the lock refuses. Never unlink the persistent lock:
+this avoids concurrent open/unlink split-lock races. No-op/preview do not create
+it. The OS releases the kernel lock on process death; no PID/time-based stale-lock
+stealing or automatic deletion. An obtainable existing lock is reusable only if
+its bytes/identity are valid. Any journal, staging residue or unknown control entry
+blocks ordinary writes. Invalid/incomplete lock initialization requires manual
+resolution. The lock coordinates cooperating Obforce writers, not arbitrary editors.
+
+**Private journal schema 1.** UTF-8 canonical JSON plus LF; exact keys, duplicate
+key/depth/node/type/version checks, bounded before parsing. Root fields are
+`journal_schema`, `transaction_id`, `lock_token`, `vault_identity`,
+`control_identity`, `phase`, `entries`, `directories`, `guards`, `work_stamp`.
+Phases: preparing, ready, publishing, committed, rolling_back, rolled_back,
+cleaning. Entries are ordered note paths then `.obforce/state.json` last, with
+before/after byte sizes and SHA-256, exact pathname stamps, deterministic numeric
+blob names, published/restored stamps and an explicit operation intent. Blobs are
+private complete before-images/candidates, never embedded public diagnostics.
+Directory records retain intended relative paths and exact created stamps.
+`guards` retain relative in-vault full same-API observations/digests outside the
+opaque control area; external ancestry/exclusions are explicit caller inputs and
+freshly checked during recovery. State-wire contents stay unchanged. Journal
+hashes detect corruption, not malicious authentication; an attacker with control
+of the trusted vault/control area can forge evidence. Recovery validates complete
+schemas, paths, identities, candidate/prior state and note preservation consistency
+before any change. It never guesses a path or reconstructs saved baselines.
+
+**Order, ownership and crash windows.** Create control/guard, revalidate, persist
+a preparing journal before staging. Journal updates use one exclusive bounded
+`journal.next` followed by per-file replacement of `journal.json`. An incomplete
+initial journal or leftover next file blocks rather than being repaired. Record
+intents before creating the fixed transaction directory, note parents and blobs;
+record full resulting identities/stamps afterwards. Stage on the same device as
+vault/targets. Persist and sync all complete before-images and candidates plus a
+ready journal before the first publication. Publish notes in deterministic order,
+then corresponding state. Persist intent before each replacement and exact
+published stamp after it. The persisted `committed` journal is the commit point;
+no rollback after it. Per-file replacement is not an atomic multi-file operation.
+
+A crash before an observed stamp is journaled may make ownership unprovable;
+retain explicit recovery-required evidence instead of guessing. Rename can change
+ctime: never round/ignore full same-API timestamps to claim ownership. Recovery
+accepts an unchanged prior file, a fully recorded published file, or a fully
+recorded restored file only. An unrecorded replacement remains ambiguous even
+when candidate bytes/hash/inode happen to match. During an ordinary call, every
+mutation checks all outstanding full observations immediately beforehand and again
+afterwards. Expected parent metadata changes are accepted only with stable parent
+identity/mode and an exact bounded directory-entry delta for the named owned
+operation; all other entry stamps and ancestor observations must remain unchanged.
+The Windows birthtime cross-API bridge and full same-API guards are retained.
+
+**Recovery and cleanup.** `recover_transaction(vault, state_path, excluded_roots,
+preview=True)` uses only local validated evidence. Preview is read-only and obtains
+no lock. Actual recovery must acquire the same kernel guard and revalidate the
+complete evidence. Before commit, restore changed notes (reverse note order), then
+state, from exact before-images, only over fully matching recorded transaction
+outputs. Remove newly created targets only with exact transaction ownership;
+never overwrite an intervening edit. A conflict retains the journal/before-images
+and blocks normal writes. Partial rollback has explicit intent/result records and
+can be resumed only where ownership remains proven. Committed recovery performs
+cleanup only. Cleanup validates each blob/target/directory, journals removal intent,
+and deletes only matching owned blobs and proven empty transaction-created
+directories; no recursive deletion. Final journal removal occurs only after all
+owned temporary material is gone. Persistent control/lock stay. Recovery failures
+are redacted and retain evidence, not partial success.
+
+**Bounds and durability.** Maximum 128 changed files including state; 32 MiB
+aggregate before plus after bytes; existing per-note 1 MiB and state 16 MiB limits;
+16 MiB journal, depth 20, 300,000 JSON nodes; 50,000 saved guards, 256 created
+note-parent directories, path length 1,024/depth 32/UTF-8 segment 240 (explicit vault
+root at most 4,096 characters; full targets at most 5,121 including the relative path); 1 KiB fixed report. Overflow refuses, never
+truncates. Existing planner/read limits also apply. File data is flushed and
+fsynced before journal/publication; parent directories are fsynced on POSIX.
+Failures refuse and retain recovery evidence. Windows lacks portable directory
+fsync in this implementation; file fsync plus replacement does not promise
+power-loss durability there. POSIX fsync is a request to the OS/filesystem, not
+proof against hardware/network-filesystem failure. Local stable ordinary
+filesystems and trusted same-user directory ancestry are required; no atomic
+filesystem snapshot or hostile concurrent editor isolation is claimed. Immediate
+checks cannot eliminate the final check-to-system-call race. Unavailable native
+platform/process-death/power-loss qualification must remain explicit.
+
+`TransactionResult` contains only fixed status, existing precedence-selected
+outcome (3, 2, 1, 4, 0), recovery-required boolean, bounded file count and fixed
+redacted report. No paths, content, source facts, UUIDs, exception strings or
+journal/before-image data appear in diagnostics. Synthetic checkpoints and
+subprocess death exercise every boundary; no source/transport/runtime network or
+unapproved process access is added.
+
+**Implementation refinements, before dependent acceptance probes:** immutable
+before/after blobs are retained through publication and rollback. Each entry also
+has `original` (exact prior target stamp) and `transfer` (nullable full stamp for
+one deterministic numeric `.transfer` file); the transfer is a separately fsynced
+copy used for replacement. This permits resumed rollback without consuming its
+only evidence. Aggregate before/after bytes stay bounded at 32 MiB; at most one
+additional transfer of up to 16 MiB exists, for at most 48 MiB of blob data.
+Blob names/count are derived from entry index; no journal-supplied blob path is
+followed. APFS locally reports directory link counts as 2 plus all entries;
+POSIX mutation checks accept only the exact subdirectory-count delta or that
+fully matching entry-count model. Windows requires an unchanged directory link
+count. Exact named-entry deltas, full identity/mode/ancestor checks and all
+unaffected observations remain mandatory. No timestamp is rounded or disabled.
+
+New private control/blob files request mode 0600 and new directories 0700.
+Publication/rollback use fresh replacement files: preservation of original
+owner/group, ACLs, extended attributes, file identities or timestamps is not
+promised. Note/state content and all accepted human-owned information retain the
+contracts above; no-op retains original bytes/mtimes. Native Windows ACL/private
+root and power-loss qualification is unavailable. Caller-selected trusted private
+local roots are required; this increment is not a public lifecycle support claim.
+
+If failure occurs before any journal/staging evidence exists, the result is
+blocked with the original typed outcome. If the commit and all cleanup completed
+but a final reporting/checkpoint failure occurs, the result records committed
+with a non-success outcome and no recovery-required flag. It does not invent
+a journal or claim silent success. Otherwise actual retained evidence is explicit.

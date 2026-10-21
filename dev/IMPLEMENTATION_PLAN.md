@@ -25,7 +25,10 @@ as completed. Thread 09 is **accepted and complete**, including Windows correcti
 as completed. Thread 10 is **accepted and complete**, including temporary-root
 correction `a2132c3` / merge `6004c35` and all 12 exact-merge hosted cells in
 run `39510802449`, attempt 1. Issue #10 is closed as completed.
-Thread 11 is **IMPLEMENTED LOCALLY**, pending maintainer acceptance; Threads 12–17 remain **NOT STARTED**.
+Thread 11's initial implementation is delivered at merge `9edcb2b`; run
+`39610229702` passed Linux/macOS but failed all four Windows cells. The lock-read
+correction is implemented locally, pending delivery/native Windows validation and maintainer
+acceptance; Threads 12–17 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -809,7 +812,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 08 | Existing-note parsing and preservation | 07 | C | [#8](https://github.com/jeffshurtliff/obforce/issues/8) | Accepted and complete; issue closed |
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
-| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | IMPLEMENTED LOCALLY; pending acceptance |
+| 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Windows correction local; pending delivery/CI/acceptance |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
@@ -1649,7 +1652,7 @@ refusal, template changes, and deterministic count/result precedence.
 
 **Goal:** Recoverable bounded publication primitives before public vault writes.
 
-**Depends on:** 10 (accepted and closed). **Status:** Implemented locally; pending acceptance.
+**Depends on:** 10 (accepted and closed). **Status:** Windows correction implemented locally; pending delivery/CI/acceptance.
 
 Implementation authorized on 20 October 2026; see the latest Thread 11 handoff.
 The launch prompt below records the authorized scope.
@@ -4511,3 +4514,77 @@ Verified local checklist:
 > source/ownership/coverage contracts; no real sf/Obsidian/auth/org/vault access,
 > transport changes or Git/publication actions. Keep #12 synchronized/open pending
 > acceptance. Thread 13 and later and #18 remain NOT STARTED.
+
+
+### Thread 11 Windows CI investigation and correction start — 21 October 2026
+
+Maintainer reported Windows death-boundary failures and authorized investigation
+and correction only. Clean checkout is exact merge 9edcb2b174bda2c619f3baf3ce3254bb7ec73c82
+on existing fix/11-thread-11-fix-death-boundary-windows-failure; no branch created.
+Implementation b538cb2 and merge trees match. Read current root instructions,
+roadmap and transaction safety contract; local/vendor_docs remains absent.
+
+All 12 job/step/full command logs in run 39610229702 attempt 1 were inspected at
+that exact merge. Linux 3.12–3.15: 1214 passed each; macOS: 1212/2 skipped each.
+All eight cells passed standalone metadata/lock, Ruff lint/format, Bandit, fresh
+builds, strict Twine, exact 32/31 archives, both installs and whitespace. Windows
+3.12–3.15 each reported 134 failed/1064 passed/16 skipped; lock/lint/format/Bandit
+passed, later build/Twine/archive/install/whitespace steps skipped. This failed
+run and earlier local/hosted failures/skips retain their original outcomes.
+
+First publication returned blocked/operational before journaling or fault
+injection. A deterministic offline test denied a second handle reading our own
+locked byte and reproduced exactly that refusal before changing production code.
+Microsoft's documented Windows mandatory-lock behavior supports this cause; the
+hosted redacted result did not expose the raw OS error itself. Recorded the
+[correction contract](../docs/SYNC_SAFETY.md#thread-11-windows-lock-read-correction--21-october-2026)
+before dependent implementation: retain the same byte-zero kernel lock, token,
+journal/state wire and all guards; validate through the owning descriptor without
+unlocking/relocking or weakening byte/identity/birthtime checks. Address lock-held
+test observations and improve fixed child diagnostics. No new prerequisite blocker.
+
+Original #11 start/progress/handoff records are historical; this correction does
+not accept/close the issue or begin Thread 12. Prior instruction authorizes issue
+progress/checklist/handoff synchronization. Work remains unstaged/uncommitted; no
+Git delivery, CI rerun, sf/Obsidian/auth/org/real-vault access or delegation.
+Threads 12–17 and #18 remain NOT STARTED.
+
+
+### Thread 11 Windows correction handoff — 21 October 2026
+
+Windows lock-read correction is implemented locally and reviewable; #11 remains OPEN pending delivery, corrected native Windows CI and maintainer acceptance.
+
+The guard reopened writer.lock after acquiring Windows' exclusive byte-zero range. Windows denies access through that second handle even in the locking process, so initial publication returned blocked/operational before any journal or death checkpoint. The child then reported the downstream "Death boundary was not reached" error. A deterministic offline mandatory-read-denial test reproduced that exact pre-journal result before the production correction. Microsoft LockFileEx remarks document this restriction; hosted redacted results did not expose the raw OS error itself.
+
+Correction:
+- `_Guard` validates only its owned lock through `_Lock`'s continuously held descriptor; all other reads retain the accepted reader. Rewind and bounded exact token reads retain digest, full same-API pathname/descriptor stamps, before/after safety checks and Windows cross-API birthtime comparison. Detach ownership before descriptor close on success or failed entry. No temporary unlock/relock or changed lock byte/token/journal/state protocol.
+- Added 14 focused regressions covering mandatory-read denial, six descriptor changes, token edits, failed-entry cleanup/lifetime, Windows cross-API ctime semantics, birthtime changes/unavailability and OS-refused lock rename. Installed probes also repeat owner reads/guard checks.
+- Lock-held snapshots use the owning handle. A competing process snapshots the full lock stamp while access is denied and compares exact baseline lock bytes after owner death. OS-denied rename is tested as a refused edit, without a skip. Child setup/death/ready failures now expose bounded transaction result/stderr diagnostics.
+
+Final local macOS ARM64 / Python 3.14.7 / Poetry 2.4.2 evidence: **1226 passed / 2 existing case-NFC skips**, 92% combined / 83% transaction coverage. Preliminary focused transaction/process run: 163 passed; final 14 new focused cases: 14 passed/110 deselected. Strict metadata/lock, Ruff lint/format (83 files), Bandit and whitespace passed. No dependency/lock change, new finding/suppression, retry, weakened guard or new skip. Five existing source/transport Bandit annotations remain.
+
+Fresh wheel/sdist, strict Twine, exact **32-wheel/31-sdist** source/resource/license/README/metadata checks and both independent fresh installs outside checkout/cwd passed. Installed planner/report/parser/state/transaction/recovery/owner-handle probes ran with active runtime socket/process denial and no cwd artifacts. Setup downloads are separate network use.
+- Wheel SHA-256: `85814f344ca24d9476cbee77d9e2884d9e2408e5314528e83a4dc8abee0f7693`.
+- Sdist SHA-256: `9541deb6979494f9f0b34fb7ae83bb380f44760d723c2dd2bbafc93494ceb17f`.
+
+Historical exact-merge run **39610229702 attempt 1** at **9edcb2b174bda2c619f3baf3ce3254bb7ec73c82** remains failed. All 12 job/step/full command logs were reviewed: Linux 3.12–3.15 each passed 1214 tests and every required artifact gate; macOS each passed 1212/2 skipped and every gate. Windows each reported **134 failed/1064 passed/16 skipped**; metadata/lock/Ruff/Bandit passed, but build/Twine/archive/both installs/whitespace were skipped. All earlier failures/probes/skips retain their outcomes. The local reproduction initially failed as expected before correction; it is not relabeled as a pass.
+
+Corrected native Windows/Linux hosted cells and other local Python versions remain unverified; no CI rerun was requested. Local Windows-policy injection is separate evidence, not native qualification. Directory fsync/ACL/power-loss, trusted-tree/final-syscall-race and conservative manual recovery limits remain unchanged. Windows sf stays refused.
+
+Seven files remain unstaged/uncommitted on the existing fix branch at baseline 9edcb2b. The maintainer's b538cb2 implementation/9edcb2b merge trees match; all accepted models/state/planner/preservation/source/transport/coverage/UUID/hash/Apache contracts and isolated TMPDIR/TEMP/TMP CI setup remain unchanged. No Git delivery, CI rerun, live sf/Obsidian/auth/org/real-vault/settings access, private upload, public lifecycle, graph storage, later-thread work or delegation occurred. **Thread 12 and later and enhancement #18 remain NOT STARTED.** The next eligible thread remains #12 only after #11 acceptance/delivery/exact corrected CI verification and a separate request.
+
+
+Correction acceptance gates:
+
+- [x] Exact failed merge/run and all 12 jobs/steps/full command logs inspected.
+- [x] Reproduced own-lock second-handle denial before production changes; recorded correction contract.
+- [x] Continuous owning-descriptor validation with full identity/byte/birthtime guards; focused regressions and diagnostic corrections.
+- [x] Final local full suite, static/security/whitespace checks, fresh archives/Twine and both independent installed probes passed.
+- [x] Issue/docs/changelog/roadmap synchronized; metadata/native dependencies preserved.
+- [ ] Correction delivered and exact-commit native Windows/all-matrix command evidence verified.
+- [ ] Maintainer acceptance/closure.
+
+**Next-thread gate:** Keep the existing Thread 12 prompt above unstarted. Require
+this correction's delivered commit/merge and exact passing CI logs; original
+39610229702 is failed evidence and cannot qualify #12. No later work or #18 is
+authorized by this correction.

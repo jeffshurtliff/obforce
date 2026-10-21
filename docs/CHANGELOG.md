@@ -171,6 +171,18 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Windows transaction guards no longer reopen their own byte-locked writer file
+  through a second handle. Validation retains the continuous owning descriptor,
+  exact canonical bytes/hash, full same-API identity/timestamp guards and Windows
+  cross-API birthtime comparison. Guard ownership is detached before close even
+  on failed entry. Added deterministic mandatory-read-denial, descriptor/byte/
+  lifetime/birthtime regressions and installed owner-handle probes. Synthetic
+  process tests now report fixed transaction failures before death checkpoints;
+  lock-held snapshots respect Windows handle access and OS-denied lock renames
+  remain tested refusals. No lock/journal/state-wire change, retry, bypass, skip,
+  dependency or transport expansion. Failed run 39610229702 remains historical;
+  corrected native Windows CI and maintainer acceptance are pending.
+
 - CI now creates a fresh dedicated runner temporary root and exports TMPDIR,
   TEMP and TMP for all subsequent setup, tests and independent artifact probes.
   This avoids unrelated shared system-temp ancestor changes blocking synthetic

@@ -4,7 +4,7 @@
 :Synopsis:          Probes independently installed transaction/recovery with synthetic explicit inputs
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -122,6 +122,14 @@ def main() -> None:
         stable = next_request.plan()
         before = snapshot(vault)
         assert publish_plan(stable, next_request).status == TransactionStatus.NO_OP
+        assert snapshot(vault) == before
+        lock_guard = module._Guard(stable.preconditions)
+        with module._Lock(request.state_path.parent, lock_guard) as owner:
+            lock_guard.check()
+            expected = ('obforce-lock-v1 ' + owner.token + '\n').encode('ascii')
+            assert owner.read() == owner.read() == expected
+            assert lock_guard.owner is owner
+        assert lock_guard.owner is None and owner.descriptor is None
         assert snapshot(vault) == before
         updated = replace(make_inputs(vault, initial=False), excluded_roots=(source,))
         candidate = updated.plan()

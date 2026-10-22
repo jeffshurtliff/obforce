@@ -2,12 +2,13 @@
 
 Read [AGENTS.md](AGENTS.md) and the [implementation roadmap](dev/IMPLEMENTATION_PLAN.md)
 before changing files. They define scope, safety contracts, and the current thread.
-The production CLI exposes help and version only; public collection workflows,
-rendering, and vault mutation remain planned. The internal Python modules are not a stable public API.
+The production CLI exposes explicit init, initial build and local recovery;
+refresh remains planned. See the fictional [quickstart](docs/QUICKSTART.md). The internal Python modules are not a stable public API.
 
 Thread 02 adds internal config/model validation; see [configuration](docs/CONFIGURATION.md),
 [coverage](docs/COVERAGE.md), and [note ownership](docs/NOTE_FORMAT.md) for frozen
-contracts and their implementation boundaries. The production CLI is unchanged.
+contracts and their implementation boundaries. Those internal increments did not
+expose public commands; Thread 12 now composes them.
 Thread 03 adds internal [offline Apex acquisition](docs/OFFLINE_SOURCE.md) and a
 fictional multi-package DX sample; it adds no public command or live access.
 The delivered Windows identity correction passed all 12 hosted cells, including
@@ -72,7 +73,8 @@ correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
 `39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
 see the [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
 [transaction contract](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Threads 12–17 and enhancement #18 remain NOT STARTED.
+Thread 12 is implemented locally pending acceptance; Threads 13–17 and
+enhancement #18 remain NOT STARTED.
 
 ## Development setup
 
@@ -181,8 +183,11 @@ Both independent installs exercise complete plan authority, guarded note/state
 publication, state-only UUID moves, no-op/preview, recovery rollback, intervening
 user content preservation and exact source/ordinary/.obsidian/input snapshots.
 Application runtime socket/process guards remain active; synthetic subprocess
-death/concurrent-writer tests run only in the authorized test suite. Public lifecycle
-commands remain absent. Bases assets remain Thread 14. The checker never publishes or uploads artifacts.
+death/concurrent-writer tests run only in the authorized test suite. Thread 12
+adds `sync/engine.py` deliberately plus `dev/probe_engine.py`, public console/module
+initial journeys and guarded installed recovery selection probes. Fresh archives
+now contain 33 wheel / 32 sdist entries. Refresh remains absent. Bases assets
+remain Thread 14. The checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

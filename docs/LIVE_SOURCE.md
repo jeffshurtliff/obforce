@@ -6,8 +6,8 @@ renderer, state adoption, deletion planner, or vault writes. A separately invoke
 Thread 06 [relationship adapter](RELATIONSHIPS.md) now consumes normalized live
 inventory and reverifies identity; `collect_live` itself still leaves relationships
 uncollected.
-Internal interfaces are not a stable Python API. The CLI still exposes only
-help/version. Windows `sf` execution remains refused by the unchanged
+Internal interfaces are not a stable Python API. Thread 12 connects the adapter to explicit public initial build;
+see [configuration](CONFIGURATION.md#public-initialization-and-initial-build-thread-12). Windows `sf` execution remains refused by the unchanged
 [process boundary](SF_CLI.md); [enhancement #18](https://github.com/jeffshurtliff/obforce/issues/18)
 is outside v0.1.0 and is not a prerequisite for this adapter.
 
@@ -22,7 +22,9 @@ and hosted Windows results do not qualify Windows sf execution. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026).
 Thread 06 is accepted at merge `2aa8d2b` with all 12 exact-merge hosted cells
 passing; its [relationship adapter documentation](RELATIONSHIPS.md) retains the
-partial/unavailable coverage limitation. Thread 07 and later work remain not started.
+partial/unavailable coverage limitation. Subsequent renderer/planner/writer increments are accepted; Thread 12 now
+composes the adapter into initial build with mocked live orchestration only.
+Thread 13 and later and enhancement #18 remain NOT STARTED.
 
 ## Invocation and verified identity
 

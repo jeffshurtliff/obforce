@@ -7,6 +7,20 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Thread 12 public noninteractive `init`, initial-only `build`, and local `recover`.
+  Explicit source/config selection, config-relative roots, escaped/validated
+  exclusive TOML creation, guarded absent-vault setup, genuinely write-free
+  missing-destination previews, and existing source/graph/render/plan/writer
+  composition. Every nonempty/repeated destination refuses; no adoption/refresh.
+  Explicit rollback/committed cleanup is phase-checked under the continuous
+  writer guard without acquisition; unsafe/legacy evidence remains retained.
+  Added fictional offline quickstart/example, synthetic public end-to-end and
+  process-death/concurrency/intervening-edit tests, and fresh installed console/
+  module/recovery probes. Archive allowlist deliberately adds sync/engine.py.
+  Accepted source/transport/state-wire/hash/UUID/coverage/renderer/journal-schema-2
+  contracts and Apache license stay unchanged; no dependency. Thread 12 remains
+  open pending acceptance; Thread 13 onward and enhancement #18 NOT STARTED.
+
 - Internal bounded transaction writer/recovery primitives consuming explicit
   accepted planner inputs. Independently regenerate/compare complete candidates,
   then recheck exact bytes/identities/absence and full parents under a persistent

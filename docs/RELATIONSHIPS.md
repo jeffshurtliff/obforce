@@ -32,7 +32,8 @@ correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
 `39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
 see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
 [transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Threads 12–17 and enhancement #18 remain NOT STARTED.
+Thread 12 is implemented locally pending acceptance; Threads 13–17 and
+enhancement #18 remain NOT STARTED.
 
 ## Direction, endpoints and provenance
 
@@ -239,3 +240,12 @@ remain explicit transient planner inputs; no graph state persistence or saved
 baseline reconstruction is added. Recovery performs no platform collection.
 Partial/unavailable platform relationships, offline not-collected coverage and
 Windows sf refusal remain unchanged.
+
+Thread 12 public initial build composes this graph directly with the independent
+inventory/audit coverage before rendering/planning. Live orchestration tests mock
+the accepted process boundary and reverify org identity for relationship probes.
+Requested relationships remain partial/unavailable even after clean empty probes,
+so a completed live first build/preview returns 4. Offline graphs remain empty
+and uncollected/unrequested. Neither graph snapshots nor inferred edges are
+persisted; saved hashes never reconstruct a previous graph. No refresh lifecycle
+or enhancement #18 is started.

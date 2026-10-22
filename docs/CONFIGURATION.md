@@ -1,9 +1,9 @@
 # Configuration contract
 
 Thread 02 implements an internal, read-only config loader and source selection.
-The CLI still supports only help/version. The `init`, `build`, `sync`, and
-`recover` workflows remain planned for Threads 12–13; the following config is a
-fictional input for internal validation, not a working generation tutorial.
+Public `init`, initial `build` and `recover` are implemented in Thread 12;
+`sync` remains planned. See the public command contract below and fictional
+[quickstart](QUICKSTART.md). The following config also documents internal validation.
 Internal Python interfaces are versioned implementation details, not a stable API.
 
 ## Explicit loading and schema
@@ -13,7 +13,8 @@ no config discovery, environment-variable configuration, credential discovery,
 fallback file, default Salesforce org, or directory creation. A relative config
 filename is interpreted from the caller's working directory; paths *inside* it
 are resolved from the config file's resolved parent directory. A symlinked config
-therefore uses its target's directory. Loading opens only that config file;
+therefore uses its target's directory internally. Public lifecycle commands
+refuse symlinked configs through their stricter publication guards. Loading opens only that config file;
 path resolution may inspect filesystem path components, without reading source
 files, templates, notes, or state.
 
@@ -109,8 +110,8 @@ implemented. See [coverage and identity](COVERAGE.md).
 ## Errors and exits
 
 Typed internal exceptions use Click's existing exception display/exit protocol.
-There are no new production CLI options or commands. Test-only Click commands
-exercise operational/config/conflict/coverage errors without source access.
+The public Thread 12 commands use the same typed errors. Offline tests exercise
+operational/config/conflict/coverage outcomes without real source access.
 Callers provide concise safe diagnostics, never raw responses or note content.
 
 | Code | Meaning | Error type |
@@ -162,3 +163,68 @@ access is added. A persistent private writer.lock may remain after an actual
 transaction; no-op and both previews create nothing. Recovery receives explicit
 vault/state/excluded roots and reads only validated local journal evidence. See
 [transaction safety](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
+
+## Public initialization and initial build (Thread 12)
+
+The public commands now implement the first-build journey; refresh remains planned.
+All commands are noninteractive. `--config` is always required; there is no search
+of cwd, parents, home, environment, auth or existing vaults.
+
+```sh
+obforce init --config ./obforce.toml --source ./FictionalProject --vault ../Knowledge --workspace-id fictional
+obforce init --config ./preview.toml --org fictional-sandbox --vault ../OtherKnowledge --workspace-id fictional --dry-run
+obforce build --config ./obforce.toml --dry-run
+obforce build --config ./obforce.toml
+obforce recover --config ./obforce.toml
+obforce recover --config ./obforce.toml --rollback
+obforce recover --config ./obforce.toml --cleanup
+```
+
+Exactly one `init` source selector is required: `--source PATH` or `--org TARGET`.
+The config filename is invocation-relative; source/vault arguments are relative
+to the config parent, including normal `..` roots. Native absolute paths are also
+accepted. No expansion is added. Init preserves the accepted layout/options
+(default audit names true, namespaces false); edit a valid config explicitly to
+change these or select a known template override. Init validates selection and
+paths without acquiring source metadata. A missing source can be configured but
+will fail acquisition during build. Its config parent must already exist.
+
+Init serializes escaped UTF-8 TOML values, validates the complete bytes through
+the same strict schema, and creates one file exclusively with requested mode
+0600. Any existing entry refuses. It never replaces a file or creates config
+parents. A failure after exclusive creation may retain partial config evidence;
+inspect it manually rather than overwrite it. `--dry-run` creates nothing.
+
+Build uses the configured source. `--org TARGET` may override only a live source;
+it never changes mode or workspace. Live builds, including previews, additionally
+require both `--sf-executable ABSOLUTE_PATH` and `--sf-directory ABSOLUTE_PATH`.
+The latter is an existing neutral directory disjoint from source/template/vault/
+config/application roots. There is no executable search. Actual org identity is
+verified by the accepted live adapter before graph and note planning. Real
+operations require the user's authorization; implementation/tests used mocks only.
+Windows sf remains refused; no wrapper or launcher workaround is added. The CLI
+may change its own auth/cache/config state during authorized read queries; see
+[the unchanged transport boundary](SF_CLI.md). Offline rejects live process options.
+
+Build requires an absent or completely empty destination. All entries, including
+hidden files, `.obsidian`, state, managed notes and a retained writer lock, block
+initial build. It never adopts or resumes a vault. See [setup and recovery safety](SYNC_SAFETY.md#public-initial-setup-and-recovery-thread-12).
+Missing destination/parents can be previewed without creation. Actual setup creates
+at most 32 guarded portable directories before a freshly validated existing-vault
+transaction. Refused publication can leave explicit setup/control evidence; do
+not delete it automatically or retry build as a recovery operation.
+
+Recover defaults to read-only validated preview. `--dry-run`, `--rollback`, and
+`--cleanup` are mutually exclusive. Rollback applies only before recorded commit;
+cleanup applies only to committed/cleaning evidence. Selection is rechecked under
+the existing continuous writer lock. Recovery never collects source/templates,
+invokes sf, discovers auth or reconstructs graph evidence. Missing source metadata
+does not prevent recovery. No-op and previews preserve exact bytes/mtimes.
+
+Reports contain fixed categories, bounded counts and independent coverage states,
+including requested flags and warning counts. Precedence remains **3, 2, 1, 4, 0**.
+Public recovery-required failures use 3 even when the internal writer retains an
+original operational outcome; a valid recovery preview returns 0 with an explicit
+recovery-required flag. Partial requested coverage can publish a first build with
+4 and never proves absence. By-design offline audit/relationship exclusions alone
+allow 0. State/journal bounds and schema-1 journal refusal remain unchanged.

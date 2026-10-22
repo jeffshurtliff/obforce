@@ -623,3 +623,70 @@ See the [acceptance and handoff](../dev/IMPLEMENTATION_PLAN.md#thread-11-accepta
 for exact gates, history and the Thread 12 launch prompt. Thread 12 is next eligible
 only after a new request and remains NOT STARTED. Threads 13–17 and #18 remain
 NOT STARTED. No release/publication authorization follows.
+
+## Public initial setup and recovery (Thread 12)
+
+`cli.py` delegates only init, initial build and recovery to `sync/engine.py`.
+Thread 12 is a local review candidate, not maintainer acceptance or hosted/native
+qualification. [The recorded contract](../dev/IMPLEMENTATION_PLAN.md#thread-12-start-and-pre-implementation-contract--21-october-2026)
+preceded dependent implementation. Exact syntax/defaults are in
+[configuration](CONFIGURATION.md#public-initialization-and-initial-build-thread-12).
+
+Public paths reject unsafe links/reparse points, special/hard-linked files,
+portable case/NFC aliases, file parents, reserved new output segments and overlap
+with config/source/templates/application. Lexical ancestors are checked before
+resolution so `link/..` cannot hide a link. Root `..` remains config-relative;
+generated relative paths still forbid traversal. Read observations retain full
+pathname and historical descriptor stamps, hashes and absence checks. Limits
+include 64 KiB config, 4096-character explicit roots, 50,000 entries per observed
+parent, at most 32 setup directories, and existing renderer/planner/writer limits.
+A first build still has the writer's 128 changed-file ceiling including state,
+32 MiB before/after ceiling and 256 new note-parent ceiling. Overflow refuses
+before setup; no truncation or public limit override exists.
+
+Build refuses every entry in an existing destination before acquisition and again
+before publication. That includes unrelated files, `.obsidian`, prior state and
+post-rollback persistent control/lock. Missing/corrupt/unknown state never grants
+adoption. The read-only planner's explicit `allow_absent` option is restricted to
+initial reconciliation; it records existing ancestry and missing paths. It creates
+no temporary stand-in vault. Writer defaults and actual `_roots` checks still
+require an existing explicit vault and independently revalidate the whole plan.
+
+After source/graph/template/candidate validation and writer-bound checks, actual
+setup creates each missing parent/vault separately through the accepted `_Guard`
+exact-entry-delta operation and private mode 0700 request. Recheck all unaffected
+ancestors, file hashes/descriptors and absence before/after each change; accept
+only the named parent delta and existing Windows/APFS link-count rules. Record
+exact created stamps in local memory. Then require empty output and regenerate
+an equal candidate against the now-existing vault before calling the unchanged
+single-writer publication protocol. A competing writer, editor or changed ancestor
+refuses; there is no retry, timestamp rounding, weaker guard or atomic snapshot.
+
+A caught prepublication setup failure can remove only still-empty directories
+created and fully observed by this call, in reverse order, with exact full-stamp/
+entry-delta guards. An intervening edit blocks cleanup and is preserved. Unobserved
+creation, process death, failed initialization or retained writer/control evidence
+needs explicit recovery/manual resolution. Setup ownership is never guessed after
+process death and is not added to private journal schema 2. Existing parents are
+never removed. The writer remains responsible for same-filesystem staging,
+before-images, full pathname and historical descriptor/birthtime guards, owning-
+handle lock reads, journal/notes/state publication and constrained recovery.
+
+Recover reads config and validates only explicit local evidence; it performs no
+source acquisition or template execution. Preview is write-free and acquires no
+lock. Explicit rollback/cleanup selection is validated before and under the same
+continuous kernel lock, using the validated journal phase. Rollback refuses
+committed/cleaning evidence; cleanup refuses precommit evidence. Unknown/incomplete/
+schema-1 journals or changed outputs remain retained, with bounded diagnostics
+and public conflict outcome 3. A valid preview can return 0 while reporting that
+recovery is required. Ordinary recovery no-op preserves bytes/mtimes and creates
+nothing. Persistent control/lock remains after successful rollback or cleanup;
+repeat build refuses. A new destination/config is required for another first build.
+
+Accepted NoteState/state-wire/hash/UUID/source/workspace/org/scope/coverage and
+renderer-local graph composition contracts are unchanged. Saved hashes do not
+reconstruct graphs. No refresh/reactivation, graph persistence, migration/adoption,
+automatic note removal, dashboard, backup or Git integration is exposed. No
+`.obsidian` mutation. Trusted private local filesystem roots remain required;
+native ACLs, Windows directory-fsync durability, power-loss and hostile editor/
+final-syscall races remain outside the evidence. No atomic multi-file claim.

@@ -552,6 +552,7 @@ def reconcile_vault(
     *,
     excluded_roots: tuple[Path, ...],
     initial: bool = False,
+    allow_absent: bool = False,
 ) -> Reconciliation:
     """Read a bounded explicit vault and accept only uniquely mapped unchanged baselines.
 
@@ -570,6 +571,8 @@ def reconcile_vault(
     _binding(binding.canonical())
     if type(excluded_roots) is not tuple or len(excluded_roots) > 128:
         raise ModelError('Invalid explicit excluded roots')
+    if type(allow_absent) is not bool or (allow_absent and not initial):
+        raise ModelError('Absent destination is only valid for explicit initial preview')
     reader = _Reader()
     for root in excluded_roots:
         _absolute(root)
@@ -583,6 +586,18 @@ def reconcile_vault(
         if left == right or left.startswith(right + os.sep) or right.startswith(left + os.sep):
             raise ConflictError('Vault overlaps an explicit excluded root')
     try:
+        if allow_absent:
+            absent = False
+            for parent in (*reversed(vault.parents), vault):
+                info = reader.observe(parent, missing=True)
+                if info is None:
+                    absent = True
+                elif absent or not stat.S_ISDIR(info.st_mode):
+                    raise ConflictError('Invalid initial preview ancestry')
+            if absent:
+                reader.observe(state_path, missing=True)
+                reader.finish()
+                return Reconciliation(None, MappingProxyType({}), (), MappingProxyType({}), True, reader.preconditions())
         reader.parents(vault)
         root_info = reader.observe(vault)
         if root_info is None or not stat.S_ISDIR(root_info.st_mode):

@@ -30,7 +30,8 @@ merge `2995f93` and final exact-merge run `39676435834`, attempt 2: all 12 cells
 and 24 independent installs passed. Issue #11 is closed as completed. Eleven cells
 retain successful attempt-1 logs; macOS 3.14 completed in attempt 2 after its earlier
 cancelled/no-runner/no-step attempt with unavailable log. Historical failed runs
-and skips remain recorded. Threads 12–17 remain **NOT STARTED**.
+and skips remain recorded. Thread 12 is **implemented and locally verified**, pending maintainer acceptance;
+Threads 13–17 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -815,7 +816,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
-| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Not started |
+| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Implemented locally; open pending acceptance; hosted evidence unavailable |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
@@ -1722,7 +1723,7 @@ publication, and recovery no-op/dry-run behavior. Record native platform gaps.
 
 **Goal:** The first complete user journey from configuration to a managed vault.
 
-**Depends on:** 11 (accepted and closed). **Status:** Not started.
+**Depends on:** 11 (accepted and closed). **Status:** Implemented and locally verified; #12 open pending acceptance.
 
 The prerequisite is accepted at correction `4aaeb0f` / merge `2995f93`, final
 run `39676435834` attempt 2. Recheck actual code and exact command evidence before
@@ -1755,7 +1756,7 @@ project, then open readable notes; an existing nonempty destination is untouched
 missing prerequisites, noninteractive use, repeat-build refusal, rollback, dry-run
 tree snapshots, clean installed package, and source-tree preservation.
 
-**Copy-ready prompt (Thread 12 remains NOT STARTED):**
+**Historical launch prompt (Thread 12 started 21 October 2026):**
 
 > Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/12 and prerequisite #11, following linked #10 and earlier evidence as needed. Keep the existing #12 updated with start/progress, verified checklist and handoff evidence synchronized with the roadmap. Leave #12 open pending maintainer acceptance; do not create duplicate tracking issues.
 >
@@ -4689,3 +4690,182 @@ completed; labels enhancement/codex/maintainer/security, assignee jeffshurtliff
 and milestone 1 are unchanged. Native #10 (closed) -> #11 (closed) -> #12 (open)
 links, including #12’s reciprocal prerequisite, remain intact.
 [Acceptance/closure comment](https://github.com/jeffshurtliff/obforce/issues/11#issuecomment-6327267264).
+
+
+### Thread 12 start and pre-implementation contract — 21 October 2026
+
+Baseline 33fd158 includes the maintainer acceptance documentation; clean checkout
+on the existing feature/12-thread-12-public-initialization-and-initial-build branch.
+Read root guidance and all requested contracts; local/vendor_docs absent. Verified
+#10/#11 closed, #12 open, native #11 -> #12 links and the accepted correction/merge
+trees. Rechecked all 12 final full command logs of exact-merge 39676435834 attempt 2:
+Linux 1248, macOS 1246/2 skipped, Windows 1232/16 skipped each, all required gates
+and 24 independent installs passed. Eleven successful attempt-1 executions persist;
+macOS 3.14 executed in attempt 2. Historical failures, unavailable cancelled log/cause,
+skips and local refusals retain their outcomes. No new prerequisite blocker.
+
+Contract recorded before dependent code:
+
+- `obforce init --config PATH (--source PATH | --org TARGET) --vault PATH
+  --workspace-id ID [--dry-run]`: every selector required, no discovery/prompts.
+  Root path arguments are config-relative (absolute also accepted), config filename
+  is invocation-relative. Existing config parent required; no config-parent creation.
+  Serialize bounded UTF-8 TOML strings with escaping; validate through the same
+  strict parser before exclusive 0600 creation. No replacement of any existing entry.
+  Dry-run validates and reports fixed counts only, creating nothing. Defaults remain
+  accepted layout/options, including audit names true, namespaces false.
+- `obforce build --config PATH [--dry-run] [--org TARGET]
+  [--sf-executable ABSOLUTE_PATH --sf-directory ABSOLUTE_PATH]`: configured source
+  only; org override only for live config. Live requires both explicit process paths,
+  an existing neutral directory disjoint from source/template/vault/application,
+  and accepted adapter verified identity before graph/planning. No PATH/auth discovery.
+  Offline refuses live-process options; no network/process is needed.
+- Require genuinely absent/empty destination; any entry, including hidden/control/
+  managed history and .obsidian, blocks initial build. Refuse config/source/template/
+  application overlap, portable aliases, links/reparse/special/hard-linked files,
+  unreadable/changing observations and unsafe ancestors before acquisition/writes.
+- Missing-destination preview uses an explicitly read-only empty initial reconciliation
+  with full existing ancestry/absence preconditions, never temporary directories.
+  Actual writer still requires an existing vault: create at most 32 absent portable
+  parent/vault directories using accepted full guards and exact named-entry deltas,
+  recheck empty ownership, regenerate the complete plan, then publish under its
+  unchanged continuous kernel guard. Preview also enforces transaction file/byte/
+  directory bounds. No public arbitrary-vault adoption or repeat-build path.
+- Setup uses full pathname/historical descriptor/hash/absence checks before/after
+  each mutation. Only locally recorded created empty directories can be cleaned,
+  in reverse order with matching stamps and exact entry deltas; never recursive
+  cleanup. A crash or ambiguous setup change retains output for manual resolution;
+  no journal-schema extension or invented ownership. Once writer evidence/control
+  exists, preserve it for explicit recovery. Persistent control/lock remain after
+  rollback/commit; repeat build is refused, not silently resumed.
+- `obforce recover --config PATH [--dry-run | --rollback | --cleanup]`: omitted
+  operation and --dry-run are validated preview; flags mutually exclusive. Rollback
+  refuses committed/cleaning phases; cleanup refuses precommit phases. Selection
+  is validated again under the same continuous writer lock, not only at preview.
+  No source/template collection, executable/auth discovery or saved-graph requirement.
+  Invalid/schema-1/incomplete/unsafe evidence is retained with bounded redacted
+  diagnostics and conflict/recovery-required outcome, never guessed/migrated.
+- Existing config 64 KiB, root length 4096, setup depth 32, parent enumeration
+  50,000, planner/renderer/writer/journal bounds and fixed 1 KiB terminal diagnostics
+  apply; overflow refuses. Errors/coverage precedence 3,2,1,4,0. Requested partial
+  live relationships remain partial/unavailable; offline exclusions alone allow 0.
+  Both initial config publication and vault setup are guarded exclusive operations,
+  not atomic snapshots or atomic multi-file transactions. No retries or weaker guards.
+
+Necessary internal refinements: extract pure strict config-byte parsing for safe
+init round-trip validation; permit explicit read-only absent-initial planning only;
+add explicit recovery operation selection enforced under lock. Accepted source,
+transport, NoteState/state-wire/hash/UUID/org/scope/independent coverage, renderer
+local graph composition and private journal schema 2 stay unchanged. Prior graphs
+remain transient explicit inputs. No dependencies intended. #12 remains open;
+Thread 13 onward and #18 NOT STARTED. No Git actions, CI rerun, real sf/Obsidian/
+auth/org/metadata/vault access, upload or delegation.
+
+
+### Thread 12 implementation handoff — 21 October 2026
+
+Thread 12 is implemented and locally verified; **#12 remains OPEN pending
+maintainer acceptance**. The existing issue start/progress/checklist/handoff and
+roadmap are synchronized. No duplicate issue or dependent implementation. Baseline
+33fd158 preserves the maintainer's #11 acceptance documentation on the existing
+feature/12-thread-12-public-initialization-and-initial-build branch.
+
+- [x] Rechecked #10/#11 closed, #12 open, native reciprocal #10 -> #11 -> #12 -> #13
+  links, correction 4aaeb0f / merge 2995f93 matching trees, and all 12 final full
+  command logs of exact-merge 39676435834 attempt 2 before coding. Counts, eleven
+  retained attempt-1 executions, macOS 3.14 attempt 2 and historical cancellation/
+  unavailable cause, failed runs 39610229702/39670042028, older failures and all
+  skips/refusals retain their outcomes. Vendor documentation directory absent.
+- [x] Exact public syntax/defaults, config-relative roots, source exclusivity,
+  escaped/validated exclusive config publication, guarded missing-vault setup,
+  absent-destination preview, cleanup/ownership/crash limits, recovery selection,
+  finite bounds and outcome precedence recorded before dependent implementation.
+- [x] Public init requires explicit config/source/vault/workspace, never overwrites
+  and never creates config parents. Public initial build connects accepted
+  source/graph/assets/planner/writer; every nonempty/repeated destination refuses.
+  Missing-destination dry-run plans without temporary stand-ins/artifacts; actual
+  setup uses exact guarded parent deltas, then an equal fresh existing-vault plan.
+  Clear fixed reports retain independent requested coverage and warning counts.
+- [x] Default recovery is validated write-free preview; explicit precommit rollback
+  or committed cleanup is phase-checked before and under the continuous writer
+  lock, without source acquisition. Changed/unsafe/schema-1/incomplete evidence
+  remains retained. Public recovery-required failures map to conflict 3 without
+  changing the internal writer's original typed outcomes. Oversized config stays
+  invalid 2; post-setup revalidation retains its typed 1/2/3 outcome.
+- [x] Synthetic fictional quickstart/example and **77 new test cases** (68 unit,
+  9 process integration) cover explicit selections, paths/spaces, invalid/missing/
+  oversized inputs, absent/empty/nonempty/repeated output, partial outcomes, dry-run
+  full snapshots, mocked live verified identity/graph, setup/publication/rollback/
+  cleanup interventions, process death and competing writers. Three old tests
+  rejecting now-implemented commands were removed from the unimplemented list;
+  missing required arguments and unavailable sync remain tested. Windows link
+  privilege is not assumed: its new lexical-link test uses injected refusal;
+  native POSIX link and hardlink refusal ran locally. No new skips or retries.
+- [x] Final local **macOS ARM64 / Python 3.14.7 / Poetry 2.4.2**: **1320 passed /
+  2 existing filesystem case/NFC representability skips**, **92% combined coverage**,
+  **94% engine / 97% CLI / 84% transaction**. Full final pytest run used isolated
+  TMPDIR/TEMP/TMP ancestry outside checkout; active offline guards and authorized
+  synthetic subprocess tests retained. Earlier focused boundary run: 229 passed;
+  final engine regressions: 68 passed. First full candidate: 1316 passed/2 skips.
+- [x] Strict Poetry metadata/lock, Ruff lint/format (88 files), Bandit and whitespace
+  passed on final code. No dependency/lock/CI/Apache change or new suppression;
+  five existing source/transport Bandit annotations remain. Docs/local links,
+  anchors, privacy, examples, diff/untracked/status reviewed.
+- [x] Final **fresh** wheel/sdist, strict Twine, exact **33-wheel / 32-sdist**
+  source/resource/license/README/metadata checks and **both independent fresh
+  installs** passed outside checkout/cwd. Allowlist deliberately adds engine.py.
+  Each install ran actual console/module init/build/recover, no-overwrite/repeat
+  refusal and missing-destination preview snapshots, installed recovery phase
+  selection/rollback/committed cleanup and all accepted lower-level probes.
+  Application runtime socket/process guards were demonstrably active, external
+  tools absent, source/config/user/.obsidian snapshots preserved, no cwd artifacts.
+  Dependency setup/downloads are separate network use. No package upload.
+- [ ] Thread 12 delivery and exact-commit hosted Linux/macOS/Windows / other-Python
+  qualification. Configured CI and #11 results are not Thread 12 evidence.
+- [ ] Maintainer acceptance/closure; #12 stays open.
+
+Final candidate SHA-256 (local build evidence, no reproducibility claim):
+- Wheel: `ce40ed037d8cbd53292f3f856c254cdac61cb0dbeffcbe5686c8378834be28d6`.
+- Sdist: `a00001d599ae348f14a485f759cb8324a9f83742c70e1299e6ffa1812080e2fd`.
+
+Retained local investigation evidence: initial focused run 5 failed/41 passed
+exposed public recovery outcome expectations; corrected at the public boundary.
+A following system-temp run recorded 1 failed/45 passed at a changed observation;
+an expanded run recorded 4 failed/55 passed (two changed-observation setup refusals,
+file-parent classification, test-helper missing import). Exact external changed
+observations were not captured; shared-temp ancestry remains an inference, not
+a proven cause for those refusals. An isolated preliminary run recorded
+1 failed/58 passed at file-parent classification, corrected without weakening
+guards. Subsequent 68-case public/process and 229-case expanded runs passed.
+The first fresh build could not reach PyPI and produced no artifacts; the next
+Twine shell invocation had no files to check and was not validation. Authorized
+setup-download access produced independently passing initial artifacts, followed
+by the final tested code/README refinements and fresh final artifacts above.
+Connector issue-comment write returned 403; authenticated gh posted the authorized
+public-safe start/progress/handoff instead. No failure/skip is relabeled as success.
+
+Accepted config defaults and internal loader behavior, NoteState/state-wire/hash/
+UUID/source/workspace/org/scope, independent coverage, renderer-local graph
+composition, continuous owning-lock reads, full pathname/historical descriptor/
+birthtime/parent guards and private journal schema 2 remain intact. Prior graphs
+remain explicit transient inputs; schema 1 stays unsupported retained evidence.
+No refresh/missing/reactivation lifecycle, adoption/migration, graph storage,
+automatic note deletion, dashboards, backups or Git integration. No atomic
+snapshot/multi-file publication, hostile-editor/final-syscall-race, power-loss,
+Windows private-root ACL/directory-fsync durability or native Windows sf claim.
+Real Salesforce/Obsidian/auth/credential/.env/org/metadata/vault/settings access,
+private uploads and delegation were not performed.
+
+All **27 changed/new files remain unstaged/uncommitted**; no branch creation,
+stage, commit, push, PR, merge, tag, CI rerun, issue closure or publication.
+The next eligible thread is **Thread 13 / #13 only after #12 acceptance/delivery/
+exact CI verification and a new request; NOT STARTED**. Threads 14–17 and
+enhancement #18 remain **NOT STARTED**.
+
+Issue synchronization verified: [start](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6327398891),
+[progress](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6327601622),
+and [final verified handoff](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6327696881).
+Current issue body marks all four implementation tasks and local implementation/
+tests/docs/compatibility gates verified; ready-to-merge/release remains unchecked.
+#12 remains open, with original labels enhancement/codex/maintainer, assignee
+jeffshurtliff, milestone 1 and native dependency links preserved.

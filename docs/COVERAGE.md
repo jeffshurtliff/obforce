@@ -194,3 +194,12 @@ not use partial/offline/unavailable coverage as proof of absence or deletion.
 Conflict/invalid/operational outcomes retain precedence 3, 2, 1, 4, 0; transaction
 recovery acquires no source data and restores exact saved coverage with the prior
 state when ownership permits rollback.
+
+Thread 12 public initial build carries these same independent records through
+source, graph, rendering, planning and publication. Reports include each status,
+requested flag and warning count. Offline exclusions alone permit 0; a bounded
+partial local inventory or requested partial/unavailable live facet yields 4 on
+completed publication/preview. Identity ambiguity can stop before any write with
+4; conflict/recovery, invalid input and operational errors retain precedence
+3,2,1 over coverage. Public initial build never marks a component missing or
+reactivated. No graph snapshot is stored or reconstructed from saved hashes.

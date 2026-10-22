@@ -1196,8 +1196,15 @@ def _rollback(journal: dict, vault: Path, guard: _Guard) -> None:
     _checkpoint('rolled_back')
 
 
+def _recovery_operation(journal: dict, operation: str | None) -> None:
+    """Refuse an explicit operation incompatible with validated commit evidence."""
+    committed = journal['phase'] in {'committed', 'cleaning'}
+    if (operation == 'rollback' and committed) or (operation == 'cleanup' and not committed):
+        raise ConflictError('Recovery operation does not match the recorded commit phase')
+
+
 def recover_transaction(
-    vault: Path, state_path: Path, *, excluded_roots: tuple[Path, ...], preview: bool = True
+    vault: Path, state_path: Path, *, excluded_roots: tuple[Path, ...], preview: bool = True, operation: str | None = None
 ) -> TransactionResult:
     """Preview validated local recovery or rollback/clean under the same writer guard.
 
@@ -1206,13 +1213,14 @@ def recover_transaction(
     """
     evidence = False
     try:
-        if type(preview) is not bool:
-            raise ModelError('Invalid recovery preview flag')
+        if type(preview) is not bool or operation not in {None, 'rollback', 'cleanup'}:
+            raise ModelError('Invalid recovery preview or operation')
         evidence = True
         journal, guard = _load_recovery(vault, state_path, excluded_roots)
         if journal is None:
             return TransactionResult(TransactionStatus.NO_OP, ExitCode.SUCCESS)
         files = len(journal['entries'])
+        _recovery_operation(journal, operation)
         if preview:
             return TransactionResult(TransactionStatus.PREVIEW, ExitCode.SUCCESS, True, files)
         with _Lock(vault / '.obforce', guard) as lock:
@@ -1221,6 +1229,7 @@ def recover_transaction(
             # Full evidence was read immediately before lock acquisition and is
             # rechecked again under it; there is no stale-lock deletion or retry.
             guard.check()
+            _recovery_operation(journal, operation)
             committed = journal['phase'] in {'committed', 'cleaning'}
             if not committed and journal['phase'] != 'rolled_back':
                 _rollback(journal, vault, guard)

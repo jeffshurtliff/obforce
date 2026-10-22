@@ -14,8 +14,12 @@ The findings are outlined in the sections below.
 
 - **Internal Tracking ID**: MTF-1
 - **Title**: HTML character references displayed literally in generated notes
-- **Categories**: Templates; Note Rendering; User Experience
+- **Categories**: Note Rendering; Templates; User Experience
 - **Proposed Release**: v0.1.0
+- **Status**: Reported — awaiting triage
+- **Impact**: Generated-note readability in Live Preview
+- **GitHub Issue**: [#20](https://github.com/jeffshurtliff/obforce/issues/20)
+- **Related Threads**: Thread 07 renderer; discovered during Thread 12 validation
 
 #### Details
 
@@ -46,9 +50,9 @@ Below is Markdown output from the **Salesforce Metadata** section of a note for 
 - status: &#34;Active&#34;
 ````
 
-As end-users will likely spend most of their time in the *Live Preview* mode, these HTML entities 
-should be converted to their standard values to ensure readability.
+As end-users will likely spend most of their time in the *Live Preview* mode, ordinary metadata labels 
+and values should remain readable in Obsidian Live Preview and Reading view. The solution must preserve 
+protection against unintended HTML, links, embeds, generated markers, and Markdown injection.
 
 It is also worth noting that standard double quotes (`"`) should be used instead of curly double 
 quotes so that anything copied/pasted will be formatted properly.
-

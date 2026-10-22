@@ -4,7 +4,7 @@
 :Synopsis:          Defines versioned internal configuration and ownership contracts
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 CONFIG_SCHEMA_VERSION = 1
@@ -12,7 +12,7 @@ MODEL_SCHEMA_VERSION = 1
 NOTE_SCHEMA_VERSION = 1
 STATE_SCHEMA_VERSION = 1
 MARKER_VERSION = 1
-RENDERER_VERSION = 1
+RENDERER_VERSION = 2
 MAX_CONFIG_BYTES = 65_536
 
 # Offline acquisition limits are refusal boundaries, never truncation controls.

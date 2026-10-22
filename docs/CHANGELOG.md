@@ -191,6 +191,20 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Corrected Thread 12 Windows alias validation to retain original lexical spelling
+  even when the native resolver returns on-disk case. Bounded alias checks apply
+  before accepting resolved config/source/template/vault paths; full historical
+  descriptor/pathname/parent/lock guards and isolated CI ancestry are unchanged.
+  No skipped tests, retries or weakened guards.
+- Corrected MTF-1 / #20 in current Thread 12 acceptance work: renderer version 2
+  emits readable ordinary inline labels, provenance, straight quotes, numeric
+  versions and ISO timestamps while preserving injection/automatic-link controls.
+  Retained v1 fixtures verify saved-state compatibility and human-content
+  preservation. Current output snapshots and installed hashes are deliberately
+  updated; state/hash algorithms/schema/journal/source/transport are unchanged.
+  No automatic vault rewrite, adoption, migration or public refresh. Obsidian UI
+  acceptance and corrected hosted Windows CI remain pending.
+
 - Retain historical full descriptor change-time observations across transaction
   guards and recovery. On Windows, an identical in-place rewrite with restored
   mtime can retain the entire pathname creation-time stamp; recovery now refuses

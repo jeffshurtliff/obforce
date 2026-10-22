@@ -4,7 +4,7 @@
 :Synopsis:          Probes installed initial lifecycle and recovery with active runtime guards
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from pathlib import Path
 from click.testing import CliRunner
 
 from obforce.cli import main as cli
-from obforce.sync import transactions
+from obforce.sync import engine, transactions
 from obforce.sync.state import parse_state
 
 
@@ -64,6 +64,35 @@ def main() -> None:
         root = Path(temporary).resolve()
         source = project(root)
         source_before = snapshot(source)
+        # Emulate Windows returning on-disk case from the resolver. Original
+        # caller spelling must still be refused in both actual init and preview.
+        stored = root / 'ALIAS VAULT'
+        stored.mkdir()
+        resolve = engine._resolve
+
+        def disk_spelling(raw, base):
+            return stored if raw == 'Alias Vault' else resolve(raw, base)
+
+        engine._resolve = disk_spelling
+        try:
+            before = snapshot(root)
+            for flags in ([], ['--dry-run']):
+                result = invoke(
+                    'init',
+                    '--config',
+                    root / 'alias.toml',
+                    '--org',
+                    'fictional',
+                    '--vault',
+                    'Alias Vault',
+                    '--workspace-id',
+                    'demo',
+                    *flags,
+                )
+                assert result.exit_code == 3, result.output
+                assert snapshot(root) == before
+        finally:
+            engine._resolve = resolve
         for phase in ('ready', 'published', 'commit'):
             config = root / f'{phase}.toml'
             vault = root / f'{phase} Parent/Vault'
@@ -102,6 +131,10 @@ def main() -> None:
             if phase == 'commit':
                 state = parse_state((vault / '.obforce/state.json').read_bytes())
                 assert len(state.notes) == 1
+                text = (vault / state.notes[0].note.path).read_text(encoding='utf-8')
+                assert '- api_version: "67.0"' in text and '- status: "Active"' in text
+                assert '- Source provenance: local-apex-xml-v1' in text
+                assert '&#95;' not in text and '&#34;' not in text and '&#45;' not in text
             else:
                 assert not list(vault.rglob('*.md')) and not (vault / '.obforce/state.json').exists()
             before = snapshot(root)

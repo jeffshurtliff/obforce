@@ -4,7 +4,7 @@
 :Synopsis:          Verifies explicit public lifecycle with synthetic projects and guarded refusals
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -613,3 +613,69 @@ def test_setup_revalidation_keeps_typed_outcome_and_cleans_only_owned_parents(pr
     result = invoke('build', '--config', config)
     assert result.exit_code == outcome, result.output
     assert not vault.parent.exists() and config.exists()
+
+
+@pytest.mark.parametrize('preview', [False, True])
+def test_original_spelling_is_checked_when_resolver_returns_disk_case(project, monkeypatch, preview):
+    """Reproduce Windows resolve replacing a requested alias with disk spelling."""
+    root, _ = project
+    stored = root / 'VAULT'
+    stored.mkdir()
+    resolve = engine._resolve
+
+    def disk_spelling(raw, base):
+        return stored if raw == 'Vault' else resolve(raw, base)
+
+    monkeypatch.setattr(engine, '_resolve', disk_spelling)
+    before = snapshot(root)
+    flags = ['--dry-run'] if preview else []
+    result = invoke(
+        'init', '--config', root / 'new.toml', '--org', 'fictional', '--vault', 'Vault', '--workspace-id', 'demo', *flags
+    )
+    assert result.exit_code == 3, result.output
+    assert snapshot(root) == before
+
+
+@pytest.mark.parametrize('kind', ['config', 'source', 'template', 'missing-suffix'])
+@pytest.mark.parametrize('command', ['build', 'recover'])
+def test_all_public_config_roots_retain_original_spelling(project, monkeypatch, kind, command):
+    """Refuse serialized aliases even when resolution reports matching disk case."""
+    root, source = project
+    stored = root / 'STORED'
+    stored.mkdir()
+    config = root / 'Config.toml'
+    project_value, vault_value, template = source.name, 'Vault', ''
+    config_argument = config
+    if kind == 'source':
+        project_value = 'stored'
+    elif kind == 'template':
+        template = '\n[templates]\ndirectory = "stored"\n'
+    elif kind == 'missing-suffix':
+        vault_value = 'stored/Nested'
+    else:
+        config_argument = root / 'config.toml'
+    config.write_text(
+        f'schema_version = 1\nworkspace_id = "demo"\nvault = "{vault_value}"\n'
+        f'[source]\nmode = "local"\nproject = "{project_value}"\n' + template
+    )
+    resolve = engine._resolve
+
+    def disk_spelling(raw, base):
+        if raw == str(config_argument) and kind == 'config':
+            return config
+        if raw == 'stored':
+            return stored
+        if raw == 'stored/Nested':
+            return stored / 'Nested'
+        return resolve(raw, base)
+
+    monkeypatch.setattr(engine, '_resolve', disk_spelling)
+
+    def deny(*args, **kwargs):
+        raise AssertionError('Unsafe config must refuse before acquisition')
+
+    monkeypatch.setattr(engine.local, 'collect_local', deny)
+    before = snapshot(root)
+    result = invoke(command, '--config', config_argument, '--dry-run')
+    assert result.exit_code == 3, result.output
+    assert snapshot(root) == before

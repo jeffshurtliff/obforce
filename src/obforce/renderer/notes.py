@@ -4,7 +4,7 @@
 :Synopsis:          Serializes deterministic Apex candidates without reading or writing notes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -80,9 +80,22 @@ def _bounded(value: object) -> None:
 
 
 def markdown(value: str) -> str:
-    """Escape a label as inert Markdown text, including Obsidian link/tag syntax."""
+    """Escape data within fixed inline prefixes or validated wikilink labels.
+
+    Ordinary inline punctuation stays readable; only intraword underscores,
+    nondomain periods and whole ISO timestamp colons are literal. Delimiter
+    underscores and syntax-capable punctuation retain numeric escaping. Never
+    use this for raw block boundaries, link targets, HTML attributes or markers.
+    """
     _bounded(value)
-    return ''.join(c if c.isalnum() or c in ' /' else f'&#{ord(c)};' for c in value)
+    timestamp = re.fullmatch(r'"?\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})"?', value)
+    result = []
+    for index, char in enumerate(value):
+        intraword = char == '_' and 0 < index < len(value) - 1 and value[index - 1].isalnum() and value[index + 1].isalnum()
+        period = char == '.' and (index == len(value) - 1 or not value[index + 1].isalpha())
+        ordinary = char in ' /-"\',;()' or period or (char == ':' and timestamp is not None)
+        result.append(char if char.isalnum() or ordinary or intraword else f'&#{ord(char)};')
+    return ''.join(result)
 
 
 def _path(path: str) -> str:

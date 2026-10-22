@@ -4,7 +4,7 @@
 :Synopsis:          Orchestrates explicit initialization, initial build and local recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -69,6 +69,7 @@ def _path(raw: str, base: Path, reader: _Reader) -> Path:
     for part in lexical.parts[1:]:
         current = current.parent if part == '..' else current / part
         info = reader.observe(current, missing=True)
+        _spelling(current, reader)
         if current != resolved and info is not None and not stat.S_ISDIR(info.st_mode):
             raise ConflictError('Explicit path has a file parent')
     _absolute(resolved)
@@ -88,17 +89,23 @@ def _observe_path(path: Path, reader: _Reader) -> None:
         # only newly created path segments must satisfy portable output spelling.
         if info is None:
             relative_path(item.name)
-        parent_info = reader.observe(item.parent, missing=True)
-        if item != item.parent and parent_info is not None:
-            names = []
-            with os.scandir(item.parent) as entries:
-                for entry in entries:
-                    if len(names) >= const.MAX_VAULT_ENTRIES:
-                        raise ConflictError('Setup ancestor exceeds entry bound')
-                    names.append(entry.name)
-            for name in names:
-                if _token(Path(name)) == _token(Path(item.name)) and name != item.name:
-                    raise ConflictError('Explicit path has a case or Unicode alias')
+        _spelling(item, reader)
+
+
+def _spelling(path: Path, reader: _Reader) -> None:
+    """Compare exact caller spelling before a native resolver can canonicalize it."""
+    parent_info = reader.observe(path.parent, missing=True)
+    if path == path.parent or parent_info is None:
+        return
+    names = []
+    with os.scandir(path.parent) as entries:
+        for entry in entries:
+            if len(names) >= const.MAX_VAULT_ENTRIES:
+                raise ConflictError('Setup ancestor exceeds entry bound')
+            names.append(entry.name)
+    for name in names:
+        if _token(Path(name)) == _token(Path(path.name)) and name != path.name:
+            raise ConflictError('Explicit path has a case or Unicode alias')
 
 
 def _excluded(config: Config) -> tuple[Path, ...]:

@@ -30,7 +30,8 @@ merge `2995f93` and final exact-merge run `39676435834`, attempt 2: all 12 cells
 and 24 independent installs passed. Issue #11 is closed as completed. Eleven cells
 retain successful attempt-1 logs; macOS 3.14 completed in attempt 2 after its earlier
 cancelled/no-runner/no-step attempt with unavailable log. Historical failed runs
-and skips remain recorded. Thread 12 is **implemented and locally verified**, pending maintainer acceptance;
+and skips remain recorded. Thread 12 is **implemented with locally verified Windows/MTF-1 corrections**,
+pending corrected hosted CI and maintainer acceptance;
 Threads 13–17 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
@@ -816,7 +817,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
-| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Implemented locally; open pending acceptance; hosted evidence unavailable |
+| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Corrections locally verified; open pending corrected hosted CI/acceptance |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
@@ -4869,3 +4870,156 @@ Current issue body marks all four implementation tasks and local implementation/
 tests/docs/compatibility gates verified; ready-to-merge/release remains unchecked.
 #12 remains open, with original labels enhancement/codex/maintainer, assignee
 jeffshurtliff, milestone 1 and native dependency links preserved.
+
+### Thread 12 Windows and MTF-1 correction start — 22 October 2026
+
+Maintainer reviewed/pushed Thread 12 and requested correction of Windows CI plus
+triage/implementation of #20 (MTF-1). Clean baseline main is merge
+972c72fc29d11e703fc7e2523f2713b7d0a52f6e; preserve the manual findings and quickstart
+maintainer edits. #12 remains open; #11 closed; native #11 -> #12 -> #13 intact.
+Read root guidance, relevant roadmap/rendering/safety/config contracts, #12/#20
+and MANUAL_TEST_FINDINGS.md; vendor_docs absent. No new prerequisite blocker.
+
+Reviewed all 12 job/step/full command logs of exact-merge run 39860217729 attempt 1.
+Linux Python 3.12–3.15 each 1322 passed; macOS each 1320 passed/2 skipped; all
+required checks/fresh artifacts/Twine/exact 33/32 archives/both independent installs/
+whitespace passed in those eight cells. Windows each 1 failed/1305 passed/16 skipped:
+only test_case_unicode_output_aliases_refuse[VAULT]. Metadata/lock/Ruff/Bandit passed;
+subsequent build/Twine/archive/installs/whitespace skipped. This run remains failed.
+Earlier failures/skips/local refusals and #11 accepted evidence stay historical.
+
+Before dependent production changes, recorded correction contracts:
+
+- Windows resolve can canonicalize caller Vault to stored VAULT before alias
+  validation. An injected disk-spelling resolver reproduced incorrect success
+  for actual init and its preview (2 failed/68 deselected before the fix).
+  Validate original lexical segment spelling against a bounded immediate-parent
+  listing as well as resolved paths. Retain full same-API pathname/historical
+  descriptor/birthtime/hash/absence/parent guards, exact deltas, no retries/skips.
+  Cover init/build/recover, config/source/template/vault roots and missing suffixes;
+  Windows path-object equality must never stand in for ordinal spelling equality.
+- #20 belongs NOW in this Thread 12 correction for v0.1.0: readable generated notes
+  are part of the current first-build acceptance/demo. It is a renderer defect,
+  not deferred dashboard polish or permission to start Thread 13/14. Keep both
+  existing #12 and #20 open for acceptance; do not create tracking duplicates.
+- Renderer version advances from 1 to 2 using the existing fingerprint field;
+  no new state/model/note/marker/journal schema or hash algorithm. For existing
+  fixed inline data contexts, keep ordinary hyphens, periods and straight double
+  quotes literal; underscores are literal only between alphanumeric characters.
+  All other punctuation retains the conservative numeric-reference escaping.
+  Thus api_version, local-apex-xml-v1 and "67.0" become readable source text while
+  emphasis boundaries, links/embeds, HTML/ampersands, URLs, tags, math, comments,
+  block IDs and unsafe syntax stay inert. Existing newline/control/marker refusal
+  and bounds stay. Data never appears at an arbitrary block boundary; all call
+  sites retain fixed prefixes or validated intentional wikilinks.
+- Update current candidate snapshots and installed fixed hashes deliberately;
+  retain legacy fixtures as evidence. Existing generated-field/exact-region
+  baselines still validate before any accepted patch. Preserve human prose/YAML/
+  technical_debt* and old state; never rewrite/adopt a vault or rerender existing
+  whole notes. No migration, force repair or mass regeneration. Public build
+  continues to refuse repeats; actual old-vault refresh stays Thread 13, unstarted.
+- Synthetic regression/initial-build/package tests and an independent local
+  CommonMark parser check will verify readable ordinary text and hostile payloads.
+  Actual Obsidian Live Preview/Reading acceptance remains manual/unverified;
+  no real Obsidian, sf, credentials, org or vault is accessed. No dependencies
+  intended. No commits/Git delivery/CI rerun/issue closure or later-thread work.
+
+Rendering refinement before dependent final validation: include ordinary apostrophes,
+commas, semicolons and parentheses in the fixed-inline allowlist, and permit colons
+only in a whole ISO-shaped timestamp scalar. Encode periods immediately before
+letters so newly readable punctuation cannot activate bare domain links (for
+example www.example.invalid). Scheme colons/HTML/Obsidian syntax remain encoded.
+This extends the same readability correction to ordinary audit dates and names
+without introducing URL linkification, new dependencies or any wire change.
+
+
+### Thread 12 Windows and MTF-1 correction handoff — 22 October 2026
+
+Both corrections are implemented and locally verified at clean-delivery baseline
+972c72fc29d11e703fc7e2523f2713b7d0a52f6e. **#12 and #20 remain OPEN pending
+corrected delivery/CI and maintainer acceptance.** #20/MTF-1 belongs to the current
+Thread 12 first-build/readability acceptance for v0.1.0, not a future thread.
+The manual finding and current roadmap/issue checklists reflect that assignment.
+
+- [x] Read all 12 exact-merge run 39860217729 attempt-1 job/step/full command logs.
+  Linux 3.12–3.15 each 1322 passed; macOS each 1320/2 skipped with every required
+  gate and 16 independent installs passing. Windows each 1 failed/1305 passed/
+  16 skipped, exclusively VAULT alias refusal; metadata/lock/Ruff/Bandit passed,
+  downstream artifact/install/whitespace gates skipped. The run remains FAILED.
+  Old #11 runs, cancellations/unavailable causes and local/skipped evidence remain.
+- [x] Reproduced incorrect success through injected native disk-spelling resolution
+  for init and preview before production changes (2 failed/68 deselected). Original
+  lexical spelling now receives bounded parent comparison independent of resolver
+  case canonicalization and Path equality. Added 10 cases for actual/preview init
+  and serialized config/source/template/missing-suffix build/recover refusals with
+  full tree preservation and refusal before acquisition. Full pathname/historical
+  descriptor/birthtime/hash/absence/parent/lock/delta guards remain unchanged.
+- [x] Reproduced MTF-1 with seven pre-fix readability failures. Renderer version 2
+  keeps ordinary labels, provenance, ASCII quotes, audit dates and names readable,
+  while unsafe Markdown/HTML/Obsidian/URL syntax stays escaped. Source/graph hashes
+  and fingerprint algorithms/wire schemas/UUIDs/journal schema 2 are unchanged.
+  Existing renderer-version fingerprint field advances deliberately; version
+  invalidation test now increments the current value instead of assuming 1.
+- [x] Preserved legacy v1 rendered/hand-edited fixtures; added v2 current candidate/
+  no-op fixtures and updated only generated-region expectations/installed fixed
+  hashes. Legacy state still round-trips, safe lower-level patches preserve exact
+  human YAML/comments/prose/aliases/tags/technical_debt*, and edited baselines
+  refuse. No migration, existing-vault rewrite, adoption or public refresh.
+- [x] Final local macOS ARM64 / Python 3.14.7 / Poetry 2.4.2: **1369 passed /
+  2 existing filesystem case/NFC representability skips**, 92% combined coverage
+  (94% engine, 92% renderer, 84% transactions). **49 new test cases**. Expanded
+  focused run: 306 passed. Independent local CommonMark parser (existing development environment): 33
+  ordinary/hostile payloads preserved exact text without active injected link,
+  image, HTML, emphasis, code or extra block. Runtime socket/process denial active;
+  this parser evidence does not claim native Obsidian UI behavior.
+- [x] Strict Poetry metadata/lock, Ruff lint/format (91 files), Bandit and whitespace
+  passed. No dependency/lock/CI/Apache change or new suppression; five existing
+  source/transport annotations remain. Isolated TMPDIR/TEMP/TMP setup preserved,
+  no skips or retries around races and no lower-level guard changes.
+- [x] Fresh wheel/sdist, strict Twine, exact **33-wheel / 32-sdist** archive/source/
+  resource/license/README/metadata checks and both independent installs passed
+  outside checkout/cwd. Actual installed console/module init/build/recover and
+  accepted lower-level probes ran with active runtime network/process denial,
+  absent external tools and no cwd artifacts. New installed probes check synthetic
+  disk-case alias refusal, readable first-build output, valid legacy-v1 wire and
+  human-preserving patching. Setup downloads are separate network use.
+- [x] Code/header/diff/untracked/privacy/manual-findings/docs/changelog/links and
+  current #12/#20 triage/checklists/handoffs reviewed. Native #11 -> #12 -> #13 and
+  issue metadata preserved. No duplicate tracking or new dependency.
+- [ ] Corrected delivery and exact-commit hosted Windows/all-matrix verification.
+- [ ] Maintainer Obsidian Live Preview/Reading review and issue acceptance/closure.
+
+Fresh correction candidate SHA-256 (local evidence only):
+- Wheel: `9c639509ad3ec99d13043beca7e3e045d5c9e91d6b2b8bdaf8ccafaf9bfe9cf0`.
+- Sdist: `1acfed300d421b860513a859f6553fc9c6423cf6f2a980aaf7facdb0afd6e6e8`.
+
+Retained intermediate outcomes: 1 failed/138 passed at the expected current
+renderer snapshot; 8 failed/277 passed where v1 fixtures were incorrectly treated
+as current-output no-ops, resolved with explicit v2 fixtures while retaining v1
+evidence; then 286 and expanded 306 focused passes. First full run recorded
+1 failed/1368 passed/2 skipped because a version-invalidation test hardcoded the
+now-current renderer version 2. Corrected that test to use current+1; final full
+run passed 1369/2. A formatting check flagged one string-quote style and was
+corrected before final checks. No application retry, hidden failure or weakened
+assertion/guard. Prior Thread 12 local failures remain recorded above.
+
+Corrected native Windows/Linux/other-Python execution is unavailable until new
+delivery/CI; no CI rerun was initiated. Actual Obsidian UI review is unavailable.
+Windows sf remains refused; native ACL/directory-fsync, power-loss, hostile-editor/
+final-syscall-race, forged timestamps and atomic snapshot/multi-file guarantees
+remain outside the evidence. No real sf/Obsidian/auth/credential/.env/org/metadata/
+vault/settings access, private upload or delegation.
+
+All **19 changed/new files remain unstaged/uncommitted on main**; maintainer
+quickstart/manual report and delivery history preserved. No branch creation, stage,
+commit, push, PR, merge, tag, CI rerun, release, publication or issue closure.
+**Next eligible only after corrected #12 acceptance/delivery/exact CI and a new
+request: Thread 13 / #13, NOT STARTED.** Threads 14–17 and enhancement #18 remain
+NOT STARTED. #20 is handled in this correction; no future thread was started.
+
+Issue synchronization: correction starts in [#12](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6352808387)
+and [#20](https://github.com/jeffshurtliff/obforce/issues/20#issuecomment-6352808763);
+verified handoffs in [#12](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6353049104)
+and [#20](https://github.com/jeffshurtliff/obforce/issues/20#issuecomment-6353049517).
+Current bodies/checklists retain pending corrected delivery/CI/manual acceptance.
+Both issues remain open with existing labels/assignee/milestone and native links.

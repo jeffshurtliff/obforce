@@ -60,8 +60,8 @@ Unavailable, absent and observed-null audits are omitted from properties and
 explained separately in the generated body. Audit-name omission removes available
 names from both output contexts and properties. No body, org ID, record ID,
 internal endpoint, raw response or incidental collection timestamp is projected
-into output. Metadata strings become inert numeric-character-reference Markdown
-text; property strings use YAML-compatible JSON quoting. Internal wikilinks use
+into output. Metadata strings use the bounded inline escaping contract below;
+property strings use YAML-compatible JSON quoting. Internal wikilinks use
 only separately validated explicit paths and escaped display labels. Explicit
 user creation defaults are authored content, not source metadata or inferred facts.
 
@@ -263,3 +263,40 @@ rendering still performs no publication itself. Existing-note publication uses t
 accepted preservation patch, not creation-template regeneration. Renderer-local
 graph-plus-independent-Coverage and creation-only hash contracts remain unchanged.
 No graph snapshot is persisted in state or reconstructed during recovery.
+
+
+## Renderer version 2 readability correction — MTF-1 / #20
+
+Assigned to the current Thread 12 correction for v0.1.0, because readable first
+build notes are already an acceptance requirement. No Thread 13/14 work is started.
+The original blanket numeric escaping made underscores, quotes and hyphens appear
+as literal references in reported Obsidian Live Preview output.
+
+Renderer version 2 retains plain ordinary inline punctuation (straight quotes,
+hyphens, commas, semicolons, apostrophes and parentheses), intraword underscores
+and non-domain periods. Whole ISO-shaped timestamp scalars retain colons. Thus
+`api_version`, `local-apex-xml-v1`, `"67.0"`, `"Active"` and audit timestamps remain
+readable. Serialization does not introduce curly quotes or normalize human data.
+Periods immediately before letters and scheme colons stay encoded to avoid
+activating bare domains/URLs. All remaining syntax-capable punctuation retains
+numeric references: brackets/embeds, emphasis-boundary underscores, asterisks,
+HTML angles/ampersands, backticks, hashtags, math, block IDs, highlights/comments
+and pipes. Existing control/newline/reserved-marker refusal and finite bounds stay.
+
+This serializer is used only within engine-owned single-line prefixes or validated
+intentional wikilink display labels; it is not a general block, target-path or HTML
+attribute encoder. Known reference targets keep their separate strict path gates.
+The [CommonMark reference rules](https://spec.commonmark.org/0.31.2/#entity-and-numeric-character-references)
+do not reinterpret decoded character references as Markdown syntax. Synthetic
+source snapshots and a local independent CommonMark parser verify ordinary text
+and hostile payloads. Actual Obsidian Live Preview/Reading UI review remains manual
+and unverified; no real vault or Obsidian is opened during correction validation.
+
+Only the existing renderer-version fingerprint input advances (1 to 2). Source/
+graph hashes, hash algorithms, state/model/note/marker schemas and journal schema 2
+are unchanged. Legacy rendered/preservation fixtures are retained and old saved
+state still round-trips. The accepted lower-level patcher validates exact old
+generated-property/body baselines before replacing only the generated region;
+custom YAML/comments/prose/aliases/tags/technical_debt* remain user-owned. A human
+edit still blocks. Public build refuses repeats, and no migration/repair/whole-note
+rerender or public refresh capability is introduced.

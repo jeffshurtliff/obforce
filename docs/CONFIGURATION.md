@@ -228,3 +228,12 @@ original operational outcome; a valid recovery preview returns 0 with an explici
 recovery-required flag. Partial requested coverage can publish a first build with
 4 and never proves absence. By-design offline audit/relationship exclusions alone
 allow 0. State/journal bounds and schema-1 journal refusal remain unchanged.
+
+
+Thread 12's Windows correction retains each original lexical spelling as well as
+the resolved path. A resolver returning stored `VAULT` for requested `Vault` must
+not erase the alias refusal. Every original segment receives the same bounded
+parent-name comparison used for resolved paths, with ordinal string comparison
+independent of native Path equality. This applies to config/source/template/vault
+roots and missing suffixes in init/build/recover, including previews. No retry,
+case normalization workaround, relaxed observation or new skip is added.

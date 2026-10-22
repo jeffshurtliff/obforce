@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -365,6 +365,27 @@ def state_for(note):
     return NoteState(identity, binding, a.key, 'Custom Code/Apex Classes/DemoService.md',
         original.source_hash, original.graph_hash, original.render_hash,
         note.generated_properties, note.region_hash)
+# A v1 region/state remains valid evidence and can receive only a guarded patch.
+from obforce import constants as const
+from obforce.sync.state import SavedNote, StateDocument, parse_state, serialize_state
+legacy_raw = V1_BASELINE_BYTES
+legacy_note = parse_note(legacy_raw)
+version = const.RENDERER_VERSION
+try:
+    const.RENDERER_VERSION = 1
+    legacy_render_hash = candidate(a).render_hash
+finally:
+    const.RENDERER_VERSION = version
+legacy_state = replace(state_for(legacy_note), render_hash=legacy_render_hash)
+legacy_wire = serialize_state(StateDocument(binding, coverage.selection, coverage,
+    (SavedNote(legacy_state, legacy_note.region),)))
+assert serialize_state(parse_state(legacy_wire)) == legacy_wire
+upgrade = patch_note(legacy_raw, legacy_state, legacy_note.region, original)
+upgraded = parse_note(upgrade.content)
+assert upgrade.changed and upgraded.region == original.region.encode()
+assert upgrade.content[:upgraded.region_start] == legacy_raw[:legacy_note.region_start]
+assert upgrade.content[upgraded.region_end:] == legacy_raw[legacy_note.region_end:]
+assert b'&#95;' in legacy_note.region and b'&#95;' not in upgraded.region
 for data in (raw, raw.replace(b'\n', b'\r\n')):
     note = parse_note(data)
     state = state_for(note)
@@ -503,7 +524,8 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         raise AssertionError('State traversal accepted')
 """
         fixtures = Path(__file__).resolve().parents[1] / 'tests/fixtures/vaults'
-        preservation_probe = preservation_probe.replace('NOTE_BYTES', repr((fixtures / 'hand_edited.md').read_bytes()))
+        preservation_probe = preservation_probe.replace('V1_BASELINE_BYTES', repr((fixtures / 'hand_edited.md').read_bytes()))
+        preservation_probe = preservation_probe.replace('NOTE_BYTES', repr((fixtures / 'hand_edited_v2.md').read_bytes()))
         preservation_probe = preservation_probe.replace(
             'EXPECTED_PATCH_HASH', repr(hashlib.sha256((fixtures / 'expected_updated.md').read_bytes()).hexdigest())
         )

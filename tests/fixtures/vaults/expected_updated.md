@@ -43,18 +43,18 @@ Human whitespace: retained
 - ApexClass: DemoService
 - Namespace: none
 - Source: local
-- api&#95;version: &#34;68&#46;0&#34;
-- created&#95;at: absent (not supplied)
-- created&#95;by: absent (not supplied)
-- last&#95;modified&#95;at: &#34;2026&#45;10&#45;20T12&#58;00&#58;00Z&#34;
-- last&#95;modified&#95;by: absent (not supplied)
-- status: &#34;Active&#34;
+- api_version: "68.0"
+- created_at: absent (not supplied)
+- created_by: absent (not supplied)
+- last_modified_at: "2026-10-20T12:00:00Z"
+- last_modified_by: absent (not supplied)
+- status: "Active"
 
 ## Coverage
 
-- inventory: complete; requested: true; method: synthetic&#45;local; pagination: exhausted; limit reached: false; API version: unknown
-- audit: unavailable; requested: false; method: offline&#45;audit; pagination: unknown; limit reached: null; API version: unknown
-- relationships: not_collected; requested: false; method: offline&#45;relationships; pagination: unknown; limit reached: null; API version: unknown
+- inventory: complete; requested: true; method: synthetic-local; pagination: exhausted; limit reached: false; API version: unknown
+- audit: unavailable; requested: false; method: offline-audit; pagination: unknown; limit reached: null; API version: unknown
+- relationships: not_collected; requested: false; method: offline-relationships; pagination: unknown; limit reached: null; API version: unknown
 
 Inventory describes only the selected accessible scope. Offline audit values remain unavailable.
 Offline relationships are not collected. Requested platform relationships remain partial/unavailable:

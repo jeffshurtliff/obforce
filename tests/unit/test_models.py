@@ -3,8 +3,8 @@
 :Module:            tests.unit.test_models
 :Synopsis:          Tests deterministic identities, coverage, ownership, and fingerprint inputs
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
-:Modified Date:     19 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -266,7 +266,7 @@ def test_render_inputs_invalidate_without_rendering_or_reading_templates(monkeyp
     assert render_fingerprint(**inputs) == initial
     for name in ['RENDERER_VERSION', 'NOTE_SCHEMA_VERSION', 'MARKER_VERSION']:
         with monkeypatch.context() as context:
-            context.setattr(const, name, 2)
+            context.setattr(const, name, getattr(const, name) + 1)
             assert render_fingerprint(**inputs) != initial
     with pytest.raises(ModelError):
         render_fingerprint(**(inputs | {'source_hash': 'invalid'}))

@@ -4,7 +4,7 @@
 :Synopsis:          Verifies bounded in-memory patches using fictional hand-edited notes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     22 Oct 2026
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ from obforce.renderer.templates import TemplateAsset
 from obforce.sync.notes import parse_note, patch_note
 
 IDENTITY = '00000000-0000-4000-8000-000000000001'
-FIXTURE = Path(__file__).parents[1] / 'fixtures/vaults/hand_edited.md'
+FIXTURE = Path(__file__).parents[1] / 'fixtures/vaults/hand_edited_v2.md'
 
 
 @pytest.fixture

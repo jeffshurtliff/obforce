@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -69,6 +69,7 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'sync/planner.py',
             'sync/reporting.py',
             'sync/transactions.py',
+            'sync/engine.py',
             'resources/templates/apex_created.md.j2',
             'resources/templates/apex_generated.md.j2',
         }
@@ -511,11 +512,14 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         _run([str(python), '-c', planner_probe], work, environment)
         transaction_probe = Path(__file__).with_name('probe_transactions.py').read_text(encoding='utf-8')
         _run([str(python), '-c', transaction_probe], work, environment)
+        engine_probe = Path(__file__).with_name('probe_engine.py').read_text(encoding='utf-8')
+        _run([str(python), '-c', engine_probe], work, environment)
         _run([str(python), '-c', live_probe], work, environment)
         _run([str(python), '-c', graph_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.
         _run([str(python), '-c', offline_probe], root, environment)
-        for command in ([str(console)], [str(python), '-m', 'obforce']):
+        for number, command in enumerate(([str(console)], [str(python), '-m', 'obforce'])):
+            _lifecycle(command, root / f'public-{number}', work, environment)
             for arguments in ([], ['--help'], ['--version']):
                 output = _run(command + arguments, work, environment)
                 expected = f'obforce, version {version}\n' if arguments == ['--version'] else '--help'
@@ -530,6 +534,47 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         if list(work.iterdir()):
             raise ValueError('Discovery created working-directory artifacts')
         print(f'{artifact.name}: install, imports/resources, pip check, both entry points, offline/no-write checks passed')
+
+
+def _lifecycle(command: list[str], root: Path, work: Path, environment: dict[str, str]) -> None:
+    """Exercise actual installed console/module init/build/recover under runtime denial."""
+    from probe_engine import project, snapshot
+
+    root.mkdir()
+    source = project(root)
+    protected = snapshot(source)
+    config = root / 'Config with spaces.toml'
+    vault = root / 'New Parent/Vault'
+    args = ['init', '--config', str(config), '--source', source.name, '--vault', 'New Parent/Vault', '--workspace-id', 'demo']
+    before = snapshot(root)
+    _run(command + args + ['--dry-run'], work, environment)
+    if snapshot(root) != before:
+        raise ValueError('Installed init preview wrote output')
+    _run(command + args, work, environment)
+    config_before = config.read_bytes(), config.stat().st_mtime_ns
+    before = snapshot(root)
+    _run(command + ['build', '--config', str(config), '--dry-run'], work, environment)
+    if snapshot(root) != before or vault.exists():
+        raise ValueError('Installed missing-destination preview wrote output')
+    _run(command + ['build', '--config', str(config)], work, environment)
+    before = snapshot(root)
+    result = subprocess.run(
+        command + ['build', '--config', str(config)],
+        cwd=work,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    if result.returncode != 3 or snapshot(root) != before:
+        raise ValueError('Installed repeat-build refusal failed')
+    for flags in ([], ['--dry-run'], ['--cleanup']):
+        _run(command + ['recover', '--config', str(config)] + flags, work, environment)
+        if snapshot(root) != before:
+            raise ValueError('Installed recovery no-op changed output')
+    if snapshot(source) != protected or (config.read_bytes(), config.stat().st_mtime_ns) != config_before:
+        raise ValueError('Installed lifecycle modified source or configuration')
 
 
 def main() -> None:

@@ -4,7 +4,7 @@
 :Synopsis:          Loads explicit strict TOML configuration without filesystem writes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     19 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -180,6 +180,16 @@ def load_config(path: Path) -> Config:
         raise ConfigError('Explicit configuration file does not exist') from error
     except (OSError, RuntimeError, ValueError) as error:
         raise OperationalError('Cannot read explicit configuration file') from error
+    return parse_config(raw, config_path)
+
+
+def parse_config(raw: bytes, config_path: Path) -> Config:
+    """Validate bounded config bytes relative to an explicit absolute filename.
+
+    This pure validation step creates no file and shares the loader's schema.
+    """
+    if type(raw) is not bytes or not isinstance(config_path, Path) or not config_path.is_absolute():
+        raise ConfigError('Expected explicit configuration bytes and absolute path')
     if len(raw) > const.MAX_CONFIG_BYTES:
         raise ConfigError('Configuration exceeds size limit')
     try:

@@ -2,11 +2,11 @@
 
 Thread 07 implements deterministic **candidate** rendering in
 `renderer/templates.py` and `renderer/notes.py`. This is an internal interface,
-not a stable public Python API or a generation command. The CLI still exposes
-help/version only. The renderer reads no existing note and performs no patching,
+not a stable public Python API. Thread 12 connects it to public initial build. The renderer reads no existing note and performs no patching,
 adoption or publication. Thread 09 separately adds internal read-only
 [state/move reconciliation](SYNC_SAFETY.md); Thread 10 adds internal read-only
-planning while publication/recovery remain later work.
+planning; accepted Thread 11 publication/recovery and Thread 12 public orchestration
+compose these existing primitives.
 A complete new-note candidate must never be applied to an existing note.
 Thread 08 separately supplies
 [bounded in-memory preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
@@ -244,7 +244,8 @@ correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
 `39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
 see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
 [transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Threads 12–17 and enhancement #18 remain NOT STARTED.
+Thread 12 is implemented locally pending acceptance; Threads 13–17 and
+enhancement #18 remain NOT STARTED.
 No release is published.
 
 Thread 10 always renders accepted generated candidates for existing notes against

@@ -4,7 +4,7 @@
 :Synopsis:          Plans complete bounded read-only changes without publication
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -396,6 +396,7 @@ def plan_changes(
     verified_org_id: str | None = None,
     comparable_live_inventory: bool = False,
     initial: bool = False,
+    allow_absent: bool = False,
     layout: Layout = _DEFAULT_LAYOUT,
     options: Options = _DEFAULT_OPTIONS,
     generated_template: TemplateAsset | None = None,
@@ -420,7 +421,13 @@ def plan_changes(
         # Validate independent offline dimensions even for an empty initial inventory.
         StateDocument(coverage.binding, coverage.selection, coverage)
         result = reconcile_vault(
-            vault, state_path, coverage.binding, coverage.selection, excluded_roots=excluded_roots, initial=initial
+            vault,
+            state_path,
+            coverage.binding,
+            coverage.selection,
+            excluded_roots=excluded_roots,
+            initial=initial,
+            allow_absent=allow_absent,
         )
         current = {component.key: component for component in components}
         existing = _prior(result, retained_components, current, previous_graph)

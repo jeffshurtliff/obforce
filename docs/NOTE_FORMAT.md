@@ -5,8 +5,9 @@ Thread 07 [renders candidate strings](RENDERING.md); Thread 08 now parses and
 patches caller-supplied managed-note bytes internally as described below. State
 loading/discovery and unique move reconciliation are internal Thread 09 work
 ([safety contract](SYNC_SAFETY.md)); Thread 10 adds internal read-only planning.
-Publication remains Threads 11–13. This fictional
-note illustrates the version-one contract, not output from a public command.
+Accepted Thread 11 publication/recovery is connected to public initial build by
+Thread 12. Refresh remains Thread 13. This fictional note illustrates the
+version-one contract; initial build never adopts or regenerates an existing note.
 
 ```markdown
 ---
@@ -293,7 +294,8 @@ correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
 `39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
 see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
 [transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Threads 12–17 and enhancement #18 remain NOT STARTED.
+Thread 12 is implemented locally pending acceptance; Threads 13–17 and
+enhancement #18 remain NOT STARTED.
 
 Thread 10's existing-note candidates always call the preservation patcher after
 strict reconciliation; they never use whole-new-note templates. Lifecycle

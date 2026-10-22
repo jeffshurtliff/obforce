@@ -3,8 +3,8 @@
 :Module:            tests.unit.test_cli
 :Synopsis:          Verifies CLI discovery and rejection of unimplemented features
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
-:Modified Date:     19 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     21 Oct 2026
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ def test_module_import_does_not_run_cli(capsys: pytest.CaptureFixture[str]) -> N
     assert captured.out == captured.err == ''
 
 
-@pytest.mark.parametrize('argument', ['init', 'build', 'sync', 'recover', '--org', '--source', '--unknown'])
+@pytest.mark.parametrize('argument', ['sync', '--org', '--source', '--unknown'])
 def test_unimplemented_operations_are_usage_errors(argument: str) -> None:
     """Reject later capabilities with Click's usage-error result."""
     result = CliRunner().invoke(main, [argument])

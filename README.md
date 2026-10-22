@@ -1,9 +1,11 @@
 # Obforce
 Create and maintain living documentation for your Salesforce org within an Obsidian vault.
 
-Under development: the `0.1.0.dev0` foundation provides help and installed-version
-reporting. Public live Salesforce workflows, note generation, and safe refresh are planned in
-the [implementation roadmap](dev/IMPLEMENTATION_PLAN.md).
+Under development: `0.1.0.dev0` now exposes explicit `init`, initial `build` and
+local `recover`, alongside help/version. Try the fictional offline
+[quickstart](docs/QUICKSTART.md). Thread 12 is locally implemented pending
+maintainer acceptance; refresh remains planned in the
+[implementation roadmap](dev/IMPLEMENTATION_PLAN.md).
 
 Internal configuration and normalized-record validation are implemented with
 offline tests. See the [configuration](docs/CONFIGURATION.md),
@@ -14,8 +16,11 @@ The fictional multi-package sample is testable without Salesforce CLI or network
 The internal [Salesforce CLI process boundary](docs/SF_CLI.md) is tested offline;
 Windows execution currently fails closed. The internal [live Apex adapter](docs/LIVE_SOURCE.md)
 adds explicit verified org identity, bounded inventory and optional scoped audit names,
-validated with synthetic mocked responses only. There are no source acquisition,
-rendering, or vault-writing CLI commands yet.
+validated with synthetic mocked responses only.
+
+Initial build connects these accepted primitives; live orchestration is tested
+only with mocks. Explicit live executable and neutral directory are required;
+there is no auth/executable discovery or Windows sf execution.
 
 For development, use Python 3.12+ and Poetry 2.4+ within Poetry 2.x:
 
@@ -42,11 +47,14 @@ Thread 09 adds internal [state validation and identity reconciliation](docs/SYNC
 bounded read-only explicit synthetic-vault/state inputs, strict saved baselines
 and unique moved-note path candidates. Thread 10 adds internal complete read-only
 change plans, publication preconditions and bounded redacted reports. Plans retain
-strict ownership, coverage and no-write checks; no public lifecycle command,
-adoption, state write or filesystem publication is exposed. Thread 10 is accepted
+strict ownership, coverage and no-write checks; these internal planners perform
+no publication or adoption themselves. Thread 12 connects them to initial build.
+
+Thread 10 is accepted
 and [#10](https://github.com/jeffshurtliff/obforce/issues/10) is closed after all 12
 exact-merge CI cells passed; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
+
 Thread 11 adds internal bounded [transaction/recovery primitives](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026),
 with explicit caller inputs, independent plan validation, kernel writer guard,
 same-filesystem staging, before-images, journaled note/state replacement and
@@ -54,10 +62,14 @@ conservative rollback/cleanup. Thread 11 is accepted, including recovery correct
 `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run `39676435834`,
 attempt 2, has all 12 cells and 24 independent installs passing; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026).
-There is no public init/build/sync/recover
-command or end-to-end lifecycle yet. Ambiguous crash evidence is retained for
-manual resolution. Hosted synthetic transaction results do not establish
-power-loss, hostile-race or Windows sf guarantees. Threads 12–17 and
+
+Thread 12 connects init/initial build/recovery; `sync` remains absent. Initial
+build requires an absent or completely empty destination and refuses repeats.
+Init/build dry runs and recovery preview create no artifacts. Explicit rollback
+and committed cleanup retain the accepted guards and journal schema 2. 
+Ambiguous crash evidence is retained for manual resolution. 
+Hosted synthetic transaction results do not establish
+power-loss, hostile-race or Windows sf guarantees. Threads 13–17 and
 Windows sf enhancement #18 remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,

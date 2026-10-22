@@ -1,0 +1,17 @@
+# Fictional offline configuration. Copy alongside the copied fictional project
+# in a new explicit workspace outside the application checkout; see QUICKSTART.md.
+schema_version = 1
+workspace_id = "fictional"
+vault = "./Knowledge"
+
+[source]
+mode = "local"
+project = "./Fictional Project"
+
+[layout]
+apex_classes = "Custom Code/Apex Classes"
+dashboards = "Dashboards"
+
+[options]
+include_namespaced = false
+include_audit_names = true

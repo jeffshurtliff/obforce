@@ -3,7 +3,8 @@
 Thread 03 implements internal read-only acquisition from an explicit Salesforce
 DX project. It returns the existing [normalized records](COVERAGE.md) and typed
 [errors](CONFIGURATION.md#errors-and-exits). The Python interface is internal;
-the production CLI still provides only help/version. Public build/refresh/live access and vault/state publication remain planned.
+Thread 12 connects it to public initial build; see the fictional
+[quickstart](QUICKSTART.md). Refresh remains planned.
 Thread 07 adds separate internal [candidate rendering](RENDERING.md), without
 changing this source or collecting offline relationships.
 

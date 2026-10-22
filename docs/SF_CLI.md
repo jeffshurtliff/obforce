@@ -169,3 +169,12 @@ Reviewed via documentation/source reads, without executing `sf`:
 These are observed official contracts, not a tested installed CLI/version pin.
 No real CLI or platform support claim follows from source inspection. Refresh
 contracts and obtain targeted authorization before any future live validation.
+
+Thread 12 public live initial build requires explicit `--config`, optional live-only
+`--org` override, and both absolute `--sf-executable`/`--sf-directory` options.
+The directory must be existing and neutral; no PATH/default-org/auth discovery is
+added. The accepted adapters verify actual org identity before graph/planning.
+Implementation and lifecycle tests use mocked process replies only. Recovery
+never calls this transport. Live previews may cause sf's own local state changes
+as described above; Obforce previews create no artifacts. Windows execution
+remains refused and enhancement #18 remains outside v0.1.0 and NOT STARTED.

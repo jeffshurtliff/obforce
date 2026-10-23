@@ -73,8 +73,12 @@ correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
 `39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
 see the [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
 [transaction contract](docs/SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Thread 12 is implemented locally pending acceptance; Threads 13–17 and
-enhancement #18 remain NOT STARTED.
+Thread 12 is accepted and complete at final correction `f833505`; #12 and #20
+are closed. Exact-commit run `39985255497`, attempt 1, passed all 12 cells and
+24 independent installs. See the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026)
+for retained local failures and native/live limits. Thread 13 is next eligible
+and remains NOT STARTED; Threads 14–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup
 

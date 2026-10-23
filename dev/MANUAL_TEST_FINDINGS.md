@@ -16,7 +16,7 @@ The findings are outlined in the sections below.
 - **Title**: HTML character references displayed literally in generated notes
 - **Categories**: Note Rendering; Templates; User Experience
 - **Proposed Release**: v0.1.0
-- **Status**: Delivered with passing exact-commit CI; maintainer confirmed quickstart readability on 23 October 2026
+- **Status**: Resolved and accepted — #20 closed as completed on 23 October 2026
 - **Impact**: Generated-note readability in Live Preview
 - **GitHub Issue**: [#20](https://github.com/jeffshurtliff/obforce/issues/20)
 - **Related Threads**: Thread 07 renderer; corrected in Thread 12 acceptance work for v0.1.0
@@ -94,3 +94,21 @@ directly in #12: use four spaces per engine-generated nested bullet level.
 See [the indentation contract](../docs/RENDERING.md#four-space-generated-list-indentation--thread-12).
 Human-authored spacing remains untouched; native Obsidian acceptance of that
 new spacing is pending. Thread 13 onward and enhancement #18 remain NOT STARTED.
+
+
+#### Accepted and closed — 23 October 2026
+
+The maintainer confirmed the character-readability and four-space nesting fixes
+and authorized completion/closure. #20 and parent Thread 12/#12 are completed.
+Final delivered correction f833505ee0e17c0f048abe3786918c324962fa36 passed all 12
+Linux/macOS/Windows Python 3.12–3.15 cells in run 39985255497 attempt 1: Linux
+1375 passed each; macOS 1373/2 skipped each; Windows 1359/16 skipped each. Every
+required check and all 24 independent installs passed. Manual Obsidian acceptance
+is maintainer-reported; no automated UI or exhaustive platform/view test is claimed.
+
+The preceding pending/local statements remain historical. Earlier local
+safety-refusal failures keep their original outcomes and unconfirmed cause;
+passing hosted CI does not erase them. See the
+[Thread 12 acceptance record](IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026).
+No remaining work for this finding in Thread 12. Thread 13 onward and enhancement
+#18 remain NOT STARTED.

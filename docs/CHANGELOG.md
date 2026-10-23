@@ -18,8 +18,11 @@ All notable changes to this project will be documented in this file, following
   process-death/concurrency/intervening-edit tests, and fresh installed console/
   module/recovery probes. Archive allowlist deliberately adds sync/engine.py.
   Accepted source/transport/state-wire/hash/UUID/coverage/renderer/journal-schema-2
-  contracts and Apache license stay unchanged; no dependency. Thread 12 remains
-  open pending acceptance; Thread 13 onward and enhancement #18 NOT STARTED.
+  contracts and Apache license stay unchanged; no dependency. Thread 12 is accepted
+  and complete at f833505; #12/#20 closed after exact-commit run 39985255497
+  attempt 1 passed all 12 cells/24 independent installs and maintainer rendering
+  acceptance. Prior failures/skips/local refusals remain historical. Thread 13
+  onward and enhancement #18 NOT STARTED. No release publication implied.
 
 - Internal bounded transaction writer/recovery primitives consuming explicit
   accepted planner inputs. Independently regenerate/compare complete candidates,
@@ -211,7 +214,8 @@ All notable changes to this project will be documented in this file, following
   No automatic vault rewrite, adoption, migration or public refresh. The maintainer
   confirmed the fictional quickstart readability correction; merge 8285aca passed
   all 12 hosted cells in run 39868649758, attempt 1. Historical failed runs remain
-  recorded; the subsequent four-space indentation correction awaits its own CI.
+  recorded; the subsequent four-space correction f833505 passed run 39985255497
+  attempt 1 in all 12 cells and was confirmed by the maintainer. #20 is completed.
 
 - Retain historical full descriptor change-time observations across transaction
   guards and recovery. On Windows, an identical in-place rewrite with restored

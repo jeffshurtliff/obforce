@@ -620,15 +620,19 @@ coarse timestamps, atomic snapshots or atomic multi-file replacement. Ambiguous
 crashes still require retained evidence/manual resolution.
 
 See the [acceptance and handoff](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026)
-for exact gates, history and the Thread 12 launch prompt. Thread 12 is next eligible
-only after a new request and remains NOT STARTED. Threads 13–17 and #18 remain
-NOT STARTED. No release/publication authorization follows.
+for exact gates, history and the historical Thread 12 launch prompt. At that
+acceptance Thread 12 was next eligible and NOT STARTED; the acceptance below
+supersedes that status. Threads 13–17 and #18 remain NOT STARTED. No release/
+publication authorization follows.
 
 ## Public initial setup and recovery (Thread 12)
 
 `cli.py` delegates only init, initial build and recovery to `sync/engine.py`.
-Thread 12 is a local review candidate, not maintainer acceptance or hosted/native
-qualification. [The recorded contract](../dev/IMPLEMENTATION_PLAN.md#thread-12-start-and-pre-implementation-contract--21-october-2026)
+Thread 12 is accepted and complete at `f833505`, with every required check and
+all 24 independent installs passing in exact-commit run `39985255497`, attempt 1.
+The maintainer confirmed the fictional quickstart and rendering corrections; see
+the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026)
+for retained local failures and native/live limits. [The recorded contract](../dev/IMPLEMENTATION_PLAN.md#thread-12-start-and-pre-implementation-contract--21-october-2026)
 preceded dependent implementation. Exact syntax/defaults are in
 [configuration](CONFIGURATION.md#public-initialization-and-initial-build-thread-12).
 

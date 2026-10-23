@@ -2,7 +2,10 @@
 
 This journey uses the repository's fictional Apex sample and no Salesforce CLI,
 authentication, network, Obsidian process or plugins. Public Thread 12 commands
-are implemented locally pending maintainer acceptance. Refresh is not implemented.
+are accepted and complete, including maintainer confirmation of character
+readability and four-space generated nesting. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026).
+Refresh is not implemented.
 Use an installed development package (`poetry install --with dev` from the checkout)
 and Python 3.12+. Package/dependency installation is separate from offline runtime.
 

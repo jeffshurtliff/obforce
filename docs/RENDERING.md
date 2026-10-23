@@ -244,7 +244,7 @@ correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
 `39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
 see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
 [transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Thread 12 is implemented locally pending acceptance; Threads 13–17 and
+Thread 12 is accepted and complete; #12/#20 are closed. Threads 13–17 and
 enhancement #18 remain NOT STARTED.
 No release is published.
 
@@ -289,8 +289,10 @@ attribute encoder. Known reference targets keep their separate strict path gates
 The [CommonMark reference rules](https://spec.commonmark.org/0.31.2/#entity-and-numeric-character-references)
 do not reinterpret decoded character references as Markdown syntax. Synthetic
 source snapshots and a local independent CommonMark parser verify ordinary text
-and hostile payloads. Actual Obsidian Live Preview/Reading UI review remains manual
-and unverified; no real vault or Obsidian is opened during correction validation.
+and hostile payloads. The maintainer subsequently confirmed the fictional
+quickstart's readability and nesting in Obsidian. This is manual acceptance, not
+automated execution or an exhaustive view/platform test; agent validation opened
+no real vault or Obsidian.
 
 Only the existing renderer-version fingerprint input advances (1 to 2). Source/
 graph hashes, hash algorithms, state/model/note/marker schemas and journal schema 2
@@ -322,5 +324,8 @@ vault; this does not add refresh, migration or automatic note rewriting.
 The maintainer confirmed the preceding MTF-1 character correction through the
 fictional quickstart on 23 October 2026. Its delivered merge `8285aca` passed all
 12 exact-commit hosted cells in run `39868649758`, attempt 1. Four-space rendering
-has separate local regression/installed-package evidence in the roadmap handoff;
-its hosted CI and native Obsidian review remain pending.
+was delivered at `f833505` and passed all 12 hosted cells and 24 independent
+installs in run `39985255497`, attempt 1. The maintainer tested and accepted the
+indentation; #12 and #20 are completed. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026)
+for the retained local safety-refusal failures and precise evidence limits.

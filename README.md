@@ -3,8 +3,8 @@ Create and maintain living documentation for your Salesforce org within an Obsid
 
 Under development: `0.1.0.dev0` now exposes explicit `init`, initial `build` and
 local `recover`, alongside help/version. Try the fictional offline
-[quickstart](docs/QUICKSTART.md). Thread 12 is locally implemented pending
-maintainer acceptance; refresh remains planned in the
+[quickstart](docs/QUICKSTART.md). Thread 12 is accepted and complete, including the rendering corrections;
+refresh remains planned in the
 [implementation roadmap](dev/IMPLEMENTATION_PLAN.md).
 
 Internal configuration and normalized-record validation are implemented with
@@ -63,7 +63,9 @@ conservative rollback/cleanup. Thread 11 is accepted, including recovery correct
 attempt 2, has all 12 cells and 24 independent installs passing; see the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026).
 
-Thread 12 connects init/initial build/recovery; `sync` remains absent. Initial
+Thread 12 init/initial build/recovery is accepted at `f833505`, with all 12 cells
+and 24 independent installs passing in run `39985255497`, attempt 1; see the
+[Thread 12 acceptance](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026). `sync` remains absent. Initial
 build requires an absent or completely empty destination and refuses repeats.
 Init/build dry runs and recovery preview create no artifacts. Explicit rollback
 and committed cleanup retain the accepted guards and journal schema 2. 

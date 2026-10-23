@@ -30,8 +30,11 @@ merge `2995f93` and final exact-merge run `39676435834`, attempt 2: all 12 cells
 and 24 independent installs passed. Issue #11 is closed as completed. Eleven cells
 retain successful attempt-1 logs; macOS 3.14 completed in attempt 2 after its earlier
 cancelled/no-runner/no-step attempt with unavailable log. Historical failed runs
-and skips remain recorded. Thread 12 is **implemented with locally verified Windows/MTF-1 corrections**,
-pending corrected hosted CI and maintainer acceptance;
+and skips remain recorded. Thread 12's delivered Windows/MTF-1 correction passed
+all 12 exact-merge hosted cells in run 39868649758; the maintainer confirmed the
+quickstart character-readability fix. Four-space nested-list rendering is implemented;
+focused/static/installed-artifact checks pass, but the full local suite has two
+unresolved safety refusals. #12 remains open pending final acceptance;
 Threads 13–17 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
@@ -817,7 +820,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 09 | State validation and identity reconciliation | 08 | C | [#9](https://github.com/jeffshurtliff/obforce/issues/9) | Accepted and complete; corrected 12/12 hosted cells passed; issue closed |
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
-| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Corrections locally verified; open pending corrected hosted CI/acceptance |
+| 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Prior correction CI verified; four-space fix prepared; full local gate unresolved |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
@@ -1724,7 +1727,10 @@ publication, and recovery no-op/dry-run behavior. Record native platform gaps.
 
 **Goal:** The first complete user journey from configuration to a managed vault.
 
-**Depends on:** 11 (accepted and closed). **Status:** Implemented and locally verified; #12 open pending acceptance.
+**Depends on:** 11 (accepted and closed). **Status:** Delivered Windows/MTF-1 correction
+has verified passing CI and maintainer quickstart confirmation; nested-list spacing
+correction implemented with focused/package checks passing, two unresolved full-suite
+safety refusals. #12 open pending acceptance.
 
 The prerequisite is accepted at correction `4aaeb0f` / merge `2995f93`, final
 run `39676435834` attempt 2. Recheck actual code and exact command evidence before
@@ -5023,3 +5029,113 @@ verified handoffs in [#12](https://github.com/jeffshurtliff/obforce/issues/12#is
 and [#20](https://github.com/jeffshurtliff/obforce/issues/20#issuecomment-6353049517).
 Current bodies/checklists retain pending corrected delivery/CI/manual acceptance.
 Both issues remain open with existing labels/assignee/milestone and native links.
+
+
+### Thread 12 nested-list correction start — 23 October 2026
+
+Maintainer reviewed/pushed the Windows/MTF-1 correction and confirmed the fictional
+quickstart's character readability fix. Clean main baseline is merge
+8285acae6e0351a01ac6d8c3ddb1ae89b50f7ba8, containing correction 117803f. Verified
+all 12 jobs, required steps and complete command logs in run 39868649758 attempt 1:
+Linux Python 3.12–3.15 each 1371 passed; macOS each 1369 passed/2 skipped; Windows
+each 1355 passed/16 skipped. Metadata/lock, Ruff lint/format, Bandit, fresh builds,
+strict Twine, exact 33/32 archive checks, both independent installs per cell and
+whitespace all passed. Historical failed run 39860217729 and earlier evidence
+remain unchanged. #12 remains open; native #11 (closed) -> #12 -> #13 preserved.
+No new prerequisite blocker; local/vendor_docs is absent.
+
+Before dependent implementation: address this small rendering defect directly
+in #12 without a duplicate issue. Use a single internal four-space Markdown-list
+indent convention for each engine-generated nesting level. Coverage warnings are
+the only current nested-list emitter; ordinary top-level bullets remain flush.
+Do not add a public configuration option, normalize YAML or human prose, rewrite
+template-authored text, or postprocess whole existing notes. Renderer version
+advances 2 to 3 through the existing fingerprint input; schemas, hash algorithms,
+UUID/source/graph/coverage/state/journal contracts and all filesystem guards stay
+unchanged. Test every coverage facet, multiple warnings, explicit override slots,
+installed offline builds and exact v2-baseline region-only preservation/conflicts.
+Public build still refuses existing vaults; no migration/refresh/mass rewrite.
+
+The maintainer's screenshot/quickstart report is manual Obsidian evidence for the
+prior readability correction. Automated correction tests use only synthetic
+inputs; actual four-space Obsidian UI acceptance remains pending. No real sf,
+Obsidian, auth, org or vault access. Leave changes unstaged/uncommitted and #12
+open; no CI rerun/closure/publication. Threads 13–17 and enhancement #18 remain
+NOT STARTED.
+
+
+### Thread 12 four-space nested-list handoff — 23 October 2026
+
+Implemented the requested formatting correction directly in #12; no separate
+issue is needed for this bounded first-build rendering defect. Every current
+engine-generated nested list (coverage warnings for inventory/audit/relationships)
+uses the shared four-space indent. Top-level bullets, user properties/prose and
+template-authored literals retain their spacing. Renderer fingerprint version 3
+records the output change; hash algorithms, UUIDs, source/graph/coverage/state/
+note/marker/journal schemas and filesystem safety guards remain unchanged.
+
+- [x] Verified clean delivered merge 8285acae6e0351a01ac6d8c3ddb1ae89b50f7ba8 /
+  correction 117803f and all 12 job/step/full command logs in run 39868649758,
+  attempt 1. Linux Python 3.12–3.15 each **1371 passed**; macOS each **1369 passed/
+  2 skipped**; Windows each **1355 passed/16 skipped**. Every metadata/lock, Ruff,
+  Bandit, fresh build, strict Twine, exact 33/32 archive, independent wheel/sdist
+  install and whitespace gate passed. All 24 independent installs passed. This
+  verifies the preceding Windows/MTF-1 correction, not the new indentation change.
+  Maintainer repeated the fictional quickstart and confirmed character readability.
+  Failed 39860217729 and earlier failures/skips/unavailable evidence remain historical.
+- [x] Four new regression cases: all facets/multiple escaped warnings, packaged and
+  override section slots, no artifacts/input mutation, LF/CRLF legacy-v2 state
+  round trips and generated-only patches preserving exact human spacing/YAML/
+  technical_debt*; human generated-region edits still refuse. Existing v1 evidence
+  and current no-warning snapshots remain unchanged. Installed planner state hash
+  deliberately updated for renderer version 3; its no-warning note hash is unchanged.
+- [x] Focused local macOS ARM64 / Python 3.14.7 / Poetry 2.4.2: **264 passed** across
+  renderer/model/preservation tests. Strict Poetry metadata/lock, Ruff lint/format
+  (91 files), Bandit and whitespace passed. Five existing security annotations
+  unchanged; no dependency/lock/CI/license change, weaker guard, new skip or retry
+  logic. All runtime inputs remain synthetic/offline.
+- [x] Fresh wheel/sdist build, strict Twine, exact **33-wheel/32-sdist** archive/
+  metadata/source/resource/license checks and both independent fresh installs
+  outside checkout/cwd passed. Actual installed console/module init/build/recover
+  and accepted lower-level probes ran with active runtime socket/process denial,
+  absent external tools and no cwd artifacts. Both installed build probes assert
+  the exact four-space output of all three offline warnings. Installation/build
+  downloads remain separate setup network use.
+- [ ] Full local suite gate: **2 failed / 1371 passed / 2 existing case/NFC
+  representability skips**, 92% combined coverage. Failures are
+  `test_guarded_setup_cleanup_does_not_remove_existing_parents` (blocked before
+  the injected publication-ready failure) and
+  `test_kernel_lock_releases_on_process_death` (resumed transaction returned
+  recovery_required during committed cleanup). Synthetic journal/transaction
+  evidence is retained. No original changed observation was captured; environmental
+  ancestor interference is only a possibility, not an established cause. One
+  instrumented diagnostic execution of those two tests passed and logged only
+  the intended competing-writer refusal. It does not erase the failed full run
+  or establish a fix. No repeated acceptance runs around these refusals, guard
+  changes or skipped tests. Full-suite acceptance remains unresolved.
+- [ ] New indentation delivery/exact-commit hosted matrix and native Obsidian
+  formatting review. Neither is inferred from the preceding green baseline.
+
+Retained development history: four intended pre-fix failures/101 deselected;
+first expanded focused run 2 failed/340 passed because the new test assumed
+unsorted warning order. Corrected that test to the accepted normalized sort; the
+production warning ordering did not change. All original full-suite failures,
+existing skips and diagnostic evidence are retained separately above.
+
+Fresh local artifact SHA-256:
+- Wheel: `f3fa05c60b17cd9b8efa0af8ae0d196f19d1ad9aaf1e827b7e0d24628cf0b595`.
+- Sdist: `3dc63458fad2d0674a1ec3cb7b1281a4f234ae68594ebc4880108bb25072b115`.
+
+Docs/rendering contract, changelog, manual finding confirmation and roadmap
+index/current thread/handoff agree. #12 stays OPEN; metadata and native
+#11 -> #12 -> #13 links preserved. No issue closure or acceptance is implied.
+All nine changed files remain unstaged/uncommitted on main. No stage/commit/push/
+PR/CI rerun/publication, real sf/Obsidian/auth/org/vault/settings access or
+subagents/other chats. No migration, public refresh, atomic snapshot/multi-file,
+hostile-race, power-loss, native ACL or Windows sf qualification claim.
+**Next eligible only after #12 acceptance and a new request: Thread 13 / #13,
+NOT STARTED. Threads 14–17 and enhancement #18 remain NOT STARTED.**
+
+Issue synchronization verified: [correction start](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6367125385)
+and [verified handoff with unresolved full-suite gate](https://github.com/jeffshurtliff/obforce/issues/12#issuecomment-6367301120).
+The current issue status/checklist matches this handoff; no new issue was created.

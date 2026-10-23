@@ -191,6 +191,12 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Use a shared four-space indentation convention for engine-generated nested
+  Markdown lists, including every coverage warning, to address the reported
+  Obsidian nesting issue. Renderer fingerprint version 3 records the presentation
+  change; validated v2 baseline patches preserve human spacing/properties. No
+  public setting, template-literal reformatting or existing-vault rewrite.
+
 - Corrected Thread 12 Windows alias validation to retain original lexical spelling
   even when the native resolver returns on-disk case. Bounded alias checks apply
   before accepting resolved config/source/template/vault paths; full historical
@@ -202,8 +208,10 @@ All notable changes to this project will be documented in this file, following
   Retained v1 fixtures verify saved-state compatibility and human-content
   preservation. Current output snapshots and installed hashes are deliberately
   updated; state/hash algorithms/schema/journal/source/transport are unchanged.
-  No automatic vault rewrite, adoption, migration or public refresh. Obsidian UI
-  acceptance and corrected hosted Windows CI remain pending.
+  No automatic vault rewrite, adoption, migration or public refresh. The maintainer
+  confirmed the fictional quickstart readability correction; merge 8285aca passed
+  all 12 hosted cells in run 39868649758, attempt 1. Historical failed runs remain
+  recorded; the subsequent four-space indentation correction awaits its own CI.
 
 - Retain historical full descriptor change-time observations across transaction
   guards and recovery. On Windows, an identical in-place rewrite with restored

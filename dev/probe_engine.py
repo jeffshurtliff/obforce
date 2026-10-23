@@ -4,7 +4,7 @@
 :Synopsis:          Probes installed initial lifecycle and recovery with active runtime guards
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     23 Oct 2026
 """
 
 from __future__ import annotations
@@ -135,6 +135,12 @@ def main() -> None:
                 assert '- api_version: "67.0"' in text and '- status: "Active"' in text
                 assert '- Source provenance: local-apex-xml-v1' in text
                 assert '&#95;' not in text and '&#34;' not in text and '&#45;' not in text
+                warnings = [line for line in text.splitlines() if '- Warning:' in line]
+                assert warnings == [
+                    '    - Warning: local_scope_only',
+                    '    - Warning: salesforce_audit_unavailable',
+                    '    - Warning: source_text_not_dependency_evidence',
+                ]
             else:
                 assert not list(vault.rglob('*.md')) and not (vault / '.obforce/state.json').exists()
             before = snapshot(root)

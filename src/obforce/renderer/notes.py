@@ -4,7 +4,7 @@
 :Synopsis:          Serializes deterministic Apex candidates without reading or writing notes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     23 Oct 2026
 """
 
 from __future__ import annotations
@@ -368,7 +368,7 @@ def render_generated(
             f'limit reached: {_scalar(record.limit_reached)}; API version: {markdown(record.api_version or "unknown")}'
         )
         for warning in record.warnings:
-            facets.append(f'  - Warning: {markdown(warning)}')
+            facets.append(f'{const.MARKDOWN_LIST_INDENT}- Warning: {markdown(warning)}')
     facets.extend(
         [
             '',

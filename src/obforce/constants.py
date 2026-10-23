@@ -4,7 +4,7 @@
 :Synopsis:          Defines versioned internal configuration and ownership contracts
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     23 Oct 2026
 """
 
 CONFIG_SCHEMA_VERSION = 1
@@ -12,7 +12,7 @@ MODEL_SCHEMA_VERSION = 1
 NOTE_SCHEMA_VERSION = 1
 STATE_SCHEMA_VERSION = 1
 MARKER_VERSION = 1
-RENDERER_VERSION = 2
+RENDERER_VERSION = 3
 MAX_CONFIG_BYTES = 65_536
 
 # Offline acquisition limits are refusal boundaries, never truncation controls.
@@ -85,6 +85,7 @@ MAX_GRAPH_EDGES = 20_000
 MAX_GRAPH_OBSERVATIONS = 40_000
 
 # Candidate rendering uses finite interpolation, never general template execution.
+MARKDOWN_LIST_INDENT = '    '
 TEMPLATE_SLOTS = {
     'apex_created.md.j2': (),
     'apex_generated.md.j2': ('metadata', 'coverage', 'references', 'referenced_by'),

@@ -300,3 +300,27 @@ generated-property/body baselines before replacing only the generated region;
 custom YAML/comments/prose/aliases/tags/technical_debt* remain user-owned. A human
 edit still blocks. Public build refuses repeats, and no migration/repair/whole-note
 rerender or public refresh capability is introduced.
+
+
+## Four-space generated list indentation — Thread 12
+
+Engine-generated Markdown uses four spaces per nested bullet level, consistently
+for every coverage warning under inventory, audit and relationships. Top-level
+bullets stay flush left. This is a shared internal rendering convention, not a
+new configuration option. Explicit template slots receive the same formatted
+sections; template-authored literals, YAML properties and human note regions
+retain their own spacing. No whole-document reindent pass runs.
+
+Renderer version 3 advances the existing fingerprint input from 2, making this
+presentation change visible to planning without changing source/graph hashes,
+hash algorithms, UUIDs or state/note/marker/journal schemas. Exact legacy-v2
+property and generated-region baselines still validate before a generated-only
+patch; intervening generated edits still refuse. Two-space human lists and all
+user properties remain unchanged. Public initial build still refuses an existing
+vault; this does not add refresh, migration or automatic note rewriting.
+
+The maintainer confirmed the preceding MTF-1 character correction through the
+fictional quickstart on 23 October 2026. Its delivered merge `8285aca` passed all
+12 exact-commit hosted cells in run `39868649758`, attempt 1. Four-space rendering
+has separate local regression/installed-package evidence in the roadmap handoff;
+its hosted CI and native Obsidian review remain pending.

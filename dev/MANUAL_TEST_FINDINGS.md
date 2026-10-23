@@ -16,7 +16,7 @@ The findings are outlined in the sections below.
 - **Title**: HTML character references displayed literally in generated notes
 - **Categories**: Note Rendering; Templates; User Experience
 - **Proposed Release**: v0.1.0
-- **Status**: Implemented locally in Thread 12 — pending corrected CI and maintainer UI acceptance
+- **Status**: Delivered with passing exact-commit CI; maintainer confirmed quickstart readability on 23 October 2026
 - **Impact**: Generated-note readability in Live Preview
 - **GitHub Issue**: [#20](https://github.com/jeffshurtliff/obforce/issues/20)
 - **Related Threads**: Thread 07 renderer; corrected in Thread 12 acceptance work for v0.1.0
@@ -80,3 +80,17 @@ Python 3.14.7; fresh wheel/sdist, strict Twine, exact archive checks and both
 independent guarded installs passed. Thirty-three local CommonMark payloads
 remained exact text without active injected markup. Corrected Windows CI and
 actual Obsidian UI review remain unavailable; these results do not close #20.
+
+
+#### Delivery and manual confirmation — 23 October 2026
+
+The maintainer reviewed/pushed the correction and repeated the fictional
+quickstart, confirming that MTF-1 is addressed. Merge 8285aca / run 39868649758
+attempt 1 passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells and required
+artifact gates; exact job/step/command logs were verified. The preceding local
+and pending-CI statements remain as historical evidence. No issue closure is
+implied. A separate small nested-list spacing correction is being handled
+directly in #12: use four spaces per engine-generated nested bullet level.
+See [the indentation contract](../docs/RENDERING.md#four-space-generated-list-indentation--thread-12).
+Human-authored spacing remains untouched; native Obsidian acceptance of that
+new spacing is pending. Thread 13 onward and enhancement #18 remain NOT STARTED.

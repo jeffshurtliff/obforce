@@ -2,8 +2,8 @@
 
 Read [AGENTS.md](AGENTS.md) and the [implementation roadmap](dev/IMPLEMENTATION_PLAN.md)
 before changing files. They define scope, safety contracts, and the current thread.
-The production CLI exposes explicit init, initial build and local recovery;
-refresh remains planned. See the fictional [quickstart](docs/QUICKSTART.md). The internal Python modules are not a stable public API.
+The production CLI exposes explicit init, initial build, local recovery and
+managed-vault sync. See [refresh](docs/REFRESH.md) for versioned private evidence and scope rules. See the fictional [quickstart](docs/QUICKSTART.md). The internal Python modules are not a stable public API.
 
 Thread 02 adds internal config/model validation; see [configuration](docs/CONFIGURATION.md),
 [coverage](docs/COVERAGE.md), and [note ownership](docs/NOTE_FORMAT.md) for frozen
@@ -77,8 +77,7 @@ Thread 12 is accepted and complete at final correction `f833505`; #12 and #20
 are closed. Exact-commit run `39985255497`, attempt 1, passed all 12 cells and
 24 independent installs. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026)
-for retained local failures and native/live limits. Thread 13 is next eligible
-and remains NOT STARTED; Threads 14–17 and enhancement #18 remain NOT STARTED.
+for retained local failures and native/live limits. Thread 13 is implemented locally pending acceptance; Threads 14–17 and enhancement #18 remain NOT STARTED.
 
 ## Development setup
 
@@ -190,7 +189,10 @@ Application runtime socket/process guards remain active; synthetic subprocess
 death/concurrent-writer tests run only in the authorized test suite. Thread 12
 adds `sync/engine.py` deliberately plus `dev/probe_engine.py`, public console/module
 initial journeys and guarded installed recovery selection probes. Fresh archives
-now contain 33 wheel / 32 sdist entries. Refresh remains absent. Bases assets
+now contain 34 wheel / 33 sdist entries after Thread 13 deliberately adds
+`sync/evidence.py`. Both independent installs exercise console/module sync previews,
+updates, human-content preservation and byte/mtime-stable no-op under the existing
+runtime guards. Lower-level legacy-state/recovery probes remain. Bases assets
 remain Thread 14. The checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and

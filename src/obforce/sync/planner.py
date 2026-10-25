@@ -4,7 +4,7 @@
 :Synopsis:          Plans complete bounded read-only changes without publication
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -32,6 +32,7 @@ from obforce.models import (
 )
 from obforce.renderer.notes import _bounded, _paths, note_paths, render_generated, render_new_note
 from obforce.renderer.templates import TemplateAsset
+from obforce.sync.evidence import InventoryScope, RefreshEvidence
 from obforce.sync.notes import parse_note, patch_note
 from obforce.sync.state import (
     ReadObservation,
@@ -397,6 +398,8 @@ def plan_changes(
     comparable_live_inventory: bool = False,
     initial: bool = False,
     allow_absent: bool = False,
+    persist_evidence: bool = False,
+    inventory_scope: InventoryScope | None = None,
     layout: Layout = _DEFAULT_LAYOUT,
     options: Options = _DEFAULT_OPTIONS,
     generated_template: TemplateAsset | None = None,
@@ -430,6 +433,26 @@ def plan_changes(
             allow_absent=allow_absent,
         )
         current = {component.key: component for component in components}
+        if type(persist_evidence) is not bool:
+            raise ModelError('Invalid persistence intent')
+        if result.state is not None and result.state.evidence is not None and not persist_evidence:
+            raise ConflictError('Persistent refresh requires evidence-aware planning')
+        if persist_evidence:
+            if comparable_live_inventory and inventory_scope is None:
+                raise ConflictError('Missing transitions require an explicit saved scope declaration')
+            if previous_graph is not None or retained_components:
+                raise ModelError('Persistent planning loads prior evidence from validated state')
+            if result.state is not None:
+                saved_evidence = result.state.evidence
+                if saved_evidence is None:
+                    raise ConflictError('Legacy state lacks required refresh evidence')
+                if saved_evidence.inventory_scope != inventory_scope:
+                    raise ConflictError('Inventory scope declaration changed')
+                previous_graph = saved_evidence.graph
+                retained_components = tuple(c for c in saved_evidence.components if c.key not in current)
+            _inputs(components, retained_components, coverage, graph, previous_graph, verified_org_id)
+        elif inventory_scope is not None:
+            raise ModelError('Scope declaration requires persistent evidence')
         existing = _prior(result, retained_components, current, previous_graph)
         all_components = {**current, **{component.key: component for component in retained_components}}
         fresh_paths = note_paths(tuple(component for key, component in current.items() if key not in existing), layout)
@@ -452,6 +475,8 @@ def plan_changes(
             comparable=comparable_live_inventory,
         )
         candidate = StateDocument(coverage.binding, coverage.selection, coverage, tuple(action.saved for action in actions))
+        if persist_evidence:
+            candidate = replace(candidate, evidence=RefreshEvidence(tuple(all_components.values()), refreshed, inventory_scope))
         wire = serialize_state(candidate)
         changed = result.state is None or bool(result.path_changes) or candidate.canonical() != result.state.canonical()
         if not changed:
@@ -459,9 +484,17 @@ def plan_changes(
         if sum(len(action.content) for action in actions) + len(wire) > const.MAX_PLAN_OUTPUT_BYTES:
             raise ModelError('Aggregate plan output exceeds bound')
         reader.finish()
+        outcome = coverage.outcome
+        if (
+            persist_evidence
+            and coverage.binding.mode == 'live'
+            and retained_components
+            and not _complete_absence(coverage, result, comparable_live_inventory)
+        ):
+            outcome = exit_code((outcome, ExitCode.INCOMPLETE))
         return ChangePlan(
             actions,
-            coverage.outcome,
+            outcome,
             False,
             coverage,
             state=candidate,

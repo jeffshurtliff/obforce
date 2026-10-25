@@ -4,7 +4,7 @@
 :Synopsis:          Validates private state and reconciles read-only synthetic vault observations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -39,6 +39,7 @@ from obforce.models import (
 )
 from obforce.renderer.notes import _path, _paths
 from obforce.sources.live import _id
+from obforce.sync.evidence import RefreshEvidence, parse_evidence
 from obforce.sync.notes import ParsedNote, parse_note
 
 
@@ -162,6 +163,7 @@ class StateDocument:
     selection: Selection
     coverage: Coverage
     notes: tuple[SavedNote, ...] = ()
+    evidence: RefreshEvidence | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.binding, SourceBinding) or not isinstance(self.selection, Selection):
@@ -191,11 +193,16 @@ class StateDocument:
         validate_identities((), (saved.note for saved in self.notes))
         _paths({saved.note.key: saved.note.path for saved in self.notes})
         object.__setattr__(self, 'notes', tuple(sorted(self.notes, key=lambda saved: saved.note.key.token)))
+        if self.evidence is not None:
+            if not isinstance(self.evidence, RefreshEvidence):
+                raise ConflictError('Invalid private refresh evidence')
+            self.evidence.validate(self.coverage, self.notes, paths=False)
 
     def canonical(self) -> dict:
         """Serialize explicit scope separately from collection outcomes."""
         return {
-            'state_schema': const.STATE_SCHEMA_VERSION,
+            'state_schema': const.STATE_DOCUMENT_VERSION if self.evidence is not None else const.STATE_SCHEMA_VERSION,
+            **({'evidence': self.evidence.canonical()} if self.evidence is not None else {}),
             'binding': self.binding.canonical(),
             'selection': self.selection.canonical(),
             'scope_hash': self.selection.scope_hash(self.binding),
@@ -229,8 +236,14 @@ def _json_bounds(value: object) -> None:
             raise ConflictError('Unsupported state value type')
 
 
-def serialize_state(document: StateDocument) -> bytes:
-    """Return deterministic bounded UTF-8 bytes; never open or write a file."""
+def serialize_state(document: StateDocument, *, _validate_paths: bool = True) -> bytes:
+    """Return deterministic bounded UTF-8 bytes; never open or write a file.
+
+    The private path-check switch is only for bounding a reconciled in-memory
+    moved-note view after the original saved paths have validated. That view is
+    not publication authority: the planner rechecks the original graph at old
+    paths, renders against reconciled paths and serializes with full checks.
+    """
     if not isinstance(document, StateDocument):
         raise ModelError('Expected validated state document')
     if len(document.notes) > const.MAX_STATE_NOTES:
@@ -254,6 +267,10 @@ def serialize_state(document: StateDocument) -> bytes:
         if estimate > const.MAX_STATE_BYTES:
             raise ConflictError('State exceeds output byte bound')
         value['notes'].append(entry)
+    if document.evidence is not None:
+        document.evidence.validate(document.coverage, document.notes, paths=_validate_paths)
+        value['state_schema'] = const.STATE_DOCUMENT_VERSION
+        value['evidence'] = document.evidence.canonical()
     _json_bounds(value)
     chunks, size = [], 1
     encoder = json.JSONEncoder(ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)
@@ -353,15 +370,23 @@ def parse_state(raw: bytes) -> StateDocument:
         _lexical_depth(text)
         data = json.loads(text, object_pairs_hook=_pairs)
         _json_bounds(data)
-        data = _object(data, {'state_schema', 'binding', 'selection', 'scope_hash', 'coverage', 'notes'})
-        if type(data['state_schema']) is not int or data['state_schema'] != const.STATE_SCHEMA_VERSION:
+        if type(data) is not dict or type(data.get('state_schema')) is not int:
             raise ConflictError('Unsupported state schema')
+        version = data['state_schema']
+        if version not in (const.STATE_SCHEMA_VERSION, const.STATE_DOCUMENT_VERSION):
+            raise ConflictError('Unsupported state schema')
+        keys = {'state_schema', 'binding', 'selection', 'scope_hash', 'coverage', 'notes'}
+        data = _object(data, keys | ({'evidence'} if version == const.STATE_DOCUMENT_VERSION else set()))
         binding, selection = _binding(data['binding']), _selection(data['selection'])
         if data['scope_hash'] != selection.scope_hash(binding) or type(data['notes']) is not list:
             raise ConflictError('Invalid state scope evidence')
         if len(data['notes']) > const.MAX_STATE_NOTES:
             raise ConflictError('State exceeds note bound')
-        return StateDocument(binding, selection, _coverage(data['coverage']), tuple(_saved(x) for x in data['notes']))
+        evidence = parse_evidence(data['evidence'], binding, selection) if version == const.STATE_DOCUMENT_VERSION else None
+        result = StateDocument(binding, selection, _coverage(data['coverage']), tuple(_saved(x) for x in data['notes']), evidence)
+        if evidence is not None:
+            evidence.validate(result.coverage, result.notes)
+        return result
     except (ConfigError, ValueError, TypeError, KeyError, UnicodeError, RecursionError, binascii.Error):
         raise ConflictError('Invalid or unsupported private state') from None
 
@@ -700,7 +725,9 @@ def reconcile_vault(
             saved_notes.append(SavedNote(replace(note, path=location), saved.generated_region))
             paths[note.key] = location
         candidate = replace(document, notes=tuple(saved_notes))
-        serialize_state(candidate)  # Enforce the candidate output bound before returning it.
+        serialize_state(
+            candidate, _validate_paths=False
+        )  # Moved paths await graph invalidation. Enforce the candidate output bound before returning it.
         reader.finish()
         return Reconciliation(
             candidate,

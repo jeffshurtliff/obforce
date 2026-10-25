@@ -7,6 +7,33 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Thread 13 public `sync`/`--dry-run` for existing explicitly selected managed vaults.
+  New builds save bounded exact normalized component/graph evidence in private
+  state-document schema 2/evidence schema 1. NoteState schema 1, journal schema 2,
+  identities, hashes, renderer version 3 and full transaction/recovery guards remain.
+  Region/property-only patches preserve human YAML/prose/debt and unique moves;
+  affected incoming links update. Partial/offline absences retain facts/lifecycle;
+  live missing proposals require declared scope, explicit comparability attestation
+  and complete supported inventory. Legacy evidence-less sync refuses without
+  migration/adoption. No-op/previews preserve bytes/mtimes and create no artifacts.
+  Added synthetic lifecycle/tampering/process-death/concurrency tests and installed
+  console/module sync probes; archive allowlist deliberately adds sync/evidence.py.
+  No dependency/lock/config-schema change. Local implementation awaits acceptance;
+  no real org or new native/hosted support claim. Threads 14–17/#18 not started.
+
+- Design-only Thread 13 private persistent-evidence proposal following maintainer
+  authorization: embedded state-document schema 2/evidence schema 1, bounded exact
+  component/graph retention, existing transaction/recovery integration, legacy-vault
+  refusal and explicit comparable-scope attestation. Supersedes the earlier
+  transient-only recommendation; no format, flag or runtime behavior implemented.
+
+- Thread 13 pre-implementation evidence review and proposed command contract,
+  with explicit blockers for transient prior-graph/retained-fact handoff and
+  comparable accessible live inventory. Prerequisite #12 exact-commit CI and
+  current native dependencies were reverified. Public sync remains unimplemented;
+  no runtime, persisted format or safety contract changed. #13 remains open
+  pending the required design decision and eventual maintainer acceptance.
+
 - Thread 12 public noninteractive `init`, initial-only `build`, and local `recover`.
   Explicit source/config selection, config-relative roots, escaped/validated
   exclusive TOML creation, guarded absent-vault setup, genuinely write-free

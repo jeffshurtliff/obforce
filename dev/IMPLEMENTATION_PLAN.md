@@ -35,7 +35,12 @@ correction f833505 / exact-commit run 39985255497, attempt 1: all 12 hosted cell
 and 24 independent installs passed. Maintainer quickstart/readability/indentation
 acceptance is confirmed; #12 and #20 are closed as completed. Historical failures
 and local safety refusals retain their original outcomes.
-Threads 13–17 remain **NOT STARTED**.
+Thread 13 is **implemented and locally verified, pending maintainer acceptance**,
+following approval of all four
+persistent-evidence design decisions on 25 October 2026. The maintainer authorized private normalized
+fact/graph persistence and design-only format review, superseding the earlier
+transient-only restriction. See the [implementation handoff](#thread-13-implementation-and-local-handoff--25-october-2026).
+Threads 14–17 and enhancement #18 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -821,7 +826,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
-| 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Not started |
+| 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Implemented locally; 1436 passed/2 existing skips; acceptance pending; issue open |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
@@ -1788,7 +1793,12 @@ tree snapshots, clean installed package, and source-tree preservation.
 
 **Goal:** Trustworthy incremental writing that preserves knowledge over time.
 
-**Depends on:** 12 (accepted and closed). **Status:** NOT STARTED; next eligible under a new request.
+**Depends on:** 12 (accepted and closed). **Status:** Implemented and locally
+verified; #13 remains open pending delivery/hosted evidence and maintainer acceptance. See the
+[design review](THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md) and
+[handoff](#thread-13-implementation-and-local-handoff--25-october-2026).
+The approved private evidence format and public sync are implemented; no delivery
+or maintainer acceptance is implied by local checks.
 
 **GitHub issue:** [#13](https://github.com/jeffshurtliff/obforce/issues/13)
 
@@ -1818,7 +1828,10 @@ changes no managed bytes or modification times. Partial scans never retire notes
 scans, missing/reactivated classes, changed filters/org, no state churn, conflict
 batch refusal, and failures after some notes were published.
 
-**Copy-ready prompt (verified Thread 12 handoff — 23 October 2026):**
+**Historical launch prompt (verified Thread 12 handoff — 23 October 2026):**
+Its transient-only/no-persistence/private-format-freeze requirements are superseded
+by the maintainer's subsequent [persistent-evidence design authorization](#thread-13-persistent-evidence-design-review--23-october-2026).
+Retained here as history, not current permission to implement the new design.
 
 > Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/13 and prerequisite #12, following linked #11/#10 and accepted evidence as needed. Keep the existing #13 updated with start/progress, verified checklist and handoff evidence synchronized with dev/IMPLEMENTATION_PLAN.md. Leave #13 open pending maintainer acceptance; do not create duplicate tracking issues.
 >
@@ -5232,3 +5245,421 @@ Closure synchronization verified: [#12 acceptance/closure evidence](https://gith
 and [#20 resolution/closure evidence](https://github.com/jeffshurtliff/obforce/issues/20#issuecomment-6370191439).
 Both issues are closed as completed; original metadata and native dependency
 links are retained. #13 remains open and NOT STARTED, with its launch prompt above.
+
+### Thread 13 pre-implementation review and blocker — 23 October 2026
+
+**Historical checkpoint:** The later persistent-evidence authorization and
+[design review](#thread-13-persistent-evidence-design-review--23-october-2026)
+supersede this record's no-persistence restriction and transient-caller recommendation.
+Its code observations, validation evidence and then-current status remain unchanged.
+
+**Status:** Prerequisite/contract review started under the maintainer's Thread 13
+request; runtime implementation is **BLOCKED**, not accepted or complete. #13 stays
+open. The earlier acceptance records retain their historical NOT STARTED status.
+No runtime, test, dependency, lockfile, packaged resource or schema was changed.
+
+**Verified prerequisite:** Local HEAD and live main are
+`d870ceba1ada68e5095cdb68ae793288f3f574cd`; the existing feature branch is
+`feature/13-thread-13-public-refresh-and-missing-cmp-lifecycle`. The working tree
+was clean at review start. The intervening acceptance commit changes eight prose
+files only; source/tests/workflow/package metadata/lock/artifact checker match
+accepted `f833505ee0e17c0f048abe3786918c324962fa36`. Existing maintainer acceptance
+documentation is preserved. Read #13/#12 and linked #11/#10 acceptance records,
+root instructions and the requested source/coverage/render/preservation/safety/
+quickstart/manual-finding docs. No `local/vendor_docs/` directory is present.
+
+Re-read all 12 job/step/full command logs in
+[run 39985255497, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39985255497)
+and verified that exact SHA, standalone metadata/lock, Ruff lint/format, Bandit,
+pytest, fresh build, strict Twine, exact 33-wheel/32-sdist archive lists, two
+successful independent installs per cell, isolated TMPDIR/TEMP/TMP and whitespace.
+Linux Python 3.12–3.15 each passed 1375; macOS each passed 1373/2 skipped; Windows
+each passed 1359/16 skipped. All 24 installed probes passed. These are prerequisite
+hosted synthetic results, not new Thread 13 validation. Native reciprocal
+#10 -> #11 -> #12 -> #13 -> #14 links match the roadmap; #10/#11/#12 are closed,
+#13/#14 open. Existing labels/assignee/milestone/dependencies were not changed.
+
+**Command contract proposed before coding (unimplemented):**
+
+```sh
+obforce sync --config ./obforce.toml --dry-run
+obforce sync --config ./obforce.toml
+# Live configuration only; all process paths must be explicit and absolute:
+obforce sync --config ./live.toml --org fictional-sandbox --sf-executable /fictional/bin/sf --sf-directory /fictional/neutral
+```
+
+`python -m obforce` would have identical options. All invocations would be
+noninteractive, require `--config`, and use config-relative source/vault/template
+roots and invocation-relative config filenames, including literal paths with
+spaces. `--dry-run` would default false. No `--source`, mode/workspace override,
+default org, executable/config/auth/home discovery or new config key is proposed.
+Live-only `--org` could select an alias only after independent identity verification
+matches saved state. Live executable and existing disjoint neutral-directory
+requirements and Windows sf refusal remain unchanged; offline rejects live options.
+No live invocation is authorized by this contract or review.
+
+Sync would require an existing explicit safe managed vault and valid
+`.obforce/state.json`, `initial=False`, exact binding/Selection, strict note/property/
+region baselines, and no pending/unsafe transaction evidence. Missing/corrupt/
+unknown state or vanished/duplicate/ambiguous notes would refuse, never adopt or
+reconstruct. Initial build would retain absent/empty-only and repeat-build refusal.
+Public recovery would retain its existing independent preview/rollback/cleanup
+contract. No-op and previews would preserve bytes/mtimes and create no artifacts.
+
+The accepted internal caller inputs remain `TransactionInputs`: explicit absolute
+vault/state/excluded roots, current normalized Components and independent Coverage,
+current DependencyGraph, exact retained Components for absent tracked keys, explicit
+matching previous DependencyGraph, independently verified live org ID, explicit
+comparability attestation (default false), Layout/Options and loaded templates.
+These private in-memory records are supported internal inputs, not a stable public
+Python API or a new CLI transport. Public config currently supplies none of the
+retained/previous/comparability inputs. The example command shell above alone is
+therefore insufficient for the full requested lifecycle.
+
+| Inherited refusal bound | Maximum |
+| --- | --- |
+| Config / explicit public root | 64 KiB / 4,096 characters |
+| Current plus retained components / actions | 10,000 / 10,000 |
+| Each current/prior/refreshed graph | 20,000 edges / 40,000 observations |
+| Aggregate normalized source/graph input | 16 MiB |
+| State / each note / all candidate bytes plus state | 16 MiB / 1 MiB / 64 MiB |
+| Discovery entries / planner observations | 50,000 / 400,000 |
+| Changed transaction files, including state | 128 |
+| Before plus after bytes / created note parents | 32 MiB / 256 |
+| Journal bytes / depth / nodes / saved guards | 16 MiB / 20 / 300,000 / 50,000 |
+| Relative path characters / segments / UTF-8 segment bytes | 1,024 / 32 / 240 |
+| Detailed planner report / transaction report | 256 KiB / 1 KiB |
+
+All other accepted reader/parser/template/render/transport bounds and full guards
+would apply independently; overflow refuses without truncation or partial writes.
+A blocked candidate discards all publishable bytes/state; no subset can publish.
+Error/coverage precedence remains **3, 2, 1, 4, 0**: conflict/recovery, invalid
+usage/config/model, operational failure, completed requested-incomplete operation,
+complete/no-op. Required source failures cannot become successful partial scans;
+coverage 4 cannot hide a conflict. Offline by-design exclusions alone allow 0.
+
+**Concrete blockers, verified against code:**
+
+1. `planner._prior` requires a previous graph for every existing tracked note,
+   matching saved relationship coverage and every incident graph fingerprint at
+   saved paths (including pre-move paths). `StateDocument` stores only binding,
+   selection/scope, coverage and SavedNotes; NoteState has graph hashes, not edges,
+   endpoints, provenance or historical evidence. `engine.build` discards the
+   in-memory graph on return and exposes no caller handoff. Current graph input,
+   a new empty graph, hashes, generated Markdown and recovery before-images cannot
+   replace the required explicit previous graph. Even all-present unchanged
+   inventory does not remove this prerequisite.
+2. Every saved key absent from current input requires a retained normalized
+   Component with exactly the saved source hash. Saved properties/Markdown omit
+   source facts, availability, record IDs and provenance; they are preservation
+   baselines, not a lossless Component snapshot. Partial/offline absence also needs
+   these facts to preserve and re-render the tracked note. No accepted public
+   input or retained-fact handoff supplies them after a normal first build.
+3. `_complete_absence` additionally requires explicit comparable accessible-live-
+   inventory attestation. Same org/Selection/method/API-version and current
+   exhausted/no-limit/no-warning `live-apex-keyset-v1` are necessary but insufficient.
+   `collect_live` verifies Organization ID and query exhaustion, not unchanged
+   principal/permission/access scope between runs. Neither alias nor scope hash
+   proves that assertion. Default false is safe but cannot satisfy the requested
+   missing transition; setting true automatically would invent evidence. Offline,
+   partial, failed and changed-scope input must never mark a component missing.
+
+The accepted planner/writer are correctly refusing incomplete authority. Bypassing
+these gates, silently substituting the current graph, reconstructing from notes,
+persisting a graph/fact cache, changing state wire or adding auth/permission probes
+is not an authorized fix. No dependent implementation was coded.
+
+**Decision needed:** Recommend a design-only review of an explicit transient,
+caller-managed evidence handoff: how a first build returns its exact accepted
+graph/facts to an external caller, how that caller supplies the prior accepted
+evidence to each later invocation, how it retains the refreshed evidence across
+successful runs and interruptions, and how comparable accessible scope is explicitly
+attested without new Salesforce operations. No stdin/file format, public API,
+process broker or new command option is approved here. A caller must already possess
+valid evidence; old vaults cannot be backfilled from hashes/Markdown. This approach
+keeps Obforce graph persistence prohibited but changes the public workflow and
+needs explicit maintainer authorization before design/implementation. If ordinary
+independent CLI invocations must work without an external evidence custodian, a
+separate persistence/format scope decision would be required instead. No format
+or migration is proposed or implemented by this review.
+
+**Verified checklist and handoff:**
+
+- [x] Prerequisite code/delivery/logs, current issue metadata/native dependencies and
+  absence of vendor docs checked; all historical failures/skips retained.
+- [x] Proposed syntax/defaults, existing-vault/input requirements, finite bounds,
+  complete-batch refusal, precedence and concrete evidence blockers recorded
+  before dependent coding; maintainer decision remains required.
+- [x] Existing synthetic planner tests: **20 passed / 105 deselected**, local macOS
+  ARM64 / Python 3.14.7. Ran the retained-fact/prior-graph/source-binding refusal,
+  comparable-complete-live absence/reactivation and repeat-stable stale-edge cases
+  from `tests/unit/test_planner.py`. Runtime socket/Popen denial stayed active;
+  TMPDIR/TEMP/TMP shared a new isolated external temporary root. No cacheprovider,
+  new test, runtime guard change, retry or skip was added.
+- [x] Documentation links/anchors/fences/privacy/consistency and `git diff --check`
+  reviewed; current #13 body/checklist plus start/blocker/handoff evidence synchronized.
+- [ ] Public sync/dry-run implementation and multi-run public acceptance scenarios.
+- [ ] New installed sync wheel/sdist probes, full Thread 13 local gates and hosted
+  delivery evidence; no new distributable code exists to validate yet.
+- [ ] Maintainer acceptance. #13 remains OPEN; implementation tasks remain unchecked.
+
+Only documentation is changed, unstaged/uncommitted. No new full suite, build,
+Twine, independent install, CI execution/rerun, real sf/Obsidian/auth/credential/
+`.env`/org/metadata/vault/settings access, private upload, Git delivery, other-chat
+or subagent action. No new Windows sf/native ACL/power-loss/hostile-race/atomic
+snapshot or multi-file qualification is claimed. Retain failed run 39860217729,
+accepted prior correction run 39868649758, all older failures/skips/unavailable
+evidence, and the final correction's local 2-failed/1371-passed/2-skipped full run
+with its passing diagnostic and uncaptured original observation/cause.
+
+Next work remains **Thread 13 only after the evidence-contract decision**.
+Thread 14 is still blocked by #13; Threads 14–17 and enhancement #18 remain
+**NOT STARTED**.
+
+Issue synchronization: [start](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6370723723),
+[verified blocker and handoff](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6370815943)
+and current #13 body/checklist. The connector denied the authorized start comment
+with 403; authenticated `gh` completed the authorized updates. #13 remains open;
+metadata/native dependencies are preserved. This is an integration-permission
+limitation, not an application failure.
+
+### Thread 13 persistent-evidence design review — 23 October 2026
+
+**Maintainer decision:** Private persistence of the minimum normalized Component
+facts and relationship/graph evidence inside `.obforce` is authorized as product
+direction for normal independent build/sync invocations. This supersedes the earlier
+transient-caller/no-graph-persistence restriction. Necessary versioned private
+state/evidence changes may be proposed. **Current authorization is design only**;
+runtime implementation still requires review of the concrete proposal. This is
+not permission for real org/auth access, installs, Git delivery or publication.
+
+The [complete design proposal](THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md) recommends:
+
+1. Embed evidence in existing `.obforce/state.json`: private document schema 2 plus
+   evidence schema 1, preserving NoteState schema 1, UUIDs, source/graph/render hash
+   inputs, config/model/note/marker schemas and renderer version 3. Separate the
+   envelope-version constant from the existing NoteState version constant.
+2. Retain exact normalized facts for all tracked notes and the accepted refreshed
+   directed graph, including stale provenance/coverage and historical endpoints.
+   No raw responses, bodies, credentials, source paths or extra human content.
+   Validate component/source hashes and graph hashes at saved paths, exact keys,
+   identity/scope, duplicates, normalized shapes and all accepted safety baselines.
+3. New nested evidence ceiling 8 MiB within existing 16 MiB state and all independent
+   node/component/graph/planner/transaction bounds. Refuse overflow; do not evict
+   needed evidence, raise existing budgets or publish a subset.
+4. Build creates and sync refreshes state+evidence as one complete state candidate,
+   published last with notes under the existing recoverable writer. Journal schema
+   2 and full file guards stay; recovery semantics explicitly validate version-2
+   state evidence. Legacy schema-2 journals with version-1 state retain their own
+   recovery validation; journal schema 1 stays unsupported. No automatic format
+   migration or mixing old/new state versions in ordinary refresh transactions.
+5. Refuse sync/preview for evidence-less legacy, missing, corrupt or unknown state
+   without guesses, adoption, force/bootstrap or migration. Preserve the old vault
+   and existing recovery capability. New absent/empty destinations can be built;
+   no automatic human-content transfer/UUID continuity is promised for them.
+6. Optional immutable live `--inventory-scope-id` declaration at build and explicit
+   matching ID plus `--attest-comparable-inventory` on each attested sync. Caller
+   attests continuity from the declared reference through retained observations;
+   token equality alone is insufficient. No new Salesforce auth/permission query.
+   Current complete supported inventory and matching org/Selection/method/version
+   remain mandatory. Without comparability, preserve absences/stale edges and
+   report at least 4 when tracked live components are absent; changed declared
+   identity/scope conflicts with 3. Offline never proves absence. Positive current
+   observations can reactivate. Precedence remains 3, 2, 1, 4, 0.
+
+**Remaining review decisions:** Approve the embedded version split/recovery
+compatibility, 8 MiB evidence cap, legacy-vault refusal and the proposed optional
+scope declaration/per-invocation attestation semantics. In particular, a live
+build without a scope declaration would allow refresh with preservation but could
+not silently enable missing detection later. Changing that reference would need
+a separate reviewed scope-baseline operation. No such operation is proposed now.
+
+**Checks/evidence:** Reviewed actual state/planner/graph/engine/writer/recovery
+contracts and the current #13 body. No vendor docs directory is present. Prose-only
+link/anchor/fence/consistency/privacy review and `git diff --check` apply; no new
+application test, synthetic executable fixture, build, install or hosted run is
+claimed for this design. The previous local 20-passed/105-deselected probe and
+exact-commit #12 matrix are historical evidence, not implementation of this design.
+All failed/partial/skipped/unavailable history remains intact, including the
+2-failed/1371-passed/2-skipped local full run and uncaptured original observation.
+
+The existing four uncommitted documentation files are preserved and updated; one
+new design Markdown file is added. Everything remains unstaged/uncommitted. #13
+stays OPEN with implementation tasks unchecked; metadata/native dependencies are
+preserved. No source/tests/dependencies/formats/runtime changed, no real sf/Obsidian/
+org/vault/credentials/settings accessed, no other chats/subagents or later work.
+**Next eligible: Thread 13 implementation only after design review and a new
+implementation authorization. Threads 14–17 and enhancement #18 NOT STARTED.**
+
+Issue synchronization: [persistent-evidence proposal and remaining decisions](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6373460103)
+posted to existing #13; current body/design checklist updated, implementation
+tasks unchecked and issue left open. Historical start/blocker/handoff comments
+remain available with their original evidence and then-current scope restrictions.
+
+
+### Thread 13 implementation and local handoff — 25 October 2026
+
+The maintainer explicitly approved all four persistent-evidence design decisions
+and authorized Thread 13 implementation. That approval supersedes the earlier
+no-persistence/private-format freeze and transient-caller proposal. The reviewed
+[design](THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md) is retained; normal independent
+build/sync commands now carry prior evidence through private state. **Implemented
+and locally verified; #13 OPEN pending delivery/hosted evidence and acceptance.**
+
+- [x] Rechecked root instructions, current uncommitted design/acceptance docs,
+  source/planner/state/graph/writer/recovery contracts, #13 and the unchanged runtime
+  baseline. Preserved all five pre-existing review files. Baseline remains d870ceb
+  on the existing feature branch; source/tests/workflow/package/lock at work start
+  still matched accepted f833505. Prior all-12-cell command-log inspection of run
+  39985255497 attempt 1 and native #10 -> #11 -> #12 -> #13 -> #14 links remain
+  prerequisite evidence; no new CI was run or inferred. Vendor docs remain absent.
+- [x] Public noninteractive `sync --config PATH [--dry-run]` with module parity,
+  explicit config-relative roots and accepted live executable/neutral-directory/org
+  rules. Existing safe managed state required; legacy evidence-less state, missing/
+  corrupt/unknown evidence, pending recovery, changed/ambiguous bindings/scopes,
+  generated edits, unsafe links/collisions and vanished/duplicate identities refuse.
+  Build retains absent/empty-only and repeat refusal. No adoption or migration.
+- [x] New `sync/evidence.py` and private state-document schema 2/evidence schema 1
+  persist exactly normalized tracked facts plus the accepted refreshed graph.
+  Strict exact wire/duplicate/type/limit/identity/source-hash/graph-hash validation;
+  8 MiB evidence ceiling within existing 16 MiB state and all other budgets.
+  NoteState schema 1, UUIDs, semantic hashes, config/model/note/marker schemas,
+  renderer version 3/four-space nesting and creation-only templates are retained.
+- [x] Planner reloads prior graph/absent facts from validated state for persistent
+  calls, preserves offline/partial absences and stale evidence, reactivates positive
+  same-source observations and reconciles unique moves/backlinks. Baselines always
+  gate generated-only patches; no human YAML/prose/debt normalization or inference.
+  Reconciliation validates original saved paths first; its transient moved view is
+  size-checked before graph invalidation, then full old-path graph gates and final
+  new-path serialization remain mandatory before publication. No planner or writer
+  authority is granted by that intermediate view.
+- [x] Optional immutable live build `--inventory-scope-id` plus matching explicit
+  sync ID and per-invocation `--attest-comparable-inventory`. No permission/auth
+  query. Missing requires complete supported exhausted/no-limit/no-warning live
+  inventory, verified same org/Selection/method/API reference and explicit access-
+  scope attestation. Null declarations cannot be initialized during sync; drift
+  conflicts. Unknown continuity preserves absent lifecycle and reports incomplete
+  evaluation. Outcomes keep precedence 3, 2, 1, 4, 0 and independent Coverage truth.
+- [x] Notes and complete state/evidence use the existing notes-first/state-last
+  recoverable publication. Journal schema 2/full file_guards/continuous owning-lock
+  reads/historical descriptor/birthtime/path/hash/absence/parent guards unchanged.
+  Recovery validates new state evidence, refuses mixed-format refreshes or changed
+  scope references and retains version-specific legacy state/schema-2 recovery.
+  Schema-1 journals remain unsupported retained evidence. Intervening edits and
+  ambiguous replacement windows refuse; no retry or weakened guard was added.
+- [x] 63 additional synthetic cases across lifecycle/process/entrypoint coverage:
+  human YAML/debt/prose, new/unchanged/moved/absent/missing/reactivated notes, source/
+  incoming-edge/path/generated-template/creation-template changes, complete-empty
+  versus partial/failed live scans, changed org/filters/scope, malformed/duplicate/
+  tampered/oversized evidence, conflict-batch refusal, actual worker death, competing
+  sync/recovery, rollback/committed cleanup and intervening edits. Complete tree,
+  source, bytes/mtimes, preview and stable repeated/no-op behavior covered; no real
+  metadata or credentials. Existing lower-level renderer-v1/v2 and legacy recovery
+  probes are retained. Two existing native case/NFC representability skips remain.
+- [x] Local macOS ARM64 / Python 3.14.7 / Poetry 2.4.2: **1436 passed / 2 existing
+  skips**, 92% combined coverage (engine 93%, evidence 85%, planner 90%, transactions
+  85%). Isolated external development-sibling TMPDIR/TEMP/TMP; active runtime socket/process denial in
+  synthetic probes. Strict metadata/lock, Ruff lint/format (95 Python files), Bandit
+  and whitespace passed. No dependency/lock change, new suppression or broad skip;
+  five existing Bandit source/transport annotations unchanged.
+- [x] Fresh wheel/sdist, strict Twine, exact **34-wheel/33-sdist** source/resource/
+  license/metadata archive checks and both independent fresh installs passed outside
+  checkout/cwd. The allowlist deliberately adds only `sync/evidence.py`. Both installs
+  exercise actual console/module init/build/recover and sync preview/update/human-
+  preservation/no-op plus accepted lower-level probes, under active runtime network/
+  process guards with absent external tools and no cwd artifacts. Setup dependency
+  downloads are distinct from application runtime, which stayed offline.
+- [x] README/contributor/quickstart/config/coverage/note/render/safety/refresh docs,
+  changelog, approved design and roadmap current status/handoff synchronized with
+  existing #13. Local docs links/anchors/fences/privacy/consistency checked.
+- [ ] New Thread 13 delivery, exact-commit hosted Linux/macOS/Windows/Python matrix
+  and maintainer acceptance. #13 stays open; no release/Git delivery is authorized.
+
+Fresh local artifact SHA-256:
+
+- Wheel: `06774cb6872204ca08b138f6dca1f8adc81495d6dc20b496a6fa5386111317f2`.
+- Sdist: `0440707200bff082563638e27067b7fb658cd04ff723998fb3bc42f2a0a47e82`.
+
+**Retained development evidence:** First focused regression pass 536 passed/2
+existing skips; first new lifecycle pass 33 passed; expanded process/lifecycle/
+entrypoint pass 67 passed. The first full Thread 13 suite recorded **3 failed /
+1431 passed / 2 skipped**, all three failures from old unit help assertions expecting
+sync to be “planned for later.” Updated those assertions to the implemented command
+contract; a full run then passed 1434/2 before two additional state-publication boundary
+cases were added; the final 1436/2 pass above includes those cases. Initial Ruff formatting/line-length
+findings were corrected without suppressions. First fresh build could not reach
+PyPI and produced no validated artifact; separate authorized setup network access
+then produced the fresh passing build/independent installs above. No empty-glob
+Twine or old dist directory was used as evidence. Historical failed run 39860217729,
+prior accepted correction 39868649758, all older failures/skips/unavailable results,
+and the previous 2-failed/1371-passed/2-skipped local run with uncaptured original
+observation/cause remain unchanged. No cause is invented for those earlier refusals.
+
+**Limits and Git state:** New hosted/Linux/Windows/other-local-Python evidence is
+unavailable; no CI rerun was requested. Mocked live orchestration and synthetic
+transactions do not qualify Windows sf, native ACL/directory-fsync durability,
+power-loss, hostile editors/final-syscall races, forged/coarse timestamps, atomic
+filesystem snapshots or atomic multi-file replacement. A valid no-op can still
+return 4 for requested incomplete coverage. Old evidence-less vault refresh refuses;
+no automatic migration/human-content transfer is promised. All work is unstaged/
+uncommitted on the existing feature branch. No stage/commit/push/PR/merge/tag/release/
+publication, real sf/Obsidian/auth/credentials/.env/org/real-vault/settings access,
+private upload, subagent or other-chat action. **Next eligible only after #13
+acceptance and a new request: Thread 14 / #14, explicitly NOT STARTED. Threads
+14–17 and enhancement #18 remain NOT STARTED.**
+
+Issue synchronization: [25 October implementation start](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6403052485),
+[verified local implementation handoff](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6403248493)
+and #13 current status/implementation checklist updated. #13 remains open pending
+acceptance; labels, assignee, milestone and native prerequisite/dependent links
+are preserved. Earlier design/blocker comments retain their historical outcomes.
+
+
+### Thread 13 final qualification follow-up — 25 October 2026
+
+Final source/artifact bytes are unchanged from the passing fresh build and both
+independent installs. Added two explicit tests for interruption after complete
+state/evidence publication but before commit, and refined the extra-fact corruption
+fixture to distinguish it from a duplicate. Final **uninstrumented** local full
+suite: **1436 passed / 2 existing skips in 83.05s**, 92% coverage, under an explicit
+isolated temporary root beside the checkout, outside the application and both
+system temporary trees. TMPDIR/TEMP/TMP point to that same test root; production
+code, all guards and race-refusal behavior are unchanged. Final exact archives
+were re-inspected against current source/resource/README/license bytes: 34/33;
+artifact hashes above remain valid.
+
+Retain these additional observations separately from the final pass:
+
+- The first expanded full run recorded **1 failed / 1435 passed / 2 skipped**.
+  A generated-template refresh returned conflict 3; its assertion did not capture
+  the original diagnostic. The synthetic fixture retained a **cleaning** journal
+  with four entries after commit. Subsequent read-only recovery preview validated
+  that evidence with outcome 0/recovery-required true. No destructive recovery or
+  retry of that retained transaction was used to manufacture a success. Its exact
+  original changed observation/cause remains uncaptured.
+- A focused run under the macOS system temporary ancestry recorded **2 failed /
+  6 passed / 38 deselected / 3 setup errors** with read-observation refusals.
+- A diagnostic full run under that ancestry recorded **9 failed / 1424 passed /
+  2 skipped / 3 setup errors**. Test-only post-refusal observations captured changed
+  mtime/ctime metadata on the system temporary ancestor in two guard failures. The
+  responsible actor is unknown; this is not proof of the earlier template-refresh
+  failure's cause. The three-second directory sampler happened to observe no
+  changes and is not evidence of continuing quiescence. No skipped guard, timestamp
+  rounding or production retry was introduced.
+- After moving qualification ancestry outside both system temp trees, an instrumented
+  focused run passed **3 cases / 46 deselected**, including both new state-publication
+  cases. The final full 1436/2 run above used no diagnostic monkeypatch/plugin.
+
+The previously passing 1434/2 full run and both fresh installed-artifact probes
+retain their outcomes; none of the later failures is erased by those passes.
+Final metadata/lock, Ruff lint/format, Bandit and whitespace remain passing; no
+packaged source or dependency changed after those checks. Local evidence still
+qualifies only synthetic macOS/Python 3.14.7 behavior; delivery/hosted/other-native
+and maintainer acceptance remain pending. #13 stays open and all work remains
+unstaged/uncommitted. Threads 14–17 and enhancement #18 NOT STARTED.
+
+
+Final issue synchronization: [expanded final qualification and preserved failure evidence](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6403419500)
+and current #13 body point to the final 1436/2 uninstrumented result. Implementation
+checkboxes remain checked for local completion; delivery/hosted evidence, ready-to-
+merge/release and maintainer acceptance remain unchecked. #13 stays open.

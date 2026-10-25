@@ -1,5 +1,11 @@
 # Note ownership and state contract
 
+Thread 13 [public refresh](REFRESH.md) now publishes generated-only patches and
+exact source/graph evidence through the accepted writer. Its state-document
+envelope is schema 2; NoteState remains schema 1 with unchanged UUID/property/body
+baselines. Legacy evidence-less public refresh refuses without adoption/migration.
+The dated internal increments below retain their original contract boundaries.
+
 Thread 02 freezes constants, normalized state records, and fingerprint inputs.
 Thread 07 [renders candidate strings](RENDERING.md); Thread 08 now parses and
 patches caller-supplied managed-note bytes internally as described below. State

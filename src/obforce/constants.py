@@ -4,13 +4,16 @@
 :Synopsis:          Defines versioned internal configuration and ownership contracts
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     23 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 CONFIG_SCHEMA_VERSION = 1
 MODEL_SCHEMA_VERSION = 1
 NOTE_SCHEMA_VERSION = 1
 STATE_SCHEMA_VERSION = 1
+STATE_DOCUMENT_VERSION = 2
+EVIDENCE_SCHEMA_VERSION = 1
+MAX_EVIDENCE_BYTES = 8_388_608
 MARKER_VERSION = 1
 RENDERER_VERSION = 3
 MAX_CONFIG_BYTES = 65_536

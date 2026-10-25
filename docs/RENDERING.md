@@ -1,5 +1,12 @@
 # Internal Apex candidate rendering
 
+Thread 13 [public refresh](REFRESH.md) uses this renderer only for generated
+candidates on existing notes, followed by exact baseline-preserving patches.
+Persisted private graph/fact evidence supplies historical inputs; renderer version
+3, four-space generated nesting and all existing fingerprint/escaping contracts
+remain. Creation templates still apply only to new notes; human prose/YAML is
+never regenerated or reindented.
+
 Thread 07 implements deterministic **candidate** rendering in
 `renderer/templates.py` and `renderer/notes.py`. This is an internal interface,
 not a stable public Python API. Thread 12 connects it to public initial build. The renderer reads no existing note and performs no patching,

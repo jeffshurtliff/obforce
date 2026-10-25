@@ -4,7 +4,7 @@
 :Synopsis:          Exposes explicit initialization, initial build and local recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ def main() -> None:
     """Create Salesforce documentation from an explicit source.
 
     Initialize a configuration, preview/build an empty destination, or recover
-    validated local evidence. Refresh is planned for later implementation threads.
+    validated local evidence, or refresh an existing managed vault.
     Commands are noninteractive; no config, vault or auth discovery occurs.
     """
     if click.get_current_context().invoked_subcommand is None:
@@ -70,14 +70,70 @@ def initialize(config_path: Path, source: str | None, org: str | None, vault: st
 @click.option(
     '--sf-directory', type=click.Path(path_type=Path), help='Explicit existing absolute neutral live working directory.'
 )
-def build(config_path: Path, dry_run: bool, org: str | None, sf_executable: Path | None, sf_directory: Path | None) -> None:
+@click.option('--inventory-scope-id', help='Optional immutable logical live inventory scope declaration.')
+def build(
+    config_path: Path,
+    dry_run: bool,
+    org: str | None,
+    sf_executable: Path | None,
+    sf_directory: Path | None,
+    inventory_scope_id: str | None,
+) -> None:
     """Build once into an absent or completely empty destination.
 
     Live previews perform read queries and sf may change its own local state.
     Windows sf execution remains refused. Offline builds need no external tool.
     """
     try:
-        result, summary = engine.build(config_path, preview=dry_run, org=org, executable=sf_executable, directory=sf_directory)
+        result, summary = engine.build(
+            config_path,
+            preview=dry_run,
+            org=org,
+            executable=sf_executable,
+            directory=sf_directory,
+            inventory_scope_id=inventory_scope_id,
+        )
+        _finish(result, summary)
+    except OSError as error:
+        _operational(error)
+
+
+@main.command()
+@click.option('--config', 'config_path', type=click.Path(path_type=Path), required=True)
+@click.option('--dry-run', is_flag=True, help='Validate the complete refresh without creating artifacts.')
+@click.option('--org', help='Override only a live target; actual org must match saved identity.')
+@click.option('--sf-executable', type=click.Path(path_type=Path), help='Explicit absolute trusted live CLI executable.')
+@click.option('--sf-directory', type=click.Path(path_type=Path), help='Explicit existing absolute neutral live directory.')
+@click.option('--inventory-scope-id', help='Must match the immutable live build declaration.')
+@click.option(
+    '--attest-comparable-inventory',
+    is_flag=True,
+    help='Attest accessible live inventory scope continuity from build through retained observations.',
+)
+def sync(
+    config_path: Path,
+    dry_run: bool,
+    org: str | None,
+    sf_executable: Path | None,
+    sf_directory: Path | None,
+    inventory_scope_id: str | None,
+    attest_comparable_inventory: bool,
+) -> None:
+    """Refresh existing managed notes while preserving human content.
+
+    Missing proposals require comparable complete supported live inventory.
+    Live previews can query sf and affect its own local state; Windows sf refuses.
+    """
+    try:
+        result, summary = engine.sync(
+            config_path,
+            preview=dry_run,
+            org=org,
+            executable=sf_executable,
+            directory=sf_directory,
+            inventory_scope_id=inventory_scope_id,
+            attest_comparable_inventory=attest_comparable_inventory,
+        )
         _finish(result, summary)
     except OSError as error:
         _operational(error)

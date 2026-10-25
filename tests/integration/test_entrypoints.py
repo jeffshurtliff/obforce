@@ -3,8 +3,8 @@
 :Module:            tests.integration.test_entrypoints
 :Synopsis:          Exercises installed entry points offline outside the checkout
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
-:Modified Date:     19 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import pytest
 
 
 @pytest.mark.parametrize('entrypoint', ['console', 'console-via-python', 'module'])
-@pytest.mark.parametrize('arguments', [[], ['--help'], ['--version'], ['build']])
+@pytest.mark.parametrize('arguments', [[], ['--help'], ['--version'], ['build'], ['sync']])
 def test_entrypoint_without_external_tools(entrypoint: str, arguments: list[str], tmp_path: Path) -> None:
     """Run with no external tools, block network calls, and leave the work directory untouched."""
     guard = tmp_path / 'guard'
@@ -47,12 +47,12 @@ def test_entrypoint_without_external_tools(entrypoint: str, arguments: list[str]
     result = subprocess.run(
         command + arguments, cwd=work, env=environment, capture_output=True, text=True, timeout=20, check=False
     )
-    assert result.returncode == (2 if arguments == ['build'] else 0), result.stderr
+    assert result.returncode == (2 if arguments in (['build'], ['sync']) else 0), result.stderr
     if arguments == ['--version']:
         assert result.stdout == f'obforce, version {version("obforce")}\n'
-    elif arguments == ['build']:
+    elif arguments in (['build'], ['sync']):
         assert 'Error:' in result.stderr
     else:
         assert '--version' in result.stdout
-        assert 'planned for later' in result.stdout
+        assert 'sync' in result.stdout
     assert list(work.iterdir()) == []

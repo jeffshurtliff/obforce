@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -70,6 +70,7 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'sync/reporting.py',
             'sync/transactions.py',
             'sync/engine.py',
+            'sync/evidence.py',
             'resources/templates/apex_created.md.j2',
             'resources/templates/apex_generated.md.j2',
         }
@@ -597,6 +598,27 @@ def _lifecycle(command: list[str], root: Path, work: Path, environment: dict[str
             raise ValueError('Installed recovery no-op changed output')
     if snapshot(source) != protected or (config.read_bytes(), config.stat().st_mtime_ns) != config_before:
         raise ValueError('Installed lifecycle modified source or configuration')
+    note = next(vault.rglob('*.md'))
+    note.write_bytes(note.read_bytes() + b'\nHuman installed context\n')
+    before = snapshot(root)
+    for flags in (['--dry-run'], []):
+        _run(command + ['sync', '--config', str(config)] + flags, work, environment)
+        if snapshot(root) != before:
+            raise ValueError('Installed no-op sync changed bytes/mtimes/tree')
+    metadata = source / 'package/classes/Alpha.cls-meta.xml'
+    metadata.write_text(metadata.read_text().replace('67.0', '68.0'), encoding='utf-8')
+    protected = snapshot(source)
+    before = snapshot(root)
+    _run(command + ['sync', '--config', str(config), '--dry-run'], work, environment)
+    if snapshot(root) != before:
+        raise ValueError('Installed sync preview wrote output')
+    _run(command + ['sync', '--config', str(config)], work, environment)
+    if b'Human installed context' not in note.read_bytes() or b'68.0' not in note.read_bytes():
+        raise ValueError('Installed sync did not preserve human content and update facts')
+    before = snapshot(root)
+    _run(command + ['sync', '--config', str(config)], work, environment)
+    if snapshot(root) != before or snapshot(source) != protected:
+        raise ValueError('Installed updated sync did not stabilize or changed source')
 
 
 def main() -> None:

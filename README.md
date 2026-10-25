@@ -2,9 +2,9 @@
 Create and maintain living documentation for your Salesforce org within an Obsidian vault.
 
 Under development: `0.1.0.dev0` now exposes explicit `init`, initial `build` and
-local `recover`, alongside help/version. Try the fictional offline
+local `recover` and managed-vault `sync`, alongside help/version. Try the fictional offline
 [quickstart](docs/QUICKSTART.md). Thread 12 is accepted and complete, including the rendering corrections;
-refresh remains planned in the
+Refresh is described in [the refresh guide](docs/REFRESH.md); later work remains in the
 [implementation roadmap](dev/IMPLEMENTATION_PLAN.md).
 
 Internal configuration and normalized-record validation are implemented with
@@ -65,13 +65,13 @@ attempt 2, has all 12 cells and 24 independent installs passing; see the
 
 Thread 12 init/initial build/recovery is accepted at `f833505`, with all 12 cells
 and 24 independent installs passing in run `39985255497`, attempt 1; see the
-[Thread 12 acceptance](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026). `sync` remains absent. Initial
+[Thread 12 acceptance](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026). Thread 13 now adds [public refresh](docs/REFRESH.md), pending maintainer acceptance. Initial
 build requires an absent or completely empty destination and refuses repeats.
 Init/build dry runs and recovery preview create no artifacts. Explicit rollback
 and committed cleanup retain the accepted guards and journal schema 2. 
 Ambiguous crash evidence is retained for manual resolution. 
 Hosted synthetic transaction results do not establish
-power-loss, hostile-race or Windows sf guarantees. Threads 13–17 and
+power-loss, hostile-race or Windows sf guarantees. Thread 13 awaits acceptance; Threads 14–17 and
 Windows sf enhancement #18 remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,

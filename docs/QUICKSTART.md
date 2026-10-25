@@ -5,7 +5,7 @@ authentication, network, Obsidian process or plugins. Public Thread 12 commands
 are accepted and complete, including maintainer confirmation of character
 readability and four-space generated nesting. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026).
-Refresh is not implemented.
+Thread 13 adds [refresh](REFRESH.md) for evidence-bearing managed vaults.
 Use an installed development package (`poetry install --with dev` from the checkout)
 and Python 3.12+. Package/dependency installation is separate from offline runtime.
 
@@ -39,11 +39,25 @@ dates, authoritative dependency edges or technical-debt assessment are invented.
 You can open the notes yourself; Obforce does not launch or configure Obsidian.
 User prose/properties, including every `technical_debt*` field, belong to you.
 
+After adding human context or moving a note uniquely within the vault, preview
+and refresh through the same explicit config:
+
+```sh
+obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml" --dry-run
+obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml"
+```
+
+With unchanged source/graph/templates, these operations preserve exact note and
+state bytes/mtimes, including human-only edits. New builds save private normalized
+refresh evidence inside `.obforce/state.json`; legacy vaults without it refuse
+refresh rather than guessing old facts. No source/Obsidian settings are changed.
+
+
 Build is **initial-only**. Repeating it returns conflict 3 without altering the
 vault. Any existing destination entry, including unrelated notes, `.obsidian` or
 managed history, refuses. Do not delete control files to bypass this check.
 Use a new explicitly selected destination for another fictional first build;
-Thread 13 refresh is NOT STARTED.
+Use `sync` to refresh this newly created managed vault.
 
 Recovery needs only the explicit config and local evidence:
 

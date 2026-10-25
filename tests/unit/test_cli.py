@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 :Module:            tests.unit.test_cli
-:Synopsis:          Verifies CLI discovery and rejection of unimplemented features
+:Synopsis:          Verifies CLI discovery and explicit required arguments
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ def test_discovery(arguments: list[str]) -> None:
     assert result.exit_code == 0
     assert '--help' in result.output
     assert '--version' in result.output
-    assert 'planned for later' in result.output
+    assert 'sync' in result.output and 'recover' in result.output
 
 
 def test_installed_version() -> None:
@@ -43,8 +43,8 @@ def test_module_import_does_not_run_cli(capsys: pytest.CaptureFixture[str]) -> N
 
 
 @pytest.mark.parametrize('argument', ['sync', '--org', '--source', '--unknown'])
-def test_unimplemented_operations_are_usage_errors(argument: str) -> None:
-    """Reject later capabilities with Click's usage-error result."""
+def test_missing_arguments_and_unknown_options_are_usage_errors(argument: str) -> None:
+    """Reject missing required selectors and unsupported top-level options."""
     result = CliRunner().invoke(main, [argument])
     assert result.exit_code == 2
     assert 'Error:' in result.output

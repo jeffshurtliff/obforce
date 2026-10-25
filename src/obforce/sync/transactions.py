@@ -4,7 +4,7 @@
 :Synopsis:          Provides bounded internal publication and conservative recovery primitives
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -27,6 +27,7 @@ from obforce.graph.dependencies import DependencyGraph
 from obforce.models import Component, Coverage, canonical_json
 from obforce.renderer.notes import GeneratedCandidate, _path
 from obforce.renderer.templates import TemplateAsset
+from obforce.sync.evidence import InventoryScope
 from obforce.sync.notes import parse_note, patch_note
 from obforce.sync.planner import ChangePlan, plan_changes
 from obforce.sync.state import (
@@ -110,7 +111,7 @@ class TransactionInputs:
     """Retain explicit transient planner inputs; never acquire sources or discover paths.
 
     The independently regenerated candidate and the supplied plan must agree.
-    Prior graph evidence remains in memory; nothing extends the accepted state wire.
+    Persistent callers reload their prior evidence from guarded version-two state.
     """
 
     vault: Path
@@ -124,6 +125,8 @@ class TransactionInputs:
     verified_org_id: str | None = None
     comparable_live_inventory: bool = False
     initial: bool = False
+    persist_evidence: bool = False
+    inventory_scope: InventoryScope | None = None
     layout: Layout = field(default_factory=Layout)
     options: Options = field(default_factory=Options)
     generated_template: TemplateAsset | None = None
@@ -921,6 +924,11 @@ def _semantics(journal: dict, content: list[dict[str, bytes]], vault: Path, read
     before = parse_state(before_raw) if before_raw is not None else None
     if before is not None and (before.binding != after.binding or before.selection != after.selection):
         raise ConflictError('Recovery state bindings differ')
+    if before is not None:
+        if (before.evidence is None) != (after.evidence is None):
+            raise ConflictError('Recovery cannot migrate state evidence')
+        if before.evidence is not None and before.evidence.inventory_scope != after.evidence.inventory_scope:
+            raise ConflictError('Recovery scope declaration changed')
     old = {s.note.obforce_id: s for s in before.notes} if before else {}
     new = {s.note.obforce_id: s for s in after.notes}
     if old.keys() - new.keys():

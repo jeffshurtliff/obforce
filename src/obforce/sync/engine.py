@@ -4,7 +4,7 @@
 :Synopsis:          Orchestrates explicit initialization, initial build and local recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     25 Oct 2026
 """
 
 from __future__ import annotations
@@ -21,16 +21,19 @@ from obforce import constants as const
 from obforce.config import Config, _resolve, parse_config, relative_path, select_source
 from obforce.errors import ConfigError, ConflictError, ExitCode, ModelError, OperationalError
 from obforce.graph.dependencies import DependencyGraph
-from obforce.models import Selection, SourceBinding
+from obforce.models import Coverage, Selection, SourceBinding, require_same_source
 from obforce.renderer.templates import load_template
 from obforce.sources import live, local, relationships
+from obforce.sync.evidence import InventoryScope
 from obforce.sync.planner import plan_changes
-from obforce.sync.state import _absolute, _Reader
+from obforce.sync.reporting import report_plan
+from obforce.sync.state import _absolute, _Reader, parse_state, reconcile_vault
 from obforce.sync.transactions import (
     TransactionInputs,
     TransactionResult,
     TransactionStatus,
     _contents,
+    _control,
     _Guard,
     _listing,
     _lstat,
@@ -206,16 +209,10 @@ def _cleanup_setup(created: list[Path], guard: _Guard) -> None:
         guard.change(path.rmdir, (path,))
 
 
-def build(
-    path: Path, *, preview: bool = False, org: str | None = None, executable: Path | None = None, directory: Path | None = None
-) -> tuple[TransactionResult, str]:
-    """Acquire explicit source facts and publish a first managed build only.
-
-    No existing vault is adopted, resumed or refreshed. Missing destinations are
-    planned read-only, then created under guards before independently replanning.
-    """
-    config, guard = _config(path)
-    existed = _empty(config.vault, guard)
+def _acquire(
+    config: Config, org: str | None, executable: Path | None, directory: Path | None, state_binding: SourceBinding | None = None
+):
+    """Reuse accepted acquisition with explicit selection and independently checked org identity."""
     selection = Selection(include_namespaced=config.options.include_namespaced)
     source = select_source(config, org=org)
     if source.mode == 'local':
@@ -242,10 +239,50 @@ def build(
             workspace_id=config.workspace_id,
             selection=selection,
             include_audit_names=config.options.include_audit_names,
+            state_binding=state_binding,
         )
         collected = relationships.collect_relationships(executable, directory=directory, target=source.org, inventory=inventory)
         graph = collected.graph
         coverage = replace(inventory.coverage, relationships=graph.coverage)
+    return inventory, coverage, graph
+
+
+def _scope(coverage: Coverage, identifier: str | None) -> InventoryScope | None:
+    if identifier is None:
+        return None
+    if coverage.binding.mode != 'live':
+        raise ConfigError('Offline operations do not accept live scope declarations')
+    try:
+        return InventoryScope(identifier, coverage.inventory.method, coverage.inventory.api_version)
+    except ConflictError:
+        raise ConfigError('Invalid live inventory scope declaration') from None
+
+
+def build(
+    path: Path,
+    *,
+    preview: bool = False,
+    org: str | None = None,
+    executable: Path | None = None,
+    directory: Path | None = None,
+    inventory_scope_id: str | None = None,
+) -> tuple[TransactionResult, str]:
+    """Acquire explicit source facts and publish a first managed build only.
+
+    No existing vault is adopted, resumed or refreshed. Missing destinations are
+    planned read-only, then created under guards before independently replanning.
+    """
+    config, guard = _config(path)
+    existed = _empty(config.vault, guard)
+    if inventory_scope_id is not None and config.source.mode != 'live':
+        raise ConfigError('Offline operations do not accept live scope declarations')
+    if inventory_scope_id is not None:
+        try:
+            InventoryScope(inventory_scope_id, const.LIVE_APEX_METHOD, None)
+        except ConflictError:
+            raise ConfigError('Invalid live inventory scope declaration') from None
+    inventory, coverage, graph = _acquire(config, org, executable, directory)
+    scope = _scope(coverage, inventory_scope_id)
     generated = load_template('apex_generated.md.j2', config.template_directory)
     creation = load_template('apex_created.md.j2', config.template_directory)
     inputs = TransactionInputs(
@@ -257,6 +294,8 @@ def build(
         _excluded(config),
         verified_org_id=coverage.binding.org_id,
         initial=True,
+        persist_evidence=True,
+        inventory_scope=scope,
         layout=config.layout,
         options=config.options,
         generated_template=generated,
@@ -308,6 +347,91 @@ def build(
     except (OperationalError, OSError):
         _cleanup_setup(created, guard)
         raise
+
+
+def sync(
+    path: Path,
+    *,
+    preview: bool = False,
+    org: str | None = None,
+    executable: Path | None = None,
+    directory: Path | None = None,
+    inventory_scope_id: str | None = None,
+    attest_comparable_inventory: bool = False,
+) -> tuple[TransactionResult, str]:
+    """Refresh an explicitly selected existing managed vault through complete guarded plans."""
+    config, config_guard = _config(path)
+    source = select_source(config, org=org)
+    if type(attest_comparable_inventory) is not bool:
+        raise ConfigError('Invalid inventory attestation')
+    if source.mode == 'local' and (inventory_scope_id is not None or attest_comparable_inventory):
+        raise ConfigError('Offline operations do not accept live scope options')
+    if attest_comparable_inventory and inventory_scope_id is None:
+        raise ConfigError('Inventory attestation requires an explicit scope declaration')
+    state_path = config.vault / '.obforce/state.json'
+    reader = _Reader()
+    reader.parents(state_path)
+    if reader.observe(state_path, missing=True) is None:
+        raise ConflictError('Existing managed state is required for refresh')
+    saved = parse_state(reader.read(state_path, const.MAX_STATE_BYTES))
+    if saved.evidence is None:
+        raise ConflictError('Legacy state lacks required refresh evidence; no automatic migration')
+    expected = SourceBinding(config.workspace_id, source.mode, saved.binding.org_id if source.mode == 'live' else None)
+    require_same_source(saved.binding, expected)
+    selection = Selection(include_namespaced=config.options.include_namespaced)
+    if saved.selection != selection:
+        raise ConflictError('Selected inventory scope changed')
+    declared = saved.evidence.inventory_scope
+    if inventory_scope_id is not None:
+        # Validate syntax separately; a valid but different declaration is an ownership conflict.
+        _scope(saved.coverage, inventory_scope_id)
+        if declared is None or inventory_scope_id != declared.scope_id:
+            raise ConflictError('Inventory scope declaration changed')
+    _control(config.vault, pending=False)
+    reconcile_vault(config.vault, state_path, saved.binding, selection, excluded_roots=_excluded(config))
+    reader.finish()
+    state_guard = _Guard(reader.preconditions(), reader.file_stamps)
+    config_guard.check()
+    inventory, coverage, graph = _acquire(config, org, executable, directory, saved.binding)
+    if declared is not None and (
+        declared.method != coverage.inventory.method or declared.api_version != coverage.inventory.api_version
+    ):
+        raise ConflictError('Inventory scope reference changed')
+    state_guard.check()
+    config_guard.check()
+    inputs = TransactionInputs(
+        config.vault,
+        state_path,
+        inventory.components,
+        coverage,
+        graph,
+        _excluded(config),
+        verified_org_id=coverage.binding.org_id,
+        comparable_live_inventory=attest_comparable_inventory,
+        persist_evidence=True,
+        inventory_scope=declared,
+        layout=config.layout,
+        options=config.options,
+        generated_template=load_template('apex_generated.md.j2', config.template_directory),
+    )
+    # Creation assets are irrelevant unless there are actually new components.
+    if set(c.key for c in inventory.components) - {n.note.key for n in saved.notes}:
+        inputs = replace(inputs, creation_template=load_template('apex_created.md.j2', config.template_directory))
+    plan = inputs.plan()
+    summary = report_plan(plan).text
+    if coverage.binding.mode == 'live' and set(c.key for c in saved.evidence.components) - set(
+        c.key for c in inventory.components
+    ):
+        summary += (
+            'Missing evaluation: comparable inventory attested; completeness gates apply.\n'
+            if attest_comparable_inventory
+            else 'Missing evaluation: unavailable; prior lifecycle preserved.\n'
+        )
+    if plan.blocked:
+        return TransactionResult(TransactionStatus.BLOCKED, plan.outcome), summary
+    state_guard.check()
+    config_guard.check()
+    return _public_result(publish_plan(plan, inputs, preview=preview)), summary
 
 
 def recover(path: Path, *, operation: str | None = None) -> TransactionResult:

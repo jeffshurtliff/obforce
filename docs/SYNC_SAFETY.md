@@ -694,3 +694,109 @@ automatic note removal, dashboard, backup or Git integration is exposed. No
 `.obsidian` mutation. Trusted private local filesystem roots remain required;
 native ACLs, Windows directory-fsync durability, power-loss and hostile editor/
 final-syscall races remain outside the evidence. No atomic multi-file claim.
+
+## Thread 13 pre-implementation blocker — 23 October 2026
+
+**Historical checkpoint:** The later maintainer authorization permits private
+evidence persistence to be designed. The transient-only restriction and missing
+permission below are superseded by the proposal at the end of this document;
+the actual prerequisite/code observations remain historical evidence.
+
+Prerequisite/contract review has started; public `sync` is still unimplemented.
+The [roadmap decision record](../dev/IMPLEMENTATION_PLAN.md#thread-13-pre-implementation-review-and-blocker--23-october-2026)
+records proposed syntax/defaults, finite inherited bounds, exact evidence and
+the decision required before dependent coding. #13 remains open; #12 is accepted.
+
+The accepted planner requires an explicit prior DependencyGraph matching saved
+coverage and per-note hashes at saved paths for every existing tracked note.
+Every absent tracked key also requires exact retained normalized Component facts
+matching its saved source hash, even when offline/partial absence must preserve
+the note. These are private transient inputs. Accepted state stores hashes and
+preservation baselines, not lossless source/graph snapshots. Initial build exposes
+no evidence handoff to a later caller. Current graph, hashes, generated Markdown
+or recovery material cannot silently replace that authority.
+
+Missing proposals additionally require positive comparable accessible-live-scope
+attestation. Same verified org/Selection/method/version and current complete
+inventory alone do not prove unchanged access scope. The live adapter verifies
+org identity and bounded exhaustion; it does not verify permission continuity.
+Comparability stays false without explicit evidence. Partial/offline/failed or
+changed-scope input never proves absence, and platform relationship replies remain
+partial/unavailable even when clean and empty.
+
+There is no approved public transport for prior evidence or comparability. A
+caller-managed transient handoff would require a reviewed workflow decision;
+normal independent invocations without such a caller would require a separate
+persistence decision. Neither is authorized or implemented by this review. No
+state/NoteState/hash/UUID/renderer/journal format, guard, public command or runtime
+behavior changed. Complete-batch refusal and precedence **3, 2, 1, 4, 0** remain.
+Threads 14–17 and enhancement #18 remain **NOT STARTED**.
+
+## Thread 13 persistent-evidence proposal — 23 October 2026
+
+**Historical design review:** All four decisions below were approved on
+25 October 2026 and implementation authorized. The current implementation contract
+is summarized after this historical proposal and in [refresh](REFRESH.md).
+
+The maintainer authorized proposing private normalized facts/graph persistence
+for independent build/sync commands. The [concrete design](../dev/THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md)
+is design-only and pending review; no new format or sync command is implemented.
+
+Recommend state-document envelope schema 2 with embedded evidence schema 1 inside
+existing `.obforce/state.json`. Keep NoteState schema 1, note IDs, accepted source/
+graph/render hashes, ownership baselines and journal schema 2. Evidence would retain
+exact tracked Components and the refreshed directed graph needed to validate saved
+fingerprints, with an 8 MiB nested cap inside existing state/transaction budgets.
+Notes and complete state+evidence would publish/rollback together through the
+existing guarded protocol. Recovery semantic validation would explicitly support
+both new state and legacy state/journal combinations, without automatic migration.
+
+Legacy evidence-less vault sync would refuse, preserving notes and recovery.
+Optional build-time live scope declaration and explicit per-sync comparable-scope
+attestation would gate missing proposals alongside existing complete-inventory
+checks. When continuity cannot be established, absent lifecycle/facts and stale
+edges would survive with truthful incomplete reporting. This adds no auth or
+permission query. Full filesystem guards, write-free previews, stable no-op,
+strict generated conflicts and user ownership remain mandatory acceptance gates.
+See the [roadmap design handoff](../dev/IMPLEMENTATION_PLAN.md#thread-13-persistent-evidence-design-review--23-october-2026)
+for decisions still pending; later threads remain NOT STARTED.
+
+## Public refresh and embedded evidence (Thread 13)
+
+`sync` now composes accepted acquisition, graph refresh, preservation, planning,
+writer and recovery for an explicitly configured existing managed vault. New build
+state uses document schema 2 with evidence schema 1, retaining NoteState schema 1
+and journal schema 2. See [the refresh guide](REFRESH.md) for exact CLI syntax,
+scope flags, limits, legacy refusal, privacy and outcome rules. The maintainer's
+25 October approval supersedes the transient-only restriction above. No stable
+public Python API, adoption/migration, automatic note deletion or later capability
+is introduced.
+
+State contains exact normalized facts for all tracked components and the accepted
+refreshed graph; loading rederives source/graph fingerprints against saved paths
+and strictly validates wire data. The 8 MiB evidence cap sits inside the 16 MiB
+state ceiling and all existing budgets. Reconciliation first validates the saved
+graph at original paths. Its moved-note view can be bounded without requiring the
+old graph hashes to match new paths; it grants no publication authority. Planning
+still explicitly checks the prior graph against old paths, renders against the
+unique reconciled paths, then serializes the final state with complete graph/path
+checks. The writer independently replans from guarded state before publication.
+
+Notes and the complete state/evidence blob use the same notes-first/state-last
+recoverable protocol. No additional cache or post-publication evidence write
+exists. Recovery validates the embedded evidence on every available new-version
+state image and rejects mixed legacy/new state refreshes or changed scope
+declarations. Legacy state-schema-1 images inside valid journal-schema-2 transactions
+retain their own read/recovery semantics; this does not authorize public legacy
+refresh or a format upgrade. Journal schema 1 remains unsupported retained evidence.
+Full descriptor/path/hash/absence/birthtime/parent guards and continuous writer-lock
+ownership remain unchanged; uncertain edits retain recovery-required evidence.
+
+The optional immutable build-time live inventory scope declaration is separate
+from each sync's explicit comparability attestation. Missing proposals require all
+accepted completeness/source gates plus that declaration/attestation. Unknown
+continuity, partial input and offline input preserve absent components; changed
+declared identity/scope refuses. Lifecycle incompleteness contributes outcome 4
+without falsifying independent inventory coverage. No-op preserves exact note/state
+bytes and mtimes; dry-run creates no artifact. Actual local/hosted/native evidence
+and retained failures are in the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md).

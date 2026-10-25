@@ -1,5 +1,12 @@
 # Normalized identity and coverage
 
+Thread 13 [public refresh](REFRESH.md) loads exact private prior component/graph
+evidence from state-document schema 2 rather than reconstructing it from hashes.
+Missing evaluation additionally requires an immutable declared live scope and this
+invocation's explicit comparability attestation; verified org/Selection and current
+exhaustion alone cannot prove permission continuity. Independent coverage records,
+semantic hashes and source-key identity retain the contracts below.
+
 Thread 02 supplies immutable internal records, canonical serialization/hashing,
 and validation helpers. Thread 03 now implements the internal
 [offline Apex source](OFFLINE_SOURCE.md), using these unchanged contracts.

@@ -2,7 +2,10 @@
 
 Thread 02 implements an internal, read-only config loader and source selection.
 Public `init`, initial `build` and `recover` are implemented in Thread 12;
-`sync` remains planned. See the public command contract below and fictional
+Thread 13 adds [managed-vault sync](REFRESH.md) with private persistent evidence.
+The approved [design](../dev/THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md) records the
+state-version split, live scope declarations and per-invocation attestation.
+See the public command contract below and fictional
 [quickstart](QUICKSTART.md). The following config also documents internal validation.
 Internal Python interfaces are versioned implementation details, not a stable API.
 
@@ -166,7 +169,7 @@ vault/state/excluded roots and reads only validated local journal evidence. See
 
 ## Public initialization and initial build (Thread 12)
 
-The public commands now implement the first-build journey; refresh remains planned.
+Thread 12 implements the first-build journey. Thread 13 adds [refresh](REFRESH.md).
 All commands are noninteractive. `--config` is always required; there is no search
 of cwd, parents, home, environment, auth or existing vaults.
 
@@ -237,3 +240,19 @@ parent-name comparison used for resolved paths, with ordinal string comparison
 independent of native Path equality. This applies to config/source/template/vault
 roots and missing suffixes in init/build/recover, including previews. No retry,
 case normalization workaround, relaxed observation or new skip is added.
+
+
+## Public refresh and private evidence (Thread 13)
+
+`sync --config PATH [--dry-run]` requires existing managed state-document schema 2
+with evidence schema 1. No automatic schema-1 upgrade/adoption is offered. NoteState
+remains schema 1; journal schema 2 retains explicit legacy recovery support.
+No config schema/key changes are made.
+
+Live-only build accepts optional `--inventory-scope-id ID`. Sync accepts a matching
+ID and `--attest-comparable-inventory` for this invocation's continuity assertion.
+The attestation requires an explicit ID established at build; null declarations
+cannot be initialized later. Offline rejects both flags. Existing explicit live
+process paths/org verification rules apply. Missing transitions additionally need
+complete supported comparable inventory; unknown continuity preserves absence and
+reports incomplete evaluation. See [the full contract](REFRESH.md).

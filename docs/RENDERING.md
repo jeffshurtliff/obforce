@@ -86,6 +86,12 @@ unsafe roots/files and read failures do not fall back. There is no cwd search,
 metadata-based template discovery, Jinja filesystem loader, recursive scanning,
 include, import or inheritance. Other files in the root are never discovered.
 
+Save overrides as UTF-8 with LF line endings on every platform. Carriage returns
+(including CRLF), other unsupported control characters and reserved structure are
+refused without normalization or fallback. For a Python-created override, use
+`path.write_text(text, encoding='utf-8', newline='\n')`; checkout attributes do not
+control line endings of files created at runtime.
+
 Root ancestors and known files are checked with lstat; links/reparse points,
 special files and multiply linked template files are refused. Bounded reads
 compare pathname/descriptor identity, size and mtime and recheck parents. POSIX

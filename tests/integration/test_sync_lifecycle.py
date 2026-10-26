@@ -4,7 +4,7 @@
 :Synopsis:          Exercises independent synthetic refresh, evidence and preservation lifecycles
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -135,13 +135,41 @@ def test_independent_multi_run_offline_moves_debt_new_absent_templates_noop(loca
     assert tree(root) == before
     (templates / 'apex_generated.md.j2').write_text(
         '{{ metadata | section }}\n{{ coverage | section }}\n'
-        '{{ references | section }}\n{{ referenced_by | section }}\nExtra generated text\n'
+        '{{ references | section }}\n{{ referenced_by | section }}\nExtra generated text\n',
+        encoding='utf-8',
+        newline='\n',
     )
+    assert b'\r' not in (templates / 'apex_generated.md.j2').read_bytes()
     result = invoke('sync', '--config', config)
     assert result.exit_code == 4, (result.output, result.exception)
     assert b'Extra generated text' in moved.read_bytes() and b'Human context' in moved.read_bytes()
     before = tree(root)
     assert invoke('sync', '--config', config).exit_code == 4 and tree(root) == before
+
+
+@pytest.mark.parametrize('preview', [False, True])
+def test_crlf_generated_override_refuses_without_writes(local_vault, preview):
+    """Refuse Windows-style template bytes before publishing any pending change."""
+    root, source, config, vault = local_vault
+    note = vault / state(vault).notes[0].note.path
+    note.write_bytes(note.read_bytes() + b'\nHuman context remains unchanged.\n')
+    (source / 'package/classes/Alpha.cls-meta.xml').write_text(xml('68.0'))
+    templates = root / 'Templates'
+    templates.mkdir()
+    config.write_text(config.read_text() + '\n[templates]\ndirectory="./Templates"\n', encoding='utf-8', newline='\n')
+    template = templates / 'apex_generated.md.j2'
+    template.write_text(
+        '{{ metadata | section }}\n{{ coverage | section }}\n'
+        '{{ references | section }}\n{{ referenced_by | section }}\nExtra generated text\n',
+        encoding='utf-8',
+        newline='\r\n',
+    )
+    assert b'\r\n' in template.read_bytes()
+    before = tree(root)
+    result = invoke('sync', '--config', config, *(['--dry-run'] if preview else []))
+    assert result.exit_code == 2, (result.output, result.exception)
+    assert 'Template contains reserved or invalid structure' in result.output
+    assert tree(root) == before
 
 
 @pytest.mark.parametrize(

@@ -35,11 +35,14 @@ correction f833505 / exact-commit run 39985255497, attempt 1: all 12 hosted cell
 and 24 independent installs passed. Maintainer quickstart/readability/indentation
 acceptance is confirmed; #12 and #20 are closed as completed. Historical failures
 and local safety refusals retain their original outcomes.
-Thread 13 is **implemented and locally verified, pending maintainer acceptance**,
+Thread 13 is **implemented, with a locally verified Windows CI fixture correction; pending maintainer acceptance**,
 following approval of all four
 persistent-evidence design decisions on 25 October 2026. The maintainer authorized private normalized
 fact/graph persistence and design-only format review, superseding the earlier
 transient-only restriction. See the [implementation handoff](#thread-13-implementation-and-local-handoff--25-october-2026).
+Maintainer-delivered merge `df7df41` passed Linux/macOS; all four Windows cells
+failed the same runtime-created CRLF template fixture. See the
+[Windows investigation](#thread-13-windows-ci-correction--26-october-2026).
 Threads 14–17 and enhancement #18 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
@@ -826,7 +829,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 10 | Read-only change planner and conflict reports | 06, 07, 08, 09 | C | [#10](https://github.com/jeffshurtliff/obforce/issues/10) | Accepted and complete |
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
-| 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Implemented locally; 1436 passed/2 existing skips; acceptance pending; issue open |
+| 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Implemented; fixture correction locally verified 1438/2; corrected Windows CI and acceptance pending; issue open |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
@@ -1794,7 +1797,9 @@ tree snapshots, clean installed package, and source-tree preservation.
 **Goal:** Trustworthy incremental writing that preserves knowledge over time.
 
 **Depends on:** 12 (accepted and closed). **Status:** Implemented and locally
-verified; #13 remains open pending delivery/hosted evidence and maintainer acceptance. See the
+verified; delivered merge `df7df41` passed Linux/macOS but Windows CI failed the
+runtime-created template fixture. Correction locally verified (1438 passed/2 skips); #13 remains open
+pending corrected exact-commit hosted evidence and maintainer acceptance. See the
 [design review](THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md) and
 [handoff](#thread-13-implementation-and-local-handoff--25-october-2026).
 The approved private evidence format and public sync are implemented; no delivery
@@ -5663,3 +5668,77 @@ Final issue synchronization: [expanded final qualification and preserved failure
 and current #13 body point to the final 1436/2 uninstrumented result. Implementation
 checkboxes remain checked for local completion; delivery/hosted evidence, ready-to-
 merge/release and maintainer acceptance remain unchecked. #13 stays open.
+
+
+### Thread 13 Windows CI correction — 26 October 2026
+
+The maintainer reviewed and delivered implementation `d97a3f4` via merge
+`df7df41a64b04253d3dec0292e7e9c6db99f6dc7`. Exact-commit run
+[40235515146, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/40235515146)
+failed. All 12 job/command logs were inspected, including downstream outcomes:
+
+- Linux Python 3.12–3.15: **1438 passed each**. macOS Python 3.12–3.15:
+  **1436 passed / 2 skipped each**. Metadata/lock, Ruff lint/format, Bandit,
+  fresh build, strict Twine, exact 34/33 archives, both independent guarded
+  installs per cell (16 installs total) and whitespace passed in these eight cells.
+- Windows Python 3.12–3.15: **1 failed / 1421 passed / 16 skipped each**.
+  All four failures are the same `test_independent_multi_run_offline_moves_debt_new_absent_templates_noop`
+  generated-template assertion, invalid outcome 2 instead of incomplete outcome 4.
+  Metadata/lock, Ruff lint/format and Bandit passed. Fresh build, Twine, archive/
+  independent installs and whitespace were **skipped**, not qualified on Windows.
+
+Before correction, a local byte-level reproduction wrote the same valid generated
+template through explicit LF versus Windows CRLF text translation: LF was accepted;
+CRLF returned exactly `Template contains reserved or invalid structure`. The test
+used `Path.write_text()` with default newline translation, generating CRLF on
+Windows. Checkout `.gitattributes` cannot govern runtime-created files. The accepted
+validator intentionally rejects carriage returns and is unchanged.
+
+Correction: write the lifecycle template with explicit UTF-8/LF, assert exact LF
+bytes, and add actual-sync/dry-run CRLF refusal regressions with pending metadata
+and human edits. Verify entire synthetic source/vault/state/template/config trees
+remain byte/mtime-identical on refusal. Document the existing LF template contract.
+Local correction verification passed as recorded below. No distributable source/resources,
+dependencies, workflow, format, identity/ownership rule or filesystem guard changes.
+
+The working tree was clean at investigation start, on the maintainer's existing
+`fix/13-thread-13-fix-windows-ci-failures` branch. New agent changes remain unstaged/
+uncommitted. Issue/native dependencies reverified: #13 OPEN, prerequisite #12 CLOSED,
+dependent #14 OPEN; metadata retained. [Investigation start](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6419244263).
+All earlier failures/skips/unavailable observations remain historical, including
+the earlier template-refresh conflict 3 with uncaptured cause; this hosted invalid
+template outcome 2 is separate evidence. No CI rerun, Git delivery, real org/vault/
+credential access or publication. Threads 14–17 and enhancement #18 NOT STARTED.
+
+**Verified correction checklist and handoff:**
+
+- [x] Byte-level LF/CRLF reproduction before the correction; explicit UTF-8/LF
+  lifecycle override and actual-sync/dry-run CRLF refusal regression added.
+- [x] Focused lifecycle/template tests: **90 passed in 12.94s**.
+- [x] Full uninstrumented offline suite: **1438 passed / 2 existing skips in
+  83.65s**, 92% coverage, local macOS ARM64/Python 3.14.7/Poetry 2.4.2. TMPDIR,
+  TEMP and TMP share a fresh isolated synthetic root outside the checkout and
+  both system temp ancestries. All production guards remain active. The two
+  existing case/NFC representability skips are unchanged; no Windows skip added.
+- [x] `poetry check --lock --strict`, Ruff lint, Ruff format (95 files), Bandit
+  (no findings; five pre-existing nosec annotations), and `git diff --check` passed.
+  Local documentation link/anchor review: **56 checked, zero errors**.
+- [x] Diff confirms only one integration test file and three Markdown files
+  changed. Distributable code/resources, metadata/lock, README/license, artifact
+  allowlist/probes and CI workflow are unchanged. No new build/install was needed
+  for this test/documentation correction; the eight successful delivered-commit
+  hosted build/Twine/exact archive/16 independent-install results above remain
+  applicable to the unchanged package. Windows downstream gates remain skipped.
+- [ ] Corrected delivery and exact-commit Windows/full hosted matrix. No CI rerun
+  was invoked; local CRLF simulation is not native Windows qualification.
+- [ ] Maintainer acceptance; #13 stays OPEN. The failed run and all older evidence
+  retain their original outcomes. No stage/commit/push/PR/closure/publication.
+
+All four changed files remain unstaged/uncommitted on the maintainer's existing
+fix branch. No later-thread files or capabilities were changed. Next eligible
+thread only after #13 acceptance and a new request: #14, explicitly NOT STARTED;
+Threads 14–17 and enhancement #18 remain NOT STARTED.
+
+Windows correction issue synchronization: [verified correction and retained hosted evidence](https://github.com/jeffshurtliff/obforce/issues/13#issuecomment-6419343370).
+The existing #13 body/current status and verified checklist are synchronized with
+this handoff; corrected hosted evidence/acceptance remain pending and #13 OPEN.

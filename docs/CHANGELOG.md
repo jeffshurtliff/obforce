@@ -221,6 +221,11 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Thread 13 lifecycle test now writes its generated-template override as explicit
+  UTF-8/LF on Windows too. Added synthetic CRLF refusal checks for sync and dry-run
+  with unchanged vault/state/source/template snapshots. Template validation and
+  filesystem guards remain unchanged; corrected hosted Windows results pending.
+
 - Use a shared four-space indentation convention for engine-generated nested
   Markdown lists, including every coverage warning, to address the reported
   Obsidian nesting issue. Renderer fingerprint version 3 records the presentation

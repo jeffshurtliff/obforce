@@ -763,6 +763,14 @@ for decisions still pending; later threads remain NOT STARTED.
 
 ## Public refresh and embedded evidence (Thread 13)
 
+Thread 13 is accepted and #13 closed at correction `b43ed64` / merge `3f5e909`.
+Exact-merge run `40346586335`, attempt 1, passed all 12 hosted cells and
+24 independent installs; see the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026).
+Historical status statements above retain their original checkpoint meaning.
+Synthetic transactions do not qualify power-loss, native ACL/durability, hostile
+races, atomic multi-file publication or Windows sf execution.
+
 `sync` now composes accepted acquisition, graph refresh, preservation, planning,
 writer and recovery for an explicitly configured existing managed vault. New build
 state uses document schema 2 with evidence schema 1, retaining NoteState schema 1

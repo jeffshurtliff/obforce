@@ -2,7 +2,10 @@
 
 **Review date:** 23 October 2026. **Approval:** All four decisions approved
 25 October 2026; Thread 13 implementation authorized. The proposal below is retained
-as the reviewed design; implementation acceptance remains separate. The maintainer authorized proposing persistent normalized facts and
+as the reviewed design. Implementation was accepted on 26 October 2026 at correction
+`b43ed64` / merge `3f5e909`, exact-merge run `40346586335` attempt 1; see the
+[acceptance record](IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026).
+The maintainer authorized proposing persistent normalized facts and
 graph evidence inside the managed vault for ordinary independent CLI invocations.
 The 23 October design authorization superseded the transient-only requirement;
 the 25 October approval now also authorizes implementation of all four decisions.

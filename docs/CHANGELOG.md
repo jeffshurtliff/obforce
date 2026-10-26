@@ -18,8 +18,11 @@ All notable changes to this project will be documented in this file, following
   migration/adoption. No-op/previews preserve bytes/mtimes and create no artifacts.
   Added synthetic lifecycle/tampering/process-death/concurrency tests and installed
   console/module sync probes; archive allowlist deliberately adds sync/evidence.py.
-  No dependency/lock/config-schema change. Local implementation awaits acceptance;
-  no real org or new native/hosted support claim. Threads 14–17/#18 not started.
+  No dependency/lock/config-schema change. Accepted at correction b43ed64 / merge
+  3f5e909 after exact-merge run 40346586335 attempt 1 passed all 12 cells and
+  24 independent installs; #13 closed. Linux 1440 passed each, macOS 1438/2 each,
+  Windows 1424/16 each. Prior failures/skips and live/native limits remain;
+  no real org or Windows sf qualification. Threads 14–17/#18 not started.
 
 - Design-only Thread 13 private persistent-evidence proposal following maintainer
   authorization: embedded state-document schema 2/evidence schema 1, bounded exact
@@ -224,7 +227,9 @@ All notable changes to this project will be documented in this file, following
 - Thread 13 lifecycle test now writes its generated-template override as explicit
   UTF-8/LF on Windows too. Added synthetic CRLF refusal checks for sync and dry-run
   with unchanged vault/state/source/template snapshots. Template validation and
-  filesystem guards remain unchanged; corrected hosted Windows results pending.
+  filesystem guards remain unchanged. Corrected exact-merge run 40346586335,
+  attempt 1, passed all four Windows cells, including downstream package/install
+  gates; failed run 40235515146 remains historical evidence.
 
 - Use a shared four-space indentation convention for engine-generated nested
   Markdown lists, including every coverage warning, to address the reported

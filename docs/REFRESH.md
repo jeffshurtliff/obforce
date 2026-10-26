@@ -5,6 +5,13 @@ with private refresh evidence. Examples here are fictional. See the
 [quickstart](QUICKSTART.md) for a new offline build; real Salesforce operations
 still require separate authorization. Internal Python interfaces are not stable APIs.
 
+Thread 13 is accepted at correction `b43ed64` / merge `3f5e909`; #13 is closed.
+Exact-merge run `40346586335`, attempt 1, passed all 12 Linux/macOS/Windows ×
+Python 3.12–3.15 cells and 24 independent installs. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026)
+for counts, retained failures and native/live limits. No live org or Windows sf
+execution is qualified by these synthetic results.
+
 ```sh
 obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml" --dry-run
 obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml"

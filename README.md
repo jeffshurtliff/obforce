@@ -65,13 +65,16 @@ attempt 2, has all 12 cells and 24 independent installs passing; see the
 
 Thread 12 init/initial build/recovery is accepted at `f833505`, with all 12 cells
 and 24 independent installs passing in run `39985255497`, attempt 1; see the
-[Thread 12 acceptance](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026). Thread 13 now adds [public refresh](docs/REFRESH.md), pending maintainer acceptance. Initial
-build requires an absent or completely empty destination and refuses repeats.
+[Thread 12 acceptance](dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026). Thread 13 [public refresh](docs/REFRESH.md)
+is accepted at correction `b43ed64` / merge `3f5e909`; exact-merge run
+`40346586335`, attempt 1, passed all 12 cells and 24 independent installs. See the
+[Thread 13 acceptance](dev/IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026).
+Initial build requires an absent or completely empty destination and refuses repeats.
 Init/build dry runs and recovery preview create no artifacts. Explicit rollback
 and committed cleanup retain the accepted guards and journal schema 2. 
 Ambiguous crash evidence is retained for manual resolution. 
 Hosted synthetic transaction results do not establish
-power-loss, hostile-race or Windows sf guarantees. Thread 13 awaits acceptance; Threads 14–17 and
+power-loss, hostile-race or Windows sf guarantees. Threads 14–17 and
 Windows sf enhancement #18 remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,

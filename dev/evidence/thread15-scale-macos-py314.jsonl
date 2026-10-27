@@ -1,0 +1,16 @@
+{"environment": {"python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]", "system": "Darwin", "release": "27.0.0", "os_version": "Darwin Kernel Version 27.0.0: Tue Aug 11 21:02:57 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T8132", "machine": "arm64", "dependencies": {"obforce": "0.1.0.dev0", "click": "8.5.0", "jinja2": "3.1.6", "ruamel.yaml": "0.19.1", "defusedxml": "0.7.1"}}, "fixture": {"classes": 1000, "edges": 10000, "seed": 15}, "topology": "seeded permutation ring; successive forward offsets; no self edges", "memory_metric": "tracemalloc Python allocations; not total RSS", "runtime_guard": "socket/process audit denial"}
+{"stage": "offline_collection_normalization", "seconds": 2.479343249928206, "python_traced_current_bytes": 1751716, "python_traced_peak_bytes": 7067247, "python_traced_incremental_peak_bytes": 7067079}
+{"stage": "mocked_live_collection_normalization", "seconds": 0.4539918750524521, "python_traced_current_bytes": 2757802, "python_traced_peak_bytes": 3902421, "python_traced_incremental_peak_bytes": 2150705}
+{"mocked_acquisition_calls": {"identity": 1, "inventory": 6, "audit_dates": 5}}
+{"stage": "explicit_synthetic_graph", "seconds": 2.2199862499255687, "python_traced_current_bytes": 4393403, "python_traced_peak_bytes": 8427515, "python_traced_incremental_peak_bytes": 5669713}
+{"stage": "rendering_all_candidates", "seconds": 229.42629837500863, "python_traced_current_bytes": 4603838, "python_traced_peak_bytes": 5598091, "python_traced_incremental_peak_bytes": 1204664}
+{"rendered": {"notes": 1000, "bytes": 6855000, "sha256": "5d6f8dcca8e105a43ff3a32fae1adf48b44eb380d181af8b94c90d2e4768a7a5"}}
+{"planner_fixed_diagnostics": [{"type": "ConflictError", "reason": "State exceeds structural bound"}]}
+{"stage": "persistent_planning_attempt", "seconds": 255.37685637502, "python_traced_current_bytes": 4668241, "python_traced_peak_bytes": 49922605, "python_traced_incremental_peak_bytes": 45318979}
+{"planning": {"blocked": true, "outcome": 3, "diagnostic": "ownership_or_scope_conflict", "actions": 1, "state_bytes": 0}, "vault_absent": true}
+{"planner_fixed_diagnostics": []}
+{"stage": "persistent_planning_32_classes_320_edges", "seconds": 1.5447022919543087, "python_traced_current_bytes": 5972780, "python_traced_peak_bytes": 11931988, "python_traced_incremental_peak_bytes": 6953920}
+{"valid_small_plan": {"actions": 32, "changed_files": 34, "state_bytes": 506545}}
+{"stage": "mocked_fixed_relationship_budget", "seconds": 0.06836695899255574, "python_traced_current_bytes": 6112940, "python_traced_peak_bytes": 6490034, "python_traced_incremental_peak_bytes": 506112}
+{"relationship_collector": {"calls": 101, "edges": 0, "coverage": "partial", "warnings": ["collection_budget_exhausted", "exhaustion_unverifiable", "supported_type_coverage_unverified"]}}
+{"process_max_rss": 135184384, "unit": "bytes", "scope": "whole process high-water including fixture setup and tracemalloc; not per-stage"}

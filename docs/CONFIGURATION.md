@@ -279,3 +279,13 @@ blank `tech_debt_severity`/`tech_debt_status`, and blank `last_reviewed`.
 These human fields remain creation-only and are not backfilled on existing notes.
 Available audit timestamps additionally supply reserved UTC `sf_created` and
 `sf_last_modified` dates. Lifecycle stays in notes but leaves the default table.
+
+
+## Qualification of refusal diagnostics
+
+Readability checks for CLI path options are performed by the existing guarded
+engine/transport reads. Click converts native paths without echoing them in a
+preliminary unreadable-path error. A denied config read is operational 1 with
+fixed redacted text; missing/invalid config remains input 2 and ownership conflicts
+remain 3. This does not weaken filesystem checks or authorize a live operation.
+[Qualification](QUALIFICATION.md) records native versus injected evidence.

@@ -47,8 +47,10 @@ Thread 14 is **accepted and complete**, including Windows path correction
 12 cells and 24 independent installs; #14 is closed as completed. See the
 [acceptance record](#thread-14-acceptance-and-closure--27-october-2026) and
 [dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md). Native Obsidian preview
-was optional and remains unavailable, not an inferred pass. Thread 15 is next
-eligible but **NOT STARTED**; Threads 15–17 and enhancements #18/#19 remain **NOT STARTED**.
+was optional and remains unavailable, not an inferred pass. Thread 15 is
+**LOCALLY IMPLEMENTED**, under the 27 October authorization; #15 stays open
+for acceptance and separately authorized exact-commit hosted verification.
+Threads 16–17 and enhancements #18/#19 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -838,7 +840,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Accepted/closed; correction 6d08696 / merge cdf0e68 / run 40517073513 all 12 cells passed |
-| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
+| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Local candidate complete; hosted verification/acceptance pending; open |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
 | 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
 
@@ -1928,7 +1930,8 @@ consistency. Report separately whether a native app preview was actually done.
 
 **Goal:** Evidence for the supported platforms and realistic local operation.
 
-**Depends on:** 14. **Status:** Not started.
+**Depends on:** 14. **Status:** Local implementation/qualification candidate complete;
+new exact-commit hosted verification and maintainer acceptance pending. #15 stays open.
 
 Thread 14 is accepted/closed. The exact
 [Thread 15 launch prompt](#copy-ready-thread-15-launch-prompt) carries its final
@@ -6468,3 +6471,156 @@ Original labels/assignee/milestone and native #13 → #14 → #15 links remain;
 #13/#14 are closed, #15 is open with unchanged body and zero comments. All 11
 documentation files remain unstaged/uncommitted on the existing main checkout;
 no source/test/Git delivery or Thread 15 implementation was performed.
+
+
+### Thread 15 start and finite-bound review — 27 October 2026
+
+Thread 15 started (27 October 2026), scoped to offline lifecycle/safety/packaging qualification and reproducible synthetic scale measurement, with bounded defect fixes only.
+
+Verified #14 accepted/closed, native #14 -> #15 -> #16 dependencies, prerequisite code, and every job/command log in exact-merge cdf0e68 / run 40517073513 attempt 1: all 12 cells, exact 36/35 archives and 24 independent installs passed. Historical failed 40427329142, 40235515146 and all older failures/skips/unavailable observations remain; uncaptured causes remain uncaptured.
+
+Pre-implementation bound: 1,000 notes cannot fit the accepted 128 changed-file ceiling including dashboard/state. Measure acquisition/normalization, explicit synthetic graph, rendering and valid planning separately; verify write-free over-bound refusal and a separate within-bound lifecycle. No limit/time increase, batch splitting, public command/API or schema change. Local/native/mocked evidence stays separate from prerequisite hosted evidence; newly changed tests require separately authorized delivery/exact-commit hosted verification.
+
+#15 stays OPEN pending acceptance. Work remains unstaged/uncommitted. Threads 16–17 and enhancements #18/#19 remain NOT STARTED. No real sf/Obsidian/org/vault/auth/credentials access, runtime network, CI rerun, publication or delegation. Connector comment permission was unavailable (403); authenticated gh is the tracking fallback.
+
+
+### Thread 15 qualification progress — 27 October 2026
+
+[Start receipt](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6450689439)
+and [progress receipt](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6450932028).
+Connector mutation returned 403; authorized authenticated gh posted both records.
+Original labels/assignee/milestone/native dependencies remain unchanged.
+
+The [qualification record](THREAD_15_QUALIFICATION.md) records the finite-bound
+design, source-based cost audit, new synthetic harnesses/native availability,
+bounded CLI readability/privacy correction and retained development failures.
+Focused installed-wheel checks: 26 passed/1 explicit unavailable Windows junction
+skip, 82.77s. Full coverage runs and final artifacts/measurements remain in progress.
+No new exact-commit hosted evidence is claimed. #15 stays open pending acceptance;
+Threads 16–17 and enhancements #18/#19 remain NOT STARTED.
+
+
+### Thread 15 measured qualification checkpoint — 27 October 2026
+
+[Checkpoint receipt](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6451210021).
+The [complete qualification record](THREAD_15_QUALIFICATION.md) retains all nine
+exploratory full-matrix outcomes, three captured changing temporary ancestors,
+failed/partial installed checks, all development failures/skips and their exact
+evidence boundaries. None is relabeled by later success or assigned an uncaptured
+cause. No guard, timestamp field, bound or retry policy changed.
+
+Local macOS 27.0.1 ARM64/APFS/Python 3.14.7 full installed-wheel suite passed:
+1579 passed/3 skipped, 340.33s, 92% combined statement/branch coverage. All six
+fresh independent wheel/sdist installs passed on available Python 3.12.7,
+3.13.15 and 3.14.7, with exact unchanged 36/35 archive allowlists and active
+runtime guards. The final stronger native assertions passed 9/1 unavailable
+Windows junction skip on each interpreter. Remaining full runs are recorded in
+the final handoff below when complete.
+
+The [complete benchmark JSON](evidence/thread15-scale-macos-py314.jsonl) records
+1,000 classes/10,000 explicit synthetic edges, seed 15 and seven measured stages.
+Rendering 229.426298s/6,855,000 bytes; persistent planning 255.376856s, refused 3
+on the state structural bound without output. Separate valid 32-class/320-edge
+planning: 1.544702s, 34 changed files/506,545 state bytes; the installed 12-note
+lifecycle separately validates within-bound publication. Maximum traced Python
+allocation peak 49,922,605 bytes; whole-process RSS high-water 135,184,384 bytes,
+measured separately. Concurrent validation/host load and tracing limit timing
+interpretation; no throughput promise. Public 127/1,000-note offline publication
+refusals retain the 128-file ceiling with no output setup or batch splitting.
+
+#15 remains open pending acceptance and separately authorized exact-commit hosted
+verification. No new Linux/Windows/Python 3.15 or native Obsidian claim. Threads
+16–17 and enhancements #18/#19 remain NOT STARTED.
+
+
+### Thread 15 local qualification handoff — 27 October 2026
+
+**Scope delivered locally:** reproducible developer-only scale measurement,
+installed finite-bound/12-note lifecycle qualification, native path/object/mode
+and privacy/bound regressions, and the bounded Click readability correction.
+Only `cli.py` changes distributable runtime behavior: guarded engine/transport
+reads now supply redacted permission errors. Native Path conversion and all
+accepted state/ownership/coverage/transaction/recovery contracts remain.
+No schema/version/dependency/lock/license/budget or public command/API change.
+
+The [detailed record](THREAD_15_QUALIFICATION.md) contains the pre-implementation
+bounds, audit, all failed exploratory outcomes, measured stage table, archive
+hashes and support gaps. The [complete 16-record benchmark JSON](evidence/thread15-scale-macos-py314.jsonl)
+contains seven stages without truncation. The [user qualification guide](../docs/QUALIFICATION.md)
+explains reproduction, native/hosted/mocked distinctions and filesystem assumptions.
+
+| Available local native full suite | Result | Time | Coverage |
+| --- | --- | ---: | ---: |
+| macOS 27.0.1 ARM64/APFS/Python 3.12.7 | 1579 passed, 3 skipped | 852.78s | 92% statement/branch |
+| macOS 27.0.1 ARM64/APFS/Python 3.13.15 | 1579 passed, 3 skipped | 790.86s | 92% statement/branch |
+| macOS 27.0.1 ARM64/APFS/Python 3.14.7 | 1579 passed, 3 skipped | 340.33s | 92% statement/branch |
+
+All three commands exited 0 with explicit project coverage configuration,
+installed wheel code, external public synthetic tests/fixtures, separate temp
+roots and code/fixtures outside observed changing ancestry. Three skips per
+cell: existing case/NFC representation limits and unavailable native Windows
+junction execution. Final tighter native assertions separately passed 9/1 skip
+on each interpreter. Native ordinary POSIX mode denial is not ACL qualification.
+
+**Checks passed:** strict Poetry metadata/lock; Ruff lint/format; Bandit (five
+existing suppressions, no new findings); whitespace; fresh build/Twine; exact
+36-wheel/35-sdist source/resource/license/metadata allowlists; **six independent
+installs**, both artifacts on each available interpreter. Actual console/module
+relative/absolute space paths, malformed/oversized/unreadable config, redirected
+bounded/private output, init/build/sync/recover and accepted lower-level behavior
+ran with active application socket/process guards and no application cwd artifacts.
+Setup downloads are separate from application runtime. The current package bytes
+and README were rechecked against the final artifacts; no stale dist directory.
+
+**Scale:** seed 15, 1,000 classes/10,000 explicit synthetic directed edges. Every
+candidate rendered (6,855,000 bytes); large persistent planning refused 3 on the
+state structural bound with no output. Offline 127/1,000-note public build/preview
+refused 2 at unchanged transaction aggregate bounds before output setup. Separate
+32-class/320-edge planning fit 34 files/506,545 state bytes; actual 12-note
+lifecycle publication passed independently. No batch splitting or bound increase.
+Peak traced Python allocations 49,922,605 bytes; separate whole-process max RSS
+135,184,384 bytes. Timings/tracing/concurrent host load are documented observations,
+not throughput promises. Repeated full path-map/edge scans are identified; no
+validation/hash weakening or query-contract broadening was introduced.
+
+**Retained evidence and gaps:** all nine failed exploratory full runs and each
+captured/uncaptured observation remain in the detailed table; 40427329142,
+40235515146 and every older historical failure/skip/unavailable record remain.
+Original template-refresh conflict 3 and Thread 12's 2-failed/1371-passed/2-skipped
+causes stay uncaptured. Later passing runs and separate CRLF/path bugs do not
+explain them. No new exact-commit hosted/Linux/Windows/Python 3.15, native Windows
+junction/ACL/sf, Obsidian, power-loss, hostile-race or atomic multi-file evidence.
+Only observed APFS is named as local filesystem evidence; other filesystems are
+not inferred from runner labels. Windows sf remains refused.
+
+**Verified checklist:** scope/tests/isolation/flakiness review, local audit,
+synthetic measurements, applicable docs/changelog and installed checks complete.
+Full new hosted matrix and maintainer acceptance remain unchecked. #15 remains
+**OPEN**; existing labels/assignee/milestone/native dependencies are retained.
+All changes are unstaged/uncommitted on the existing checkout at base
+`35b103683c455fe9d2f3dadca19e49be6e341aa1`; no branch/stage/commit/push/PR/merge/tag/
+release/upload/publication/CI rerun. No real sf/Obsidian/auth/credentials/.env/org/
+vault/settings, system-policy/platform provisioning or delegation.
+
+**Next eligible after #15 acceptance: Thread 16, explicitly NOT STARTED.**
+Thread 17 and enhancements #18/#19 remain **NOT STARTED**. No later work began.
+
+
+### Thread 15 tracking receipt
+
+[Final public-safe handoff](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6451593585).
+#15's current body/status and verified checklist were read back unchanged from
+the intended update: **OPEN**, original five labels/assignee/v0.1.0 milestone,
+closed #14 prerequisite and open #16 dependent intact. Local work is complete;
+new hosted matrix/CI and ready-to-close/maintainer acceptance remain unchecked.
+No duplicate issue, closure, Git delivery, publication or later-thread action.
+
+
+Final local documentation/privacy/consistency review: **9 Markdown files / 179
+local links and anchors / 0 errors**, complete 16-record benchmark JSON, Ruff
+lint/format and whitespace passed. Git status confirms all **16 changed/new
+files remain unstaged/uncommitted**; no unrelated or staged file, Git delivery,
+CI rerun, closure, publication or later-thread action.
+
+Existing branch retained: `test/15-thread-15-platform-failure-and-scale-qualification`.
+No branch was created or renamed.

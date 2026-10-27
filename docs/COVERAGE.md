@@ -210,3 +210,16 @@ completed publication/preview. Identity ambiguity can stop before any write with
 4; conflict/recovery, invalid input and operational errors retain precedence
 3,2,1 over coverage. Public initial build never marks a component missing or
 reactivated. No graph snapshot is stored or reconstructed from saved hashes.
+
+
+## Synthetic scale evidence
+
+Thread 15 measures a seeded 1,000-class/10,000-edge graph separately from source
+collection and publication. Those edges are explicit synthetic inputs, labeled
+partial; no local source text or clean empty platform reply creates dependency
+facts. Mocked live inventory/audit acquisition is batched, while the fixed
+relationship collector retains its 101-query budget and partial/unavailable
+coverage. Its per-ID probes do not collect the complete synthetic graph.
+[Qualification](QUALIFICATION.md) reports elapsed time, the exact environment,
+Python traced allocations separately from whole-process RSS, refused bounds,
+and unavailable native/hosted cells. None is a throughput or service-level promise.

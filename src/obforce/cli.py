@@ -4,7 +4,7 @@
 :Synopsis:          Exposes explicit initialization, initial build and local recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     26 Oct 2026
+:Modified Date:     27 Oct 2026
 """
 
 from __future__ import annotations
@@ -16,6 +16,9 @@ import click
 from obforce.errors import OperationalError
 from obforce.sync import engine
 from obforce.sync.transactions import TransactionResult
+
+# Leave readability to the guarded engine/transport reads. Click's access check
+# echoes the input path and can mask a redacted operational failure as usage 2.
 
 
 @click.group(invoke_without_command=True, context_settings={'help_option_names': ['-h', '--help']})
@@ -67,7 +70,7 @@ def _operational(error: OSError) -> None:
 
 
 @main.command('init')
-@click.option('--config', 'config_path', type=click.Path(path_type=Path), required=True)
+@click.option('--config', 'config_path', type=click.Path(path_type=Path, readable=False), required=True)
 @click.option('--source', help='Offline project root, relative to the config parent or absolute.')
 @click.option('--org', help='Explicit live target; initialization never queries it.')
 @click.option('--vault', required=True, help='Destination root, relative to the config parent or absolute.')
@@ -82,12 +85,18 @@ def initialize(config_path: Path, source: str | None, org: str | None, vault: st
 
 
 @main.command()
-@click.option('--config', 'config_path', type=click.Path(path_type=Path), required=True)
+@click.option('--config', 'config_path', type=click.Path(path_type=Path, readable=False), required=True)
 @click.option('--dry-run', is_flag=True, help='Plan without config/vault/control/staging artifacts.')
 @click.option('--org', help='Override the target of a live config only; identity is independently verified.')
-@click.option('--sf-executable', type=click.Path(path_type=Path), help='Explicit absolute trusted live CLI executable.')
 @click.option(
-    '--sf-directory', type=click.Path(path_type=Path), help='Explicit existing absolute neutral live working directory.'
+    '--sf-executable',
+    type=click.Path(path_type=Path, readable=False),
+    help='Explicit absolute trusted live CLI executable.',
+)
+@click.option(
+    '--sf-directory',
+    type=click.Path(path_type=Path, readable=False),
+    help='Explicit existing absolute neutral live working directory.',
 )
 @click.option('--inventory-scope-id', help='Optional immutable logical live inventory scope declaration.')
 def build(
@@ -120,11 +129,15 @@ def build(
 
 
 @main.command()
-@click.option('--config', 'config_path', type=click.Path(path_type=Path), required=True)
+@click.option('--config', 'config_path', type=click.Path(path_type=Path, readable=False), required=True)
 @click.option('--dry-run', is_flag=True, help='Validate the complete refresh without creating artifacts.')
 @click.option('--org', help='Override only a live target; actual org must match saved identity.')
-@click.option('--sf-executable', type=click.Path(path_type=Path), help='Explicit absolute trusted live CLI executable.')
-@click.option('--sf-directory', type=click.Path(path_type=Path), help='Explicit existing absolute neutral live directory.')
+@click.option(
+    '--sf-executable', type=click.Path(path_type=Path, readable=False), help='Explicit absolute trusted live CLI executable.'
+)
+@click.option(
+    '--sf-directory', type=click.Path(path_type=Path, readable=False), help='Explicit existing absolute neutral live directory.'
+)
 @click.option('--inventory-scope-id', help='Must match the immutable live build declaration.')
 @click.option(
     '--attest-comparable-inventory',
@@ -163,7 +176,7 @@ def sync(
 
 
 @main.command()
-@click.option('--config', 'config_path', type=click.Path(path_type=Path), required=True)
+@click.option('--config', 'config_path', type=click.Path(path_type=Path, readable=False), required=True)
 @click.option('--dry-run', is_flag=True, help='Validate recovery evidence without writes (also the default).')
 @click.option('--rollback', is_flag=True, help='Explicitly roll back a validated precommit transaction.')
 @click.option('--cleanup', is_flag=True, help='Explicitly clean a validated committed transaction.')

@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Thread 15 synthetic platform/failure/scale qualification harnesses and installed
+  finite-bound/lifecycle probes, with explicit 1,000-class/10,000-edge topology,
+  stage timing/allocation metrics, actual publication refusal and native versus
+  mocked/skipped/unavailable evidence. No publication limit or schema change.
+  CI now reports skip reasons and runs for developer Python probe changes.
+  Local candidate only; #15 stays open for acceptance and new exact-commit hosted
+  verification remains pending. Threads 16–17 and enhancements #18/#19 are NOT STARTED.
+
 - Thread 14 protected native Apex Classes Base, packaged as a bounded literal asset
   and published with notes/state through the same planner/writer/recovery protocol.
   Exact dashboard-schema-1 path/hash/content ownership optionally extends
@@ -251,6 +259,11 @@ All notable changes to this project will be documented in this file, following
 - Contributor/security guidance and explicit foundation limitations.
 
 ### Fixed
+
+- CLI unreadable-path diagnostics defer to existing guarded engine/transport
+  reads, preserving redaction and operational errors instead of exposing explicit
+  paths through Click's preliminary readability check. Native path conversion and
+  all safety guards remain unchanged.
 
 - Thread 14 shared config resolver now accepts native unrooted Windows relative
   paths, including the CLI's normalized backslash spelling. Retains ambiguous

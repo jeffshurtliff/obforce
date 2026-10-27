@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     26 Oct 2026
+:Modified Date:     27 Oct 2026
 """
 
 from __future__ import annotations
@@ -572,17 +572,20 @@ def _lifecycle(command: list[str], root: Path, work: Path, environment: dict[str
     protected = snapshot(source)
     config = root / 'Config with spaces.toml'
     vault = root / 'New Parent/Vault'
-    args = ['init', '--config', str(config), '--source', source.name, '--vault', 'New Parent/Vault', '--workspace-id', 'demo']
+    selections = (str(config), os.path.relpath(config, work))
+    options = ['--source', source.name, '--vault', 'New Parent/Vault', '--workspace-id', 'demo']
     before = snapshot(root)
-    _run(command + args + ['--dry-run'], work, environment)
-    if snapshot(root) != before:
-        raise ValueError('Installed init preview wrote output')
-    _run(command + args, work, environment)
+    for selected in selections:
+        _run(command + ['init', '--config', selected] + options + ['--dry-run'], work, environment)
+        if snapshot(root) != before:
+            raise ValueError('Installed init preview wrote output')
+    _run(command + ['init', '--config', selections[1]] + options, work, environment)
     config_before = config.read_bytes(), config.stat().st_mtime_ns
     before = snapshot(root)
-    _run(command + ['build', '--config', str(config), '--dry-run'], work, environment)
-    if snapshot(root) != before or vault.exists():
-        raise ValueError('Installed missing-destination preview wrote output')
+    for selected in selections:
+        _run(command + ['build', '--config', selected, '--dry-run'], work, environment)
+        if snapshot(root) != before or vault.exists():
+            raise ValueError('Installed missing-destination preview wrote output')
     _run(command + ['build', '--config', str(config)], work, environment)
     asset = vault / 'Dashboards/Apex Classes.base'
     expected_asset = (Path(__file__).resolve().parents[1] / 'src/obforce/resources/bases/apex_classes.base').read_bytes()
@@ -600,19 +603,21 @@ def _lifecycle(command: list[str], root: Path, work: Path, environment: dict[str
     )
     if result.returncode != 3 or snapshot(root) != before:
         raise ValueError('Installed repeat-build refusal failed')
-    for flags in ([], ['--dry-run'], ['--cleanup']):
-        _run(command + ['recover', '--config', str(config)] + flags, work, environment)
-        if snapshot(root) != before:
-            raise ValueError('Installed recovery no-op changed output')
+    for selected in selections:
+        for flags in ([], ['--dry-run'], ['--cleanup']):
+            _run(command + ['recover', '--config', selected] + flags, work, environment)
+            if snapshot(root) != before:
+                raise ValueError('Installed recovery no-op changed output')
     if snapshot(source) != protected or (config.read_bytes(), config.stat().st_mtime_ns) != config_before:
         raise ValueError('Installed lifecycle modified source or configuration')
     note = next(vault.rglob('*.md'))
     note.write_bytes(note.read_bytes() + b'\nHuman installed context\n')
     before = snapshot(root)
-    for flags in (['--dry-run'], []):
-        _run(command + ['sync', '--config', str(config)] + flags, work, environment)
-        if snapshot(root) != before:
-            raise ValueError('Installed no-op sync changed bytes/mtimes/tree')
+    for selected in selections:
+        for flags in (['--dry-run'], []):
+            _run(command + ['sync', '--config', selected] + flags, work, environment)
+            if snapshot(root) != before:
+                raise ValueError('Installed no-op sync changed bytes/mtimes/tree')
     metadata = source / 'package/classes/Alpha.cls-meta.xml'
     metadata.write_text(metadata.read_text().replace('67.0', '68.0'), encoding='utf-8')
     protected = snapshot(source)

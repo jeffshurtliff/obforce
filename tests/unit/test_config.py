@@ -3,17 +3,18 @@
 :Module:            tests.unit.test_config
 :Synopsis:          Verifies explicit strict configuration and source selection offline
 :Created By:        Jeff Shurtliff
-:Last Modified:     Jeff Shurtliff
-:Modified Date:     19 Oct 2026
+:Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
+:Modified Date:     27 Oct 2026
 """
 
 from __future__ import annotations
 
 import builtins
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 import pytest
 
+from obforce import config as config_module
 from obforce.config import SourceSelection, load_config, relative_path, select_source
 from obforce.errors import ConfigError, OperationalError
 
@@ -24,6 +25,56 @@ vault = "./vault"
 mode = "local"
 project = "./project"
 """
+
+
+@pytest.fixture
+def windows_path_flavour(monkeypatch):
+    """Mock only native parsing/resolution dispatch, never Windows filesystem safety."""
+
+    class LexicalWindowsPath(PureWindowsPath):
+        def resolve(self):
+            # Retain lexical parts so the assertion proves dispatch to the native
+            # resolver. Actual resolution and guarded I/O remain host/CI checks.
+            return self
+
+    monkeypatch.setattr(config_module, 'Path', LexicalWindowsPath)
+    return LexicalWindowsPath
+
+
+@pytest.mark.parametrize(
+    'raw',
+    [
+        'Config with spaces.toml',
+        r'..\Fictional Workspace\Config with spaces.toml',
+        r'Team Space\Project',
+        'Team Space/Project',
+        r'.\Templates',
+        r'C:\Fictional Workspace\Config with spaces.toml',
+    ],
+)
+def test_windows_native_paths_reach_native_resolution(windows_path_flavour, raw):
+    """Keep native relative backslashes valid after the CLI's Path conversion."""
+    base = windows_path_flavour('C:/Fictional Caller')
+    assert config_module._resolve(raw, base) == base / raw
+
+
+@pytest.mark.parametrize('raw', [r'C:Config.toml', r'C:..\Config.toml', r'\rooted', '/rooted', r'\server'])
+def test_windows_drive_relative_or_root_relative_paths_still_refuse(windows_path_flavour, raw):
+    with pytest.raises(ConfigError, match='not native'):
+        config_module._resolve(raw, windows_path_flavour('C:/Fictional Caller'))
+
+
+@pytest.mark.parametrize('raw', [r'Folder\Config.toml', r'..\Config.toml', r'C:\Folder', r'C:Folder', r'\Folder'])
+def test_posix_foreign_windows_paths_still_refuse(monkeypatch, raw):
+    """Exercise POSIX refusal on every host without replacing global os.name."""
+
+    class LexicalPosixPath(PurePosixPath):
+        def resolve(self):
+            raise AssertionError('Foreign syntax reached resolution')
+
+    monkeypatch.setattr(config_module, 'Path', LexicalPosixPath)
+    with pytest.raises(ConfigError, match='not native'):
+        config_module._resolve(raw, LexicalPosixPath('/fictional'))
 
 
 def config_file(tmp_path: Path, text: str = CONFIG) -> Path:

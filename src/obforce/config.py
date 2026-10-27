@@ -4,7 +4,7 @@
 :Synopsis:          Loads explicit strict TOML configuration without filesystem writes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     27 Oct 2026
 """
 
 from __future__ import annotations
@@ -59,7 +59,10 @@ def _resolve(value: object, base: Path) -> Path:
     if raw.startswith('~') or '$' in raw or '%' in raw:
         raise ConfigError('Path expansion is unsupported; use a literal path')
     path = Path(raw)
-    if not path.is_absolute() and (PureWindowsPath(raw).drive or '\\' in raw):
+    windows = PureWindowsPath(raw)
+    # Native Windows relative separators are valid; a drive/root without a fully
+    # absolute path is ambiguous. POSIX must not reinterpret Windows separators.
+    if not path.is_absolute() and (windows.drive or windows.root or ('\\' in raw and isinstance(path, PurePosixPath))):
         raise ConfigError('Path is not native to this platform')
     try:
         return (base / path).resolve()

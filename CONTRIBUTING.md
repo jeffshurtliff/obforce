@@ -85,6 +85,10 @@ Thread 14 dashboard/CLI work is locally implemented/verified pending
 maintainer acceptance; Threads 15–17 and enhancement #18 remain NOT STARTED.
 MTF-2's current correction evidence is recorded separately in the roadmap;
 earlier candidate passes are historical. Native rendering still needs confirmation.
+The maintainer merged/pushed `40e0ffa`; run `40427329142` attempt 1 passed eight
+Linux/macOS cells but failed the relative-config cases in all four Windows cells.
+The focused resolver correction and remaining hosted gap are recorded in the
+Thread 14 roadmap; no Windows sf execution qualification follows from these tests.
 
 ## Development setup
 
@@ -205,6 +209,12 @@ install additionally runs `dev/probe_dashboard.py` with active runtime guards:
 resource bytes, Thread 13 asset addition, no-op/preview, human content, whole-batch
 conflict, asset rollback and committed cleanup. Native Obsidian preview remains
 unavailable. The checker never publishes or uploads artifacts.
+
+The Thread 14 Windows correction also exercises native relative and absolute
+config paths with spaces through both independently installed entry points:
+write-free init/build previews, relative init creation, and stable sync/recover.
+Pure Windows/POSIX path-flavour unit checks are mocked parsing evidence, separate
+from native Windows filesystem execution and exact-commit hosted CI results.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

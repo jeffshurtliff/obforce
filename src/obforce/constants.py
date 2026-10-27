@@ -4,7 +4,7 @@
 :Synopsis:          Defines versioned internal configuration and ownership contracts
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 CONFIG_SCHEMA_VERSION = 1
@@ -15,7 +15,7 @@ STATE_DOCUMENT_VERSION = 2
 EVIDENCE_SCHEMA_VERSION = 1
 MAX_EVIDENCE_BYTES = 8_388_608
 MARKER_VERSION = 1
-RENDERER_VERSION = 3
+RENDERER_VERSION = 4
 MAX_CONFIG_BYTES = 65_536
 
 # Offline acquisition limits are refusal boundaries, never truncation controls.
@@ -53,8 +53,10 @@ SF_PROPERTIES = frozenset(
         'sf_api_version',
         'sf_status',
         'sf_created_at',
+        'sf_created',
         'sf_created_by',
         'sf_last_modified_at',
+        'sf_last_modified',
         'sf_last_modified_by',
         'sf_source_mode',
         'sf_dependency_coverage',
@@ -65,6 +67,10 @@ OWNED_PROPERTIES = IDENTITY_PROPERTIES | SF_PROPERTIES
 COMPONENT_ATTRIBUTES = frozenset({'api_version', 'status', 'created_at', 'created_by', 'last_modified_at', 'last_modified_by'})
 DEFAULT_APEX_DIRECTORY = 'Custom Code/Apex Classes'
 DEFAULT_DASHBOARD_DIRECTORY = 'Dashboards'
+DASHBOARD_SCHEMA_VERSION = 1
+DASHBOARD_FILENAME = 'Apex Classes.base'
+DASHBOARD_MARKER = b'# obforce:dashboard:apex_classes:v1\n'
+MAX_DASHBOARD_BYTES = 16_384
 
 # Live collection uses bounded SELECT keyset pages, never arbitrary continuation URLs.
 LIVE_APEX_METHOD = 'live-apex-keyset-v1'

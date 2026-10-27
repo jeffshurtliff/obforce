@@ -74,8 +74,11 @@ Init/build dry runs and recovery preview create no artifacts. Explicit rollback
 and committed cleanup retain the accepted guards and journal schema 2. 
 Ambiguous crash evidence is retained for manual resolution. 
 Hosted synthetic transaction results do not establish
-power-loss, hostile-race or Windows sf guarantees. Threads 14–17 and
-Windows sf enhancement #18 remain NOT STARTED.
+power-loss, hostile-race or Windows sf guarantees. Thread 14 adds a protected
+[native Apex Classes dashboard](docs/DASHBOARDS.md) and plain CLI guidance, pending
+maintainer acceptance. MTF-2 supplies class-name links, audit date columns and
+creation-only human property defaults, with Boolean false throughout fictional
+examples and test defaults. Threads 15–17 and Windows sf enhancement #18 remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

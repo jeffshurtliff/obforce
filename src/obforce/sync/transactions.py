@@ -4,7 +4,7 @@
 :Synopsis:          Provides bounded internal publication and conservative recovery primitives
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -25,6 +25,7 @@ from obforce.config import Layout, Options
 from obforce.errors import ConflictError, ExitCode, ModelError, OperationalError, exit_code
 from obforce.graph.dependencies import DependencyGraph
 from obforce.models import Component, Coverage, canonical_json
+from obforce.renderer.dashboards import validate_dashboard_path
 from obforce.renderer.notes import GeneratedCandidate, _path
 from obforce.renderer.templates import TemplateAsset
 from obforce.sync.evidence import InventoryScope
@@ -83,6 +84,7 @@ class TransactionResult:
     outcome: ExitCode
     recovery_required: bool = False
     files: int = 0
+    recovery_operation: str | None = None
 
     def __post_init__(self) -> None:
         if (
@@ -91,6 +93,7 @@ class TransactionResult:
             or type(self.recovery_required) is not bool
             or type(self.files) is not int
             or not 0 <= self.files <= const.MAX_TRANSACTION_FILES
+            or self.recovery_operation not in {None, 'rollback', 'cleanup'}
         ):
             raise ModelError('Invalid bounded transaction result')
 
@@ -126,6 +129,7 @@ class TransactionInputs:
     comparable_live_inventory: bool = False
     initial: bool = False
     persist_evidence: bool = False
+    include_dashboard: bool = False
     inventory_scope: InventoryScope | None = None
     layout: Layout = field(default_factory=Layout)
     options: Options = field(default_factory=Options)
@@ -483,6 +487,8 @@ def _save(journal: dict, vault: Path, guard: _Guard, *, first: bool = False) -> 
 def _contents(vault: Path, plan: ChangePlan) -> tuple[list[dict], list[tuple[bytes | None, bytes]]]:
     entries, contents, total = [], [], 0
     changed = [(a.path, a.content) for a in plan.actions if a.content_changed]
+    if plan.dashboard is not None and plan.dashboard.content_changed:
+        changed.append((plan.dashboard.saved.path, plan.dashboard.saved.content))
     if plan.state_changed:
         changed.append(('.obforce/state.json', plan.state_bytes))
     for relative, after in changed:
@@ -784,7 +790,10 @@ def _decode_journal(raw: bytes) -> dict:
             if index != len(entries) - 1:
                 raise ConflictError('State must be published last')
         else:
-            _path(path)
+            if path.endswith('.base'):
+                validate_dashboard_path(path)
+            else:
+                _path(path)
         token = path if path == '.obforce/state.json' else _portable(path)
         if token in paths:
             raise ConflictError('Ambiguous journal targets')
@@ -803,7 +812,13 @@ def _decode_journal(raw: bytes) -> dict:
                 continue
             _keys(blob, _BLOB_KEYS)
             _digest(blob['hash'])
-            limit = const.MAX_STATE_BYTES if path == '.obforce/state.json' else const.MAX_NOTE_BYTES
+            limit = (
+                const.MAX_STATE_BYTES
+                if path == '.obforce/state.json'
+                else const.MAX_DASHBOARD_BYTES
+                if path.endswith('.base')
+                else const.MAX_NOTE_BYTES
+            )
             if type(blob['size']) is not int or not 0 < blob['size'] <= limit or type(blob['removed']) is not bool:
                 raise ConflictError('Invalid journal blob bound')
             stamp = _wire_stamp(blob['stamp'], optional=True)
@@ -933,8 +948,49 @@ def _semantics(journal: dict, content: list[dict[str, bytes]], vault: Path, read
     new = {s.note.obforce_id: s for s in after.notes}
     if old.keys() - new.keys():
         raise ConflictError('Journal attempts automatic note removal')
+    prior_dashboard = before.dashboard if before is not None else None
+    dashboard = after.dashboard
+    prior_known = before is not None or state_entry['before'] is None
+    if not prior_known and journal['phase'] not in {'committed', 'cleaning', 'rolled_back'}:
+        raise ConflictError('Prior dashboard state evidence is unavailable')
+    if prior_dashboard is not None and (dashboard is None or dashboard.path != prior_dashboard.path):
+        raise ConflictError('Recovery cannot remove or move a tracked dashboard')
+    asset_entries = [
+        (entry, blobs)
+        for entry, blobs in zip(journal['entries'][:-1], content[:-1], strict=True)
+        if entry['path'].endswith('.base')
+    ]
+    if len(asset_entries) > 1:
+        raise ConflictError('Recovery has ambiguous dashboard targets')
+    if asset_entries:
+        entry, blobs = asset_entries[0]
+        if (
+            dashboard is None
+            or entry['path'] != dashboard.path
+            or entry['after']['hash'] != dashboard.content_hash
+            or entry['after']['size'] != len(dashboard.content)
+            or ('after' in blobs and blobs['after'] != dashboard.content)
+        ):
+            raise ConflictError('Candidate dashboard and state disagree')
+        if entry['before'] is not None:
+            if prior_known and (
+                prior_dashboard is None
+                or entry['before']['hash'] != prior_dashboard.content_hash
+                or entry['before']['size'] != len(prior_dashboard.content)
+                or ('before' in blobs and blobs['before'] != prior_dashboard.content)
+            ):
+                raise ConflictError('Dashboard before-image has no saved ownership')
+        elif prior_known and prior_dashboard is not None:
+            raise ConflictError('Journal recreates a tracked dashboard')
+    elif dashboard is not None:
+        if prior_known and dashboard != prior_dashboard:
+            raise ConflictError('Unpublished dashboard baseline changed')
+        if reader.read(vault / dashboard.path, const.MAX_DASHBOARD_BYTES) != dashboard.content:
+            raise ConflictError('Unchanged recovery dashboard differs from saved bytes')
     targets = set()
     for entry, blobs in zip(journal['entries'][:-1], content[:-1], strict=True):
+        if entry['path'].endswith('.base'):
+            continue
         raw = blobs.get('after')
         if raw is None:
             if journal['phase'] not in {'committed', 'cleaning', 'rolled_back'}:
@@ -1230,7 +1286,8 @@ def recover_transaction(
         files = len(journal['entries'])
         _recovery_operation(journal, operation)
         if preview:
-            return TransactionResult(TransactionStatus.PREVIEW, ExitCode.SUCCESS, True, files)
+            operation_hint = 'cleanup' if journal['phase'] in {'committed', 'cleaning'} else 'rollback'
+            return TransactionResult(TransactionStatus.PREVIEW, ExitCode.SUCCESS, True, files, operation_hint)
         with _Lock(vault / '.obforce', guard) as lock:
             if lock.token != journal['lock_token']:
                 raise ConflictError('Recovery guard identity differs')

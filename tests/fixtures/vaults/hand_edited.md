@@ -22,7 +22,7 @@ business: |-
 summary: >-
   A folded
   human description.
-technical_debt: null
+technical_debt: false
 technical_debt_assessed: false
 technical_debt_severity: ''
 technical_debt_review_date: 2026-10-20

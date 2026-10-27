@@ -4,7 +4,7 @@
 :Synopsis:          Plans complete bounded read-only changes without publication
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -30,6 +30,7 @@ from obforce.models import (
     require_same_source,
     validate_identities,
 )
+from obforce.renderer.dashboards import dashboard_path, render_dashboard
 from obforce.renderer.notes import _bounded, _paths, note_paths, render_generated, render_new_note
 from obforce.renderer.templates import TemplateAsset
 from obforce.sync.evidence import InventoryScope, RefreshEvidence
@@ -37,6 +38,7 @@ from obforce.sync.notes import parse_note, patch_note
 from obforce.sync.state import (
     ReadObservation,
     Reconciliation,
+    SavedDashboard,
     SavedNote,
     StateDocument,
     _portable,
@@ -85,6 +87,15 @@ class ChangeAction:
 
 
 @dataclass(frozen=True, repr=False)
+class DashboardAction:
+    """Describe one protected asset separately from component action counts."""
+
+    kind: ActionKind
+    saved: SavedDashboard
+    content_changed: bool
+
+
+@dataclass(frozen=True, repr=False)
 class ChangePlan:
     """Return a complete candidate or a blocked result with no applyable subset.
 
@@ -102,6 +113,7 @@ class ChangePlan:
     state_changed: bool = False
     graph: DependencyGraph | None = None
     preconditions: tuple[ReadObservation, ...] = ()
+    dashboard: DashboardAction | None = None
 
     @property
     def counts(self) -> tuple[tuple[ActionKind, int], ...]:
@@ -200,7 +212,11 @@ def _reader(result: Reconciliation) -> _Reader:
 
 
 def _targets(
-    vault: Path, paths: dict[ComponentKey, str], existing: dict[ComponentKey, SavedNote], reader: _Reader, result: Reconciliation
+    vault: Path,
+    paths: dict[ComponentKey | str, str],
+    existing: dict[ComponentKey | str, str],
+    reader: _Reader,
+    result: Reconciliation,
 ) -> None:
     """Validate proposed and observed portable occupancy together, without creating parents."""
     locations = {}
@@ -223,7 +239,7 @@ def _targets(
                 observed, stamp = entry
                 if observed != spelling or (not leaf and not stat.S_ISDIR(stamp[2])):
                     raise ConflictError('Proposed path has an ambiguous or occupied parent')
-                if leaf and (key not in existing or existing[key].note.path != spelling):
+                if leaf and existing.get(key) != spelling:
                     raise ConflictError('Proposed target is occupied by unowned content')
             info = reader.observe(vault / spelling, missing=True)
             if info is not None and leaf and key not in existing:
@@ -399,6 +415,7 @@ def plan_changes(
     initial: bool = False,
     allow_absent: bool = False,
     persist_evidence: bool = False,
+    include_dashboard: bool = False,
     inventory_scope: InventoryScope | None = None,
     layout: Layout = _DEFAULT_LAYOUT,
     options: Options = _DEFAULT_OPTIONS,
@@ -433,8 +450,12 @@ def plan_changes(
             allow_absent=allow_absent,
         )
         current = {component.key: component for component in components}
-        if type(persist_evidence) is not bool:
+        if type(persist_evidence) is not bool or type(include_dashboard) is not bool:
             raise ModelError('Invalid persistence intent')
+        if include_dashboard and not persist_evidence:
+            raise ModelError('Dashboard publication requires persistent evidence')
+        if result.state is not None and result.state.dashboard is not None and not include_dashboard:
+            raise ConflictError('Tracked dashboard requires dashboard-aware planning')
         if result.state is not None and result.state.evidence is not None and not persist_evidence:
             raise ConflictError('Persistent refresh requires evidence-aware planning')
         if persist_evidence:
@@ -457,8 +478,21 @@ def plan_changes(
         all_components = {**current, **{component.key: component for component in retained_components}}
         fresh_paths = note_paths(tuple(component for key, component in current.items() if key not in existing), layout)
         paths = _paths({**dict(result.paths), **fresh_paths})
+        dashboard = None
+        destinations = dict(paths)
+        owned = {key: saved.note.path for key, saved in existing.items()}
+        if include_dashboard:
+            prior = result.state.dashboard if result.state is not None else None
+            saved = SavedDashboard(dashboard_path(layout), render_dashboard())
+            if prior is not None and prior.path != saved.path:
+                raise ConflictError('Configured dashboard destination changed')
+            kind = ActionKind.CREATE if prior is None else ActionKind.NO_OP if prior == saved else ActionKind.UPDATE
+            dashboard = DashboardAction(kind, saved, prior != saved)
+            destinations['dashboard'] = saved.path
+            if prior is not None:
+                owned['dashboard'] = prior.path
         reader = _reader(result)
-        _targets(vault, paths, existing, reader, result)
+        _targets(vault, destinations, owned, reader, result)
         refreshed = refresh_graph(graph, previous_graph)
         actions = _actions(
             all_components,
@@ -477,11 +511,18 @@ def plan_changes(
         candidate = StateDocument(coverage.binding, coverage.selection, coverage, tuple(action.saved for action in actions))
         if persist_evidence:
             candidate = replace(candidate, evidence=RefreshEvidence(tuple(all_components.values()), refreshed, inventory_scope))
+        if dashboard is not None:
+            candidate = replace(candidate, dashboard=dashboard.saved)
         wire = serialize_state(candidate)
         changed = result.state is None or bool(result.path_changes) or candidate.canonical() != result.state.canonical()
         if not changed:
             wire = result.state_bytes
-        if sum(len(action.content) for action in actions) + len(wire) > const.MAX_PLAN_OUTPUT_BYTES:
+        if (
+            sum(len(action.content) for action in actions)
+            + len(wire)
+            + (len(dashboard.saved.content) if dashboard is not None else 0)
+            > const.MAX_PLAN_OUTPUT_BYTES
+        ):
             raise ModelError('Aggregate plan output exceeds bound')
         reader.finish()
         outcome = coverage.outcome
@@ -502,6 +543,7 @@ def plan_changes(
             state_changed=changed,
             graph=refreshed,
             preconditions=reader.preconditions(),
+            dashboard=dashboard,
         )
     except OperationalError as error:
         return _blocked(error, safe_coverage)

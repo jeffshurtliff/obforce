@@ -57,8 +57,13 @@ marker pair on separate lines. Templates cannot supply frontmatter or markers.
 Unknown `sf_*` names and attempts to supply reserved creation defaults fail.
 Optional creation defaults are explicit flat user properties; all remain
 user-owned after creation. Defaults are `type: salesforce_component`,
-`tags: [salesforce]` and `technical_debt: null`. Explicit null/false/empty/absent
-values remain distinct; metadata never assesses technical debt. Creation requires
+`tags: [salesforce]`, Boolean `technical_debt: false` (MTF-2), blank strings
+`tech_debt_severity`/`tech_debt_status`, and `last_reviewed: null`.
+Only Boolean debt overrides are accepted for new notes; other supported custom
+human values remain distinct. Boolean human decisions remain preserved during
+patching; metadata never assesses technical debt. The maintainer authorized false
+throughout fictional/example/test defaults without historical unassessed data.
+Creation requires
 Business Context, Known Issues / Technical Debt, and Additional Information
 exactly once. Generated sections require Salesforce Metadata, Coverage,
 References and Referenced By exactly once.
@@ -342,3 +347,19 @@ installs in run `39985255497`, attempt 1. The maintainer tested and accepted the
 indentation; #12 and #20 are completed. See the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026)
 for the retained local safety-refusal failures and precise evidence limits.
+
+
+## Literal native dashboard (Thread 14)
+
+`renderer/dashboards.py` reads exactly one bounded installed literal
+`resources/bases/apex_classes.base` through `importlib.resources`. It uses no
+source data, Jinja, override discovery, external tool or publication side effect.
+The destination is the existing configured dashboard directory plus the fixed
+filename. MTF-2 advances the renderer fingerprint from 3 to 4 for reserved
+`sf_created`/`sf_last_modified` UTC `YYYY-MM-DD` projections of valid available
+audit timestamps. Absent/null/unavailable/invalid dates yield no projection;
+original `sf_*_at` facts and source/graph hashes remain. Exact old baselines still
+gate generated-only patches; existing human fields are not backfilled. No schema,
+acquisition, ownership or transaction bound changes.
+[Dashboard syntax, human debt semantics and ownership](DASHBOARDS.md)
+are tested independently from native Obsidian rendering (unavailable).

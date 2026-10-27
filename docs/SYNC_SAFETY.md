@@ -808,3 +808,36 @@ declared identity/scope refuses. Lifecycle incompleteness contributes outcome 4
 without falsifying independent inventory coverage. No-op preserves exact note/state
 bytes and mtimes; dry-run creates no artifact. Actual local/hosted/native evidence
 and retained failures are in the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md).
+
+
+## Protected dashboard transactions (Thread 14)
+
+The [pre-implementation contract](../dev/THREAD_14_DASHBOARD_CONTRACT.md) records
+the explicit feature extension: an optional `dashboard` root object in
+evidence-bearing state-document schema 2, containing dashboard schema 1, exact
+path/content/hash. Its absence retains the exact Thread 13 wire shape. Unknown
+keys/versions/null/corrupt baselines refuse. NoteState/evidence/renderer/journal
+versions remain 1/1/4/2 after MTF-2's renderer/date projection update. Older
+executables refuse the extended state/new reserved date properties.
+
+Discovery additionally reads every `.base` up to 16 KiB under full existing
+guards/aggregate read bounds. A managed indicator requires exactly the tracked
+path and exact saved bytes; edited/missing/moved/duplicate/untracked dashboards
+conflict. Proposed note/dashboard paths and parent roles are validated together.
+One conflict discards the entire candidate. Public builds remain absent/empty-only;
+valid Thread 13 refresh adds an asset only to an absent unowned destination.
+
+The separate dashboard action participates in complete independent revalidation,
+finite file/byte/parent/guard budgets, same-filesystem before/after images and
+notes-then-dashboard-then-state publication. Recovery requires matching exact
+asset/state association, no tracked-asset removal/move, and no asset adoption
+through a before-image or state-only change. Unchanged assets are validated too.
+Phase-permitted already removed blobs retain the existing surviving-target rules;
+no missing prior content is fabricated. All pathname/historical descriptor/
+birthtime/hash/absence/owning-lock/exact-parent-delta guards remain. Intervening
+edits refuse rollback/cleanup and retain evidence. Legacy note-only schema-2
+journals keep their accepted recovery path; journal schema 1 stays refused.
+
+Dry-run/recovery preview creates nothing; unchanged asset/note/state no-ops retain
+bytes/mtimes. See [user workflow and bounds](DASHBOARDS.md). Synthetic automated
+validation is separate from native Obsidian rendering, which remains unavailable.

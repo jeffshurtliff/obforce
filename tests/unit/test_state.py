@@ -4,7 +4,7 @@
 :Synopsis:          Exercises strict private state and read-only synthetic identity reconciliation
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -722,7 +722,7 @@ def test_unavailable_absent_null_and_user_edits(example, tmp_path):
         reconcile(vault, state_path, unavailable)
     state_path.write_bytes(serialize_state(current))
     # User fields/debt prose are opaque ownership and must not become baseline data.
-    edited = raw.replace(b'technical_debt: null', b'technical_debt: false').replace(
+    edited = raw.replace(b'technical_debt: false', b'technical_debt: true').replace(
         b'Fictional knowledge that must survive.', b'Human changed knowledge.'
     )
     path.write_bytes(edited)

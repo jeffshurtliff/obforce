@@ -81,7 +81,10 @@ for retained local failures and native/live limits. Thread 13 is accepted and
 complete at correction `b43ed64` / merge `3f5e909`; #13 is closed. Exact-merge run
 `40346586335`, attempt 1, passed all 12 cells and 24 independent installs. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026).
-Threads 14–17 and enhancement #18 remain NOT STARTED.
+Thread 14 dashboard/CLI work is locally implemented/verified pending
+maintainer acceptance; Threads 15–17 and enhancement #18 remain NOT STARTED.
+MTF-2's current correction evidence is recorded separately in the roadmap;
+earlier candidate passes are historical. Native rendering still needs confirmation.
 
 ## Development setup
 
@@ -196,8 +199,12 @@ initial journeys and guarded installed recovery selection probes. Fresh archives
 now contain 34 wheel / 33 sdist entries after Thread 13 deliberately adds
 `sync/evidence.py`. Both independent installs exercise console/module sync previews,
 updates, human-content preservation and byte/mtime-stable no-op under the existing
-runtime guards. Lower-level legacy-state/recovery probes remain. Bases assets
-remain Thread 14. The checker never publishes or uploads artifacts.
+runtime guards. Lower-level legacy-state/recovery probes remain. Thread 14 deliberately adds `renderer/dashboards.py` and
+`resources/bases/apex_classes.base` (36 wheel / 35 sdist entries). Each independent
+install additionally runs `dev/probe_dashboard.py` with active runtime guards:
+resource bytes, Thread 13 asset addition, no-op/preview, human content, whole-batch
+conflict, asset rollback and committed cleanup. Native Obsidian preview remains
+unavailable. The checker never publishes or uploads artifacts.
 
 The test-only workflow targets stable Python 3.12–3.15 on Linux, macOS, and
 Windows. Configured cells are not qualification evidence. See the roadmap handoff

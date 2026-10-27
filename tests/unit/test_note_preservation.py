@@ -4,7 +4,7 @@
 :Synopsis:          Verifies bounded in-memory patches using fictional hand-edited notes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -109,7 +109,7 @@ def test_audit_update_preserves_exact_body_user_yaml_and_inputs(example, tmp_pat
         if key not in const.OWNED_PROPERTIES:
             assert after.properties[key] == value
     assert b"sf_api_version: '68.0' # owned audit presentation" in result.content
-    assert b'technical_debt: null' in result.content
+    assert b'technical_debt: false' in result.content
     assert b'technical_debt_assessed: false' in result.content
     assert state.canonical() == snapshot and raw == FIXTURE.read_bytes()
     assert incoming.region.encode() == result.generated_region
@@ -128,9 +128,9 @@ def test_audit_update_preserves_exact_body_user_yaml_and_inputs(example, tmp_pat
 
 
 @pytest.mark.parametrize('ending', [b'\n', b'\r\n'])
-@pytest.mark.parametrize('debt', [b'', b'technical_debt: null\n', b'technical_debt: false\n'])
+@pytest.mark.parametrize('debt', [b'technical_debt: true\n', b'technical_debt: false\n'])
 def test_noop_original_bytes_and_debt_distinctions(example, ending, debt):
-    raw = FIXTURE.read_bytes().replace(b'technical_debt: null\n', debt).replace(b'\n', ending)
+    raw = FIXTURE.read_bytes().replace(b'technical_debt: false\n', debt).replace(b'\n', ending)
     note = parse_note(raw)
     state = state_for(raw, example)
     first = patch_note(raw, state, note.region, generated(example))

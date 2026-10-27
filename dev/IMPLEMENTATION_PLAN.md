@@ -42,7 +42,8 @@ private evidence design supersedes the earlier transient-only restriction.
 See the [acceptance record](#thread-13-acceptance-and-closure--26-october-2026),
 retained [Windows failure](#thread-13-windows-ci-correction--26-october-2026), and
 [Thread 14 launch prompt](#copy-ready-thread-14-launch-prompt).
-Threads 14–17 and enhancement #18 remain **NOT STARTED**.
+Thread 14 is locally implemented and verified, pending maintainer acceptance; see the
+[dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md). Threads 15–17 and enhancement #18 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -160,7 +161,7 @@ supersedes them. Record material changes before implementing dependent work.
 | Templates | Bundled Jinja2 defaults plus explicitly configured local overrides |
 | Synchronization | Generated-field/region ownership, persistent note identities, hashes, preflight plans, and recoverable writes |
 | Missing components | Mark as missing only after a comparable complete supported scan; never delete notes automatically |
-| Technical debt | User-managed Boolean, optional severity/status/review date, and narrative section; unset means unassessed |
+| Technical debt | User-managed Boolean, false by default (MTF-2); blank severity/status/review date and narrative section |
 | Configuration | One TOML file; relative paths resolve from its directory |
 | Platform target | Linux, macOS, and Windows; target stable Python 3.12–3.15, verifying interpreter/dependency availability and recording gaps |
 | Release | Prepare `0.1.0` after acceptance; publication requires a separate explicit instruction |
@@ -511,14 +512,16 @@ Defaults for new user fields may include `business_owner`, `documentation_status
 
 | Field | Suggested convention |
 | --- | --- |
-| `technical_debt` | Boolean when assessed; omit or leave null when unassessed |
-| `technical_debt_severity` | `low`, `medium`, `high`, `critical` |
-| `technical_debt_status` | `identified`, `planned`, `in_progress`, `resolved`, `accepted` |
-| `technical_debt_reviewed` | Date of the human review |
+| `technical_debt` | Boolean, false by default; human decisions remain user-owned |
+| `tech_debt_severity` | Blank string; recommend `High`, `Medium`, `Low` |
+| `tech_debt_status` | Blank string; human vocabulary |
+| `last_reviewed` | Blank by default; human date `YYYY-MM-DD` |
 
 These are helpful conventions, not permission to rewrite user values or reject
 an otherwise valid note because a user chose a different business vocabulary.
-Unset is not equivalent to `false`.
+MTF-2 explicitly supersedes the earlier unset/null default for this unreleased
+fictional dataset. Creation accepts only Boolean Technical Debt overrides;
+existing human content is not automatically migrated or backfilled.
 
 ### Body ownership and template contract
 
@@ -829,7 +832,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
-| 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Not started |
+| 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Locally verified; open pending acceptance; native/hosted gaps retained |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
 | 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
@@ -1865,7 +1868,10 @@ Retained here as history, not current permission to implement the new design.
 
 **Goal:** A discoverable administrator experience using native Obsidian features.
 
-**Depends on:** 13. **Status:** Not started.
+**Depends on:** 13. **Status:** Locally implemented/verified; #14 OPEN pending maintainer acceptance.
+Native Obsidian preview and hosted Thread 14 qualification are unavailable.
+
+See [the bounded dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md).
 
 **GitHub issue:** [#14](https://github.com/jeffshurtliff/obforce/issues/14)
 
@@ -1889,8 +1895,9 @@ Retained here as history, not current permission to implement the new design.
 `examples/sample_vault/`.
 
 **Acceptance/demo:** A fictional vault offers an Apex table and useful links;
-unassessed debt remains distinguishable from false, and edited dashboards are
-protected. No Dataview, Obsidian CLI, or community plugin is required.
+Technical Debt is a Boolean checkbox, false by default under the explicit MTF-2
+correction. Edited dashboards are protected. No Dataview, Obsidian CLI, or
+community plugin is required. Earlier unassessed-default presentation is superseded.
 
 **Validation:** YAML/schema checks against current official Bases syntax, packaged
 asset access, dashboard conflict/no-op tests, path collisions, and help/example
@@ -5856,3 +5863,326 @@ Use synthetic temporary projects/vaults and mocked Salesforce acquisition with i
 
 Leave changes unstaged/uncommitted and #14 open for acceptance. Do not create issues, stage, commit, push, open a PR, close issues, rerun CI or publish. Leave Threads 15–17 and enhancement #18 explicitly NOT STARTED. Do not create/message other chats or spawn subagents.
 ```
+
+
+### Thread 14 start and prerequisite gate — 26 October 2026
+
+Authorized only #14; no delegation or Git delivery. Read repository/user contracts,
+#14/#13 and #12/#11/#10 accepted records, relevant code and official Bases docs.
+`local/vendor_docs/` is absent. Checkout started clean at `0fc6c20`, including
+Thread 13 acceptance documentation; preserve that accepted history. Actual native
+#12 -> #13 -> #14 -> #15 links verified; #13 closed, #14/#15 open, original
+labels/assignment/milestone retained. No new prerequisite blocker found.
+
+Run **40346586335**, attempt **1**, is verified at exact merge
+**3f5e9098556d7250e43b74442fa18d66a18f7e27**, containing correction
+**b43ed640dadae812ce3bf5412198cc7a625e56a7**. Read all 12 actual command logs and
+required step outcomes: Linux 1440 passed each; macOS 1438/2 each; Windows 1424/16
+each. Metadata/lock, Ruff lint/format, Bandit, pytest, fresh build, strict Twine,
+exact 34/33 archive lists, both independent installs per cell and whitespace
+passed. This is prerequisite evidence, not hosted Thread 14 evidence. Failed
+40235515146 and all older failures/skips/unavailable observations remain unchanged.
+The historical local template-refresh conflict 3 and Thread 12 2-failed/1371-passed/
+2-skipped original causes remain uncaptured; no cause is inferred.
+
+Before dependent coding, recorded [destination/defaults, schema-2 optional
+versioned dashboard record, exact-byte ownership, existing Thread 13 behavior,
+conflict precedence, finite bounds and journal-schema-2 semantic integration](THREAD_14_DASHBOARD_CONTRACT.md).
+No scope expansion, weakened contract, information discard or migration is proposed.
+Native Obsidian preview is unavailable without separate authorization. All tests
+will use synthetic temporary inputs/mocked verified identities, with runtime
+network/process guards; no real sf, auth/credentials/.env/org/vault/settings.
+Changes stay unstaged/uncommitted; #14 stays OPEN pending acceptance. Threads
+15–17 and enhancement #18 remain NOT STARTED; optional verbosity #19 stays unstarted.
+
+
+### Thread 14 handoff — 26 October 2026
+
+**Locally implemented and verified; pending maintainer acceptance. #14 stays OPEN.**
+Only Thread 14 was implemented on the existing
+`feature/14-thread-14-native-dashboard-and-cli-usability` branch. Started clean
+at `0fc6c20`; accepted Thread 13 documentation and all older evidence are retained.
+No stage/commit/push/PR/CI rerun/closure/publication or delegation occurred.
+
+**What changed and criteria met:**
+
+- [x] [Pre-implementation contract](THREAD_14_DASHBOARD_CONTRACT.md) records exact
+  destination/config/defaults, versioned optional dashboard ownership record,
+  finite inherited budgets, conflict precedence and recovery integration.
+  Prerequisite exact-merge/run/log/native-dependency verification is recorded
+  above; no new prerequisite or duplicate issue was introduced.
+- [x] One literal installed `resources/bases/apex_classes.base`, loaded by
+  `renderer/dashboards.py`, publishes to configured `layout.dashboards` plus
+  `Apex Classes.base`. Current official syntax/functions/table docs read before
+  dependent coding. Reserved identity/schema/sf_type filters, file-based links,
+  class/namespace/status/lifecycle, available audit dates and human debt columns.
+  Absent/null debt is Unassessed, false is No, true is Yes, custom values stay
+  human-owned. Ordinary Markdown needs no dashboard or plugin.
+- [x] Optional exact-shape `dashboard_schema: 1` path/hash/base64-content baseline
+  within evidence-bearing **state-document schema 2**. Evidence/NoteState/renderer/
+  journal versions remain **1/1/3/2**. Strict old shapes remain readable; older
+  executables refuse extended state. Valid Thread 13 vaults create only an absent
+  asset. No file adoption, note migration, existing whole-note creation rerender,
+  missing-asset recreation or tracked-dashboard move/removal.
+- [x] Bounded Base discovery, combined note/dashboard portable paths and exact
+  ownership checks. Edited/missing/moved/copied/untracked/colliding dashboard
+  or edited generated note content blocks the entire batch. Human prose/YAML/
+  indentation/comments/tags/aliases/all technical_debt* survive. Exact asset/
+  note/state no-op bytes/mtimes and write-free previews remain.
+- [x] Dashboard is a separate planner action/count, inside complete independent
+  writer revalidation and existing finite guards. Notes, dashboard, state publish
+  together through existing same-filesystem before-images/journal protocol.
+  Recovery validates exact asset/state/before-image agreement, unchanged assets,
+  rollback/new-asset removal, committed/resumed cleanup and phase-permitted
+  removed blobs. Intervening edits retain evidence. Full historical descriptor/
+  pathname/birthtime/hash/absence/parent guards and owning-handle lock reads remain.
+- [x] Noninteractive help/examples, bounded plain privacy-aware counts/coverage/
+  conflict guidance and phase-compatible recovery preview hints. Console/module,
+  explicit relative/absolute paths with spaces, redirected output and outcomes
+  0/2/3/4 are exercised here; accepted operational 1 and precedence 3,2,1,4,0
+  remain covered by lower-level/error tests. No optional verbose #19 feature.
+- [x] [User guide](../docs/DASHBOARDS.md), applicable docs/changelog/quickstart,
+  config example and [fictional presentation sample](../examples/sample_vault/README.md).
+  Sample has two valid ordinary notes with null/false debt, exact packaged Base,
+  no private state and explicit presentation-only/non-adoption instructions.
+
+**Actual local validation:** macOS ARM64, Python **3.14.7**, Poetry **2.4.2**.
+
+| Check | Actual result |
+| --- | --- |
+| Strict Poetry metadata/lock | Passed |
+| Ruff lint / format | Passed; 104 Python files already formatted |
+| Bandit | No issues; five existing source/transport annotations unchanged |
+| Checkout full offline suite | **1524 passed / 2 existing skips**, 118.40 s; before final summary-text polish |
+| Final full suite against freshly installed wheel | **1524 passed / 2 existing skips**, 119.88 s; unchanged production guards |
+| Fresh wheel/sdist build and strict Twine | Both passed |
+| Exact source/resource/license/metadata/archive inspection | **36 wheel / 35 sdist** entries; only dashboard module/asset added to allowlists |
+| Independent wheel and sdist installs | Both passed all guarded installed resources, console/module init/build/sync/recover and accepted lower-level probes, outside checkout/cwd; no cwd artifacts |
+| Documentation/sample review | 20 Markdown files, 226 local links/anchors, zero errors, balanced fences; sample note parser/debt/asset checks passed |
+| Whitespace | git diff --check passed |
+
+The final wheel suite used an external temporary project/environment with unchanged
+Poetry-locked development tools (`--no-root`), then installed the fresh wheel with
+`--no-index --no-deps`. Only public test/probe/config and synthetic fixture/sample
+files were copied for validation; no private input. Import location was verified
+outside checkout/home. TMPDIR/TEMP/TMP were isolated; bytecode caching disabled.
+A diagnostic wrapper logged failing read observations without changing production
+guards or retrying a refused operation. Runtime tests/probes used network/process
+denial apart from authorized synthetic child-process tests. Setup/build/dependency
+downloads are separate. No coverage percentage is claimed for these `pytest -q` runs.
+
+Fresh final artifact SHA-256:
+
+- Wheel: `a66ca6032a917fa6f94e2d91cf9a7b6c3ba5be378cf9f191e4b1236cf7068a45`.
+- Sdist: `9991df6d003498151acfe14b0b1f6a32f278b96c8b5aab78a19b016a955fc9ed`.
+
+**Retained Thread 14 development/validation history:** first focused run
+**3 failed / 459 passed / 2 skipped**, from old build-summary assertions; first
+dashboard-focused run **2 failed / 65 passed**, from an incorrect cleanup
+checkpoint index in a new test; expanded focused **2 failed / 283 passed**, from
+one remaining old summary assertion. Expectations/checkpoint were corrected.
+A preliminary final format check requested one CLI reformat, then passed.
+Sandboxed build-backend PyPI access failed before successful authorized setup;
+no empty/old artifacts were accepted. Connector issue-comment write returned 403;
+authenticated gh performed only the authorized #14 updates.
+
+After the initial green full suite and successful independent installs, final
+CLI-focused verification was **1 failed / 102 passed**: an existing post-build
+recovery/no-op test refused a changed observation. Its exact original path/cause
+was not captured and remains unconfirmed. A separate diagnostic full run in
+task-private temporary storage was **1 failed / 1522 passed / 2 skipped /
+1 setup error**. It captured two changes in the shared home-directory ancestor's
+mtime/ctime with stable identity/mode/link/size: a new asset recovery test refused
+before fault injection, and an existing lifecycle fixture refused init. This
+establishes the changed ancestor for those two observations only, not the earlier
+focused failure or any older failure. Relocating **both the installed application
+and synthetic test inputs** outside that nonquiescent ancestry yielded the final
+1524/2 result above. No observation was rounded, ignored, retried or skipped;
+no production guard, lock, filesystem contract or source behavior was weakened.
+The failed runs retain their original outcomes; passing later evidence does not
+invent an uncaptured original cause or claim hostile-race isolation.
+
+The two skips are the existing case/NFC-collision fixtures the host filesystem
+cannot represent. No new skip/suppression/dependency/lock/license/CI change.
+Failed prerequisite **40235515146** and all older failed/skipped/unavailable
+observations remain unchanged. The earlier template-refresh conflict 3 and
+Thread 12's 2-failed/1371-passed/2-skipped original causes remain uncaptured;
+no relation to the separate Windows CRLF fixture failure is inferred.
+
+**Remaining evidence/review boundaries:** no hosted Thread 14 or native Linux/
+Windows/other-Python Thread 14 result, no native Obsidian rendering/preview, real
+sf/auth/credentials/.env/org/real-vault/settings access, private upload, Windows sf
+qualification, power-loss/native ACL/directory-fsync/hostile-race/atomic snapshot
+or atomic multi-file guarantee. Native preview was unavailable, not silently
+performed. Independent installs are local synthetic evidence. Maintainer acceptance
+and any separately authorized delivery/exact-commit CI remain outstanding.
+
+All **31 changed/new files** stay unstaged/uncommitted. #14's verified implementation
+checklist and public-safe handoff are synchronized; ready-to-merge/release remains
+unchecked. Original labels/assignee/milestone/native dependencies are retained.
+Issue updates: [start](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6427314950),
+[progress](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6427611891),
+[verified handoff](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6427858519).
+
+**Next eligible only after Thread 14 maintainer acceptance and a new request:
+Thread 15 / #15, explicitly NOT STARTED. Threads 15–17 and enhancement #18 remain
+NOT STARTED. Optional verbosity #19 remains unstarted and is not a new prerequisite.**
+
+### Thread 14 MTF-2 review — 26 October 2026
+
+Reviewed the maintainer's new MTF-2 in [manual findings](MANUAL_TEST_FINDINGS.md#mtf-2---adjustments-to-the-apex-classes-dashboard),
+committed at `0ad3add`, preserving the existing uncommitted Thread 14 candidate.
+Recorded the correction/default/version/compatibility plan in the
+[dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md#mtf-2-triage-and-correction-plan--26-october-2026).
+Presentation changes and requested date/human property additions belong to #14;
+`sf_lifecycle` remains required by accepted absence/reactivation and will only be
+removed from the default table. No adoption/migration, existing human-field
+conversion, real sf/Obsidian/vault/settings access, Git delivery or later thread.
+
+One clarification is pending: MTF-2's unchecked Boolean default conflicts with the
+original unassessed-null default and preserving that distinction. Asked whether
+to apply false only to newly created notes while preserving and visibly labeling
+legacy null/custom values, or retain unassessed creation defaults. Independent
+presentation/date/property work can proceed without changing existing assessments.
+#14 stays OPEN; prior checks/hashes are historical candidate evidence, not a pass
+for the new MTF-2 correction. Threads 15–17 and #18/#19 remain NOT STARTED.
+
+The finding's explicit Boolean-default request already authorizes false for new
+notes; the preliminary clarification is resolved on that direct instruction,
+without assuming a reply. Existing null/custom values remain untouched and
+distinct in a separate legacy/unassessed view. New creation defaults never
+backfill existing human fields. The main table uses the actual Technical Debt
+property; lifecycle remains in notes/state. Renderer fingerprint 4 adds available
+UTC date projections while keeping original timestamp facts and exact old
+baselines. Other schemas/bounds/transaction guards remain unchanged. Final MTF-2
+validation and native maintainer confirmation are pending at this checkpoint.
+
+Initial MTF-2 rendering/preservation run: **252 passed**, 2.82s. Broader focused
+dashboard/engine/sync/process run: **1 failed / 471 passed**, 56.68s. The failing
+`[False-published]` process-death recovery case previewed successfully, then
+rollback returned conflict 3; its detailed original cause was not captured.
+Preserve that result without inferring a cause from earlier home-ancestor
+observations or later passes. Fresh artifacts/independent installs and full-suite
+diagnostics are pending. [Public progress](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6429205764).
+
+### MTF-2 maintainer clarification and validation environment
+
+The maintainer explicitly directed `technical_debt: false` throughout the
+fictional/example/test data, without preserving historical null/custom examples.
+This supersedes the preliminary legacy/unassessed-view proposal above and the
+original unassessed-default requirement for this unreleased dataset. The final
+candidate uses one table, an actual Technical Debt property and no debt formula
+or legacy view. Synthetic baselines use false; Boolean true remains a supported
+human decision. No real vault migration, automatic human-field conversion,
+whole-note recreation or safety weakening is authorized or introduced.
+
+Before that clarification, fresh 36-wheel/35-sdist archives, strict Twine and both
+independent guarded installs passed. Those artifact hashes are now superseded.
+The diagnostic full run was **1549 passed / 2 existing filesystem skips / 1 setup
+error**, 123.30s: init correctly refused a captured shared temporary-ancestor
+mtime/ctime change with unchanged identity/mode/link/size. That observation
+explains only this setup error, not the earlier uncaptured rollback refusal.
+No runtime operation was retried or guard weakened. A separate 60-second read-only
+ancestry observation found repeated system-temp changes, one shared temporary
+ancestor change, and an unchanged home ancestor. Final validation will relocate
+the installed application, public synthetic test inputs and TMPDIR/TEMP/TMP to
+the observed quiescent ancestry; it does not qualify a hostile filesystem race.
+
+### Thread 14 MTF-2 verified local handoff — 26 October 2026
+
+**Status:** MTF-2 implemented and locally verified; #14 remains **OPEN pending
+maintainer acceptance and native correction confirmation**. This supersedes the
+preliminary legacy-view proposal and prior candidate hashes, without erasing
+their validation history. Maintainer finding commit `0ad3add9464f76b399630c41560f5e3836e00394`
+is preserved; all **47 changed/new files** remain unstaged/uncommitted.
+
+**Implemented:** one table with class-name links, Namespace, Metadata Status,
+API Version (stored string without added display quotes), Created, Last Modified,
+actual Boolean Technical Debt, Debt Severity, Debt Status and Last Reviewed.
+Lifecycle leaves the table but remains in notes/state for accepted missing/
+reactivation. Available valid audit timestamps supply UTC `sf_created` and
+`sf_last_modified`, retaining original `sf_*_at` facts; absent/null/unavailable/
+invalid audit values do not yield invented dates. Renderer fingerprint advances
+to **4**, preserving exact old generated baselines and four-space readability;
+state-document/evidence/NoteState/journal/dashboard schemas remain **2/1/1/2/1**.
+Older executables refuse the asset extension/new reserved date properties.
+
+Per the explicit maintainer clarification, fictional/example/test defaults use
+`technical_debt: false`, without retaining historical null/custom data or a
+legacy view. New-note debt overrides require an actual Boolean. New human fields
+`tech_debt_severity`/`tech_debt_status` are blank strings; `last_reviewed` is blank,
+with YYYY-MM-DD recommended. Recommend High/Medium/Low severity. Existing human
+decisions/properties/comments/YAML/prose remain generated-only patch inputs;
+there is no automatic backfill, renaming, conversion or whole-note recreation.
+Tracked dashboard updates still require exact saved-byte ownership and share
+complete planner/writer/state/recovery validation. No guard, bound, schema or
+exit-precedence weakening, new dependency, lifecycle command, metadata type,
+real-vault migration, settings write or acquisition was introduced.
+
+**Final local evidence:** macOS ARM64 / Python **3.14.7** / Poetry **2.4.2**:
+
+- `poetry check --lock --strict`, Ruff lint/format (**105 files**), Bandit (five
+  existing annotations unchanged), and whitespace passed.
+- Clarified focused renderer/preservation/state/dashboard suite: **503 passed /
+  2 existing filesystem skips**, 20.16s.
+- Fresh final build, strict Twine and exact **36 wheel / 35 sdist** archive checks
+  passed. Necessary package additions remain only `renderer/dashboards.py` and
+  `resources/bases/apex_classes.base`; no additional allowlist expansion for MTF-2.
+- Both fresh independent installs passed installed asset/schema/defaults,
+  console/module help/version/init/build/sync/recover, lower-level acquisition/
+  graph/render/preservation/planner/transaction/recovery, conflicts, stable no-op,
+  write-free previews and cwd-artifact checks under active runtime network/process
+  denial. Setup dependency downloads were separate from application runtime.
+- Final full suite against the independently installed wheel, public synthetic
+  test inputs and TMPDIR/TEMP/TMP outside checkout and all captured changing
+  ancestry: **1537 passed / 2 skipped**, **108.71s**. Skips are the existing
+  filesystem inability to represent case and normalization collisions. No new
+  skips or coverage percentage claim. Diagnostic production-guard wrappers
+  observe/report failures only; they do not change observations or retry operations.
+
+Fresh final SHA-256:
+
+- Wheel: `682afdaa0220198ef53c1d7d6fed9c973eab64f006359f0d4e96002b8f4057e5`
+- Sdist: `1d7e0f3216d02779573cb92043c628c639c660bc8265d48b53747cc1912d6a6c`
+
+**Retained MTF-2 validation history:** initial focused 252-pass run and the
+1-failed/471-passed recovery refusal remain as recorded above. The pre-clarification
+1549-pass/2-skip/1-setup-error run captured a shared temporary-ancestor mtime/ctime
+change. The first final-artifact run passed wheel checks but failed the sdist's
+initial transaction publication assertion; its detailed original cause was not
+captured. A bounded assertion message was added to that development probe for
+future diagnosis. Both independent final installs subsequently passed in the
+relocated environment; no cause is inferred for that earlier assertion.
+
+A subsequent full run under tool-managed ancestry was **1 failed / 1536 passed /
+2 skipped**, 142.60s: recovery refused a captured ancestor stamp change including
+link count/size and mtime/ctime. A further run outside that tool branch but still
+under user-home ancestry was **1536 passed / 2 skipped / 1 setup error**, 113.86s:
+mocked live-vault setup refused a captured home-ancestor link-count/size/mtime/ctime
+change. Each observation explains only its own recorded refusal. Final validation
+used a mode-0700 synthetic directory under an independently observed stable
+parent outside all those branches, keeping every production check intact.
+No refused application operation was retried, no hostile-race exclusion claimed,
+and no broader skip or guard relaxation was added. A quiescent observed ancestor
+does not guarantee that other ancestors stay unchanged; the guards still decide.
+
+All earlier Thread 14 failures and the prerequisite failure **40235515146** remain.
+The original local template-refresh conflict 3 and Thread 12's
+2-failed/1371-passed/2-skipped causes remain uncaptured; later passes and the
+separate Windows CRLF fixture failure do not explain them. The original Thread
+13 exact-commit/12-cell acceptance and its live/native limits remain unchanged.
+
+**Evidence limits:** native Obsidian correction preview unavailable to the agent;
+the maintainer's original MTF-2 observation is distinct native evidence for the
+earlier candidate. No hosted Thread 14, other Python/platform result, real sf/
+auth/credentials/.env/org/vault/settings access, private upload, Windows sf
+qualification, power-loss/native ACL/hostile-race/atomic-snapshot or atomic
+multi-file guarantee. No CI rerun, stage, commit, push, PR, publication, closure
+or delegation. The original labels/assignee/milestone/native dependencies stay.
+[Clarified public progress](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6429429282).
+[Verified MTF-2 handoff](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6429598001);
+the existing issue body/checklist is synchronized and remains open.
+
+**Next eligible only after #14 acceptance and a new request: Thread 15 / #15,
+explicitly NOT STARTED. Threads 15–17 and enhancement #18 remain NOT STARTED;
+optional verbosity #19 remains unstarted.**

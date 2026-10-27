@@ -22,7 +22,7 @@ business: |-
 summary: >-
   A folded
   human description.
-technical_debt: null
+technical_debt: false
 technical_debt_assessed: false
 technical_debt_severity: ''
 technical_debt_review_date: 2026-10-20
@@ -30,6 +30,7 @@ technical_debt_status: "Awaiting review"
 custom_number: 1.25
 custom_empty: []
 custom_null:
+"sf_last_modified": "2026-10-20"
 "sf_last_modified_at": "2026-10-20T12:00:00Z"
 ---
 

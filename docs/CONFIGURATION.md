@@ -256,3 +256,20 @@ cannot be initialized later. Offline rejects both flags. Existing explicit live
 process paths/org verification rules apply. Missing transitions additionally need
 complete supported comparable inventory; unknown continuity preserves absence and
 reports incomplete evaluation. See [the full contract](REFRESH.md).
+
+
+## Protected native dashboard (Thread 14)
+
+Public build/sync now include one `Apex Classes.base` under `layout.dashboards`
+(default `Dashboards`). No config key/schema change or additional command.
+The whole file has exact saved ownership in an optional dashboard-schema-1
+record within evidence-bearing state-document schema 2. Editing/moving/removing
+it or changing its configured directory blocks the whole batch. A valid Thread
+13 vault can add it only at an absent destination; no file adoption or note
+migration. See [dashboard behavior, limits and recovery](DASHBOARDS.md).
+
+MTF-2 adds no configuration knobs: new notes use Boolean `technical_debt: false`,
+blank `tech_debt_severity`/`tech_debt_status`, and blank `last_reviewed`.
+These human fields remain creation-only and are not backfilled on existing notes.
+Available audit timestamps additionally supply reserved UTC `sf_created` and
+`sf_last_modified` dates. Lifecycle stays in notes but leaves the default table.

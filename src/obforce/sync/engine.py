@@ -4,7 +4,7 @@
 :Synopsis:          Orchestrates explicit initialization, initial build and local recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -295,6 +295,7 @@ def build(
         verified_org_id=coverage.binding.org_id,
         initial=True,
         persist_evidence=True,
+        include_dashboard=True,
         inventory_scope=scope,
         layout=config.layout,
         options=config.options,
@@ -307,21 +308,16 @@ def build(
         return TransactionResult(TransactionStatus.BLOCKED, plan.outcome), f'Plan refused: {plan.diagnostic.value}\n'
     # Missing-destination previews enforce writer bounds without writer setup.
     entries, _ = _contents(config.vault, plan)
-    parents = {parent for a in plan.actions for parent in Path(a.path).parents if str(parent) != '.'}
+    targets = [a.path for a in plan.actions]
+    if plan.dashboard is not None:
+        targets.append(plan.dashboard.saved.path)
+    parents = {parent for path in targets for parent in Path(path).parents if str(parent) != '.'}
     if len(parents) > const.MAX_TRANSACTION_DIRECTORIES:
         raise ModelError('Initial plan exceeds directory bound')
     missing = [p for p in (*reversed(config.vault.parents), config.vault) if _lstat(p) is None]
     if len(missing) > const.MAX_SETUP_DIRECTORIES:
         raise ModelError('Initial setup exceeds directory bound')
-    summary = (
-        'Coverage: '
-        + '; '.join(
-            f'{name}={facet.status.value} (requested={str(facet.requested).lower()}, warnings={len(facet.warnings)})'
-            for name in ('inventory', 'audit', 'relationships')
-            for facet in (getattr(coverage, name),)
-        )
-        + '\n'
-    )
+    summary = report_plan(plan).text
     guard.check()
     if preview:
         _empty(config.vault, guard)
@@ -335,7 +331,12 @@ def build(
         if fresh.blocked:
             failure = {ExitCode.INVALID: ModelError, ExitCode.CONFLICT: ConflictError}.get(fresh.outcome, OperationalError)
             raise failure('Initial candidate could not be revalidated after setup')
-        if (fresh.actions, fresh.state_bytes, fresh.outcome) != (plan.actions, plan.state_bytes, plan.outcome):
+        if (fresh.actions, fresh.dashboard, fresh.state_bytes, fresh.outcome) != (
+            plan.actions,
+            plan.dashboard,
+            plan.state_bytes,
+            plan.outcome,
+        ):
             raise ConflictError('Initial candidate differs after guarded setup')
         guard.check()
         _checkpoint('publication_ready')
@@ -409,6 +410,7 @@ def sync(
         verified_org_id=coverage.binding.org_id,
         comparable_live_inventory=attest_comparable_inventory,
         persist_evidence=True,
+        include_dashboard=True,
         inventory_scope=declared,
         layout=config.layout,
         options=config.options,

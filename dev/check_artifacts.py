@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -63,6 +63,8 @@ def _inspect(artifact: Path, version: str, license_bytes: bytes) -> None:
             'renderer/__init__.py',
             'renderer/templates.py',
             'renderer/notes.py',
+            'renderer/dashboards.py',
+            'resources/bases/apex_classes.base',
             'sync/__init__.py',
             'sync/notes.py',
             'sync/state.py',
@@ -399,7 +401,7 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
     assert result.content[after.region_end:] == data[note.region_end:]
     assert result.generated_region_hash == after.region_hash
     assert result.generated_region == after.region
-    assert after.properties['technical_debt'] is None
+    assert after.properties['technical_debt'] is False
     assert after.properties['technical_debt_assessed'] is False
     assert after.properties['tags'] == ('my-tag', 'second')
     assert b'# custom tags' in result.content and b"type: 'team_record'" in result.content
@@ -535,6 +537,8 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         _run([str(python), '-c', planner_probe], work, environment)
         transaction_probe = Path(__file__).with_name('probe_transactions.py').read_text(encoding='utf-8')
         _run([str(python), '-c', transaction_probe], work, environment)
+        dashboard_probe = Path(__file__).with_name('probe_dashboard.py').read_text(encoding='utf-8')
+        _run([str(python), '-c', dashboard_probe], work, environment)
         engine_probe = Path(__file__).with_name('probe_engine.py').read_text(encoding='utf-8')
         _run([str(python), '-c', engine_probe], work, environment)
         _run([str(python), '-c', live_probe], work, environment)
@@ -580,6 +584,10 @@ def _lifecycle(command: list[str], root: Path, work: Path, environment: dict[str
     if snapshot(root) != before or vault.exists():
         raise ValueError('Installed missing-destination preview wrote output')
     _run(command + ['build', '--config', str(config)], work, environment)
+    asset = vault / 'Dashboards/Apex Classes.base'
+    expected_asset = (Path(__file__).resolve().parents[1] / 'src/obforce/resources/bases/apex_classes.base').read_bytes()
+    if asset.read_bytes() != expected_asset:
+        raise ValueError('Installed public build dashboard differs from packaged asset')
     before = snapshot(root)
     result = subprocess.run(
         command + ['build', '--config', str(config)],

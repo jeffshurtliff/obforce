@@ -1,0 +1,46 @@
+# obforce:dashboard:apex_classes:v1
+# Generated view: layout edits are protected conflicts. Customize a separate Base.
+filters:
+  and:
+    - 'file.ext == "md"'
+    - 'note.obforce_id.isType("string")'
+    - 'note.obforce_id != ""'
+    - 'note.obforce_schema == 1'
+    - 'note.sf_type == "ApexClass"'
+formulas:
+  class_link: 'file.asLink(note.sf_full_name)'
+properties:
+  formula.class_link:
+    displayName: Class
+  note.sf_namespace:
+    displayName: Namespace
+  note.sf_status:
+    displayName: Metadata Status
+  note.sf_api_version:
+    displayName: API Version
+  note.sf_created:
+    displayName: Created
+  note.sf_last_modified:
+    displayName: Last Modified
+  note.technical_debt:
+    displayName: Technical Debt
+  note.tech_debt_severity:
+    displayName: Debt Severity
+  note.tech_debt_status:
+    displayName: Debt Status
+  note.last_reviewed:
+    displayName: Last Reviewed
+views:
+  - type: table
+    name: Apex Classes
+    order:
+      - formula.class_link
+      - note.sf_namespace
+      - note.sf_status
+      - note.sf_api_version
+      - note.sf_created
+      - note.sf_last_modified
+      - note.technical_debt
+      - note.tech_debt_severity
+      - note.tech_debt_status
+      - note.last_reviewed

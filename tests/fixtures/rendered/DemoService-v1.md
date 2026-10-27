@@ -10,7 +10,7 @@
 "sf_status": "Active"
 "sf_type": "ApexClass"
 "tags": ["salesforce"]
-"technical_debt": null
+"technical_debt": false
 "type": "salesforce_component"
 ---
 

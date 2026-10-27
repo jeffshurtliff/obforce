@@ -182,6 +182,7 @@ def test_native_windows_junction_refuses_without_following(tmp_path):
         b'<!DOCTYPE ApexClass [<!ENTITY x "private-sentinel">]><ApexClass>&x;</ApexClass>',
         b'<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">' + b'<x>' * 17 + b'</x>' * 17 + b'</ApexClass>',
     ],
+    ids=['xml-byte-limit', 'xml-forbidden-entity', 'xml-depth-limit'],
 )
 def test_actual_xml_limits_and_redaction(payload):
     with pytest.raises(ModelError) as error:
@@ -196,6 +197,7 @@ def test_actual_xml_limits_and_redaction(payload):
         (parse_state, b'{"private-sentinel":' + b'[' * 17 + b'0' + b']' * 17 + b'}', ConflictError),
         (parse_note, b'x' * (const.MAX_NOTE_BYTES + 1), ConflictError),
     ],
+    ids=['state-byte-limit', 'state-depth-limit', 'note-byte-limit'],
 )
 def test_actual_state_and_note_limits(parser, payload, error_type):
     with pytest.raises(error_type) as error:

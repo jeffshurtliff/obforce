@@ -1,9 +1,10 @@
 # Platform, failure and scale qualification
 
-Thread 15 is a local qualification candidate. #15 remains open for maintainer
-acceptance. New tests have no exact-commit hosted result until delivery and
-verification are separately authorized. The accepted Thread 14 hosted matrix is
-prerequisite evidence; it does not qualify subsequent changes. See the detailed
+Thread 15 remains open for maintainer acceptance. The initial implementation at
+merge `ae44a2c` passed eight Linux/macOS hosted cells, but Windows failed or was
+cancelled. The Windows test-ID/CI-supervision correction is a local candidate
+pending separately authorized delivery and exact-commit hosted verification.
+The accepted Thread 14 matrix remains prerequisite evidence. See the detailed
 [qualification record](../dev/THREAD_15_QUALIFICATION.md) and
 [roadmap](../dev/IMPLEMENTATION_PLAN.md).
 
@@ -111,3 +112,67 @@ Archive membership stays exactly 36 wheel / 35 sdist entries.
 The final measured results, retained failures and unavailable/skipped checks are
 in the [detailed record](../dev/THREAD_15_QUALIFICATION.md#measured-environment-results-and-retained-failures).
 Threads 16–17 and enhancements #18/#19 remain **NOT STARTED**.
+
+
+## Corrected local CI-supervision evidence
+
+After the initial Windows failure, the full corrected suite on native macOS
+27.0.1 ARM64/APFS/Python 3.14.7 passed **1593 tests / 3 skipped in 222.26s**,
+with **92% combined statement/branch coverage**, through the new supervisor.
+Complete raw capture was 8730 bytes; console output 9393 bytes; longest raw line
+754 bytes. The 14 new regressions passed separately on Python 3.12.7 and 3.13.15.
+Two fresh independent Python 3.14.7 wheel/sdist installs and all standard checks
+passed. This is local evidence; the corrected native Windows/hosted matrix
+remains pending. The detailed record preserves initial failures/cancellations,
+simulated/mocked boundaries and all prior failed or unavailable observations.
+
+## Bounded CI test execution
+
+Large fixture values must stay in test values/fixtures. The three original byte
+payloads became pytest IDs and exceeded Windows' 32767-character environment
+value limit when pytest set `PYTEST_CURRENT_TEST`. Setup and teardown both failed;
+those test bodies did not execute. Repeated IDs also produced enormous logs.
+Explicit short IDs now identify those cases, with their complete payloads intact.
+A shared test hook describes long automatic string/byte parameters by length;
+collection refuses any remaining node ID above 512 UTF-8 bytes without printing
+the offending identifier. This also covers explicitly supplied IDs.
+
+CI runs the developer-only `dev/run_pytest.py` supervisor from the test-suite root.
+For local reproduction, select fresh absolute log paths outside the checkout:
+
+```sh
+poetry run python dev/run_pytest.py --collect-only --log /absolute/isolated/collection.log
+poetry run python dev/run_pytest.py --log /absolute/isolated/pytest.log
+```
+
+The supervisor retains combined stdout/stderr in an exclusively created log and
+prefixes console lines to prevent child text becoming Actions workflow commands.
+Its finite budgets are separate from all application safety limits:
+
+| CI boundary | Budget / behavior |
+| --- | --- |
+| Automatic string/byte parameter description | Values over 96 bytes use length-based IDs; values remain intact |
+| Collected test node ID | 512 UTF-8 bytes; collection error before test setup |
+| Raw capture and emitted child console output | Each at most 2 MiB, plus a small fixed controller status |
+| Child diagnostic line | 4096 bytes; overflow fails instead of printing the line |
+| Collection wall time / Actions step | 5 / 6 minutes |
+| Coverage suite wall time / Actions step | 45 / 50 minutes |
+| Independent artifact install step / entire matrix job | 30 / 90 minutes |
+| Failure diagnostics | Short tracebacks, no captured-output dumps, stop after five failure reports |
+| Matrix / superseded runs | Fail fast; superseded runs in the same workflow/ref group cancel |
+
+Output overflow, deadline or uncertain cleanup exits unsuccessfully and marks
+the retained log as an incomplete bounded prefix. It cannot establish a complete
+test or coverage pass. Existing log paths are never overwritten; there is no
+automatic retry. A failed pytest exit remains failed. Cancellation and unexecuted
+tests remain qualification gaps. Default pytest diagnostics are bounded in
+`pyproject.toml`; the supervisor supplies the capture/time boundaries in CI.
+
+The controller terminates its owned POSIX process group or uses Windows' native
+`taskkill` for its owned pytest tree, then reaps the child. The outer Actions
+deadlines backstop unconfirmed cleanup. This is ordinary CI process management,
+not hostile-process containment or Windows sf execution. Native Windows cleanup
+and the corrected hosted matrix still require exact-commit verification. No
+application limit, filesystem guard, schema, payload, dependency or scope changed.
+The supplied raw failure log stays private and unmodified; public tracking holds
+only reviewed synthetic summaries and evidence boundaries.

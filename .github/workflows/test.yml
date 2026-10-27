@@ -17,6 +17,8 @@ on:
       - examples/**
       - .agents/**
       - .claude/**
+      - .codex/**
+      - .entire/**
       - .gemini/**
       - .github/ISSUE_TEMPLATE/**
   pull_request:
@@ -35,6 +37,8 @@ on:
       - examples/**
       - .agents/**
       - .claude/**
+      - .codex/**
+      - .entire/**
       - .gemini/**
       - .github/ISSUE_TEMPLATE/**
 

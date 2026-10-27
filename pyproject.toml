@@ -72,7 +72,7 @@ docstring-code-format = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests/unit", "tests/integration"]
-addopts = "--strict-config --strict-markers"
+addopts = "--strict-config --strict-markers --tb=short --show-capture=no --maxfail=5"
 
 [tool.coverage.run]
 source = ["obforce"]

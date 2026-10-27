@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file, following
 
 ## [Unreleased]
 
+### Fixed
+
+- Thread 15 Windows pytest setup/teardown failures from oversized parameter IDs
+  in `PYTEST_CURRENT_TEST`, with repeated huge diagnostics. Complete boundary
+  payloads now use short IDs; shared collection guards refuse oversized IDs.
+  CI supervision fails explicitly on output/line/time overflow, preserves bounded
+  incomplete evidence, stops owned children and retains nonzero exits. Short
+  diagnostics, fail-fast, concurrency and outer deadlines limit runaway runs.
+  Application limits/contracts and dependencies remain unchanged. Correction is
+  locally validated only until separately authorized exact-commit hosted testing;
+  #15 stays open. Failed/cancelled runs and all earlier observations remain.
+
 ### Added
 
 - Thread 15 synthetic platform/failure/scale qualification harnesses and installed

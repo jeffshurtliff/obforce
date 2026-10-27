@@ -88,8 +88,10 @@ passed all 12 cells and 24 independent installs: Linux 1555 passed each, macOS
 [Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Failed run `40427329142` and every earlier failure/skip remain historical.
 Optional native Obsidian preview remains unavailable; Windows sf stays refused.
-Thread 15 is locally implemented; #15 remains open pending acceptance and
-separately authorized new exact-commit hosted verification.
+Thread 15 reached an initial hosted run at merge `ae44a2c`: eight Linux/macOS
+cells passed; Windows failed or was cancelled. The test-ID/CI-supervision
+correction remains local pending separately authorized exact-commit hosted
+verification and acceptance; #15 stays open.
 Threads 16–17 and enhancements #18/#19 remain NOT STARTED. See
 [qualification boundaries and reproduction](docs/QUALIFICATION.md).
 
@@ -126,6 +128,16 @@ poetry run pytest --cov=obforce --cov-report=term-missing
 poetry run bandit -r src/obforce
 git diff --check
 ```
+
+CI first collects tests, then runs coverage through `dev/run_pytest.py` with
+exclusive external logs, 2 MiB raw/console budgets, 4 KiB diagnostic lines and
+5-minute collection / 45-minute test deadlines. Overflow is a failed incomplete
+run, never a truncated pass. Collection rejects node IDs over 512 UTF-8 bytes;
+use short descriptive IDs for large parameter values without shrinking fixtures.
+Default pytest diagnostics use short tracebacks, omit captured-output dumps and
+stop after five failure reports. Matrix fail-fast, workflow concurrency and outer
+step/job deadlines limit redundant work. Cancelled/unexecuted cells remain gaps.
+See [exact budgets and reproduction](docs/QUALIFICATION.md#bounded-ci-test-execution).
 
 Tests are deterministic and offline, using temporary directories and synthetic
 inputs. They never discover Salesforce authentication or use a real vault. The

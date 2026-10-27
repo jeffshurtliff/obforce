@@ -1,8 +1,12 @@
 # Thread 15 qualification record
 
 Thread 15 / [#15](https://github.com/jeffshurtliff/obforce/issues/15) only, authorized
-27 October 2026. Local candidate; maintainer acceptance and separately authorized
-delivery/exact-commit hosted verification remain pending. Threads 16–17 and
+27 October 2026. Initial implementation was delivered by the maintainer at
+merge `ae44a2c`; eight hosted Linux/macOS cells passed and Windows failed or
+was cancelled. The test-ID/CI-supervision correction is a local candidate pending
+separately authorized delivery/exact-commit hosted verification and acceptance.
+Earlier local handoffs below remain historical; the correction record at the end
+is current. Threads 16–17 and
 enhancements #18/#19 are **NOT STARTED**. No release or platform provisioning.
 
 ## Prerequisite and scope
@@ -427,3 +431,173 @@ CI rerun, closure, publication or later-thread action.
 
 Existing branch retained: `test/15-thread-15-platform-failure-and-scale-qualification`.
 No branch was created or renamed.
+
+
+## Windows CI failure and bounded correction — 27 October 2026
+
+### Exact hosted evidence and cause
+
+Maintainer-delivered implementation `a259fc4`, merge
+`ae44a2cf3873ba7f16076a9bf577c7bd9f4721fd`, ran as
+[40575562800, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/40575562800).
+This is initial Thread 15 evidence, separate from accepted Thread 14 and the
+correction below. Exact commit and required commands were read in each of the
+eight successful job logs, alongside native step conclusions. All eight passed
+metadata/lock, Ruff lint/format, Bandit, coverage pytest, fresh build, strict Twine,
+exact archive checks, both independent installs and whitespace: 16 installs.
+Runner labels alone do not identify tested filesystems or prove native ACLs.
+
+| Hosted cell | Job | pytest outcome | Reported seconds |
+| --- | --- | --- | ---: |
+| Linux / Python 3.12 | 122440940110 | 1581 passed, 1 skipped | 1504.76 |
+| Linux / Python 3.13 | 122440940288 | 1581 passed, 1 skipped | 1865.76 |
+| Linux / Python 3.14 | 122440940405 | 1581 passed, 1 skipped | 572.14 |
+| Linux / Python 3.15 | 122440939910 | 1581 passed, 1 skipped | 319.82 |
+| macOS / Python 3.12 | 122440940355 | 1579 passed, 3 skipped | 1271.91 |
+| macOS / Python 3.13 | 122440940222 | 1579 passed, 3 skipped | 1094.51 |
+| macOS / Python 3.14 | 122440940545 | 1579 passed, 3 skipped | 311.40 |
+| macOS / Python 3.15 | 122440940408 | 1579 passed, 3 skipped | 453.75 |
+| Windows / Python 3.14.9 | 122440940091 | 1557 passed, 22 skipped, 6 errors | 1627.34 |
+| Windows / Python 3.12.10 | 122440940286 | 1557 passed, 22 skipped, 6 errors | 2617.11 |
+| Windows / Python 3.13 | 122440940763 | Cancelled; no complete qualification result | Unavailable |
+| Windows / Python 3.15 | 122440940237 | Cancelled; no complete qualification result | Unavailable |
+
+Windows Python 3.14's complete maintainer-supplied raw log is **71,652,081 bytes**,
+SHA-256 `2e7d99c8eb040bdc41c73d5aad7479b7971bf83327e7ecd95dea18deec45b31e`.
+The original private file remains unmodified and is not uploaded or packaged.
+Bounded local scanning found 12 lines over 32767 bytes, maximum 16,777,430 bytes;
+only short reviewed summaries are public. A separate direct read of Windows
+Python 3.12.10 job 122440940286 confirms the same three setup/teardown cases and
+six environment-value errors: 1557 passed/22 skipped/6 errors in 2617.11s. That
+raw log is 71,652,034 bytes, SHA-256
+`c62d832c4fae3d929de9809a8fa0c3b2b221de28f7d1b234c2625e8ad4c1fc66`; it also
+stays private. The first gh read refused terminal escape sequences; the second
+explicitly saved raw bytes to a file for bounded inspection, never rendering
+them in a terminal. Windows metadata/lock, Ruff and Bandit
+passed; failed/cancelled pytest left downstream build/Twine/archive/install/
+whitespace gates unqualified. The Python 3.13 job snapshot still showed pending
+steps although its job conclusion was cancelled; none is counted as passed.
+No cancellation or CI rerun was initiated in this correction session.
+
+Three byte values without explicit pytest IDs caused the six Python 3.14 errors:
+65,537-byte XML, 16,777,217-byte state, and 1,048,577-byte note payloads. Pytest
+expanded each complete value into a node ID and set `PYTEST_CURRENT_TEST` in both
+setup and teardown. Windows rejected the environment value above 32767 characters.
+The test bodies therefore never executed. Error headings and summaries repeated
+the huge IDs. Pytest reported 1627.34s while oversized diagnostics continued
+arriving much later; the exact runner/transport bottleneck was not isolated.
+This test metadata defect does not explain any earlier unrelated failures.
+
+### Correction and safeguards
+
+- Explicit short IDs describe all six parser-limit cases without shrinking or
+  changing payloads. A shared hook describes large automatic string/byte values
+  by length; a 512-byte UTF-8 node-ID ceiling rejects oversized explicit IDs at
+  collection without echoing payloads.
+- Default pytest reports use short tracebacks, no captured-output dumps and a
+  five-failure-report stopping point. Unexecuted tests remain gaps.
+- Developer-only `dev/run_pytest.py` first supervises collection, then coverage.
+  Raw capture and emitted child console output each have a 2 MiB ceiling; lines
+  have a 4096-byte ceiling. Logs are exclusively created outside the checkout in
+  CI and never overwrite old evidence. Console lines are prefixed against Actions
+  workflow-command injection. Overflow fails and labels any retained prefix
+  incomplete; it cannot turn truncated evidence into a pass.
+- Collection/test child deadlines are 5/45 minutes, with 6/50-minute Actions step
+  deadlines; artifact installs have 30 minutes and each complete job 90 minutes.
+  Matrix fail-fast and workflow/ref concurrency stop redundant work. There is no
+  automatic retry, timeout increase or application bound change.
+- Cleanup targets only the owned pytest process group/tree, reaps the child and
+  fails on unconfirmed cleanup. Windows taskkill is CI process management, not
+  application sf transport. Outer Actions deadlines backstop escaped descendants
+  or blocked controller output; hostile-process containment is not promised.
+
+The complete [CI policy and reproduction](../docs/QUALIFICATION.md#bounded-ci-test-execution)
+is documented. No source/runtime/package asset, lock/dependency/schema/renderer,
+identity/ownership/human-field, transaction limit/guard/recovery or CLI behavior
+changed in this correction. The developer runner and test hooks are not packaged.
+
+### Correction development observations
+
+A small synthetic subprocess before the fix enforced Windows' UTF-16 environment
+value ceiling on this macOS host: **6 errors in 0.11s**, exit 1, 98 output bytes
+with traceback/summary suppression. This reproduces setup/teardown failure but
+is simulated, not native Windows evidence. New regression tests execute all
+three complete original payload sizes under the same simulated ceiling, refuse
+100000-character explicit IDs without echo, handle Unicode, collect actual
+parser cases, and exercise flood/deadline/exit/log preservation/child cleanup.
+Windows cleanup dispatch has a separate mock; POSIX descendant cleanup executes
+native synthetic Python children. Neither is native Windows cleanup qualification.
+
+Exploratory development outcomes remain: 1 failed/11 passed in 1.35s, then
+1 failed/13 passed in 2.79s. The console-overflow probe emitted enough raw newlines
+to hit the raw-byte budget first; its input was reduced to isolate console
+expansion. No production budget was changed. Subsequent focused result:
+**14 passed in 2.84s**. Actual parser boundary subset: **7 passed / 20 deselected
+in 0.08s**. Compact full collection: **1596 tests**, 1074 raw bytes, exit 0,
+complete capture/confirmed cleanup; maximum audited node ID 177 UTF-8 bytes.
+
+The first external full-suite command ran from an empty work directory and
+collected no tests: exit 5, 0.01s, no coverage; the controller correctly preserved
+that failure. The corrected command runs from the external suite root. The first
+sandboxed fresh-build attempt could not reach PyPI for isolated build setup; it
+produced no artifact. Separately authorized setup network access was then used.
+No application runtime network or external sf/Obsidian process was allowed.
+
+### Corrected local validation and handoff
+
+Local native **macOS 27.0.1 (26A434), ARM64, APFS, Python 3.14.7** used the
+previously verified installed application and a fresh external public synthetic
+suite copy. Both application and fixtures stayed under quiescent ancestry; all
+TMPDIR/TEMP/TMP variables selected a dedicated root. Poetry 2.4.2, pytest 9.1.1,
+pytest-cov 7.1.0 and coverage 7.17.0; runtime versions match the earlier record.
+The complete corrected suite through the actual CI supervisor exited 0:
+**1593 passed / 3 skipped in 222.26s**, **92% combined statement/branch coverage**
+(4693 statements, 2070 branches). Capture was complete, cleanup confirmed,
+**8730 raw bytes / 9393 console bytes**, longest raw line **754 bytes**. This
+exercises the controller with real coverage output as well as synthetic failures.
+Skips remain case/NFC filesystem representation and unavailable native Windows
+junction execution; no skip is qualification. Python 3.12.7 and 3.13.15 focused
+new regressions each passed **14 tests**, 3.28s and 3.29s respectively; full suites
+were not repeated on those interpreters for this test/CI-only correction.
+
+Strict Poetry metadata/lock, Ruff lint/format (113 Python files), Bandit (zero
+findings, five existing suppressions), whitespace, fresh build and strict Twine
+passed. Both fresh Python 3.14.7 independent wheel/sdist installs passed exact
+source/resource/license/metadata checks and all installed probes: both actual
+console/module entry points; absolute/relative config paths with spaces;
+malformed/oversized/unreadable inputs; bounded private output; init/build/sync/
+recover; finite bounds and 12-note lifecycle; lower-level safety; active runtime
+network/process guards; no application cwd artifacts. Setup downloads remained
+separate. Archive membership stayed exactly **36 wheel / 35 sdist**, no new asset.
+
+| Fresh artifact | SHA-256 |
+| --- | --- |
+| Wheel | `557e527155b649c93840260f9fb0b8c451c31a3d6b8484cd263be80d6dcd08cf` |
+| Sdist | `acc1ac95d2f2b156a49dd7d43ad9fedae26d066b61c0776f07b8971876589a65` |
+
+Workflow structure retains 12 cells and verifies the intended limits; five
+changed Markdown files initially checked 98 local links/anchors with no errors.
+Final readback/whitespace/privacy/status review follows. The original large
+failure log and bounded local diagnostic logs stay private and outside artifacts.
+No accepted failure/skip/unavailable observation is removed or explained by later
+success: `40427329142`, `40235515146`, template-refresh conflict 3 and Thread 12's
+uncaptured 2-failed/1371-passed/2-skipped causes all remain.
+
+Correction is **locally verified, unstaged/uncommitted**, at maintainer HEAD
+`f252844` on existing `fix/15-thread-15-fix-and-prevent-windows-ci-run-crash`.
+No branch creation, stage/commit/push/PR/merge, CI cancellation/rerun, issue closure
+or publication by this session. #15 remains open pending separately authorized
+corrected delivery/exact-commit hosted matrix and maintainer acceptance. Native
+Windows corrected execution/cleanup, Python 3.15 local execution, native ACL/sf,
+Obsidian preview, power-loss and hostile-race evidence remain unavailable.
+Threads 16–17 and enhancements #18/#19 remain **NOT STARTED**.
+
+
+Final correction tracking receipt: [public-safe handoff](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6455944150)
+and #15 body/checklist are synchronized. Readback retains OPEN, the five original
+labels, maintainer assignee, milestone 1 and native closed #14 → open #15 → open
+#16 links. Corrected hosted matrix and maintainer acceptance stay unchecked.
+
+Final correction review: five changed Markdown files, 99 local links/anchors,
+zero missing targets; metadata/lock, Ruff lint/format and whitespace rechecked.
+All 11 changed/new files remain unstaged/uncommitted; no staged or unrelated file.

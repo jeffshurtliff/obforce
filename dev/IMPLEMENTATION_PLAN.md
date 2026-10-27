@@ -840,7 +840,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Accepted/closed; correction 6d08696 / merge cdf0e68 / run 40517073513 all 12 cells passed |
-| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Local candidate complete; hosted verification/acceptance pending; open |
+| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Windows CI failed/cancelled; correction locally verified; corrected hosted verification/acceptance pending; open |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
 | 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
 
@@ -1930,8 +1930,10 @@ consistency. Report separately whether a native app preview was actually done.
 
 **Goal:** Evidence for the supported platforms and realistic local operation.
 
-**Depends on:** 14. **Status:** Local implementation/qualification candidate complete;
-new exact-commit hosted verification and maintainer acceptance pending. #15 stays open.
+**Depends on:** 14. **Status:** Initial hosted run passed eight Linux/macOS cells;
+Windows failed or was cancelled. The test-ID/CI-supervision correction is locally
+verified; corrected exact-commit hosted verification and acceptance remain pending.
+#15 stays open.
 
 Thread 14 is accepted/closed. The exact
 [Thread 15 launch prompt](#copy-ready-thread-15-launch-prompt) carries its final
@@ -6624,3 +6626,77 @@ CI rerun, closure, publication or later-thread action.
 
 Existing branch retained: `test/15-thread-15-platform-failure-and-scale-qualification`.
 No branch was created or renamed.
+
+### Thread 15 Windows CI correction in progress — 27 October 2026
+
+The maintainer reported runaway Windows logs from merge
+`ae44a2cf3873ba7f16076a9bf577c7bd9f4721fd`, run `40575562800`, attempt 1.
+The supplied complete Python 3.14 job log establishes three oversized pytest
+parameter IDs, each causing setup and teardown environment-value errors before
+its test body ran: **1557 passed / 22 skipped / 6 errors**, 1627.34s reported by
+pytest. Payloads became `PYTEST_CURRENT_TEST`; Windows refused values above
+32767 characters. Repeated huge IDs also amplified diagnostic output. The exact
+runner/transport contribution to delayed output has not been isolated.
+
+Correction is limited to test identifiers, collection validation, pytest
+diagnostics and CI supervision. Full payloads and application bounds/contracts
+remain unchanged. Focused reproduction enforces the Windows environment limit
+locally; it is simulated evidence, not native Windows qualification. Local full
+suite/package validation is in progress. The maintainer is handling cancellation;
+this session has not cancelled or rerun CI. Existing failed/cancelled evidence
+remains; #15 is open pending corrected exact-commit hosted evidence and acceptance.
+Existing branch `fix/15-thread-15-fix-and-prevent-windows-ci-run-crash` and maintainer
+HEAD `f252844` are preserved. Changes remain unstaged/uncommitted. Threads 16–17
+and enhancements #18/#19 remain **NOT STARTED**.
+
+
+### Thread 15 Windows correction local handoff — 27 October 2026
+
+The complete [correction evidence](THREAD_15_QUALIFICATION.md#windows-ci-failure-and-bounded-correction--27-october-2026)
+retains merge `ae44a2cf3873ba7f16076a9bf577c7bd9f4721fd` / run `40575562800`
+attempt 1: eight Linux/macOS cells passed all gates and 16 independent installs;
+Windows Python 3.14.9 failed 1557/22/6 errors, 1627.34s. Python 3.12.10 directly
+confirmed the same six errors, 1557/22, 2617.11s; 3.13/3.15 were cancelled; their unexecuted/skipped gates are not passes. Three
+huge parameter IDs exceeded the Windows environment-value ceiling during pytest
+setup and teardown; repeated IDs amplified output. Private original log retained
+unchanged; its exact hash/size and cause boundaries are recorded.
+
+**Correction:** complete byte payloads now have descriptive IDs; shared collection
+hooks bound automatic IDs and reject node IDs above 512 UTF-8 bytes without echo.
+Developer-only CI supervision enforces separate 2 MiB raw/console and 4 KiB line
+budgets, 5/45-minute collection/test deadlines, explicit incomplete failure and
+owned-child cleanup. Short diagnostics, maxfail 5, matrix fail-fast, superseded
+workflow cancellation and outer 6/50/30/90-minute deadlines limit redundant or
+runaway work. No application bound/schema/guard/dependency/lock/runtime change.
+
+**Verified locally:** native macOS 27.0.1 ARM64/APFS/Python 3.14.7 full suite through
+that supervisor: **1593 passed / 3 skipped, 222.26s, 92% statement/branch coverage**,
+exit 0, complete capture/confirmed cleanup; raw 8730 bytes, console 9393 bytes,
+longest raw line 754 bytes. Skips retain case/NFC representation and unavailable
+native Windows junction boundaries. New regressions on Python 3.12.7/3.13.15:
+14 passed each, 3.28/3.29s. Simulated Windows environment-limit and mocked cleanup
+checks are distinct from native Windows qualification. Strict metadata/lock,
+Ruff lint/format, Bandit, whitespace, fresh build/Twine/exact 36/35 archives and
+**two fresh independent Python 3.14.7 wheel/sdist installs** passed, including
+actual console/module paths, installed assets/lifecycle/bounds/privacy/runtime
+guards and no application cwd artifacts. First empty-cwd no-tests exit 5,
+setup-network build failure and development probe failures are retained.
+
+**Pending:** corrected exact-commit hosted Linux/macOS/Windows Python 3.12–3.15
+verification after separate delivery authorization, native Windows cleanup and
+maintainer acceptance. Original historical failures and uncaptured causes remain.
+#15 stays **OPEN** with native dependencies and metadata retained. All correction
+changes remain unstaged/uncommitted on the existing fix branch at `f252844`;
+maintainer changes preserved. No CI rerun/cancellation or Git/publication action.
+**Thread 16 is next only after acceptance, NOT STARTED**; Thread 17 and enhancements
+#18/#19 remain **NOT STARTED**.
+
+
+Final correction tracking receipt: [public-safe handoff](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6455944150)
+and #15 body/checklist are synchronized. Readback retains OPEN, the five original
+labels, maintainer assignee, milestone 1 and native closed #14 → open #15 → open
+#16 links. Corrected hosted matrix and maintainer acceptance stay unchecked.
+
+Final correction review: five changed Markdown files / 99 local links/anchors /
+zero errors; metadata/lock, Ruff lint/format and whitespace passed. All 11
+changed/new files remain unstaged/uncommitted, with no unrelated or staged file.

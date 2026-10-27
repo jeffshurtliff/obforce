@@ -42,8 +42,13 @@ private evidence design supersedes the earlier transient-only restriction.
 See the [acceptance record](#thread-13-acceptance-and-closure--26-october-2026),
 retained [Windows failure](#thread-13-windows-ci-correction--26-october-2026), and
 [Thread 14 launch prompt](#copy-ready-thread-14-launch-prompt).
-Thread 14 is locally implemented and verified, pending maintainer acceptance; see the
-[dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md). Threads 15–17 and enhancement #18 remain **NOT STARTED**.
+Thread 14 is **accepted and complete**, including Windows path correction
+`6d08696` / merge `cdf0e68`. Exact-merge run `40517073513`, attempt 1, passed all
+12 cells and 24 independent installs; #14 is closed as completed. See the
+[acceptance record](#thread-14-acceptance-and-closure--27-october-2026) and
+[dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md). Native Obsidian preview
+was optional and remains unavailable, not an inferred pass. Thread 15 is next
+eligible but **NOT STARTED**; Threads 15–17 and enhancements #18/#19 remain **NOT STARTED**.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -832,7 +837,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 11 | Transaction writer and recovery | 10 | D: working lifecycle | [#11](https://github.com/jeffshurtliff/obforce/issues/11) | Accepted and complete |
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
-| 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Locally verified; open pending acceptance; native/hosted gaps retained |
+| 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Accepted/closed; correction 6d08696 / merge cdf0e68 / run 40517073513 all 12 cells passed |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Not started |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
 | 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
@@ -1868,8 +1873,11 @@ Retained here as history, not current permission to implement the new design.
 
 **Goal:** A discoverable administrator experience using native Obsidian features.
 
-**Depends on:** 13. **Status:** Locally implemented/verified; #14 OPEN pending maintainer acceptance.
-Native Obsidian preview and hosted Thread 14 qualification are unavailable.
+**Depends on:** 13. **Status:** Accepted and complete; #14 closed as completed
+on 27 October 2026 after exact-merge run 40517073513 attempt 1 passed all 12 cells
+and 24 independent installs. Optional native Obsidian preview remains unavailable.
+
+See [acceptance and retained evidence limits](#thread-14-acceptance-and-closure--27-october-2026).
 
 See [the bounded dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md).
 
@@ -1921,6 +1929,10 @@ consistency. Report separately whether a native app preview was actually done.
 **Goal:** Evidence for the supported platforms and realistic local operation.
 
 **Depends on:** 14. **Status:** Not started.
+
+Thread 14 is accepted/closed. The exact
+[Thread 15 launch prompt](#copy-ready-thread-15-launch-prompt) carries its final
+commit/run evidence and qualification boundaries; writing it did not start this thread.
 
 **GitHub issue:** [#15](https://github.com/jeffshurtliff/obforce/issues/15)
 
@@ -6323,3 +6335,136 @@ new request.
 
 [Verified Windows correction handoff](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6443597389).
 The existing issue's current status/checklist is synchronized and remains open.
+
+
+### Thread 14 acceptance and closure — 27 October 2026
+
+**Decision:** Thread 14 is accepted and complete; #14 is closed as completed under
+the maintainer's conditional closure request after independent verification.
+Initial implementation `7c38da95ff152bcca6aa02387f8cbbb17b4ba9a2` / merge
+`40e0ffad33ed3a5dfebe8b6a85db716eb798903d` and Windows path correction
+`6d086961f07c5d36fcd8e295871b64f9f528f238` / final merge
+`cdf0e68eb5aa29184c2ecf51cb99c92e9c19e22f` are delivered. Local HEAD matches
+that final merge. The worktree was clean at this acceptance review.
+
+Verified [run 40517073513](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513),
+**attempt 1**, push/main, at the exact final merge. Read every job's command log:
+all 12 Linux/macOS/Windows Python 3.12–3.15 cells passed every required standalone
+metadata/lock, Ruff lint/format (105 files), Bandit, pytest coverage, fresh build,
+strict Twine, exact **36 wheel / 35 sdist** archive, both independent installs
+and whitespace command. No required command was skipped or masked by a later
+success. All **24 independent installs** passed installed resources, actual console/
+module entry points, relative/absolute space-path lifecycle and lower-level
+offline/runtime-guarded/no-cwd-artifact probes. Setup downloads remain separate
+from application runtime. No CI rerun was performed for this review.
+
+| Platform / Python | Job | pytest |
+| --- | --- | --- |
+| macos-latest / Python 3.12 | [122233483423](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483423) | 1553 passed, 2 skipped in 551.77s (0:09:11) |
+| macos-latest / Python 3.13 | [122233483116](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483116) | 1553 passed, 2 skipped in 477.17s (0:07:57) |
+| macos-latest / Python 3.14 | [122233483275](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483275) | 1553 passed, 2 skipped in 222.73s (0:03:42) |
+| macos-latest / Python 3.15 | [122233483628](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483628) | 1553 passed, 2 skipped in 272.61s (0:04:32) |
+| ubuntu-latest / Python 3.12 | [122233483292](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483292) | 1555 passed in 425.48s (0:07:05) |
+| ubuntu-latest / Python 3.13 | [122233483328](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483328) | 1555 passed in 725.71s (0:12:05) |
+| ubuntu-latest / Python 3.14 | [122233483801](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483801) | 1555 passed in 195.81s (0:03:15) |
+| ubuntu-latest / Python 3.15 | [122233483398](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483398) | 1555 passed in 185.42s (0:03:05) |
+| windows-latest / Python 3.12 | [122233483288](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483288) | 1539 passed, 16 skipped in 2057.58s (0:34:17) |
+| windows-latest / Python 3.13 | [122233483346](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483346) | 1539 passed, 16 skipped in 2066.69s (0:34:26) |
+| windows-latest / Python 3.14 | [122233483460](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483460) | 1539 passed, 16 skipped in 1384.66s (0:23:04) |
+| windows-latest / Python 3.15 | [122233483444](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513/job/122233483444) | 1539 passed, 16 skipped in 1657.21s (0:27:37) |
+
+Archive hashes are recorded per observed group; no cross-platform/interpreter
+byte-reproducibility claim or cause for hash variation is inferred. Each cell's
+inspected archive members, packaged source/resources and license matched its
+checkout and allowlist.
+
+| Cells | Wheel SHA-256 | Sdist SHA-256 |
+| --- | --- | --- |
+| macos-latest / Python 3.12; macos-latest / Python 3.13; macos-latest / Python 3.14; ubuntu-latest / Python 3.12; ubuntu-latest / Python 3.13; ubuntu-latest / Python 3.14 | `31905b0effa59a271e3c06e7085d726abca3921654cbf397a663d30ccea22889` | `ab11482f31692b3055003194d9c32a2be2b632c9e48ba2fe8e6a73913a788c27` |
+| macos-latest / Python 3.15; ubuntu-latest / Python 3.15 | `31905b0effa59a271e3c06e7085d726abca3921654cbf397a663d30ccea22889` | `e40f998bd7fbd7ab8cf0feafb33f0e0f50a0dde179d57c6415fdbe204a2d0b4b` |
+| windows-latest / Python 3.12; windows-latest / Python 3.13 | `915d9a4d0daea52b3c1c5888daf4ef8e4ff1de7bfdc10730156be4caddd38066` | `5dccaf23a76955c64606db63d3062a5bbad49479d4e9f04bc80cff73d35b4786` |
+| windows-latest / Python 3.14 | `7f32f66055e4e6d41e2c203a412dfef5645341d8dfaa8a92edf29ed4a5871a19` | `0531e2e152206d88c0b6f473c6ba120d28aac368ebe9ebd94f10af14e060e680` |
+| windows-latest / Python 3.15 | `7f32f66055e4e6d41e2c203a412dfef5645341d8dfaa8a92edf29ed4a5871a19` | `2953ec6b29b079db9e9bcbff711e404b1be3a38c2e107a40898a576c2ce5ca35` |
+
+**Acceptance boundaries:** the original Thread 14 task made real Obsidian preview
+optional. It remains **unavailable/not performed by the agent**, not a native
+rendering/checkbox/date-type pass. Earlier wording treating native correction
+confirmation as pending acceptance is superseded by this decision: no mandatory
+native-preview requirement was added. The maintainer's original MTF-2 manual
+observation is distinct evidence for the earlier candidate. MTF-2's requested
+code/properties/table changes and explicit false-default clarification are
+accepted with Thread 14; optional visual confirmation remains unverified.
+
+The packaged dashboard/defaults, ownership/state extension, renderer 4 date
+projections and corrected Windows relative-config handling retain all recorded
+identity, preservation, coverage, bounds, locking, transaction and recovery
+contracts. Note/marker/config/NoteState schemas remain 1, state document 2,
+evidence 1, journal 2 and dashboard 1. Windows sf stays refused. Hosted synthetic
+results do not establish real sf/org/vault behavior, native ACLs, power-loss
+durability, hostile-race exclusion, atomic snapshots or atomic multi-file
+publication. Broader platform/failure/scale qualification belongs only to #15.
+
+**Retained history:** failed run **40427329142**, its four Windows failures/
+16 skips and skipped downstream gates, and all earlier failed/skipped/unavailable
+observations remain unchanged, including **40235515146**. Earlier local changing-
+ancestor observations apply only to their captured refusals. The original
+template-refresh conflict 3 and Thread 12's 2-failed/1371-passed/2-skipped causes
+remain uncaptured; later passes and separate Windows CRLF/path-syntax failures
+do not explain them. This acceptance does not rewrite those outcomes.
+
+Issue labels, assignee, milestone and reciprocal native dependencies were checked:
+#14 blocked by closed #13; #14 blocks #15; #15 blocked by #14. Closing #14 resolves
+that prerequisite without removing its relationship. This review changed only
+acceptance documentation and #14's checklist/status; no source/tests, CI, release,
+Git delivery, real sf/Obsidian/vault/settings or other-chat action. Local
+documentation checks and closure receipt are recorded below.
+
+**Next eligible: Thread 15 / #15, explicitly NOT STARTED.** Threads 15–17 and
+enhancements #18/#19 remain NOT STARTED. The existing #15 issue was read for the
+handoff and was not edited or started. Readiness note only: its proposed
+1,000-class/10,000-edge scale fixture must be assessed against existing bounds;
+1,000 new notes cannot fit the 128-changed-file transaction ceiling. This is not
+permission to raise limits, chunk around whole-batch safety or perform benchmark
+work in Thread 14.
+
+### Copy-ready Thread 15 launch prompt
+
+> Implement only Thread 15 in the Obforce repository.
+>
+> Read GitHub issue https://github.com/jeffshurtliff/obforce/issues/15 and prerequisite #14, following #13/#12/#11/#10 and linked accepted evidence as needed. Keep existing #15 updated with public-safe start/progress, verified checklist and handoff evidence synchronized with dev/IMPLEMENTATION_PLAN.md. Leave #15 open pending maintainer acceptance; do not create duplicate tracking issues.
+>
+> Thread 14 / #14 is accepted and closed. Implementation 7c38da95ff152bcca6aa02387f8cbbb17b4ba9a2 / merge 40e0ffad33ed3a5dfebe8b6a85db716eb798903d was followed by Windows path correction 6d086961f07c5d36fcd8e295871b64f9f528f238 / merge cdf0e68eb5aa29184c2ecf51cb99c92e9c19e22f. Exact-merge run 40517073513, attempt 1, passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells: Linux 1555 passed each; macOS 1553 passed/2 skipped each; Windows 1539 passed/16 skipped each. Every required metadata/lock, Ruff lint/format, Bandit, pytest, fresh build, strict Twine, exact 36/35 archive check, both independent installs per cell and whitespace check passed. Verify actual prerequisite code, current issue/native dependencies and exact-commit command logs before coding; report new blockers first. Preserve failed run 40427329142 (all four Windows cells: 2 failed/1521 passed/16 skipped; downstream packaging/install gates skipped), 40235515146 and every older failure/skip/unavailable observation. The original template-refresh conflict 3 and Thread 12's 2-failed/1371-passed/2-skipped causes remain uncaptured; do not infer them from later passes, the Windows CRLF fixture failure or the separate relative-path resolver bug.
+>
+> Read AGENTS.md, CONTRIBUTING.md, dev/IMPLEMENTATION_PLAN.md, dev/MANUAL_TEST_FINDINGS.md, dev/THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md, dev/THREAD_14_DASHBOARD_CONTRACT.md, and docs/CONFIGURATION.md, docs/SYNC_SAFETY.md, docs/NOTE_FORMAT.md, docs/RENDERING.md, docs/COVERAGE.md, docs/REFRESH.md, docs/OFFLINE_SOURCE.md, docs/LIVE_SOURCE.md, docs/SF_CLI.md, docs/RELATIONSHIPS.md, docs/DASHBOARDS.md and docs/QUICKSTART.md. Check relevant local/vendor_docs/ if present. Preserve maintainer changes and uncommitted acceptance documentation.
+>
+> Qualify the existing offline lifecycle, safety, packaging and synthetic scale behavior; bounded fixes for defects exposed by qualification are in scope. Do not add metadata types, public commands/APIs, inferred debt/dependency facts, backup/Git integration or adoption/migration. Audit native path/link/junction/reparse/hard-link/special-file, permissions, CRLF, Unicode/case/reserved-name, locking, concurrent-edit, interruption/recovery, privacy, parser/template/state/output/time bounds and constrained cleanup behavior where actually available. Verify interpreter/dependency availability before claiming a platform. Distinguish local, mocked, hosted, native, skipped and unavailable evidence; a skip is not qualification. Document only observed filesystems and support limits.
+>
+> Design a reproducible synthetic benchmark initially targeting 1,000 classes and 10,000 explicit synthetic edges. Inspect finite bounds before dependent implementation: the accepted transaction ceiling is 128 changed files including state, so a 1,000-note initial publication does not fit one existing transaction. Measure collection/normalization, graph, rendering and planning separately where valid; test expected write-free refusal above publication bounds and a within-bound lifecycle separately. Record fixture seed/topology, exact environment, elapsed time, peak memory and which memory metric was measured; Python allocation tracking is not total RSS. Identify avoidable quadratic work and unnecessary per-component mocked acquisition calls. Do not silently raise limits/timeouts, truncate evidence, split batches to evade whole-batch contracts, or invent throughput/service-level promises. Record material proposals and obtain authorization before expanding scope, weakening accepted contracts or discarding user information.
+>
+> Preserve accepted explicit init/build/sync/recover behavior, absent/empty-only initial build and repeat refusal, stable UUIDs/moves/links, source/workspace/independently verified-org/scope binding, private retained normalized facts/graph, independent coverage, scope declaration/attestation, partial/offline preservation and missing/reactivation rules. Keep state-document schema 2/evidence schema 1, NoteState schema 1, journal schema 2, dashboard schema 1, renderer version 4 and note/marker/config schema 1. Legacy evidence-less public sync and journal-schema-1 recovery remain refused without guessing or migration. Exit precedence stays 3, 2, 1, 4, 0. Native unrooted Windows relative config paths with spaces must work through console/module; ambiguous drive/root-relative paths and foreign Windows syntax on POSIX remain refused. Windows sf execution remains refused.
+>
+> Preserve reserved generated-property and exact generated-region baselines, user prose/comments/YAML indentation/aliases/tags and every technical_debt* or other human field after creation. Never recreate existing whole notes through creation templates. Accepted MTF-2 initializes new technical_debt as Boolean false with Boolean-only creation overrides; tech_debt_severity/tech_debt_status default blank and last_reviewed blank. Keep available UTC sf_created/sf_last_modified projections and original audit timestamps; do not infer audit dates or debt. The single packaged Apex Classes Base filters reserved identity/schema and sf_type, uses class-name links and actual human properties, and stays useful alongside ordinary Markdown without plugins or Obsidian CLI. Track exact dashboard path/content/hash and publish it with state through the same recoverable planner/writer. Edited/missing/moved/unowned/ambiguous/colliding dashboards or edited generated note content block the whole batch; no overwrite/adoption/reset/migration.
+>
+> Retain full pathname/historical descriptor stamps, Windows birthtime bridging, continuous owning-handle lock reads, immediate precondition/hash/absence checks, exact transaction-owned parent deltas, same-filesystem staging/before-images, interruption/rollback/committed-cleanup validation and intervening-edit preservation. No race retries, weaker guards, broad skips, atomic-snapshot or atomic-multi-file claims. Isolate TMPDIR/TEMP/TMP, synthetic inputs and the installed application under quiescent ancestry; moving only temp fixtures may leave a changing application ancestor. Dry-run/recovery preview creates no config/vault/state/lock/journal/log/cache/staging artifacts; no-ops preserve note/dashboard/state bytes/mtimes. Keep source/config/templates/caller inputs/unrelated/.obsidian trees unchanged.
+>
+> Use synthetic temporary projects/vaults and mocked Salesforce acquisition with independently verified synthetic org identity only. Synthetic Python subprocess interruption/concurrency/measurement harnesses and normal project validation/build/install commands are authorized; application runtime network and unapproved processes are not. Do not invoke real sf or Obsidian, inspect credentials/.env, discover auth, authenticate, install/update CLI/plugins, query an org, execute Apex, deploy, access real metadata/vaults, change real .obsidian settings, provision platforms/change system policy or upload private data. Package setup downloads are separate from runtime. Native Obsidian preview was optional and unavailable in Thread 14, not a rendering pass; do not invoke it without separate authorization. Hosted synthetic transactions do not establish Windows sf, hostile-race, power-loss, native ACL or atomic multi-file guarantees. Enhancement #18 is outside v0.1.0 and is not a prerequisite or transport authorization; optional verbose enhancement #19 is outside this task.
+>
+> Test installed assets, both console/module entry points, explicit relative/absolute space paths, redirected bounded privacy-aware output, invalid inputs and bounded outcomes, init/build/sync/recover and accepted lower-level behavior from fresh independent wheel/sdist installs outside checkout/cwd under active runtime network/process guards with no cwd artifacts. Run applicable Poetry metadata/lock, Ruff lint/format, pytest with coverage, Bandit, whitespace, fresh build/Twine/exact archive and independent-install checks. Extend archive allowlists only for necessary packaged files. Manage justified dependencies through Poetry, never hand-edit poetry.lock or invent pins. Follow AGENTS.md Python headers: preserve Created By and use the actual model identifier/current local date. Update applicable docs, docs/CHANGELOG.md and the roadmap qualification handoff with measured results and exact evidence boundaries.
+>
+> Leave changes unstaged/uncommitted and #15 open for acceptance. Do not create issues, stage, commit, push, open a PR, merge, close issues, rerun CI or publish. Read existing hosted evidence; newly changed tests need separately authorized delivery/exact-commit hosted verification before qualification claims. Leave Threads 16–17 and enhancements #18/#19 explicitly NOT STARTED. Do not create/message other chats or spawn subagents.
+
+### Acceptance documentation verification and closure receipt
+
+Reviewed privacy, current/historical status consistency, exact run/job/command
+evidence and next-thread boundaries. Local documentation checks covered **11
+Markdown files / 178 local links and anchors / 0 errors** plus whitespace review.
+Corrected MTF-2's link to the superseded contract heading. No application tests,
+builds or CI were rerun for these prose-only changes; the delivered code's
+qualification is the exact hosted run above.
+
+GitHub closure was executed and read back as **closed / completed**. See the
+[closure receipt](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6446744495).
+Original labels/assignee/milestone and native #13 → #14 → #15 links remain;
+#13/#14 are closed, #15 is open with unchanged body and zero comments. All 11
+documentation files remain unstaged/uncommitted on the existing main checkout;
+no source/test/Git delivery or Thread 15 implementation was performed.

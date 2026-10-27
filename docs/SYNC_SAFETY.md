@@ -841,3 +841,12 @@ journals keep their accepted recovery path; journal schema 1 stays refused.
 Dry-run/recovery preview creates nothing; unchanged asset/note/state no-ops retain
 bytes/mtimes. See [user workflow and bounds](DASHBOARDS.md). Synthetic automated
 validation is separate from native Obsidian rendering, which remains unavailable.
+
+Thread 14 is accepted at Windows path correction `6d08696` / merge `cdf0e68`;
+#14 is closed after exact-merge run `40517073513`, attempt 1, passed every
+required command in all 12 cells and 24 independent installs. All earlier
+failures/skips remain in the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+Optional native Obsidian preview is unavailable. Hosted synthetic results do not
+qualify Windows sf, native ACL/power-loss/hostile-race behavior, atomic snapshots
+or atomic multi-file publication. Thread 15 is next eligible, NOT STARTED.

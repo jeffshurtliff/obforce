@@ -18,8 +18,9 @@ All notable changes to this project will be documented in this file, following
   summaries/help and phase-specific recovery guidance; fictional presentation
   sample and synthetic lifecycle/interruption/concurrency/installed probes.
   No dependency/lock/config-schema change, new metadata/commands, real sf/Obsidian
-  access or native preview. Hosted Thread 14 results are partial; corrected
-  Windows qualification and maintainer acceptance remain pending.
+  access or native preview. Accepted at Windows correction `6d08696` / merge
+  `cdf0e68`; exact-merge run `40517073513`, attempt 1, passed all 12 cells and
+  24 independent installs; #14 closed. Optional native preview remains unavailable.
   Threads 15–17 and enhancement #18 remain NOT STARTED.
 
 - Thread 14 MTF-2 dashboard correction: class-name links, requested column labels,
@@ -31,7 +32,8 @@ All notable changes to this project will be documented in this file, following
   decisions remain preserved. Lifecycle remains in notes/state but leaves the table.
   Renderer fingerprint advances to 4; exact old baselines remain valid, without
   human-field migration, settings changes or weakening batch/recovery guards.
-  Native confirmation remains outstanding; #14 stays open for acceptance.
+  Accepted with Thread 14 on 27 October 2026; optional native visual confirmation
+  remains unperformed and is not inferred from automated checks.
 
 - Thread 13 public `sync`/`--dry-run` for existing explicitly selected managed vaults.
   New builds save bounded exact normalized component/graph evidence in private
@@ -257,8 +259,10 @@ All notable changes to this project will be documented in this file, following
   both installed entry points' relative/absolute space-path journeys. Failed run
   40427329142 attempt 1 at merge 40e0ffa remains: all four Windows cells failed
   two relative-config cases; downstream packaging/install checks were skipped.
-  Corrected hosted Windows validation is pending; no CI rerun or Windows sf
-  qualification is implied.
+  Correction `6d08696` / merge `cdf0e68` passed exact-merge run `40517073513`,
+  attempt 1: all 12 cells and 24 independent installs, including all four Windows
+  cells (1539 passed/16 skipped each) and downstream package/install gates.
+  #14 closed after maintainer-authorized acceptance. No Windows sf qualification.
 
 - Thread 13 lifecycle test now writes its generated-template override as explicit
   UTF-8/LF on Windows too. Added synthetic CRLF refusal checks for sync and dry-run

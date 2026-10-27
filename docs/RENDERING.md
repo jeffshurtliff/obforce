@@ -363,3 +363,8 @@ gate generated-only patches; existing human fields are not backfilled. No schema
 acquisition, ownership or transaction bound changes.
 [Dashboard syntax, human debt semantics and ownership](DASHBOARDS.md)
 are tested independently from native Obsidian rendering (unavailable).
+
+Thread 14 is accepted at correction `6d08696` / merge `cdf0e68`; #14 is closed
+after run `40517073513`, attempt 1, passed all 12 hosted cells and 24 independent
+installs. Native preview was optional and remains unavailable. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).

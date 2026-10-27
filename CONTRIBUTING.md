@@ -81,14 +81,14 @@ for retained local failures and native/live limits. Thread 13 is accepted and
 complete at correction `b43ed64` / merge `3f5e909`; #13 is closed. Exact-merge run
 `40346586335`, attempt 1, passed all 12 cells and 24 independent installs. See the
 [acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026).
-Thread 14 dashboard/CLI work is locally implemented/verified pending
-maintainer acceptance; Threads 15–17 and enhancement #18 remain NOT STARTED.
-MTF-2's current correction evidence is recorded separately in the roadmap;
-earlier candidate passes are historical. Native rendering still needs confirmation.
-The maintainer merged/pushed `40e0ffa`; run `40427329142` attempt 1 passed eight
-Linux/macOS cells but failed the relative-config cases in all four Windows cells.
-The focused resolver correction and remaining hosted gap are recorded in the
-Thread 14 roadmap; no Windows sf execution qualification follows from these tests.
+Thread 14 dashboard/CLI work is accepted and complete at Windows path correction
+`6d08696` / merge `cdf0e68`; #14 is closed. Exact-merge run `40517073513`, attempt 1,
+passed all 12 cells and 24 independent installs: Linux 1555 passed each, macOS
+1553 passed/2 skipped each, Windows 1539 passed/16 skipped each. See the
+[Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+Failed run `40427329142` and every earlier failure/skip remain historical.
+Optional native Obsidian preview remains unavailable; Windows sf stays refused.
+Threads 15–17 and enhancements #18/#19 remain NOT STARTED.
 
 ## Development setup
 

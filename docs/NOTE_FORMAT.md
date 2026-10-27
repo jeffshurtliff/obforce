@@ -341,3 +341,9 @@ human fields apply only to new notes. Date projections extend the reserved
 allowlist and renderer fingerprint to version 4, preserving original timestamp
 facts and all older exact baselines. The dashboard is a separate whole-file owned asset; note templates,
 UUIDs, exact generated baselines and human YAML/prose preservation are unchanged.
+
+Thread 14, including MTF-2 and Windows relative-config correction, is accepted
+at `6d08696` / merge `cdf0e68`; #14 is closed. Run `40517073513`, attempt 1,
+passed all 12 cells and 24 independent installs. Native Obsidian preview was
+optional and remains unavailable. See the
+[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).

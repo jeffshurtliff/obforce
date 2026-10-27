@@ -126,7 +126,7 @@ No remaining work for this finding in Thread 12. Thread 13 onward and enhancemen
 - **Title**: Adjustments to the Apex Classes dashboard
 - **Categories**: Dashboards; Properties
 - **Proposed Release**: v0.1.0
-- **Status**: Implemented and verified locally; maintainer native confirmation pending
+- **Status**: Addressed and accepted with Thread 14; #14 closed on 27 October 2026; optional native preview unavailable
 - **Impact**: User experience and overall usability
 - **GitHub Issue**: [#14](https://github.com/jeffshurtliff/obforce/issues/14)
 - **Related Threads**: Thread 14
@@ -193,8 +193,9 @@ Official syntax/function/property documentation was read; no application or real
 vault/settings access was performed. The initial maintainer observation above
 is native evidence for the earlier candidate. Automated validation of this
 correction is separate and cannot confirm native checkbox/date typing or visual
-rendering. This finding and #14 remain pending maintainer confirmation. See
-[the contract](THREAD_14_DASHBOARD_CONTRACT.md#mtf-2-default-resolution) and
+rendering. At that local checkpoint this finding and #14 remained pending
+maintainer confirmation; the acceptance below supersedes that status. See
+[the contract](THREAD_14_DASHBOARD_CONTRACT.md#explicit-maintainer-mtf-2-correction) and
 [the Thread 14 roadmap](IMPLEMENTATION_PLAN.md#thread-14-mtf-2-review--26-october-2026)
 for current verification and retained historical failures.
 
@@ -206,3 +207,18 @@ installs passed. Runtime network/process denial and no cwd artifacts were checke
 separately from setup downloads. Earlier failures and changing-ancestor observations
 remain in the roadmap; this pass does not establish their uncaptured causes.
 No hosted Thread 14 or native Obsidian correction result is claimed.
+
+#### Thread 14 acceptance — 27 October 2026
+
+The maintainer requested closure if complete after corrected CI. Verified final
+Windows path correction `6d086961f07c5d36fcd8e295871b64f9f528f238` / merge
+`cdf0e68eb5aa29184c2ecf51cb99c92e9c19e22f` and every required command in
+[run 40517073513, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/40517073513).
+All 12 Linux/macOS/Windows Python 3.12–3.15 cells and 24 independent installs
+passed: Linux 1555 passed each; macOS 1553/2 each; Windows 1539/16 each.
+MTF-2's code/table/property corrections and explicit false defaults are accepted
+with Thread 14; #14 is closed. Native Obsidian preview was optional in the
+Thread 14 contract and was not performed by the agent. This is implementation/
+automated acceptance, not a claim of native rendering or property-type validation.
+Failed 40427329142 and all older evidence remain in the
+[acceptance record](IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).

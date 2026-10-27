@@ -41,8 +41,8 @@ Salesforce audit timestamps. The original `sf_*_at` values remain available.
 Obsidian property types are vault-wide. If your vault already assigns another
 type, you can review it yourself in Obsidian: Checkbox for `technical_debt`, Date
 for the date properties, Text for API Version and human severity/status. Obforce
-never changes property-type settings. Native display and existing vault type
-interactions still need maintainer confirmation.
+never changes property-type settings. Automated checks do not validate native
+display or existing vault property-type interactions.
 
 The literal packaged YAML uses documented filters, formulas and table columns.
 See official [syntax](https://obsidian.md/help/bases/syntax),
@@ -51,9 +51,12 @@ See official [syntax](https://obsidian.md/help/bases/syntax),
 [property types](https://obsidian.md/help/properties), read on
 26 October 2026. Automated schema/predicate tests do not constitute native
 Obsidian preview or rendering acceptance. The maintainer's original manual
-observation is recorded as MTF-2; native confirmation of this correction remains
-pending. Preview was unavailable to the agent; no real vault or app was opened
-by the agent.
+observation is recorded as MTF-2. Optional native preview remained unavailable to
+the agent; no real vault or app was opened by the agent. Thread 14 is accepted
+and #14 closed after exact-merge run `40517073513`, attempt 1, passed all 12 cells
+and 24 independent installs at correction `6d08696` / merge `cdf0e68`. See
+[acceptance and retained evidence limits](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+This does not establish a native rendering result.
 
 ## Destination and ownership
 

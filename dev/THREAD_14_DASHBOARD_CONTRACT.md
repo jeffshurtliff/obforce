@@ -189,3 +189,15 @@ generated-region/state readability tests remain, using Boolean fictional data.
 This does not authorize real-vault migration/adoption, automatic human-field
 conversion or whole-note recreation. All other bounds, ownership, baseline,
 publication/recovery and version-4 date projection decisions remain unchanged.
+
+## Acceptance — 27 October 2026
+
+Thread 14 is accepted and #14 closed at Windows path correction `6d08696` /
+merge `cdf0e68`. Exact-merge run `40517073513`, attempt 1, passed every required
+command in all 12 Linux/macOS/Windows Python 3.12–3.15 cells and 24 independent
+installs. The final contract includes the explicit MTF-2 Boolean false defaults,
+single table, renderer 4 date projections and unchanged transaction safety/bounds.
+Native Obsidian preview was optional and remains unavailable, not a rendering
+pass. Earlier proposals and failures above remain historical. See the
+[acceptance record and Thread 15 handoff](IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+Thread 15 and later/enhancements #18/#19 remain NOT STARTED.

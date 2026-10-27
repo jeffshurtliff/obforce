@@ -75,8 +75,11 @@ and committed cleanup retain the accepted guards and journal schema 2.
 Ambiguous crash evidence is retained for manual resolution. 
 Hosted synthetic transaction results do not establish
 power-loss, hostile-race or Windows sf guarantees. Thread 14 adds a protected
-[native Apex Classes dashboard](docs/DASHBOARDS.md) and plain CLI guidance, pending
-maintainer acceptance. MTF-2 supplies class-name links, audit date columns and
+[native Apex Classes dashboard](docs/DASHBOARDS.md) and plain CLI guidance, accepted
+at correction `6d08696` / merge `cdf0e68`; #14 is closed after run `40517073513`,
+attempt 1, passed all 12 cells and 24 independent installs. See the
+[Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+Optional native Obsidian preview remains unavailable. MTF-2 supplies class-name links, audit date columns and
 creation-only human property defaults, with Boolean false throughout fictional
 examples and test defaults. Threads 15–17 and Windows sf enhancement #18 remain NOT STARTED.
 

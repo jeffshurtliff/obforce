@@ -159,8 +159,9 @@ Do not update unrelated headers.
 - `obforce_id`/`obforce_schema` and documented `sf_*` properties are reserved.
   Other properties, including `tags`, `aliases`, business fields, and all
   `technical_debt*` fields, belong to the user after creation.
-- Leave technical debt unassessed by default. Do not convert unset to false,
-  infer debt from metadata, or overwrite human severity/status/review decisions.
+- Initialize new `technical_debt` as Boolean false under accepted MTF-2/Thread 14;
+  it remains human-owned after creation. Do not infer debt from metadata, coerce
+  existing human values during refresh, or overwrite severity/status/review decisions.
 - Replace only the validated generated body region and clean owned properties.
   Save and compare baselines for both; generated-field edits are conflicts too.
 - Never rerender an entire existing note through the creation template. Preserve

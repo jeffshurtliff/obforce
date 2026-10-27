@@ -126,7 +126,7 @@ No remaining work for this finding in Thread 12. Thread 13 onward and enhancemen
 - **Title**: Adjustments to the Apex Classes dashboard
 - **Categories**: Dashboards; Properties
 - **Proposed Release**: v0.1.0
-- **Status**: Reported
+- **Status**: Implemented and verified locally; maintainer native confirmation pending
 - **Impact**: User experience and overall usability
 - **GitHub Issue**: [#14](https://github.com/jeffshurtliff/obforce/issues/14)
 - **Related Threads**: Thread 14
@@ -167,3 +167,42 @@ the adjustments below have been identified and should be addressed within the th
 - A date property (using the `YYYY-MM-DD` format by default) should be added to the Apex Class 
   notes named `last_reviewed` (blank by default) and the **Last Reviewed** column should use
   this property as its source.
+
+#### Thread 14 response — 26 October 2026
+
+The candidate applies the requested class-name link, labels, API Version and
+human property column names. Technical Debt uses the actual Boolean property;
+new notes default unchecked. New `tech_debt_severity`/`tech_debt_status` fields
+are blank strings (recommend High/Medium/Low severity); `last_reviewed` is blank,
+with YYYY-MM-DD recommended on review. These are creation-only defaults: existing
+human properties and every `technical_debt*` value are preserved without rename,
+backfill or conversion. The maintainer explicitly authorized false throughout
+fictional/example/test defaults, without historical unassessed data; the candidate
+uses one table and no legacy view. Human Boolean decisions remain protected.
+
+Lifecycle is removed from the table but retained as `sf_lifecycle` in notes/state:
+active/missing implements the accepted comparable live-scan absence/reactivation
+workflow and is separate from Salesforce Metadata Status. The new reserved
+`sf_created`/`sf_last_modified` fields project available valid audit timestamps to
+UTC dates, retaining original `sf_*_at` facts. Offline/unavailable dates remain
+absent. Renderer fingerprint advances to 4; exact older baselines still gate
+generated-only updates. A clean saved dashboard updates through the existing
+transaction/recovery protocol; edits still block the whole batch.
+
+Official syntax/function/property documentation was read; no application or real
+vault/settings access was performed. The initial maintainer observation above
+is native evidence for the earlier candidate. Automated validation of this
+correction is separate and cannot confirm native checkbox/date typing or visual
+rendering. This finding and #14 remain pending maintainer confirmation. See
+[the contract](THREAD_14_DASHBOARD_CONTRACT.md#mtf-2-default-resolution) and
+[the Thread 14 roadmap](IMPLEMENTATION_PLAN.md#thread-14-mtf-2-review--26-october-2026)
+for current verification and retained historical failures.
+
+Final clarified candidate: **1537 passed / 2 existing case/normalization fixture
+skips**, 108.71s, against the independently installed wheel and external synthetic
+inputs. Strict metadata/lock, Ruff lint/format, Bandit, whitespace, fresh build,
+strict Twine, exact 36-wheel/35-sdist archives and both independent guarded
+installs passed. Runtime network/process denial and no cwd artifacts were checked
+separately from setup downloads. Earlier failures and changing-ancestor observations
+remain in the roadmap; this pass does not establish their uncaptured causes.
+No hosted Thread 14 or native Obsidian correction result is claimed.

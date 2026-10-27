@@ -4,7 +4,7 @@
 :Synopsis:          Serializes deterministic Apex candidates without reading or writing notes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     23 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -15,6 +15,7 @@ import re
 import unicodedata
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from types import MappingProxyType
 from uuid import UUID
 
@@ -234,6 +235,17 @@ def _properties(component: Component, coverage: Coverage, identity: str, options
             properties[f'sf_{name}'] = value.value
         elif value.availability == Availability.NULL and name in {'api_version', 'status'}:
             properties[f'sf_{name}'] = None
+    for attribute, property_name in (('created_at', 'sf_created'), ('last_modified_at', 'sf_last_modified')):
+        value = component.attributes.get(attribute)
+        if value is not None and value.availability == Availability.VALUE and type(value.value) is str:
+            try:
+                timestamp = datetime.fromisoformat(value.value)
+                if timestamp.tzinfo is not None:
+                    properties[property_name] = timestamp.astimezone(UTC).date().isoformat()
+            except (ValueError, OverflowError):
+                # Retain the original normalized value; an unsupported value is
+                # never guessed into an authoritative date-only projection.
+                continue
     return properties
 
 
@@ -432,13 +444,22 @@ def render_new_note(
     )
     if component.key not in managed_paths:
         raise ModelError('A new-note candidate requires an explicit validated path')
-    properties = {'type': 'salesforce_component', 'tags': ('salesforce',), 'technical_debt': None}
+    properties = {
+        'type': 'salesforce_component',
+        'tags': ('salesforce',),
+        'technical_debt': False,
+        'tech_debt_severity': '',
+        'tech_debt_status': '',
+        'last_reviewed': None,
+    }
     if user_properties is not None:
         if not isinstance(user_properties, Mapping) or len(user_properties) > 128:
             raise ModelError('Invalid creation properties')
         for key, value in user_properties.items():
             if property_owner(key) != 'user':
                 raise ConflictError('Creation defaults cannot redefine reserved properties')
+            if key == 'technical_debt' and type(value) is not bool:
+                raise ModelError('New-note technical_debt requires a Boolean')
             _scalar(value)
             properties[key] = value
     properties.update(generated.properties)

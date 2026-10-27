@@ -4,7 +4,7 @@
 :Synopsis:          Exercises bounded synthetic publication, interruption and conservative recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -547,7 +547,7 @@ def test_user_owned_yaml_prose_and_line_endings_preserved(inputs, ending):
     human_regions = {}
     for saved in document.notes:
         path = inputs.vault / saved.note.path
-        raw = path.read_bytes().replace(b'"technical_debt": null', b'technical_debt: false # human assessment')
+        raw = path.read_bytes().replace(b'"technical_debt": false', b'technical_debt: false # human assessment')
         raw = raw.replace(b'"tags":', b'"tags":') + b'\n## Human narrative\nPrivate fictional context\n'
         raw = raw.replace(b'\n', ending)
         path.write_bytes(raw)

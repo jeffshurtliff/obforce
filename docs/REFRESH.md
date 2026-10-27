@@ -156,5 +156,27 @@ conflict/recovery, invalid input, operational failure, completed incomplete resu
 complete/no-op. Reports expose bounded categories/counts/coverage, not private facts.
 
 See the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md) for actual local/hosted
-results, remaining platform limits and acceptance status. Thread 14/dashboard work
-and enhancement #18 are not implemented by refresh.
+results, remaining platform limits and acceptance status. Enhancement #18 remains
+unimplemented; the dashboard extension is described below.
+
+
+## Dashboard refresh (Thread 14)
+
+Sync now includes a protected [native Apex Classes dashboard](DASHBOARDS.md).
+Valid Thread 13 evidence-bearing vaults add it only when the destination is
+absent; no existing file is adopted. Notes and corresponding state retain their
+accepted source/graph/ownership contracts. Dashboard edits, missing/moved files,
+ambiguity or collisions block the whole batch. Its exact saved baseline uses an
+optional dashboard-schema-1 record inside state-document schema 2, while evidence
+schema 1, NoteState schema 1 and journal schema 2 remain. MTF-2 advances only the
+renderer fingerprint to version 4 for available UTC audit date projections.
+Dashboard changes share publication, rollback, committed cleanup and no-op/preview
+guards with notes/state. Older executables refuse the extension; use this version
+for these vaults and recovery. Legacy evidence-less sync still refuses.
+
+The MTF-2 table update replaces only a clean exact saved dashboard baseline.
+Existing human debt/status/severity/review fields are never renamed or backfilled;
+new-note Boolean/blank defaults do not authorize whole-note recreation. Human
+Boolean decisions remain preserved. New reserved
+`sf_created`/`sf_last_modified` dates patch only after both generated baselines
+validate. Edited generated dates block the entire batch like all reserved fields.

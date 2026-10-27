@@ -4,7 +4,7 @@
 :Synopsis:          Probes independently installed transaction/recovery with synthetic explicit inputs
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     21 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -99,7 +99,8 @@ def main() -> None:
         assert snapshot(vault) == before
         assert publish_plan(replace(first, state_bytes=b'forged'), request).outcome == 3
         assert snapshot(vault) == before
-        assert publish_plan(first, request).status == TransactionStatus.COMMITTED
+        result = publish_plan(first, request)
+        assert result.status == TransactionStatus.COMMITTED, result.text
         assert parse_state(request.state_path.read_bytes()) == first.state
         # A moved UUID is already user-moved; this step is explicit fixture setup.
         path = vault / first.actions[0].path

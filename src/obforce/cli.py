@@ -4,7 +4,7 @@
 :Synopsis:          Exposes explicit initialization, initial build and local recovery
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -23,9 +23,15 @@ from obforce.sync.transactions import TransactionResult
 def main() -> None:
     """Create Salesforce documentation from an explicit source.
 
-    Initialize a configuration, preview/build an empty destination, or recover
-    validated local evidence, or refresh an existing managed vault.
+    Initialize a configuration, preview/build an empty destination, then sync
+    managed notes and a protected native Apex Classes dashboard.
     Commands are noninteractive; no config, vault or auth discovery occurs.
+
+    Offline example (quote paths with spaces):
+    obforce init --config ./obforce.toml --source "./Demo Project" --vault ./Knowledge --workspace-id demo
+    Preview with build --config ./obforce.toml --dry-run, then build --config ./obforce.toml.
+    Refresh with sync --config ./obforce.toml. Recover previews local journal evidence.
+    Exit codes: 0 complete/no-op, 1 operation, 2 input, 3 conflict/recovery, 4 incomplete coverage.
     """
     if click.get_current_context().invoked_subcommand is None:
         click.echo(click.get_current_context().get_help())
@@ -33,12 +39,25 @@ def main() -> None:
 
 def _finish(result: TransactionResult, summary: str = '') -> None:
     click.echo(summary + result.text, nl=False)
+    click.echo('File totals include config (init), journaled targets (recovery), or changed notes/dashboard/state.')
+    if result.status.value == 'no_op':
+        click.echo('No changes; managed bytes and modification times preserved.')
+    elif result.status.value == 'preview':
+        click.echo('Preview only; no Obforce files or directories created.')
+    elif result.status.value == 'blocked':
+        click.echo('Batch refused; resolve the reported conflict/input before previewing again. No force/adoption mode.')
     if result.recovery_required:
         if result.outcome == 0:
-            click.echo('Validated local recovery preview; select --rollback or --cleanup to match the recorded commit phase.')
+            selection = (
+                f'next operation: recover --config PATH --{result.recovery_operation}'
+                if result.recovery_operation is not None
+                else 'select --rollback or --cleanup to match the recorded commit phase'
+            )
+            click.echo(f'Validated local recovery preview; {selection}. Run only after reviewing this preview.')
         else:
             click.echo(
-                'Recovery evidence retained; use recover preview. Unsafe or incomplete evidence requires manual resolution.'
+                'Recovery evidence retained; run recover --config PATH first. '
+                'Use only the phase-matching --rollback or --cleanup; ambiguous evidence needs manual resolution.'
             )
     click.get_current_context().exit(int(result.outcome))
 
@@ -83,6 +102,8 @@ def build(
 
     Live previews perform read queries and sf may change its own local state.
     Windows sf execution remains refused. Offline builds need no external tool.
+    Preview first with build --config "./Demo Config.toml" --dry-run.
+    Use sync for a previously built vault; build never adopts or replaces it.
     """
     try:
         result, summary = engine.build(
@@ -123,6 +144,8 @@ def sync(
 
     Missing proposals require comparable complete supported live inventory.
     Live previews can query sf and affect its own local state; Windows sf refuses.
+    Preview first with sync --config "./Demo Config.toml" --dry-run.
+    Generated note/dashboard edits block the whole batch; human note content stays owned by you.
     """
     try:
         result, summary = engine.sync(
@@ -145,7 +168,11 @@ def sync(
 @click.option('--rollback', is_flag=True, help='Explicitly roll back a validated precommit transaction.')
 @click.option('--cleanup', is_flag=True, help='Explicitly clean a validated committed transaction.')
 def recover(config_path: Path, dry_run: bool, rollback: bool, cleanup: bool) -> None:
-    """Preview, roll back or clean local evidence without acquiring a source."""
+    """Preview, roll back or clean local evidence without acquiring a source.
+
+    Start with recover --config PATH. Use --rollback before commit, --cleanup
+    after commit. Unsafe/incomplete evidence is retained for manual resolution.
+    """
     if sum((dry_run, rollback, cleanup)) > 1:
         raise click.UsageError('Recovery operation flags are mutually exclusive')
     try:

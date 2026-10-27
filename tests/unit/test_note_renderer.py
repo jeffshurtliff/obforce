@@ -4,7 +4,7 @@
 :Synopsis:          Verifies deterministic candidate contracts with synthetic metadata only
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     23 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -78,7 +78,7 @@ def test_deterministic_snapshot_no_artifacts(example, tmp_path, monkeypatch):
     assert first.text == snapshot.read_text()
     assert not list(tmp_path.iterdir())
     assert first.text.count(const.GENERATED_START) == first.text.count(const.GENERATED_END) == 1
-    assert properties(first.text)['technical_debt'] is None
+    assert properties(first.text)['technical_debt'] is False
     assert first.text.split(const.GENERATED_START + '\n')[1].split(const.GENERATED_END)[0] == first.generated.region
 
 
@@ -128,7 +128,7 @@ def test_indentation_upgrade_preserves_v2_baseline_and_human_content(example, mo
         old_hash = render(current_example).generated.render_hash
     assert current.generated.render_hash != old_hash
     raw = current.text.replace('    - Warning:', '  - Warning:').replace(
-        '"technical_debt": null', '"technical_debt": false # Human review\n"technical_debt_status": "reviewed"'
+        '"technical_debt": false', '"technical_debt": false # Human review\n"technical_debt_status": "reviewed"'
     )
     raw += '\n- Human list\n  - Keep two spaces\n    - Keep four spaces\n'
     raw = raw.encode().replace(b'\n', ending)
@@ -189,10 +189,10 @@ def test_audit_names_omitted_even_if_available(example):
 
 @pytest.mark.parametrize('value', [None, False, '', 0, ['[[DemoService]]'], ('a', 'b')])
 def test_user_defaults_remain_flat_and_explicit(example, value):
-    result = render(example, user_properties={'technical_debt': value, 'aliases': ['Demo'], 'tags': ['custom']})
-    assert properties(result.text)['technical_debt'] == (list(value) if isinstance(value, tuple) else value)
+    result = render(example, user_properties={'business_flag': value, 'aliases': ['Demo'], 'tags': ['custom']})
+    assert properties(result.text)['business_flag'] == (list(value) if isinstance(value, tuple) else value)
     assert properties(result.text)['tags'] == ['custom']
-    assert 'technical_debt' not in result.generated.properties
+    assert 'business_flag' not in result.generated.properties
 
 
 @pytest.mark.parametrize('key', ['obforce_id', 'obforce_schema', 'sf_type', 'sf_unknown'])
@@ -404,12 +404,12 @@ def test_yaml_parsed_independently_and_unicode_preserved(example):
     from yaml import safe_load
 
     value = 'Unicode \U0001f642 Café "quoted" : &anchor !tag'
-    result = render(example, user_properties={'null': value, 'false': ['[[Demo]]'], 'technical_debt': None})
+    result = render(example, user_properties={'null': value, 'false': ['[[Demo]]'], 'technical_debt': False})
     raw = result.text.split('---\n', 2)[1]
     parsed = safe_load(raw)
     assert parsed == properties(result.text)
     assert parsed['null'] == value and parsed['false'] == ['[[Demo]]']
-    assert parsed['technical_debt'] is None
+    assert parsed['technical_debt'] is False
 
 
 def test_generated_template_cannot_duplicate_required_headings(example):
@@ -482,7 +482,7 @@ def test_renderer_upgrade_preserves_legacy_state_and_human_regions(example, monk
 
     legacy = (Path(__file__).parents[1] / 'fixtures/rendered/DemoService-v1.md').read_bytes()
     raw = legacy.replace(
-        b'"technical_debt": null',
+        b'"technical_debt": false',
         b'"technical_debt": false # Human review\n"technical_debt_status": "reviewed"\n"aliases": ["Human Alias"]',
     )
     note = parse_note(raw)

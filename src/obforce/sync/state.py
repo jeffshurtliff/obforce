@@ -4,7 +4,7 @@
 :Synopsis:          Validates private state and reconciles read-only synthetic vault observations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -37,6 +37,7 @@ from obforce.models import (
     require_same_source,
     validate_identities,
 )
+from obforce.renderer.dashboards import validate_dashboard_content, validate_dashboard_path
 from obforce.renderer.notes import _path, _paths
 from obforce.sources.live import _id
 from obforce.sync.evidence import RefreshEvidence, parse_evidence
@@ -156,6 +157,48 @@ class SavedNote:
 
 
 @dataclass(frozen=True, repr=False)
+class SavedDashboard:
+    """Retain one exact generated asset baseline, separately from human note fields."""
+
+    path: str
+    content: bytes
+
+    def __post_init__(self) -> None:
+        try:
+            validate_dashboard_path(self.path)
+            validate_dashboard_content(self.content)
+        except (ModelError, ConfigError, UnicodeError):
+            raise ConflictError('Invalid saved dashboard baseline') from None
+
+    @property
+    def content_hash(self) -> str:
+        """Return the exact byte digest without normalization."""
+        return hashlib.sha256(self.content).hexdigest()
+
+    def canonical(self) -> dict:
+        """Serialize the explicit versioned exact-byte ownership record."""
+        return {
+            'dashboard_schema': const.DASHBOARD_SCHEMA_VERSION,
+            'path': self.path,
+            'content_hash': self.content_hash,
+            'content': base64.b64encode(self.content).decode('ascii'),
+        }
+
+
+def _dashboard(value: object) -> SavedDashboard:
+    data = _object(value, {'dashboard_schema', 'path', 'content_hash', 'content'})
+    if type(data['dashboard_schema']) is not int or data['dashboard_schema'] != const.DASHBOARD_SCHEMA_VERSION:
+        raise ConflictError('Unsupported dashboard schema')
+    if type(data['content']) is not str or len(data['content']) > 4 * ((const.MAX_DASHBOARD_BYTES + 2) // 3):
+        raise ConflictError('Invalid dashboard byte encoding')
+    raw = base64.b64decode(data['content'], validate=True)
+    saved = SavedDashboard(data['path'], raw)
+    if saved.canonical() != data:
+        raise ConflictError('Dashboard digest or canonical encoding differs')
+    return saved
+
+
+@dataclass(frozen=True, repr=False)
 class StateDocument:
     """Hold one bound scope and independent saved coverage without lifecycle decisions."""
 
@@ -164,6 +207,7 @@ class StateDocument:
     coverage: Coverage
     notes: tuple[SavedNote, ...] = ()
     evidence: RefreshEvidence | None = None
+    dashboard: SavedDashboard | None = None
 
     def __post_init__(self) -> None:
         if not isinstance(self.binding, SourceBinding) or not isinstance(self.selection, Selection):
@@ -197,12 +241,28 @@ class StateDocument:
             if not isinstance(self.evidence, RefreshEvidence):
                 raise ConflictError('Invalid private refresh evidence')
             self.evidence.validate(self.coverage, self.notes, paths=False)
+        if self.dashboard is not None:
+            if not isinstance(self.dashboard, SavedDashboard) or self.evidence is None:
+                raise ConflictError('Dashboard ownership requires evidence-bearing state')
+            # Validate all prefix spellings and leaf/parent roles across both kinds.
+            locations = {}
+            for path in (self.dashboard.path, *(saved.note.path for saved in self.notes)):
+                for index in range(1, len(path.split('/')) + 1):
+                    spelling = '/'.join(path.split('/')[:index])
+                    token = _portable(spelling)
+                    leaf = index == len(path.split('/'))
+                    if token in locations:
+                        prior, prior_leaf = locations[token]
+                        if prior != spelling or leaf or prior_leaf:
+                            raise ConflictError('Dashboard and note paths collide')
+                    locations[token] = (spelling, leaf)
 
     def canonical(self) -> dict:
         """Serialize explicit scope separately from collection outcomes."""
         return {
             'state_schema': const.STATE_DOCUMENT_VERSION if self.evidence is not None else const.STATE_SCHEMA_VERSION,
             **({'evidence': self.evidence.canonical()} if self.evidence is not None else {}),
+            **({'dashboard': self.dashboard.canonical()} if self.dashboard is not None else {}),
             'binding': self.binding.canonical(),
             'selection': self.selection.canonical(),
             'scope_hash': self.selection.scope_hash(self.binding),
@@ -271,6 +331,8 @@ def serialize_state(document: StateDocument, *, _validate_paths: bool = True) ->
         document.evidence.validate(document.coverage, document.notes, paths=_validate_paths)
         value['state_schema'] = const.STATE_DOCUMENT_VERSION
         value['evidence'] = document.evidence.canonical()
+    if document.dashboard is not None:
+        value['dashboard'] = document.dashboard.canonical()
     _json_bounds(value)
     chunks, size = [], 1
     encoder = json.JSONEncoder(ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)
@@ -376,14 +438,24 @@ def parse_state(raw: bytes) -> StateDocument:
         if version not in (const.STATE_SCHEMA_VERSION, const.STATE_DOCUMENT_VERSION):
             raise ConflictError('Unsupported state schema')
         keys = {'state_schema', 'binding', 'selection', 'scope_hash', 'coverage', 'notes'}
-        data = _object(data, keys | ({'evidence'} if version == const.STATE_DOCUMENT_VERSION else set()))
+        keys |= {'evidence'} if version == const.STATE_DOCUMENT_VERSION else set()
+        if version == const.STATE_DOCUMENT_VERSION and 'dashboard' in data:
+            keys.add('dashboard')
+        data = _object(data, keys)
         binding, selection = _binding(data['binding']), _selection(data['selection'])
         if data['scope_hash'] != selection.scope_hash(binding) or type(data['notes']) is not list:
             raise ConflictError('Invalid state scope evidence')
         if len(data['notes']) > const.MAX_STATE_NOTES:
             raise ConflictError('State exceeds note bound')
         evidence = parse_evidence(data['evidence'], binding, selection) if version == const.STATE_DOCUMENT_VERSION else None
-        result = StateDocument(binding, selection, _coverage(data['coverage']), tuple(_saved(x) for x in data['notes']), evidence)
+        result = StateDocument(
+            binding,
+            selection,
+            _coverage(data['coverage']),
+            tuple(_saved(x) for x in data['notes']),
+            evidence,
+            _dashboard(data['dashboard']) if 'dashboard' in data else None,
+        )
         if evidence is not None:
             evidence.validate(result.coverage, result.notes)
         return result
@@ -647,6 +719,7 @@ def reconcile_vault(
         locations: dict[str, str] = {}
         files: dict[str, str] = {}
         observations: dict[str, ParsedNote] = {}
+        dashboards: dict[str, bytes] = {}
         directory_ids = set()
         while pending:
             directory = pending.pop()
@@ -680,6 +753,11 @@ def reconcile_vault(
                     pending.append(path)
                 else:
                     files[token] = relative
+                    if path.suffix.casefold() == '.base':
+                        raw = reader.read(path, const.MAX_DASHBOARD_BYTES)
+                        if b'obforce:dashboard' in raw.lower():
+                            dashboards[relative] = raw
+                        continue
                     if path.suffix.casefold() != '.md':
                         continue
                     raw = reader.read(path, const.MAX_NOTE_BYTES)
@@ -697,10 +775,15 @@ def reconcile_vault(
                     # Store the exact observed relative path separately from immutable parser bytes.
                     files['id:' + identity] = relative
         if document is None:
-            if observations or not initial:
+            if observations or dashboards or not initial:
                 raise ConflictError('Missing state cannot establish managed ownership')
             reader.finish()
             return Reconciliation(None, MappingProxyType({}), (), MappingProxyType({}), True, reader.preconditions())
+        expected_dashboards = {document.dashboard.path: document.dashboard.content} if document.dashboard is not None else {}
+        if dashboards != expected_dashboards:
+            raise ConflictError(
+                'Managed dashboard is edited, missing, moved or untracked; preserve edits and resolve ownership before sync'
+            )
         if observations.keys() != {saved.note.obforce_id for saved in document.notes}:
             raise ConflictError('Tracked notes vanished or untracked managed notes exist')
         saved_notes, changes, paths = [], [], {}

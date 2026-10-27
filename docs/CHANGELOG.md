@@ -7,6 +7,31 @@ All notable changes to this project will be documented in this file, following
 
 ### Added
 
+- Thread 14 protected native Apex Classes Base, packaged as a bounded literal asset
+  and published with notes/state through the same planner/writer/recovery protocol.
+  Exact dashboard-schema-1 path/hash/content ownership optionally extends
+  evidence-bearing state schema 2; NoteState/evidence/renderer/journal versions
+  are 1/1/4/2 after MTF-2. Valid Thread 13 vaults add only an absent asset; no adoption or
+  note migration. Dashboard edits/missing/moves/collisions block the entire batch.
+  Reserved identity/schema/type filters follow note moves and retain human tags,
+  aliases and human debt decisions. Expanded plain CLI
+  summaries/help and phase-specific recovery guidance; fictional presentation
+  sample and synthetic lifecycle/interruption/concurrency/installed probes.
+  No dependency/lock/config-schema change, new metadata/commands, real sf/Obsidian
+  access, native preview, hosted Thread 14 result or acceptance is claimed.
+  Threads 15–17 and enhancement #18 remain NOT STARTED.
+
+- Thread 14 MTF-2 dashboard correction: class-name links, requested column labels,
+  API Version, available UTC `sf_created`/`sf_last_modified` audit date projections
+  retaining original timestamp facts, and actual Technical Debt property column.
+  New notes default to Boolean false plus blank human severity/status/review date;
+  fictional/example/test defaults also use false under explicit maintainer
+  authorization, without historical unassessed data or a legacy view. Human
+  decisions remain preserved. Lifecycle remains in notes/state but leaves the table.
+  Renderer fingerprint advances to 4; exact old baselines remain valid, without
+  human-field migration, settings changes or weakening batch/recovery guards.
+  Native confirmation remains outstanding; #14 stays open for acceptance.
+
 - Thread 13 public `sync`/`--dry-run` for existing explicitly selected managed vaults.
   New builds save bounded exact normalized component/graph evidence in private
   state-document schema 2/evidence schema 1. NoteState schema 1, journal schema 2,

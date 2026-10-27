@@ -93,7 +93,7 @@ def test_independent_multi_run_offline_moves_debt_new_absent_templates_noop(loca
     alpha = vault / saved.notes[0].note.path
     alpha.write_bytes(
         alpha.read_bytes().replace(
-            b'"technical_debt": null', b'technical_debt: false # human\naliases: ["Team Alpha"]\ntechnical_debt_status: reviewed'
+            b'"technical_debt": false', b'technical_debt: false # human\naliases: ["Team Alpha"]\ntechnical_debt_status: reviewed'
         )
         + b'\nHuman context\n- one\n  - two\n'
     )

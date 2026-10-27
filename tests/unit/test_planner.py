@@ -4,7 +4,7 @@
 :Synopsis:          Verifies complete synthetic read-only plans and bounded private reporting
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     20 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -106,7 +106,7 @@ def seed_baseline(vault, candidate, *, ending=b'\n', human=False):
         raw = action.content.replace(b'\n', ending)
         if human:
             raw = raw.replace(b'"type": "salesforce_component"', b'type: "team_record" # custom type')
-            raw = raw.replace(b'"technical_debt": null', b'technical_debt: false # retained assessment')
+            raw = raw.replace(b'"technical_debt": false', b'technical_debt: false # retained assessment')
             raw += b'Private human narrative with Unicode caf\xc3\xa9' + ending
         path = vault / action.path
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -248,7 +248,7 @@ def test_collection_order_time_user_edits_and_creation_template_do_not_churn(tmp
     target = vault / first.actions[0].path
     raw = target.read_bytes()
     raw = raw.replace(b'"tags": ["salesforce"]', b'tags: [team, second] # human tags')
-    raw = raw.replace(b'"technical_debt": null', b'technical_debt: false')
+    raw = raw.replace(b'"technical_debt": false', b'technical_debt: false')
     raw = raw.replace(b'---\n', b'---\n', 1)
     # Insert every supported kind of user-owned flat property without changing baselines.
     index = raw.index(b'---\n', 4)

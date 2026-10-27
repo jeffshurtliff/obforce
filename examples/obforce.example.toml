@@ -10,6 +10,7 @@ project = "./Fictional Project"
 
 [layout]
 apex_classes = "Custom Code/Apex Classes"
+# One protected Apex Classes.base is created here; later path changes refuse.
 dashboards = "Dashboards"
 
 [options]

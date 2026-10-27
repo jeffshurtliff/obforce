@@ -4,7 +4,7 @@
 :Synopsis:          Probes installed read-only planner contracts using explicit synthetic setup
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     23 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -76,8 +76,8 @@ def main() -> None:
         assert first == plan(initial=True)
         action = first.actions[0]
         assert action.kind == ActionKind.CREATE and action.identity == '7637447b-f5e1-54db-830d-d3ff73769182'
-        assert hashlib.sha256(action.content).hexdigest() == '51dc2a9778761d3cf227e33d545937825eca887d1b05c20044b3f44ed2742177'
-        assert hashlib.sha256(first.state_bytes).hexdigest() == 'ee865d97f24b1bf8a9967599b09c77d4ed0e0591f99bafb0beabef8cb240852e'
+        assert hashlib.sha256(action.content).hexdigest() == 'd6c2c2529a24c59560d9f9a486894f974cf8997214423e4e7f12d875ce3e59ef'
+        assert hashlib.sha256(first.state_bytes).hexdigest() == 'c347ee8ac53de8035cb7bc9506a9550de8fc89113fe594a455059f813fcb8cff'
         assert parse_state(first.state_bytes) == first.state
         assert 'create: 1; update: 0; no_op: 0; move: 0; missing: 0; conflict: 0' in report_plan(first).text
         assert snapshot(vault) == before

@@ -1,4 +1,5 @@
 ---
+"last_reviewed": null
 "obforce_id": "00000000-0000-4000-8000-000000000001"
 "obforce_schema": 1
 "sf_api_version": "68.0"
@@ -10,7 +11,9 @@
 "sf_status": "Active"
 "sf_type": "ApexClass"
 "tags": ["salesforce"]
-"technical_debt": null
+"tech_debt_severity": ""
+"tech_debt_status": ""
+"technical_debt": false
 "type": "salesforce_component"
 ---
 

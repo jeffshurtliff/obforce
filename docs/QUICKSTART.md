@@ -32,8 +32,9 @@ an existing parent. Ordinary Python bytecode caching can be disabled separately
 with `PYTHONDONTWRITEBYTECODE=1`; reads may affect filesystem access times.
 
 The final command creates two readable ApexClass notes under
-`Knowledge/Custom Code/Apex Classes`, plus `.obforce/state.json` and the persistent
-writer lock. It reports local inventory complete, audit unavailable/unrequested,
+`Knowledge/Custom Code/Apex Classes`, the protected native
+`Knowledge/Dashboards/Apex Classes.base`, plus `.obforce/state.json` and the
+persistent writer lock. It reports local inventory complete, audit unavailable/unrequested,
 and relationships not collected/unrequested, with exit 0. No Salesforce audit
 dates, authoritative dependency edges or technical-debt assessment are invented.
 You can open the notes yourself; Obforce does not launch or configure Obsidian.
@@ -97,3 +98,26 @@ and [setup/recovery limits](SYNC_SAFETY.md#public-initial-setup-and-recovery-thr
 
 Windows sf execution, native ACL/durability, power-loss and hostile-race guarantees
 are not established by this offline example or hosted synthetic tests.
+
+
+## Optional native table
+
+Open `Knowledge/Dashboards/Apex Classes.base` yourself if native Bases is available
+in your Obsidian installation. Obforce opens no app and changes no settings. The
+view uses reserved identity/schema/type properties, so changing user tags/type or
+moving a note does not hide it. Created/Last Modified stay blank offline. Class
+links use the class name; API Version displays the stored version text. New notes
+have an unchecked Boolean Technical Debt property, blank `tech_debt_severity`
+(recommend High/Medium/Low), blank `tech_debt_status` and blank `last_reviewed`
+(enter YYYY-MM-DD after review). Existing human fields are preserved without
+backfilling or renaming. The fictional sample and test defaults also use false,
+per the maintainer's unreleased-contract correction. Ordinary Markdown remains
+useful without the table or plugins.
+
+Keep the generated Base unchanged: even UI column/layout edits are protected
+conflicts and block the entire sync batch. Author an independent custom view at
+another path without the reserved ownership comment if desired. Missing/moved
+generated dashboards refuse rather than recreate. See [dashboard ownership and
+recovery](DASHBOARDS.md) and the [read-only fictional presentation sample](../examples/sample_vault/README.md).
+Automated YAML checks are not native Obsidian rendering evidence; a native preview
+was unavailable for Thread 14.

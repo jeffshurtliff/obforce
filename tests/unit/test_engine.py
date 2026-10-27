@@ -4,7 +4,7 @@
 :Synopsis:          Verifies explicit public lifecycle with synthetic projects and guarded refusals
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     22 Oct 2026
+:Modified Date:     26 Oct 2026
 """
 
 from __future__ import annotations
@@ -88,8 +88,8 @@ def test_initial_journey_and_write_free_previews(project, existing):
     before = snapshot(root)
     result = invoke('build', '--config', config, '--dry-run')
     assert result.exit_code == 0, result.output
-    assert 'inventory=complete' in result.output and 'audit=unavailable' in result.output
-    assert 'relationships=not_collected' in result.output
+    assert 'inventory: complete' in result.output and 'audit: unavailable' in result.output
+    assert 'relationships: not_collected' in result.output
     assert snapshot(root) == before
     protected = snapshot(source), config.read_bytes(), config.stat().st_mtime_ns
     result = invoke('build', '--config', config)
@@ -97,7 +97,7 @@ def test_initial_journey_and_write_free_previews(project, existing):
     state = parse_state((vault / '.obforce/state.json').read_bytes())
     assert len(state.notes) == 1 and state.binding.workspace_id == 'fictional'
     note = parse_note((vault / state.notes[0].note.path).read_bytes())
-    assert note.properties['technical_debt'] is None
+    assert note.properties['technical_debt'] is False
     assert (snapshot(source), config.read_bytes(), config.stat().st_mtime_ns) == protected
     before = snapshot(root)
     for args in (('build',), ('build', '--dry-run'), ('recover',), ('recover', '--dry-run'), ('recover', '--cleanup')):
@@ -400,7 +400,7 @@ def test_partial_offline_inventory_is_explicit_and_publishes_only_valid_notes(pr
     (source / 'package/classes/Unpaired.cls').write_text('fictional')
     config, vault = init(project)
     result = invoke('build', '--config', config)
-    assert result.exit_code == 4 and 'inventory=partial' in result.output, result.output
+    assert result.exit_code == 4 and 'inventory: partial' in result.output, result.output
     state = parse_state((vault / '.obforce/state.json').read_bytes())
     assert len(state.notes) == 1 and state.coverage.inventory.status == 'partial'
 

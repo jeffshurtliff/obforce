@@ -81,7 +81,10 @@ attempt 1, passed all 12 cells and 24 independent installs. See the
 [Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Optional native Obsidian preview remains unavailable. MTF-2 supplies class-name links, audit date columns and
 creation-only human property defaults, with Boolean false throughout fictional
-examples and test defaults. Threads 15–17 and Windows sf enhancement #18 remain NOT STARTED.
+examples and test defaults. Thread 15 is a local qualification candidate; #15
+remains open pending acceptance and separately authorized hosted verification.
+See [qualification](docs/QUALIFICATION.md). Threads 16–17 and enhancements #18/#19
+remain NOT STARTED.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and fresh artifact validation,
 [AGENTS.md](AGENTS.md) for agent rules, and [SECURITY.md](SECURITY.md) for private

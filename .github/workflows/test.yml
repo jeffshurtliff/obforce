@@ -12,7 +12,7 @@ on:
       - SECURITY.md
       - .readthedocs.yaml
       - .env.example
-      - dev/**
+      - dev/*.md
       - docs/**
       - examples/**
       - .agents/**
@@ -30,7 +30,7 @@ on:
       - SECURITY.md
       - .readthedocs.yaml
       - .env.example
-      - dev/**
+      - dev/*.md
       - docs/**
       - examples/**
       - .agents/**
@@ -89,7 +89,7 @@ jobs:
       - name: Audit source security
         run: poetry run bandit -r src/obforce
       - name: Run offline tests
-        run: poetry run pytest -q --cov=obforce --cov-report=term-missing
+        run: poetry run pytest -q -ra --cov=obforce --cov-report=term-missing
       - name: Build fresh artifacts
         run: poetry build --output "${{ runner.temp }}/obforce-candidate-${{ github.run_id }}-${{ github.run_attempt }}"
       - name: Check artifact metadata

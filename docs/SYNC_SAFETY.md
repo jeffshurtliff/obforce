@@ -849,4 +849,25 @@ failures/skips remain in the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Optional native Obsidian preview is unavailable. Hosted synthetic results do not
 qualify Windows sf, native ACL/power-loss/hostile-race behavior, atomic snapshots
-or atomic multi-file publication. Thread 15 is next eligible, NOT STARTED.
+or atomic multi-file publication. Thread 15 qualification is in progress;
+[the qualification record](../dev/THREAD_15_QUALIFICATION.md) separates candidate
+local/native/mocked checks from prerequisite hosted evidence. #15 remains open.
+
+
+## Thread 15 qualification limits
+
+The publication ceiling remains **128 changed files including dashboard/state**.
+An initial 1,000-note publication would require 1,002 files; even 127 notes require
+129. The complete batch refuses before destination setup, without truncation,
+limit changes or automatic splitting. Independent state/evidence/node/byte bounds
+can also refuse a candidate. The separately measured 1,000-class/10,000-edge graph
+is explicit synthetic in-memory evidence, not a supported publication size or
+platform-acquisition result. See [qualification and reproduction](QUALIFICATION.md).
+
+Native permission probes on available POSIX hosts exercise actual access denial.
+Click path conversion leaves readability to the existing guarded reads, avoiding
+path-bearing preliminary errors; unreadable config reads use redacted operational
+1. All lexical/overlap/path/descriptor/parent/hash/absence guards remain. POSIX mode
+checks do not certify ACLs, Windows privacy or power-loss behavior. Quiescent
+ancestry must include both synthetic fixtures and the installed application.
+No runtime race retry, weaker observation or new automatic cleanup is introduced.

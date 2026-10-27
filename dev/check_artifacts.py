@@ -539,6 +539,8 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         _run([str(python), '-c', transaction_probe], work, environment)
         dashboard_probe = Path(__file__).with_name('probe_dashboard.py').read_text(encoding='utf-8')
         _run([str(python), '-c', dashboard_probe], work, environment)
+        qualification_probe = Path(__file__).with_name('probe_qualification.py').read_text(encoding='utf-8')
+        _run([str(python), '-c', qualification_probe], work, environment)
         engine_probe = Path(__file__).with_name('probe_engine.py').read_text(encoding='utf-8')
         _run([str(python), '-c', engine_probe], work, environment)
         _run([str(python), '-c', live_probe], work, environment)
@@ -632,6 +634,55 @@ def _lifecycle(command: list[str], root: Path, work: Path, environment: dict[str
     _run(command + ['sync', '--config', str(config)], work, environment)
     if snapshot(root) != before or snapshot(source) != protected:
         raise ValueError('Installed updated sync did not stabilize or changed source')
+    private_config = root / 'private-path-sentinel.toml'
+    for raw in (b'private-value-sentinel = [', b'x' * 65_537):
+        private_config.write_bytes(raw)
+        before = snapshot(root)
+        for feature in ('build', 'sync', 'recover'):
+            result = subprocess.run(
+                command + [feature, '--config', str(private_config)],
+                cwd=work,
+                env=environment,
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=False,
+            )
+            output = result.stdout + result.stderr
+            if (
+                result.returncode != 2
+                or len(output.encode('utf-8')) > 1024
+                or snapshot(root) != before
+                or 'private-path-sentinel' in output
+                or 'private-value-sentinel' in output
+            ):
+                raise ValueError('Installed invalid-input refusal violated privacy/bounds/preservation')
+    if os.name == 'posix':
+        mode = config.stat().st_mode & 0o777
+        config.chmod(0)
+        try:
+            if not os.access(config, os.R_OK):
+                before = snapshot(source)
+                for feature in ('build', 'sync', 'recover'):
+                    result = subprocess.run(
+                        command + [feature, '--config', str(config)],
+                        cwd=work,
+                        env=environment,
+                        capture_output=True,
+                        text=True,
+                        timeout=20,
+                        check=False,
+                    )
+                    output = result.stdout + result.stderr
+                    if (
+                        result.returncode != 1
+                        or str(config) in output
+                        or len(output.encode('utf-8')) > 1024
+                        or snapshot(source) != before
+                    ):
+                        raise ValueError('Installed permission refusal violated redaction/outcome/preservation')
+        finally:
+            config.chmod(mode)
 
 
 def main() -> None:

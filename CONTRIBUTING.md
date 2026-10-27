@@ -88,7 +88,10 @@ passed all 12 cells and 24 independent installs: Linux 1555 passed each, macOS
 [Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Failed run `40427329142` and every earlier failure/skip remain historical.
 Optional native Obsidian preview remains unavailable; Windows sf stays refused.
-Threads 15–17 and enhancements #18/#19 remain NOT STARTED.
+Thread 15 is locally implemented; #15 remains open pending acceptance and
+separately authorized new exact-commit hosted verification.
+Threads 16–17 and enhancements #18/#19 remain NOT STARTED. See
+[qualification boundaries and reproduction](docs/QUALIFICATION.md).
 
 ## Development setup
 
@@ -118,7 +121,7 @@ tools are pytest, pytest-cov, Ruff, Bandit, and Twine.
 poetry check --lock --strict
 poetry run ruff check .
 poetry run ruff format --check .
-poetry run pytest -q
+poetry run pytest -q -ra
 poetry run pytest --cov=obforce --cov-report=term-missing
 poetry run bandit -r src/obforce
 git diff --check
@@ -208,7 +211,10 @@ runtime guards. Lower-level legacy-state/recovery probes remain. Thread 14 delib
 install additionally runs `dev/probe_dashboard.py` with active runtime guards:
 resource bytes, Thread 13 asset addition, no-op/preview, human content, whole-batch
 conflict, asset rollback and committed cleanup. Native Obsidian preview remains
-unavailable. The checker never publishes or uploads artifacts.
+unavailable. Thread 15 adds the shared installed finite-bound/12-note lifecycle qualification
+probe, actual console/module malformed/oversized config and POSIX unreadable
+config checks, with runtime guards and no cwd artifacts. Archive allowlists stay
+36/35; no new packaged file is needed. The checker never publishes or uploads artifacts.
 
 The Thread 14 Windows correction also exercises native relative and absolute
 config paths with spaces through both independently installed entry points:

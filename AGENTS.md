@@ -281,3 +281,8 @@ Inspect the diff, untracked files, and Git status before returning work. Include
 
 Append a concise thread handoff in `dev/IMPLEMENTATION_PLAN.md`. A successful
 local implementation does not imply maintainer acceptance or publication.
+
+<!-- entire-agent:begin -->
+Read .entire/agent-guide.md for this repository's workflow, source inspection, and verification guidance.
+@.entire/agent-guide.md
+<!-- entire-agent:end -->

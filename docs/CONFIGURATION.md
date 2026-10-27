@@ -73,6 +73,12 @@ permit traversal in generated relative paths. `~`, `$` and `%` expansion forms
 are rejected; use literal paths. Non-native drive/backslash paths fail rather
 than being interpreted as local relative names. Paths need not exist at this
 stage. Loading does not validate an SFDX project or contact Salesforce.
+Windows unrooted relative paths may use native backslashes (for example,
+`..\Team Space\Config with spaces.toml`) or forward slashes. This applies to the
+explicit CLI config argument too; it is relative to cwd. Drive-relative
+`C:Config.toml` and current-drive-rooted `\Config.toml` or `/Config.toml` are
+ambiguous and refused. POSIX still refuses Windows relative backslash syntax.
+The public lexical ancestor, spelling, overlap and filesystem guards remain.
 The separate [offline acquisition](OFFLINE_SOURCE.md) phase validates declared
 DX package roots and supported Apex pairs using the loaded project path,
 logical workspace binding, and explicit namespace selection.

@@ -18,7 +18,8 @@ All notable changes to this project will be documented in this file, following
   summaries/help and phase-specific recovery guidance; fictional presentation
   sample and synthetic lifecycle/interruption/concurrency/installed probes.
   No dependency/lock/config-schema change, new metadata/commands, real sf/Obsidian
-  access, native preview, hosted Thread 14 result or acceptance is claimed.
+  access or native preview. Hosted Thread 14 results are partial; corrected
+  Windows qualification and maintainer acceptance remain pending.
   Threads 15–17 and enhancement #18 remain NOT STARTED.
 
 - Thread 14 MTF-2 dashboard correction: class-name links, requested column labels,
@@ -248,6 +249,16 @@ All notable changes to this project will be documented in this file, following
 - Contributor/security guidance and explicit foundation limitations.
 
 ### Fixed
+
+- Thread 14 shared config resolver now accepts native unrooted Windows relative
+  paths, including the CLI's normalized backslash spelling. Retains ambiguous
+  drive/root-relative and foreign POSIX syntax refusals and all lexical/
+  filesystem/transaction guards. Added mocked path-flavour regression checks and
+  both installed entry points' relative/absolute space-path journeys. Failed run
+  40427329142 attempt 1 at merge 40e0ffa remains: all four Windows cells failed
+  two relative-config cases; downstream packaging/install checks were skipped.
+  Corrected hosted Windows validation is pending; no CI rerun or Windows sf
+  qualification is implied.
 
 - Thread 13 lifecycle test now writes its generated-template override as explicit
   UTF-8/LF on Windows too. Added synthetic CRLF refusal checks for sync and dry-run

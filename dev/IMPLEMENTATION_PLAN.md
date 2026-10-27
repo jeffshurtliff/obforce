@@ -6186,3 +6186,140 @@ the existing issue body/checklist is synchronized and remains open.
 **Next eligible only after #14 acceptance and a new request: Thread 15 / #15,
 explicitly NOT STARTED. Threads 15–17 and enhancement #18 remain NOT STARTED;
 optional verbosity #19 remains unstarted.**
+
+### Thread 14 Windows CI correction review — 27 October 2026
+
+Maintainer reviewed/committed implementation `7c38da95ff152bcca6aa02387f8cbbb17b4ba9a2`
+and merged/pushed `40e0ffad33ed3a5dfebe8b6a85db716eb798903d`. The prior
+47-file uncommitted status is historical. The correction starts from a clean
+worktree on the maintainer's existing fix branch; no Git delivery is authorized.
+
+Read run **40427329142**, attempt **1**, push/main, exact merge above, all 12
+job/command logs before implementation. Linux Python 3.12–3.15 each passed
+**1539**; macOS each passed **1537 / 2 skipped**. Those eight cells passed every
+required metadata/lock, lint/format, Bandit, fresh build/Twine, exact 36/35 archive,
+both independent installs and whitespace command (16 independent installs).
+Every Windows 3.12–3.15 cell had **2 failed / 1521 passed / 16 skipped**, the
+relative-config console/module cases returning invalid-input 2 instead of the
+expected missing-state conflict 3. Windows metadata/lock, lint/format and Bandit
+passed; subsequent build/Twine/archive/install/whitespace commands were skipped,
+not qualified. Retain the failed run and all prior evidence.
+
+**Cause and bounded correction recorded before coding:** the CLI converts the
+relative config argument to native `Path`; Windows renders it with backslashes.
+Shared `_resolve` rejects every nonabsolute backslash spelling, including native
+Windows relative paths. It is a runtime resolver defect, not an expected-code
+or test-fixture correction. Accept unrooted native Windows relative paths while
+retaining drive-relative and current-drive-rooted refusal, foreign Windows syntax
+on POSIX, environment-expansion refusal, lexical parent checks, aliases/overlap,
+links/reparse/hard-link/special-file guards and full transaction validation.
+No format, identity, coverage, lifecycle, bounds, exit-precedence or scope change.
+Use mocked Windows path-flavour regression checks plus actual host entry-point
+and independent installed relative/absolute space-path journeys. Mocks/local
+passes cannot establish a corrected hosted/native Windows result. #14 remains
+open; no CI rerun, commit, push, PR, publication, native app or real sf access.
+Threads 15–17 and enhancements #18/#19 remain NOT STARTED.
+
+Verified Windows jobs in that failed attempt:
+
+| Python | Job | pytest result | Time |
+| --- | --- | --- | --- |
+| 3.12 | [121936239718](https://github.com/jeffshurtliff/obforce/actions/runs/40427329142/job/121936239718) | 2 failed / 1521 passed / 16 skipped | 1686.74s |
+| 3.13 | [121936239682](https://github.com/jeffshurtliff/obforce/actions/runs/40427329142/job/121936239682) | 2 failed / 1521 passed / 16 skipped | 1722.06s |
+| 3.14 | [121936239500](https://github.com/jeffshurtliff/obforce/actions/runs/40427329142/job/121936239500) | 2 failed / 1521 passed / 16 skipped | 1619.88s |
+| 3.15 | [121936239655](https://github.com/jeffshurtliff/obforce/actions/runs/40427329142/job/121936239655) | 2 failed / 1521 passed / 16 skipped | 1346.95s |
+
+The two failures are
+`test_plain_redirected_entrypoints_explicit_space_paths_and_bounded_outcomes[True-console]`
+and `[True-module]`, both with `Error: Path is not native to this platform`.
+The original assertions remain unchanged. Hosted success/skip metadata was checked
+against command logs, not inferred from green summaries. The eight successful
+cells emitted exact 36/35 archive checks and two independent-install success
+messages each. Their wheel hash was
+`682afdaa0220198ef53c1d7d6fed9c973eab64f006359f0d4e96002b8f4057e5`;
+sdist hash was `1d7e0f3216d02779573cb92043c628c639c660bc8265d48b53747cc1912d6a6c`
+for 3.12–3.14 and
+`bc3981b4b537ef0f8de0b082f0185b1f1443533eb841997f1f762882a19373f0`
+for 3.15. Preserve that observed hash variation without inferring its cause or
+claiming cross-interpreter byte reproducibility. Each archive's inspected
+members/source/resources matched its checkout.
+
+Correction progress: six mocked Windows native-path cases before the fix gave
+**3 failed / 3 passed / 63 deselected**, 0.05s, reproducing native relative
+backslash refusal. Afterward the config suite gave **69 passed**, 0.08s; combined
+config/engine/dashboard-process checks gave **163 passed**, 17.95s. These path
+flavours are mocked parsing/resolver-dispatch evidence, not Windows filesystem
+qualification. No new skips or changed expected outcomes. Fresh artifacts,
+strict Twine, exact unchanged 36/35 allowlists and both independent runtime-guarded
+installs passed on local macOS; expanded installed journeys cover absolute/native
+relative config paths with spaces, write-free init/build previews, relative init
+creation, stable sync/recover and no cwd artifacts through console and module.
+Full installed-wheel coverage validation is pending at this checkpoint.
+[Public correction start](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6443152679).
+
+### Thread 14 Windows correction local handoff — 27 October 2026
+
+**Implemented:** `_resolve` now distinguishes native Windows relative backslashes
+from foreign syntax on POSIX. Drive-relative and root-relative paths remain
+refused, with forward-slash rooted Windows spelling treated consistently too.
+The CLI's Path conversion can now reach the intended missing-state guard rather
+than incorrectly returning input 2. Existing integration assertions, exit
+precedence, source/config selection, lexical ancestor/spelling checks and all
+publication/recovery safety contracts remain unchanged. No new format/schema,
+dependency, API, command, metadata type or Windows sf execution support.
+
+Added 16 path-flavour unit cases (mocked Windows positive/ambiguous and POSIX
+foreign-syntax refusal); they do not touch a Windows filesystem. Expanded fresh
+wheel/sdist console/module journeys to exercise absolute and native relative
+space-containing config paths, including relative init and unchanged preview/
+no-op snapshots. Updated config/quickstart/contributor guidance and changelog.
+Only eight files changed; all are unstaged/uncommitted on the maintainer's
+existing `fix/14-thread-14-path-not-native-to-windows-platform` branch, based on
+the pushed merge `40e0ffad33ed3a5dfebe8b6a85db716eb798903d`.
+
+**Verified local macOS ARM64 / Python 3.14.7 / Poetry 2.4.2:**
+
+- `poetry check --lock --strict`, Ruff lint/format (105 files), Bandit (five
+  existing annotations unchanged), and `git diff --check` passed.
+- Config suite: **69 passed**, 0.08s; focused config/engine/dashboard-process
+  suite: **163 passed**, 17.95s. Before-fix mocked regression failure remains
+  **3 failed / 3 passed / 63 deselected**, 0.05s.
+- Fresh build, strict Twine, exact **36 wheel / 35 sdist** archives and both
+  fresh independent installs passed, including installed assets, accepted
+  lower-level probes and both actual console/module relative/absolute journeys
+  with active runtime network/process denial and no cwd artifacts. Setup
+  downloads remain separate from application runtime. All allowlists unchanged.
+- Full suite using `pytest -q --cov=obforce --cov-report=term-missing` plus skip
+  reporting against the freshly installed wheel and external public synthetic
+  inputs, with TMPDIR/TEMP/TMP isolated outside captured changing ancestry:
+  **1553 passed / 2 existing filesystem skips**, **124.31s**. Skips remain case/
+  normalization representation limits. No new skips, race retries or weakened
+  observations. Diagnostic wrappers only report failures and preserve all guards.
+
+Fresh correction SHA-256:
+
+- Wheel: `31905b0effa59a271e3c06e7085d726abca3921654cbf397a663d30ccea22889`
+- Sdist: `ab11482f31692b3055003194d9c32a2be2b632c9e48ba2fe8e6a73913a788c27`
+
+**Pending:** corrected exact-commit hosted Windows/12-cell verification after
+separately authorized delivery; no CI rerun, commit, push or PR was performed.
+Run 40427329142 attempt 1 remains failed with its original Windows failures/
+16 skips and skipped downstream gates. Its Linux/macOS results are hosted
+evidence for the pushed baseline, not the uncommitted correction. The new pure
+Windows cases are mocks, and local installed runs are macOS evidence only.
+Native Obsidian confirmation/maintainer acceptance remain pending; #14 stays
+**OPEN**. Original labels/assignee/milestone/dependencies remain unchanged.
+
+All older failed/skipped/unavailable observations, including 40235515146, remain
+as previously recorded. This captured path-syntax cause explains only the new
+40427329142 relative-config failures. It does not establish a cause for the
+uncaptured original template-refresh conflict 3, Thread 12's
+2-failed/1371-passed/2-skipped run, or any unrelated earlier refusal. No real
+sf/auth/credentials/.env/org/vault/Obsidian/settings access, private upload,
+Windows sf/native ACL/power-loss/hostile-race/atomic multi-file qualification,
+publication, closure, delegation or later-thread work. Threads **15–17** and
+enhancements **#18/#19 remain NOT STARTED**; #15 requires #14 acceptance and a
+new request.
+
+[Verified Windows correction handoff](https://github.com/jeffshurtliff/obforce/issues/14#issuecomment-6443597389).
+The existing issue's current status/checklist is synchronized and remains open.

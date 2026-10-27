@@ -25,6 +25,10 @@ obforce build --config "/absolute/path/Fictional Workspace/obforce.toml"
 ```
 
 `python -m obforce` accepts the same options as `obforce`; both are noninteractive.
+A relative `--config` uses your current working directory. On Windows, quote
+native paths with spaces, for example `--config "..\Fictional Workspace\obforce.toml"`;
+unrooted forward-slash paths work too. Use a fully absolute path when selecting a
+drive; `C:obforce.toml` and `\obforce.toml` are ambiguous and refused.
 The absolute config path works from any directory. Source/vault paths inside it
 resolve from its parent. Preview commands create no config, vault, state, lock,
 journal, log, cache or staging artifacts. Init creates only a new config, with

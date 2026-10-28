@@ -1,13 +1,13 @@
-# Configuration contract
+# Configuration
 
-Thread 02 implements an internal, read-only config loader and source selection.
-Public `init`, initial `build` and `recover` are implemented in Thread 12;
-Thread 13 adds [managed-vault sync](REFRESH.md) with private persistent evidence.
-The approved [design](../dev/THREAD_13_PERSISTENT_EVIDENCE_DESIGN.md) records the
-state-version split, live scope declarations and per-invocation attestation.
-See the public command contract below and fictional
-[quickstart](QUICKSTART.md). The following config also documents internal validation.
-Internal Python interfaces are versioned implementation details, not a stable API.
+All lifecycle commands require an explicit UTF-8 TOML config. See the
+[CLI reference](CLI.md) and [quickstart](QUICKSTART.md). Internal Python
+interfaces are implementation details, not a stable public API.
+
+The [approved stable target](../dev/STABLE_010_RELEASE_PLAN.md) moves configuration
+to `<vault>/.obforce/obforce.toml` through R3/R4 design and implementation. The
+current loader below still refuses config inside the vault; this roadmap change
+does not relocate files, alter the schema or enable that workflow yet.
 
 ## Explicit loading and schema
 
@@ -45,7 +45,7 @@ dashboards = "Dashboards"
 include_namespaced = false
 include_audit_names = true
 
-# Optional explicit override root; internal candidate rendering only (Thread 07).
+# Optional explicit template override root.
 [templates]
 directory = "./demo-templates"
 ```
@@ -62,8 +62,9 @@ directory = "./demo-templates"
 Strings cannot be empty, have surrounding whitespace, or contain control
 characters. Arbitrary Salesforce field/type selection, command configuration,
 credentials, API versions, logging, and force-overwrite settings are unsupported
-config keys. The supported component type is ApexClass only. Optional internal
-name filters in the normalized selection record are not exposed config options.
+config keys. The current version supports the ApexClass component type only.
+Optional internal name filters in the normalized selection record are not exposed
+config options.
 
 ## Paths and selectors
 
@@ -91,7 +92,7 @@ and `.obforce` control-directory segments. Root paths are resolved before overla
 checks: vault and source/template roots must be disjoint, and config cannot be inside the
 vault. This is an early refusal, not a safe-write certification. Repository
 separation, links/junctions, special files, collisions, permissions, parent
-changes, and concurrency must be checked again by later publication threads.
+changes and concurrency are checked again before publication.
 
 For example, `/fictional/work/obforce.toml` with `project = "./sample-sfdx"`
 means `/fictional/work/sample-sfdx` regardless of the caller's working directory.
@@ -108,7 +109,7 @@ is an alias/username for the internal [live adapter](LIVE_SOURCE.md), not verifi
 org identity or permission to query it. Loading never inspects authentication or invokes `sf`.
 
 Precedence for supported selection is explicit invocation, config, then listed
-non-selector defaults. Future initialization requires exactly one absolute
+non-selector defaults. Initialization requires exactly one explicit
 project path or live target; both or neither fail. Given a config, only a live
 `org` override is supported. A project override or local/live switch fails.
 The adapter verifies the actual org ID with a minimal query before inventory;
@@ -119,7 +120,7 @@ implemented. See [coverage and identity](COVERAGE.md).
 ## Errors and exits
 
 Typed internal exceptions use Click's existing exception display/exit protocol.
-The public Thread 12 commands use the same typed errors. Offline tests exercise
+The public initial build commands use the same typed errors. Offline tests exercise
 operational/config/conflict/coverage outcomes without real source access.
 Callers provide concise safe diagnostics, never raw responses or note content.
 
@@ -140,54 +141,18 @@ See [the independent coverage contract](COVERAGE.md).
 
 The internal [renderer](RENDERING.md) now loads only the two documented known
 assets from this explicit root, falling back per absent file to installed defaults.
-Invalid existing overrides refuse. No public generation command is introduced.
+Invalid existing overrides refuse. Build and sync use these validated templates.
 
 
-Thread 08 [parses and patches caller-supplied note bytes](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
-using in-memory state/baselines only. It adds no config keys, command, file loading
-or vault discovery. Unsupported/edited managed content raises redacted conflict
-3; invalid caller contracts use 2. Existing precedence and source controls remain.
+## Public initialization and initial build
 
-
-Thread 09 separately accepts explicit absolute vault/state paths and normalized
-binding/selection for internal [read-only reconciliation](SYNC_SAFETY.md). It never
-loads/discovers config, resolves auth/default orgs, or uses cwd/home discovery.
-The caller must supply disjoint source/template/application roots for overlap
-refusal and independently verified canonical org identity for live bindings.
-No public config/state initialization or migration command is added.
-
-Thread 10's internal `plan_changes` takes explicit normalized source/coverage/
-graph inputs and absolute vault/state/excluded roots. Templates are already
-loaded explicit assets; no config/source/template/auth discovery occurs during
-planning. Existing saved graph and retained absent-component facts are explicit
-inputs, never reconstructed from current notes. The comparable accessible-live-
-inventory attestation defaults false. See the [planner contract](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026)
-for finite bounds, immutable preconditions, blocked results and safe report fields.
-`report_plan` returns text/outcome without printing or writing. No new config
-key or public command is introduced; outcome precedence remains 3, 2, 1, 4, 0.
-
-Thread 11 adds internal transaction/recovery calls with explicit absolute paths and
-caller-supplied planner inputs. No config key, discovery, public command or auth
-access is added. A persistent private writer.lock may remain after an actual
-transaction; no-op and both previews create nothing. Recovery receives explicit
-vault/state/excluded roots and reads only validated local journal evidence. See
-[transaction safety](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-
-## Public initialization and initial build (Thread 12)
-
-Thread 12 implements the first-build journey. Thread 13 adds [refresh](REFRESH.md).
+Build creates the initial vault; [sync refreshes it](REFRESH.md).
 All commands are noninteractive. `--config` is always required; there is no search
 of cwd, parents, home, environment, auth or existing vaults.
 
-```sh
-obforce init --config ./obforce.toml --source ./FictionalProject --vault ../Knowledge --workspace-id fictional
-obforce init --config ./preview.toml --org fictional-sandbox --vault ../OtherKnowledge --workspace-id fictional --dry-run
-obforce build --config ./obforce.toml --dry-run
-obforce build --config ./obforce.toml
-obforce recover --config ./obforce.toml
-obforce recover --config ./obforce.toml --rollback
-obforce recover --config ./obforce.toml --cleanup
-```
+See the executable [offline quickstart](QUICKSTART.md), [live setup](LIVE_SETUP.md)
+and phase-selected [recovery commands](RECOVERY.md).
+
 
 Exactly one `init` source selector is required: `--source PATH` or `--org TARGET`.
 The config filename is invocation-relative; source/vault arguments are relative
@@ -217,7 +182,7 @@ may change its own auth/cache/config state during authorized read queries; see
 
 Build requires an absent or completely empty destination. All entries, including
 hidden files, `.obsidian`, state, managed notes and a retained writer lock, block
-initial build. It never adopts or resumes a vault. See [setup and recovery safety](SYNC_SAFETY.md#public-initial-setup-and-recovery-thread-12).
+initial build. It never adopts or resumes a vault. See [setup and recovery safety](SYNC_SAFETY.md#initial-setup-and-guarded-publication).
 Missing destination/parents can be previewed without creation. Actual setup creates
 at most 32 guarded portable directories before a freshly validated existing-vault
 transaction. Refused publication can leave explicit setup/control evidence; do
@@ -239,7 +204,7 @@ recovery-required flag. Partial requested coverage can publish a first build wit
 allow 0. State/journal bounds and schema-1 journal refusal remain unchanged.
 
 
-Thread 12's Windows correction retains each original lexical spelling as well as
+Windows path validation retains each original lexical spelling as well as
 the resolved path. A resolver returning stored `VAULT` for requested `Vault` must
 not erase the alias refusal. Every original segment receives the same bounded
 parent-name comparison used for resolved paths, with ordinal string comparison
@@ -248,7 +213,7 @@ roots and missing suffixes in init/build/recover, including previews. No retry,
 case normalization workaround, relaxed observation or new skip is added.
 
 
-## Public refresh and private evidence (Thread 13)
+## Public refresh and private evidence
 
 `sync --config PATH [--dry-run]` requires existing managed state-document schema 2
 with evidence schema 1. No automatic schema-1 upgrade/adoption is offered. NoteState
@@ -264,17 +229,16 @@ complete supported comparable inventory; unknown continuity preserves absence an
 reports incomplete evaluation. See [the full contract](REFRESH.md).
 
 
-## Protected native dashboard (Thread 14)
+## Protected native dashboard
 
 Public build/sync now include one `Apex Classes.base` under `layout.dashboards`
 (default `Dashboards`). No config key/schema change or additional command.
 The whole file has exact saved ownership in an optional dashboard-schema-1
 record within evidence-bearing state-document schema 2. Editing/moving/removing
-it or changing its configured directory blocks the whole batch. A valid Thread
-13 vault can add it only at an absent destination; no file adoption or note
+it or changing its configured directory blocks the whole batch. A valid evidence-bearing vault without a dashboard record can add it only at an absent destination; no file adoption or note
 migration. See [dashboard behavior, limits and recovery](DASHBOARDS.md).
 
-MTF-2 adds no configuration knobs: new notes use Boolean `technical_debt: false`,
+Creation adds no configuration knobs: new notes use Boolean `technical_debt: false`,
 blank `tech_debt_severity`/`tech_debt_status`, and blank `last_reviewed`.
 These human fields remain creation-only and are not backfilled on existing notes.
 Available audit timestamps additionally supply reserved UTC `sf_created` and
@@ -289,3 +253,6 @@ preliminary unreadable-path error. A denied config read is operational 1 with
 fixed redacted text; missing/invalid config remains input 2 and ownership conflicts
 remain 3. This does not weaken filesystem checks or authorize a live operation.
 [Qualification](QUALIFICATION.md) records native versus injected evidence.
+
+<!-- Compatibility targets for retained maintainer evidence links. -->
+<a id="public-initialization-and-initial-build-thread-12"></a>

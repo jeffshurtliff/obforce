@@ -14,3 +14,7 @@ workspace. Open no real vault on behalf of this example.
 The [dashboard guide](../../docs/DASHBOARDS.md) explains ownership, customization
 and unavailable native preview evidence. Opening a copy yourself requires no
 community plugins or Obsidian CLI. Ordinary Markdown is useful independently.
+
+For an actual isolated command journey use the matching candidate and
+[installation guide](../../docs/INSTALLATION.md). Technical-debt false and blank
+review fields initialize fictional notes only; later human edits remain owned.

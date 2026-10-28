@@ -1,127 +1,97 @@
-# Fictional offline first build
+# Fictional offline quickstart
 
-This journey uses the repository's fictional Apex sample and no Salesforce CLI,
-authentication, network, Obsidian process or plugins. Public Thread 12 commands
-are accepted and complete, including maintainer confirmation of character
-readability and four-space generated nesting. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026).
-Thread 13 adds [refresh](REFRESH.md) for evidence-bearing managed vaults.
-Use an installed development package (`poetry install --with dev` from the checkout)
-and Python 3.12+. Package/dependency installation is separate from offline runtime.
+This tutorial creates two ApexClass notes from the supplied fictional DX sample.
+It needs [an installed candidate](INSTALLATION.md), Python 3.12+ and the matching
+repository examples. Application runtime needs no network, sf, authentication,
+Obsidian process or plugins. All examples here are fictional.
 
-Choose a **new absolute workspace outside this repository**, any source checkout,
-existing vault, template root or application installation. Substitute the two
-absolute paths below. The selected workspace parent must already exist; this
-setup refuses to replace an existing workspace. Python's `shutil` copies only
-the supplied fictional sample, never real metadata.
+## Prepare a separate workspace
+
+Choose a new absolute workspace outside the repository, the installed application,
+any existing vault and any real source project. Its parent must already exist.
+Use stable trusted private local ancestry. Substitute your paths below. The setup
+refuses an existing workspace and copies only `examples/sample_sfdx`.
 
 ```sh
 python -c "import shutil,sys; from pathlib import Path; root=Path(sys.argv[1]); root.mkdir(); shutil.copytree(Path(sys.argv[2])/'examples/sample_sfdx', root/'Fictional Project')" "/absolute/path/Fictional Workspace" "/absolute/path/obforce-checkout"
-
-obforce init --config "/absolute/path/Fictional Workspace/obforce.toml" --source "./Fictional Project" --vault "./Knowledge" --workspace-id fictional --dry-run
-obforce init --config "/absolute/path/Fictional Workspace/obforce.toml" --source "./Fictional Project" --vault "./Knowledge" --workspace-id fictional
-obforce build --config "/absolute/path/Fictional Workspace/obforce.toml" --dry-run
-obforce build --config "/absolute/path/Fictional Workspace/obforce.toml"
 ```
 
-`python -m obforce` accepts the same options as `obforce`; both are noninteractive.
-A relative `--config` uses your current working directory. On Windows, quote
-native paths with spaces, for example `--config "..\Fictional Workspace\obforce.toml"`;
-unrooted forward-slash paths work too. Use a fully absolute path when selecting a
-drive; `C:obforce.toml` and `\obforce.toml` are ambiguous and refused.
-The absolute config path works from any directory. Source/vault paths inside it
-resolve from its parent. Preview commands create no config, vault, state, lock,
-journal, log, cache or staging artifacts. Init creates only a new config, with
-an existing parent. Ordinary Python bytecode caching can be disabled separately
-with `PYTHONDONTWRITEBYTECODE=1`; reads may affect filesystem access times.
+Use quotes on Windows too. In PowerShell invoke the installed Python explicitly
+as shown in [installation](INSTALLATION.md) if it is not on PATH. These Python
+setup/edit commands work on both platforms with native absolute paths.
 
-The final command creates two readable ApexClass notes under
-`Knowledge/Custom Code/Apex Classes`, the protected native
-`Knowledge/Dashboards/Apex Classes.base`, plus `.obforce/state.json` and the
-persistent writer lock. It reports local inventory complete, audit unavailable/unrequested,
-and relationships not collected/unrequested, with exit 0. No Salesforce audit
-dates, authoritative dependency edges or technical-debt assessment are invented.
-You can open the notes yourself; Obforce does not launch or configure Obsidian.
-User prose/properties, including every `technical_debt*` field, belong to you.
-
-After adding human context or moving a note uniquely within the vault, preview
-and refresh through the same explicit config:
+## Preview and build once
 
 ```sh
-obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml" --dry-run
-obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml"
+obforce init --config "/absolute/path/Fictional Workspace/Config with spaces.toml" --source "./Fictional Project" --vault "./Knowledge" --workspace-id fictional --dry-run
+obforce init --config "/absolute/path/Fictional Workspace/Config with spaces.toml" --source "./Fictional Project" --vault "./Knowledge" --workspace-id fictional
+obforce build --config "/absolute/path/Fictional Workspace/Config with spaces.toml" --dry-run
+obforce build --config "/absolute/path/Fictional Workspace/Config with spaces.toml"
 ```
 
-With unchanged source/graph/templates, these operations preserve exact note and
-state bytes/mtimes, including human-only edits. New builds save private normalized
-refresh evidence inside `.obforce/state.json`; legacy vaults without it refuse
-refresh rather than guessing old facts. No source/Obsidian settings are changed.
+Init preview creates nothing; init creates just the new config. Build preview
+creates no destination or control artifacts. Build creates:
 
+- `Knowledge/Custom Code/Apex Classes/DemoService.md` and `DemoExtension.md`;
+- `Knowledge/Dashboards/Apex Classes.base`, the protected packaged view;
+- private `Knowledge/.obforce/state.json` and a persistent writer lock.
 
-Build is **initial-only**. Repeating it returns conflict 3 without altering the
-vault. Any existing destination entry, including unrelated notes, `.obsidian` or
-managed history, refuses. Do not delete control files to bypass this check.
-Use a new explicitly selected destination for another fictional first build;
-Use `sync` to refresh this newly created managed vault.
+Expect exit 0: inventory complete for the declared local scope, audit unavailable
+and unrequested, relationships not collected and unrequested. Salesforce audit
+dates, dependency facts and debt assessments are not invented. Repeating build
+refuses with **3** and changes nothing. An existing destination must be completely
+empty, including hidden entries. Do not remove control files to bypass refusal.
 
-Recovery needs only the explicit config and local evidence:
+Use `python -m obforce` interchangeably with `obforce`. From an empty sibling directory under the same
+parent, this quoted relative config selects the same file:
 
 ```sh
-obforce recover --config "/absolute/path/Fictional Workspace/obforce.toml"
-# Select only the operation matching the validated journal phase:
-obforce recover --config "/absolute/path/Fictional Workspace/obforce.toml" --rollback
-obforce recover --config "/absolute/path/Fictional Workspace/obforce.toml" --cleanup
+python -m obforce sync --config "../Fictional Workspace/Config with spaces.toml" --dry-run
 ```
 
-The default is validated read-only preview. `--dry-run` is equivalent.
-Rollback refuses committed evidence; cleanup refuses precommit evidence. Without
-pending evidence, recovery is a write-free no-op. An edit or incomplete/unsafe
-journal refuses and preserves evidence for manual resolution. Setup interrupted
-before a journal can leave directories whose ownership cannot be reconstructed;
-no automatic recursive removal or build retry adopts them. A successful rollback
-retains the control/lock, so it does not turn the old destination into a new build.
+Relative config paths use cwd; source/vault paths inside the file use the config
+parent. Native Windows unrooted relative paths with spaces work. Ambiguous drive
+paths remain refused; see [CLI paths](CLI.md).
 
+## Add your knowledge and move a note
 
-## Exit codes
+Edit human sections below the generated end marker, or add properties such as
+`aliases`. Preserve `obforce_*`, `sf_*` and everything between generated markers.
+New `technical_debt` is Boolean false; severity/status are blank and review date
+is null. Those defaults are creation-only: your later choices stay yours.
+For a reproducible fictional edit and unique move:
 
-| Exit Code | Description                                            |
-|-----------|--------------------------------------------------------|
-| 0         | complete selected operation/no-op                      |
-| 1         | operational failure                                    |
-| 2         | invalid usage/config/input                             |
-| 3         | conflict/recovery required                             |
-| 4         | completed operation with requested incomplete coverage |
+```sh
+python -c "import sys; from pathlib import Path; v=Path(sys.argv[1]); p=v/'Custom Code/Apex Classes/DemoService.md'; p.write_bytes(p.read_bytes()+b'\nHuman context: reviewed for the fictional tutorial.\n'); d=v/'Reviewed'; d.mkdir(); p.rename(d/'DemoService.md')" "/absolute/path/Fictional Workspace/Knowledge"
+obforce sync --config "/absolute/path/Fictional Workspace/Config with spaces.toml" --dry-run
+obforce sync --config "/absolute/path/Fictional Workspace/Config with spaces.toml"
+```
 
-Requested partial inventory can produce a bounded
-partial first build with 4; it does not prove missing components. Precedence is
-3, 2, 1, 4, 0. See [configuration](CONFIGURATION.md#public-initialization-and-initial-build-thread-12)
-and [setup/recovery limits](SYNC_SAFETY.md#public-initial-setup-and-recovery-thread-12).
+The moved note retains its UUID and source identity. State records its new path;
+relationship links to moved targets update where evidence exists. This offline
+sample has no dependency edges. Human text survives. Copying a managed note instead
+of moving it duplicates its ID and blocks the whole batch.
 
+## Change fictional metadata, then check a no-op
 
-## Additional Information
+Only for this copied fixture, change DemoService's API version from 67.0 to 68.0:
 
-Windows sf execution, native ACL/durability, power-loss and hostile-race guarantees
-are not established by this offline example or hosted synthetic tests.
+```sh
+python -c "import sys; from pathlib import Path; p=Path(sys.argv[1])/'core/main/default/classes/DemoService.cls-meta.xml'; p.write_bytes(p.read_bytes().replace(b'67.0', b'68.0'))" "/absolute/path/Fictional Workspace/Fictional Project"
+python -m obforce sync --config "/absolute/path/Fictional Workspace/Config with spaces.toml" --dry-run
+python -m obforce sync --config "/absolute/path/Fictional Workspace/Config with spaces.toml"
+python -m obforce sync --config "/absolute/path/Fictional Workspace/Config with spaces.toml"
+```
 
+Preview leaves bytes/mtimes unchanged. Sync updates clean generated facts while
+preserving the UUID and human context. The final unchanged sync is a no-op,
+preserving note, dashboard and state bytes/mtimes. Obforce does not modify source.
+Removing a component from the local project does not mark its note missing;
+[retained facts and coverage](REFRESH.md) prevent that inference.
 
-## Optional native table
-
-Open `Knowledge/Dashboards/Apex Classes.base` yourself if native Bases is available
-in your Obsidian installation. Obforce opens no app and changes no settings. The
-view uses reserved identity/schema/type properties, so changing user tags/type or
-moving a note does not hide it. Created/Last Modified stay blank offline. Class
-links use the class name; API Version displays the stored version text. New notes
-have an unchecked Boolean Technical Debt property, blank `tech_debt_severity`
-(recommend High/Medium/Low), blank `tech_debt_status` and blank `last_reviewed`
-(enter YYYY-MM-DD after review). Existing human fields are preserved without
-backfilling or renaming. The fictional sample and test defaults also use false,
-per the maintainer's unreleased-contract correction. Ordinary Markdown remains
-useful without the table or plugins.
-
-Keep the generated Base unchanged: even UI column/layout edits are protected
-conflicts and block the entire sync batch. Author an independent custom view at
-another path without the reserved ownership comment if desired. Missing/moved
-generated dashboards refuse rather than recreate. See [dashboard ownership and
-recovery](DASHBOARDS.md) and the [read-only fictional presentation sample](../examples/sample_vault/README.md).
-Automated YAML checks are not native Obsidian rendering evidence; a native preview
-was unavailable for Thread 14.
+Continue with [safe customization](CUSTOMIZATION.md) and [recovery](RECOVERY.md).
+The latter includes a bounded synthetic interruption exercise. Open Markdown or
+the generated Base yourself if desired; ordinary notes work without plugins.
+Do not edit the tracked Base, including via UI layout controls: that is a protected
+conflict. Use a separate custom view without its reserved ownership comment.
+Native Obsidian preview remains unavailable in automated verification.

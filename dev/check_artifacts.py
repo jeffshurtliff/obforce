@@ -4,7 +4,7 @@
 :Synopsis:          Inspects fresh distributions and checks independent installations
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     27 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -547,7 +547,10 @@ for data in (raw, raw.replace(b'\n', b'\r\n')):
         _run([str(python), '-c', graph_probe], work, environment)
         # Keep this fixture outside the entry-point no-write working directory.
         _run([str(python), '-c', offline_probe], root, environment)
+        from verify_tutorials import verify
+
         for number, command in enumerate(([str(console)], [str(python), '-m', 'obforce'])):
+            verify(command, python, root / f'tutorial-{number}', work, environment)
             _lifecycle(command, root / f'public-{number}', work, environment)
             for arguments in ([], ['--help'], ['--version']):
                 output = _run(command + arguments, work, environment)

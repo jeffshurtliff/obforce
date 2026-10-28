@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-28",
+  "scope": "Issue #16 documentation and bounded tutorial support only; pending maintainer acceptance",
+  "base_commit": "17243c73f5e40d7c2d41023345365b99c8cd5ff1",
+  "branch": "docs/16-thread-16-user-and-maintainer-documentation",
+  "prerequisite": {
+    "implementation": "3771c16f133703bd76615d1af383e88d7d8dbf08",
+    "merge": "178bf98a53f910364eb0985d201a372f3fe8cd7e",
+    "run": 40721222520,
+    "attempt": 2,
+    "full_job_logs_reverified": 12,
+    "independent_installs": 24,
+    "attempt1_unacquired_job": 122932342732,
+    "attempt1_limit": "no runner/steps; capacity annotations and unavailable 404 log retained in prior manifest"
+  },
+  "environment": {
+    "os": "macOS 27.0.1",
+    "architecture": "ARM64",
+    "filesystem": "APFS as previously observed; no new filesystem qualification",
+    "python": "3.14.7",
+    "isolation": "independent installed wheel, external copied tests/harnesses, TMPDIR/TEMP/TMP under dedicated stable private ancestry, separate coverage and installer roots"
+  },
+  "checks": {
+    "metadata_lock": "passed",
+    "ruff_lint": "passed",
+    "ruff_format": "passed",
+    "bandit": "no issues; existing annotations retained",
+    "whitespace": "passed",
+    "strict_twine": "both passed",
+    "archive_files": {
+      "wheel": 36,
+      "sdist": 35
+    },
+    "independent_installs": 2,
+    "tutorial_journeys": 4,
+    "tutorials": "actual console and module in each install; literal fictional quickstart/customization snippets, exact source/cwd and preview/no-op snapshots, UUID move, metadata update, creation-only template, dashboard conflict, separate synthetic rollback/cleanup/intervening-edit refusal",
+    "runtime_guards": "active Python socket/process audit denial and empty external-tool PATH; setup downloads and authorized synthetic children separate",
+    "full_suite": {
+      "passed": 1605,
+      "skipped": 3,
+      "seconds": 148.73,
+      "coverage_percent": 92,
+      "capture_bytes": 182942,
+      "capture_complete": true,
+      "cleanup_confirmed": true
+    },
+    "local_references": 216,
+    "public_vendor_source_get_links": 39,
+    "links_tls_verification": true
+  },
+  "retained_observations": [
+    "Initial sandbox build could not reach PyPI; no artifacts were produced. Authorized dependency-download build then passed.",
+    "First tutorial recovery fixture incorrectly tried to restore a changed note and continue recovery; production guards refused. Corrected into separate clean rollback/cleanup and retained-edit refusal cases; no production change.",
+    "Initial full suite: 4 failed, 1540 passed, 3 skipped, 1 setup error, 137.46s; complete capture/cleanup. PyYAML missing from incomplete test setup; other refusal causes uncaptured.",
+    "Complete-locked-tool stable-root full suite: 1 failed, 1604 passed, 3 skipped, 142.67s, 92% coverage, complete capture/cleanup. Thousand-class test returned ConflictError Read path changed during observation before expected size refusal; changed path/cause uncaptured.",
+    "Observation-only focused diagnostic: 1 passed, 11.53s; no changed path reproduced. Does not explain failed runs.",
+    "Final uninstrumented full suite passed; earlier failures remain failed and causes are not inferred from later passes.",
+    "Entire Brain brief could not open its local lock; direct inspection fallback. Search service 503; Python TLS-store failure and Salesforce HEAD false-404s preceded successful system-TLS GET verification. Invalid original CLI setup URL replaced.",
+    "Connector issue-comment action had PR-shaped parameters and was auto-review rejected. Verified issue-specific API successfully posted #16 updates.",
+    "Optional #17 body edit auto-review rejected as outside explicit mutation scope; body left unchanged. Verified native #16 to #22 to #17 edges and #22 body establish blocker.",
+    "A temporary documentation-baseline conversion parsed headings inside fenced history and failed before mutation; corrected using explicit changed file paths and verified all 17 exact SHA-256 values."
+  ],
+  "skips": [
+    "filesystem cannot represent case collision",
+    "filesystem cannot represent normalization collision",
+    "native Windows junction/reparse execution unavailable"
+  ],
+  "unavailable": [
+    "new hosted CI",
+    "new native Windows/Linux execution",
+    "local Python 3.15",
+    "live sf/org checks",
+    "native Obsidian preview/property-type validation",
+    "power-loss/hostile-race/ACL/arbitrary-filesystem guarantees"
+  ],
+  "artifacts": [
+    {
+      "name": "obforce-0.1.0.dev0-py3-none-any.whl",
+      "sha256": "cc0654eebdb1593d9e3b89165d381029b462bd138596c948eddd17298eb06b69"
+    },
+    {
+      "name": "obforce-0.1.0.dev0.tar.gz",
+      "sha256": "c2bc5adf9cb8e2d833790cd810128826ed6dc1deb5c1ebb2a574356098ee95f2"
+    }
+  ],
+  "baseline": "documentation-baseline-20261028.json retains 17 exact original UTF-8 documents with verified SHA-256; older full benchmark/profile/CI/design/roadmap evidence remains unchanged",
+  "tracking": {
+    "issue16": "open pending acceptance",
+    "issue22": "16b release blocker, NOT STARTED",
+    "native_edges": [
+      "15 -> 16",
+      "16 -> 17",
+      "16 -> 22",
+      "22 -> 17"
+    ],
+    "thread17": "NOT STARTED",
+    "enhancements18_19": "NOT STARTED",
+    "broader21": "excluded, remains open"
+  },
+  "git": "all changes unstaged/uncommitted; no production src, dependency/lock, workflow, version or runtime schema changes",
+  "subsequent_documentation_revision": {
+    "date": "2026-10-28",
+    "change": "Clarified entire-org metadata/configuration purpose versus current ApexClass-only scope and planned future areas. Documentation wording only; no runtime change.",
+    "verification": "Links, consistency, privacy and whitespace; no tests or builds rerun.",
+    "artifact_evidence_boundary": "Recorded artifact hashes and tutorial checks apply to the preceding documentation snapshot. README packaged long description has since changed."
+  }
+}

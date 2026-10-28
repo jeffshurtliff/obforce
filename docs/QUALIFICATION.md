@@ -1,13 +1,20 @@
 # Platform, failure and scale qualification
 
-Thread 15 is **accepted and complete; #15 closed**, after exact-merge
+The [approved stable release plan](../dev/STABLE_010_RELEASE_PLAN.md) requires new
+R2/R7/R8 actual-input/native evidence and a successful R6 1,000-class lifecycle.
+The results below retain their accepted historical synthetic scope; the large
+fixtures establish safe refusal, not successful 1,000-note publication. Native
+Obsidian review is now mandatory for stable acceptance and remains unperformed.
+No new real/native/scale pass follows from this documentation revision.
+
+The current accepted implementation is verified by exact-merge
 [run 40721222520, attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520),
 implementation `3771c16` / merge `178bf98a53f910364eb0985d201a372f3fe8cd7e`.
 All 12 selected Linux/macOS/Windows Python 3.12–3.15 cells and 24 independent
 installs passed every required gate. Historical failures/timeouts/cancellations
 and skips remain. The approved #21 path optimization is delivered/verified;
 broader optional work stays open without becoming a prerequisite.
-The accepted Thread 14 matrix remains prerequisite evidence. See the detailed
+Earlier accepted matrix results remain historical evidence. See the detailed
 [qualification record](../dev/THREAD_15_QUALIFICATION.md) and
 [roadmap](../dev/IMPLEMENTATION_PLAN.md).
 
@@ -40,7 +47,7 @@ cooperating writers and observed checkpoints. They do not establish power-loss
 durability, hostile-editor exclusion, forged/coarse timestamp detection, Windows
 directory fsync, atomic snapshots or atomic multi-file transactions. Windows sf
 execution remains refused; #18 is outside this task. Native Obsidian preview was
-optional and unavailable in Thread 14 and was not invoked here.
+optional and unavailable in dashboard support and was not invoked here.
 
 ## Reproducing synthetic measurements
 
@@ -114,7 +121,7 @@ Archive membership stays exactly 36 wheel / 35 sdist entries.
 
 The final measured results, retained failures and unavailable/skipped checks are
 in the [detailed record](../dev/THREAD_15_QUALIFICATION.md#measured-environment-results-and-retained-failures).
-Threads 16–17 and enhancements #18/#19 remain **NOT STARTED**.
+
 
 
 ## First ID correction local evidence — 27 October 2026
@@ -227,8 +234,7 @@ Captures completed under existing budgets with confirmed cleanup. The unchanged
 case/NFC representation and locally unavailable Windows junction skips remain
 gaps. Six fresh independent wheel/sdist installs, exact 36/35 archives and all
 standard checks passed. These were local results at that checkpoint; the accepted hosted result below
-subsequently qualifies the selected matrix separately. Threads 16–17 and #18/#19
-remain NOT STARTED.
+subsequently qualifies the selected matrix separately.
 
 The [complete repeated scale JSON](../dev/evidence/thread15-scale-macos-py314-20261028.jsonl)
 retains seven stages, 1000 classes/10000 explicit edges and seed 15. All candidate
@@ -262,6 +268,5 @@ results do not establish Windows sf/ACL, power-loss/hostile-race, atomic snapsho
 multi-file guarantees or native Obsidian preview. No hosted filesystem is inferred
 from runner labels. All skips remain explicit gaps.
 
-#15 is accepted/closed. Thread 16 is eligible but NOT STARTED; Thread 17 and
-#18/#19 remain NOT STARTED. The approved #21 path scope is delivered/verified;
+Release preparation is separately gated by [the release runbook](RELEASE_RUNBOOK.md). The approved #21 path scope is delivered/verified;
 its broader optional work remains open and outside the dependency graph.

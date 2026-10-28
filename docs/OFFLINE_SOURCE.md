@@ -1,41 +1,11 @@
 # Offline Apex acquisition
 
-Thread 03 implements internal read-only acquisition from an explicit Salesforce
-DX project. It returns the existing [normalized records](COVERAGE.md) and typed
-[errors](CONFIGURATION.md#errors-and-exits). The Python interface is internal;
-Thread 12 connects it to public initial build; see the fictional
-[quickstart](QUICKSTART.md). Refresh remains planned.
-Thread 07 adds separate internal [candidate rendering](RENDERING.md), without
-changing this source or collecting offline relationships.
+These engineering details describe current implementation contracts, not a stable
+public Python API. Use the [quickstart](QUICKSTART.md), [live setup](LIVE_SETUP.md)
+and [CLI reference](CLI.md) for command journeys.
 
-## Fictional example
-
-The repository [sample project](../examples/sample_sfdx/sfdx-project.json) contains
-two declared packages and two fictional Apex classes. From a development checkout:
-
-```python
-from pathlib import Path
-
-from obforce.models import Selection, SourceBinding
-from obforce.sources.local import collect_local
-
-result = collect_local(
-    Path('examples/sample_sfdx').resolve(),
-    SourceBinding('fictional-workspace', 'local'),
-    Selection(include_namespaced=False),
-)
-assert [item.key.full_name for item in result.components] == ['DemoExtension', 'DemoService']
-assert result.coverage.inventory.status == 'complete'
-assert result.coverage.audit.status == 'unavailable'
-assert result.coverage.relationships.status == 'not_collected'
-```
-
-No `sf`, authentication, external process, schema fetch, network, or Obsidian is
-used. Acquisition creates no config, vault, state, log, cache, or source files.
-Normal interpreter bytecode caches can be disabled with `PYTHONDONTWRITEBYTECODE=1`.
-Filesystem access times may change as an ordinary result of reading; source
-bytes and modification times remain unchanged. Tests copy the sample into a
-temporary directory and compare complete before/after snapshots.
+The supplied fictional multi-package DX sample is used in the
+[offline tutorial](QUICKSTART.md); no sf process or network is needed.
 
 ## Selected local scope
 
@@ -141,7 +111,7 @@ with `requested=false` by design. All four audit attributes remain unavailable;
 local records have no Salesforce record ID. File/Git dates never substitute for
 Salesforce audit dates, and source text never establishes dependency edges.
 
-Components are ordered by canonical key and use unchanged Thread 02 hashes,
+Components are ordered by canonical key and use unchanged normalized-model validation hashes,
 binding, availability wrappers, and provenance label `local-apex-xml-v1`.
 Checkout location, package order, raw XML formatting, source body changes, and
 filesystem timestamps do not change normalized hashes. Supported fact changes

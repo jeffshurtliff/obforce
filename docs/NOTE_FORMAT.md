@@ -1,19 +1,9 @@
 # Note ownership and state contract
 
-Thread 13 [public refresh](REFRESH.md) now publishes generated-only patches and
-exact source/graph evidence through the accepted writer. Its state-document
-envelope is schema 2; NoteState remains schema 1 with unchanged UUID/property/body
-baselines. Legacy evidence-less public refresh refuses without adoption/migration.
-The dated internal increments below retain their original contract boundaries.
-
-Thread 02 freezes constants, normalized state records, and fingerprint inputs.
-Thread 07 [renders candidate strings](RENDERING.md); Thread 08 now parses and
-patches caller-supplied managed-note bytes internally as described below. State
-loading/discovery and unique move reconciliation are internal Thread 09 work
-([safety contract](SYNC_SAFETY.md)); Thread 10 adds internal read-only planning.
-Accepted Thread 11 publication/recovery is connected to public initial build by
-Thread 12. Refresh remains Thread 13. This fictional note illustrates the
-version-one contract; initial build never adopts or regenerates an existing note.
+Refresh publishes generated-only patches and exact private source/graph evidence.
+State-document schema is 2, NoteState schema is 1 and renderer version is 4.
+Legacy evidence-less sync refuses without adoption/migration. This fictional
+note illustrates ownership; initial build never adopts an existing note.
 
 ```markdown
 ---
@@ -53,9 +43,8 @@ Leave assessment to a person.
 ## Exact ownership and versions
 
 `obforce_id` is a persistent canonical lowercase UUID, independent of its path;
-`obforce_schema` is integer 1, not a boolean or string. Model, note, state,
-config, and marker versions start at 1, as does the initial renderer-contract
-version. The marker version is tracked internally; it is not an extra note key.
+`obforce_schema` is integer 1, not a boolean or string. Model, note, NoteState, config and marker versions are 1. The state
+document/evidence/journal/dashboard versions are 2/1/2/1; renderer is 4. The marker version is tracked internally; it is not an extra note key.
 Unsupported schemas require refusal, never automatic migration or repair.
 
 The exact generator-owned property allowlist is:
@@ -72,10 +61,8 @@ The whole `sf_*` namespace is reserved. An unknown `sf_*` key is unsupported and
 must be refused rather than adopted or overwritten. Every other key belongs to
 the user after creation, including `type`, `tags`, `aliases`, business fields,
 all `technical_debt*` fields, and arbitrary custom properties. Creation defaults
-do not transfer their ownership. MTF-2 changes new-note `technical_debt` to a strict
-Boolean, false by default; this is an initial checkbox default, not an inferred
-assessment. The maintainer authorized false throughout fictional/example/test
-defaults, without retaining historical unassessed data or a legacy view.
+do not transfer their ownership. New-note `technical_debt` is Boolean false by default, an initial checkbox
+default rather than a metadata-derived assessment.
 New `tech_debt_severity` and `tech_debt_status` strings default blank; `last_reviewed`
 defaults null, with `YYYY-MM-DD` recommended for a human review date. These and
 earlier human key names are never renamed or backfilled on existing notes.
@@ -88,7 +75,7 @@ accessible live scope, not proven deletion. Dependency coverage uses the four
 statuses in [COVERAGE.md](COVERAGE.md). Audit display names are optional via
 `include_audit_names`; exclude unnecessary emails, usernames, org/record IDs,
 internal URLs, raw API data, and class bodies from notes. Quote wikilinks when
-stored as YAML values. Serialization/escaping is implemented for new candidates in Thread 07.
+stored as YAML values. The renderer serializes and escapes new candidates.
 
 ## Generated region
 
@@ -102,8 +89,8 @@ The exact reserved marker strings are:
 There must be exactly one ordered pair, each on its own line. Repeated, nested,
 missing, reversed, inline, or otherwise malformed markers are conflicts. Marker
 strings may not occur in source values or template content in a way that creates
-an extra marker or ambiguous boundary. Thread 07 validates its own generated/new candidates against this structure;
-Thread 08 independently validates supplied existing bytes too.
+an extra marker or ambiguous boundary. The renderer validates generated/new
+candidates; the parser independently validates existing bytes.
 
 Only the bytes strictly between the validated marker lines are replaceable.
 Preserve the marker lines and all user body bytes outside them, including line
@@ -117,7 +104,7 @@ unsafe tags, malformed frontmatter, and unsupported YAML structures block the
 batch before any publication. No fallback destructive repair or force mode.
 User prose and supported custom YAML structure/comments/types/quoting must be
 preserved. Universal byte-identical frontmatter preservation is not promised;
-Thread 08 supports the bounded round-trip forms below and refuses unsafe forms.
+note preservation supports the bounded round-trip forms below and refuses unsafe forms.
 
 ## Internal state and invalidation
 
@@ -131,7 +118,7 @@ and supported note schema. User-owned properties are forbidden in that baseline.
 Mappings are copied and read-only so callers cannot mutate a previously hashed
 record. State schema/UUID/path/digest validation exists for supplied records.
 The private `.obforce/state.json` wire envelope is implemented internally in
-Thread 09, including strict duplicate-key/ID/path validation, bounded loading,
+state reconciliation, including strict duplicate-key/ID/path validation, bounded loading,
 missing/corrupt state refusal and identity reconciliation. It wraps the unchanged
 NoteState with exact saved generated-region bytes encoded as canonical base64;
 see [SYNC_SAFETY](SYNC_SAFETY.md). Constructing a `NoteState`
@@ -147,20 +134,18 @@ Render fingerprints include all relevant graph/path, generated-template,
 schema/renderer-version, layout, and privacy inputs. A separate creation-only
 candidate fingerprint never replaces the generated render hash saved in state.
 Collection times, host paths, and response ordering do not enter source hashes;
-actual audit dates do. No-op bytes/mtimes must remain unchanged when later sync
-is implemented. Notes and their state must ultimately publish through the same
-recoverable transaction; per-file replacement alone is insufficient. This thread
-provides no vault writes, locks, journals, recovery, or publication commands.
+actual audit dates do. No-op preserves exact bytes/mtimes. Notes, dashboard and state publish through
+the same guarded recoverable transaction.
 
 ## Relationship invalidation boundary
 
-Thread 06's [internal graph](RELATIONSHIPS.md) derives References and Referenced By
+The [internal graph](RELATIONSHIPS.md) derives References and Referenced By
 from one directed evidence set, retaining unresolved/unsupported endpoints as labels.
 Only explicitly supplied managed-note paths can supply link locations. Graph-only
 changes or a neighboring note move change graph fingerprints without changing
 component facts/source hashes or note ownership. Coverage/stale changes participate
-in invalidation too. Thread 07 renders these explicit mappings; Thread 08 supplies
-in-memory preservation. Thread 09 adds read-only state/move discovery; publication remains later work;
+in invalidation too. Rendering uses these explicit mappings. Preservation parses existing bytes,
+state reconciliation discovers unique moves and the guarded writer publishes;
 this graph neither adopts notes nor writes state.
 
 See [internal rendering](RENDERING.md) for engine-owned YAML/markers, finite Jinja
@@ -168,12 +153,12 @@ overrides, candidate bounds, separate creation/generated hashes and independent
 coverage invalidation. Whole-new-note candidates must never replace existing notes.
 
 
-## Internal existing-note parsing and preservation (Thread 08)
+## Internal existing-note parsing and preservation
 
 `sync/notes.py` accepts immutable caller-supplied note bytes. `parse_note` returns
 an immutable observation with exact generated-region bytes and hash, properties,
 and byte offsets. `patch_note` also requires a validated **in-memory** `NoteState`,
-the exact saved generated-region bytes, and an accepted Thread 07
+the exact saved generated-region bytes, and an accepted renderer
 `GeneratedCandidate`. A whole `NewNoteCandidate` is refused. There is no file/path
 input, state-file loading, note/vault discovery, adoption, move reconciliation,
 batch planner, publication, locking, journal, recovery or public lifecycle command.
@@ -237,7 +222,7 @@ validated against the flat subset, never silently stringified or discarded.
 | Each scalar / key | 16 KiB UTF-8 |
 | Each list | 1,024 strings |
 
-Incoming candidates retain Thread 07's stricter rendering bounds, section/template
+Incoming candidates retain the stricter rendering bounds, section/template
 validation, scalar types, hashes and required owned identity/source fields.
 Bounds refuse rather than truncate. This is finite in-process parsing, not OS
 resource isolation or universal YAML support. Official contracts reviewed on
@@ -288,62 +273,38 @@ Malformed/unsupported notes, invalid markers, edited baselines and identity
 conflicts raise concise redacted `ConflictError` (3). Invalid caller/candidate
 contracts raise `ModelError` (2), with identity conflicts retaining 3. Parser
 messages, note snippets and local paths are never displayed. Existing outcome
-precedence stays 3, 2, 1, 4, 0. Thread 08 is accepted at implementation `d79f5e2` /
-merge `dba53ab`; #8 is closed. Exact-merge run `39453887153`, attempt 1, passed all
-12 Linux/macOS/Windows Python 3.12–3.15 cells: 744 passed per Linux/macOS cell,
-732 passed/12 expected skips per Windows cell. Every standalone gate, fresh
-build/Twine and all 24 independent guarded installs passed. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026)
-for actual evidence and retained historical failures/skips. No real sf/org/vault
-access or Windows sf execution qualification follows. Thread 09 internal
-[state reconciliation](SYNC_SAFETY.md) is accepted, including correction `890ced2` /
-merge `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed
-all 12 cells and all 24 independent installs; see the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 internal read-only planning/reporting is accepted, including correction
-`a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
-passed in exact-merge run `39510802449`, attempt 1; see the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 internal bounded transaction/recovery primitives are accepted, including
-correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
-`39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
-see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
-[transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Thread 12 is implemented locally pending acceptance; Threads 13–17 and
-enhancement #18 remain NOT STARTED.
+precedence stays 3, 2, 1, 4, 0.
 
-Thread 10's existing-note candidates always call the preservation patcher after
+Existing-note candidates always call the preservation patcher after
 strict reconciliation; they never use whole-new-note templates. Lifecycle
 validation accepts only the already supported `active` and `missing` values;
 the planner alone proposes missing after the positive comparable supported live
-inventory gate in [SYNC_SAFETY](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026).
+inventory gate in [SYNC_SAFETY](SYNC_SAFETY.md#complete-planning-and-fresh-integrity-checks).
 Both strict owned-property and exact saved-byte comparisons still gate changes.
 Source/graph/render hashes retain their meanings; lifecycle candidate values are
 compared directly too. User-only changes and creation-template edits cause no
 note/state churn. Hash-only generated invalidation can update candidate state
-while retaining exact original note bytes. No publication is implemented.
+while retaining exact original note bytes. Publication is independently validated by the writer.
 
-Thread 11's internal writer independently replans explicit inputs before accepting
+The internal writer independently replans explicit inputs before accepting
 existing-note patch bytes. It never applies a creation template to an existing
 note. Saved properties/exact generated bytes, all user-owned YAML/comments/prose
 and technical_debt fields retain the accepted contract. Unique moves are already
-user-moved paths; transaction publication reconciles state without renaming notes.
+user-moved paths; Publication reconciles state without renaming notes.
 Before-images are private recovery material, never public note baselines.
 
 
-## Dashboard view of human properties (Thread 14)
+## Dashboard view of human properties
 
 The [native dashboard](DASHBOARDS.md) filters only reserved identity/schema and
 `sf_type`, with a Markdown extension gate. User `type`, tags and aliases stay
 yours and do not control eligibility. The table uses the actual Boolean Technical
-Debt property. MTF-2's Boolean false default and blank
+Debt property. The Boolean false default and blank
 human fields apply only to new notes. Date projections extend the reserved
 allowlist and renderer fingerprint to version 4, preserving original timestamp
 facts and all older exact baselines. The dashboard is a separate whole-file owned asset; note templates,
 UUIDs, exact generated baselines and human YAML/prose preservation are unchanged.
 
-Thread 14, including MTF-2 and Windows relative-config correction, is accepted
-at `6d08696` / merge `cdf0e68`; #14 is closed. Run `40517073513`, attempt 1,
-passed all 12 cells and 24 independent installs. Native Obsidian preview was
-optional and remains unavailable. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+
+<!-- Compatibility targets for retained maintainer evidence links. -->
+<a id="internal-existing-note-parsing-and-preservation-thread-08"></a>

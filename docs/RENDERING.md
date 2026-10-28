@@ -1,23 +1,9 @@
-# Internal Apex candidate rendering
+# Apex candidate rendering
 
-Thread 13 [public refresh](REFRESH.md) uses this renderer only for generated
-candidates on existing notes, followed by exact baseline-preserving patches.
-Persisted private graph/fact evidence supplies historical inputs; renderer version
-3, four-space generated nesting and all existing fingerprint/escaping contracts
-remain. Creation templates still apply only to new notes; human prose/YAML is
-never regenerated or reindented.
-
-Thread 07 implements deterministic **candidate** rendering in
-`renderer/templates.py` and `renderer/notes.py`. This is an internal interface,
-not a stable public Python API. Thread 12 connects it to public initial build. The renderer reads no existing note and performs no patching,
-adoption or publication. Thread 09 separately adds internal read-only
-[state/move reconciliation](SYNC_SAFETY.md); Thread 10 adds internal read-only
-planning; accepted Thread 11 publication/recovery and Thread 12 public orchestration
-compose these existing primitives.
-A complete new-note candidate must never be applied to an existing note.
-Thread 08 separately supplies
-[bounded in-memory preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08)
-for caller-supplied bytes and saved baselines.
+Build renders new candidates; sync renders only generated candidates for existing
+notes and applies strict baseline-preserving patches. Creation templates are
+creation-only. The current renderer fingerprint is 4, with four spaces per nested
+list level. These modules are internal implementation details, not a stable API.
 
 ## Inputs, identity and output
 
@@ -49,21 +35,18 @@ returns a complete new-note string, explicit path and a separate creation hash.
 Candidate strings have UTF-8/LF semantics and one terminal newline. The engine
 serializes sorted, quoted property keys and JSON-encoded scalar/list values,
 a valid flat YAML subset. Quoted keys also preserve names such as `null`/`false`.
-There are no YAML tags, aliases, nested mappings or duplicate keys. This thread
-needs no runtime YAML parser dependency; it does not parse existing frontmatter.
+There are no YAML tags, aliases, nested mappings or duplicate keys. The renderer does not parse existing frontmatter; the preservation layer does.
 
 The engine owns UUID/schema, the frozen `sf_*` allowlist, and exactly one ordered
 marker pair on separate lines. Templates cannot supply frontmatter or markers.
 Unknown `sf_*` names and attempts to supply reserved creation defaults fail.
 Optional creation defaults are explicit flat user properties; all remain
 user-owned after creation. Defaults are `type: salesforce_component`,
-`tags: [salesforce]`, Boolean `technical_debt: false` (MTF-2), blank strings
+`tags: [salesforce]`, Boolean `technical_debt: false`, blank strings
 `tech_debt_severity`/`tech_debt_status`, and `last_reviewed: null`.
 Only Boolean debt overrides are accepted for new notes; other supported custom
 human values remain distinct. Boolean human decisions remain preserved during
-patching; metadata never assesses technical debt. The maintainer authorized false
-throughout fictional/example/test defaults without historical unassessed data.
-Creation requires
+patching; metadata never assesses technical debt. Creation requires
 Business Context, Known Issues / Technical Debt, and Additional Information
 exactly once. Generated sections require Salesforce Metadata, Coverage,
 References and Referenced By exactly once.
@@ -185,112 +168,12 @@ new-note `creation_fingerprint`. No override root, checkout path, template mtime
 response ordering, incidental timestamp or newly generated identity enters output.
 An incoming-only edge or neighboring move invalidates affected output even when
 the component source hash stays unchanged. Hash equality never authorizes
-replacing edited generated content; Thread 08 compares both saved property and
+replacing edited generated content; note preservation compares both saved property and
 exact-byte body baselines before patching.
 
-## Dependency and verification evidence
+## Readable escaped metadata
 
-Poetry adds `Jinja2 >=3.1.6,<4`, resolving Jinja2 3.1.6 and transitive MarkupSafe
-3.0.4 in the generated lockfile. Jinja supplies the explicitly requested template
-syntax and sandbox; serialization uses the standard library. No runtime YAML
-parser is added. Official contracts reviewed on 20 October 2026:
-[Jinja API](https://jinja.palletsprojects.com/en/stable/api/),
-[sandbox](https://jinja.palletsprojects.com/en/stable/sandbox/),
-[changes](https://jinja.palletsprojects.com/en/stable/changes/) and
-[publisher package metadata](https://pypi.org/project/Jinja2/). The
-[Obsidian internal-link contract](https://obsidian.md/help/links),
-[flat properties and quoted links](https://obsidian.md/help/properties), and
-[YAML 1.2.2 JSON compatibility](https://yaml.org/spec/1.2.2/) were also checked;
-no running Obsidian or real vault was used.
-
-Tests use synthetic fixtures, blocked network/process access, independent YAML
-parsing via Bandit's already locked development dependency, and explicit
-installed-resource/output checks. The fresh-artifact checker deliberately
-allowlists both assets and renderer modules, compares all packaged source/resource
-bytes to the checkout, then independently installs wheel and sdist outside it.
-Each installed probe compares complete rendering with the reviewed synthetic
-fixture, checks overrides/fallback, graph staleness/moves and absence of cwd
-artifacts with sockets/process launches blocked. Setup/build/dependency downloads
-may use the network; runtime probes do not.
-
-Actual local, hosted and native gaps are recorded in the
-[roadmap handoff](../dev/IMPLEMENTATION_PLAN.md). No live sf/org/vault or Windows
-sf execution qualification follows. Thread 09 internal state reconciliation is
-accepted; #9 is closed. Thread 10 planning is described below; Threads 11–17 and enhancement #18 remain not started.
-
-
-## Thread 07 accepted delivery — 20 October 2026
-
-Thread 07 is accepted and complete; #7 is closed under maintainer authorization.
-Implementation `b4658eb0f878c71698e580801c118733a16b86df` was merged at
-`eedeff425bcd4921bef8756412826ce5a93b0165`. All 21 packaged source/resource files
-match the reviewed final candidate, and implementation/merge trees match.
-
-Every required step and full command log in
-[run 39440606470, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39440606470)
-was verified. All 12 Linux/macOS/Windows Python 3.12–3.15 cells passed. Linux/macOS
-passed 618 tests each without skips (95% coverage); Windows passed 606 with 12
-expected skips each (93% coverage). Every cell passed standalone strict lock,
-Ruff lint/format, Bandit, fresh build, strict Twine, exact archive/license/source/
-resource inspection, both independent installations and whitespace checks.
-All 24 installed probes passed full candidate-byte/resource/override/fallback/
-graph/move/privacy checks with active runtime socket/process guards and no cwd
-artifacts. Setup/download network use remains separate from offline runtime tests.
-
-The 12 Windows skips are nine POSIX collector cases, the POSIX wrapper-symlink
-case, unavailable FIFO case and POSIX unsafe-template-link fixture. Reparse
-refusal is synthetic. This does not qualify Windows sf execution, real Salesforce,
-hostile filesystem races, arbitrary Jinja, OS resource isolation or the later
-preservation/publication lifecycle. Relationship coverage limitations and all
-scope/privacy contracts remain unchanged. Historical local probe failures and
-older CI evidence retain their original status.
-
-See the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-07-acceptance-and-closure--20-october-2026).
-Thread 08 supplies accepted [bounded supplied-byte preservation](NOTE_FORMAT.md),
-delivered at merge `dba53ab`; #8 is closed. Its exact-merge 12-cell acceptance is
-recorded in the [roadmap](../dev/IMPLEMENTATION_PLAN.md#thread-08-acceptance-and-closure--20-october-2026).
-Thread 09 adds accepted internal [state/move reconciliation](SYNC_SAFETY.md),
-including correction `890ced2` / merge `dff34a7`. #9 is closed; exact-merge run
-`39502679337`, attempt 1, passed all 12 cells and 24 independent installs. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 internal read-only planning/reporting is accepted, including correction
-`a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
-passed in exact-merge run `39510802449`, attempt 1; see the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 internal bounded transaction/recovery primitives are accepted, including
-correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
-`39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
-see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
-[transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Thread 12 is accepted and complete; #12/#20 are closed. Threads 13–17 and
-enhancement #18 remain NOT STARTED.
-No release is published.
-
-Thread 10 always renders accepted generated candidates for existing notes against
-all reconciled/current paths and independently supplied coverage, then applies
-only preservation patches. This catches source, incoming/outgoing graph, moved
-target, generated-template, options/layout and renderer-contract invalidation.
-Equal hashes never bypass baseline checks. Whole-note creation and its separate
-fingerprint apply only to new components; existing notes ignore creation assets.
-The planner retains stale graph evidence with the accepted refresh helper.
-See [complete read-only planning](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026)
-for caller inputs, output limits and the publication boundary.
-
-Thread 11 consumes only complete independently revalidated planner candidates;
-rendering still performs no publication itself. Existing-note publication uses the
-accepted preservation patch, not creation-template regeneration. Renderer-local
-graph-plus-independent-Coverage and creation-only hash contracts remain unchanged.
-No graph snapshot is persisted in state or reconstructed during recovery.
-
-
-## Renderer version 2 readability correction — MTF-1 / #20
-
-Assigned to the current Thread 12 correction for v0.1.0, because readable first
-build notes are already an acceptance requirement. No Thread 13/14 work is started.
-The original blanket numeric escaping made underscores, quotes and hyphens appear
-as literal references in reported Obsidian Live Preview output.
-
-Renderer version 2 retains plain ordinary inline punctuation (straight quotes,
+The renderer retains plain ordinary inline punctuation (straight quotes,
 hyphens, commas, semicolons, apostrophes and parentheses), intraword underscores
 and non-domain periods. Whole ISO-shaped timestamp scalars retain colons. Thus
 `api_version`, `local-apex-xml-v1`, `"67.0"`, `"Active"` and audit timestamps remain
@@ -307,22 +190,10 @@ attribute encoder. Known reference targets keep their separate strict path gates
 The [CommonMark reference rules](https://spec.commonmark.org/0.31.2/#entity-and-numeric-character-references)
 do not reinterpret decoded character references as Markdown syntax. Synthetic
 source snapshots and a local independent CommonMark parser verify ordinary text
-and hostile payloads. The maintainer subsequently confirmed the fictional
-quickstart's readability and nesting in Obsidian. This is manual acceptance, not
-automated execution or an exhaustive view/platform test; agent validation opened
-no real vault or Obsidian.
+and hostile payloads. Native display is a separate evidence class; see
+[qualification](QUALIFICATION.md).
 
-Only the existing renderer-version fingerprint input advances (1 to 2). Source/
-graph hashes, hash algorithms, state/model/note/marker schemas and journal schema 2
-are unchanged. Legacy rendered/preservation fixtures are retained and old saved
-state still round-trips. The accepted lower-level patcher validates exact old
-generated-property/body baselines before replacing only the generated region;
-custom YAML/comments/prose/aliases/tags/technical_debt* remain user-owned. A human
-edit still blocks. Public build refuses repeats, and no migration/repair/whole-note
-rerender or public refresh capability is introduced.
-
-
-## Four-space generated list indentation — Thread 12
+## Four-space generated list indentation
 
 Engine-generated Markdown uses four spaces per nested bullet level, consistently
 for every coverage warning under inventory, audit and relationships. Top-level
@@ -331,31 +202,17 @@ new configuration option. Explicit template slots receive the same formatted
 sections; template-authored literals, YAML properties and human note regions
 retain their own spacing. No whole-document reindent pass runs.
 
-Renderer version 3 advances the existing fingerprint input from 2, making this
-presentation change visible to planning without changing source/graph hashes,
-hash algorithms, UUIDs or state/note/marker/journal schemas. Exact legacy-v2
-property and generated-region baselines still validate before a generated-only
-patch; intervening generated edits still refuse. Two-space human lists and all
-user properties remain unchanged. Public initial build still refuses an existing
-vault; this does not add refresh, migration or automatic note rewriting.
+The current renderer fingerprint includes this formatting convention. Exact saved
+property/body baselines still gate generated-only patches; human lists and
+properties retain their original content.
 
-The maintainer confirmed the preceding MTF-1 character correction through the
-fictional quickstart on 23 October 2026. Its delivered merge `8285aca` passed all
-12 exact-commit hosted cells in run `39868649758`, attempt 1. Four-space rendering
-was delivered at `f833505` and passed all 12 hosted cells and 24 independent
-installs in run `39985255497`, attempt 1. The maintainer tested and accepted the
-indentation; #12 and #20 are completed. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-12-acceptance-and-closure--23-october-2026)
-for the retained local safety-refusal failures and precise evidence limits.
-
-
-## Literal native dashboard (Thread 14)
+## Literal native dashboard
 
 `renderer/dashboards.py` reads exactly one bounded installed literal
 `resources/bases/apex_classes.base` through `importlib.resources`. It uses no
 source data, Jinja, override discovery, external tool or publication side effect.
 The destination is the existing configured dashboard directory plus the fixed
-filename. MTF-2 advances the renderer fingerprint from 3 to 4 for reserved
+filename. Renderer fingerprint 4 is used for reserved
 `sf_created`/`sf_last_modified` UTC `YYYY-MM-DD` projections of valid available
 audit timestamps. Absent/null/unavailable/invalid dates yield no projection;
 original `sf_*_at` facts and source/graph hashes remain. Exact old baselines still
@@ -364,7 +221,9 @@ acquisition, ownership or transaction bound changes.
 [Dashboard syntax, human debt semantics and ownership](DASHBOARDS.md)
 are tested independently from native Obsidian rendering (unavailable).
 
-Thread 14 is accepted at correction `6d08696` / merge `cdf0e68`; #14 is closed
-after run `40517073513`, attempt 1, passed all 12 hosted cells and 24 independent
-installs. Native preview was optional and remains unavailable. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+Native Obsidian preview remains unavailable. See [qualification](QUALIFICATION.md)
+for evidence and platform limits.
+
+<!-- Compatibility targets for retained maintainer evidence links. -->
+<a id="renderer-version-2-readability-correction--mtf-1--20"></a>
+<a id="four-space-generated-list-indentation--thread-12"></a>

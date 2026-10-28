@@ -21,12 +21,9 @@ Filtering uses Markdown plus reserved `obforce_id`, `obforce_schema: 1`, and
 `sf_type: ApexClass`. Changing your `type` or `tags` does not hide a managed note.
 The view is a convenience; its filter does not establish filesystem ownership.
 Technical Debt uses the actual `technical_debt` property, suitable for a native
-checkbox. Per maintainer finding MTF-2, new notes default to Boolean `false`
+checkbox. New notes default to Boolean `false`
 (unchecked); that initial default is not a metadata-derived assessment. Only
-Boolean creation overrides are accepted. The maintainer explicitly replaced the
-earlier unassessed-default proposal for this unreleased, fictional dataset:
-examples and test baselines now use false, with one table and no legacy view.
-Human Boolean decisions remain user-owned during generated-only refresh.
+Boolean creation overrides are accepted. Human Boolean decisions remain user-owned during generated-only refresh.
 
 New notes also initialize user-owned `tech_debt_severity: ""`,
 `tech_debt_status: ""` and `last_reviewed: null`. Recommend `High`, `Medium` or
@@ -50,13 +47,8 @@ See official [syntax](https://obsidian.md/help/bases/syntax),
 [table documentation](https://obsidian.md/help/bases/views/table) and
 [property types](https://obsidian.md/help/properties), read on
 26 October 2026. Automated schema/predicate tests do not constitute native
-Obsidian preview or rendering acceptance. The maintainer's original manual
-observation is recorded as MTF-2. Optional native preview remained unavailable to
-the agent; no real vault or app was opened by the agent. Thread 14 is accepted
-and #14 closed after exact-merge run `40517073513`, attempt 1, passed all 12 cells
-and 24 independent installs at correction `6d08696` / merge `cdf0e68`. See
-[acceptance and retained evidence limits](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
-This does not establish a native rendering result.
+Obsidian preview or rendering acceptance. Native preview remains unavailable; automated validation is not a rendering
+or vault property-type acceptance result.
 
 ## Destination and ownership
 
@@ -84,7 +76,8 @@ or repair mode. For a custom view, author a separate indicator-free Base at anot
 path and retain the generated file unchanged. Do not copy its reserved
 `obforce:dashboard` ownership comment into a user-managed view.
 
-Valid Thread 13 state-document-schema-2 vaults have no dashboard record. Their
+Valid evidence-bearing state-document-schema-2 vaults without a dashboard record
+can add the asset. Their
 first sync creates the new dashboard only when its destination is absent and
 there is no untracked managed dashboard indicator. It preserves existing UUIDs,
 notes and human fields. It never adopts an existing file. Evidence-less legacy
@@ -97,10 +90,10 @@ An optional exact-shape root `dashboard` record extends evidence-bearing state
 schema 2. It has `dashboard_schema: 1`, a portable relative `path`, `content_hash`
 (SHA-256) and canonical base64 `content` holding exact bytes. No human note data
 is added. Evidence schema 1, NoteState schema 1 and journal schema 2 remain;
-MTF-2 advances the renderer fingerprint to version 4 for date projections.
+The renderer fingerprint is version 4 for date projections.
 Older executables reject the extra state key/new reserved date properties; use this version
 for these vaults and recovery. Unknown keys/versions/types or corrupt baselines
-refuse. See [the recorded contract](../dev/THREAD_14_DASHBOARD_CONTRACT.md).
+refuse. See [synchronization safety](SYNC_SAFETY.md).
 
 Changed notes, dashboard, then complete state use the same recoverable writer.
 The dashboard has the same full pathname/historical descriptor/hash/absence/parent
@@ -136,5 +129,4 @@ Optional verbose enhancement #19 remains unstarted.
 
 Try the [fictional quickstart](QUICKSTART.md). A read-only
 [presentation sample](../examples/sample_vault/README.md) contains no private
-state and is not a build/sync target. Actual local/hosted/native evidence and
-acceptance status are recorded in the [roadmap](../dev/IMPLEMENTATION_PLAN.md).
+state and is not a build/sync target. Actual evidence and limits are recorded in [qualification](QUALIFICATION.md).

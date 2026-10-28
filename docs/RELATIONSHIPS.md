@@ -1,39 +1,8 @@
-# Internal platform relationships and directed graph
+# Platform relationships and directed graph
 
-Thread 06 adds `sources/relationships.py` and `graph/dependencies.py`, with synthetic
-fixtures and mocked CLI collection. There is no public command, real org
-validation, static analysis, new component note type, state loading or publication.
-Internal interfaces are versioned implementation details. Thread 06 is accepted
-and delivered at implementation `d1134fa` / merge `2aa8d2b`; #6 is closed as completed.
-
-Exact-merge [run 39431345348, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39431345348)
-passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells. Linux/macOS each reported
-517 passed; Windows each reported 506 passed/11 expected skips. Every cell passed
-standalone metadata/lock, lint, formatting, Bandit, fresh builds, strict Twine,
-both independent artifact installations and whitespace. The Windows skips are
-nine POSIX collector cases, one POSIX wrapper-symlink case and the unavailable
-FIFO case. Mocked graph/adapter/refusal and installed artifact checks do not
-qualify Windows sf execution or actual Salesforce capability/exhaustion. The
-release limitation below is retained. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-06-acceptance-and-closure--20-october-2026).
-Thread 07 adds accepted internal [candidate rendering](RENDERING.md), delivered
-at merge `eedeff4`; #7 is closed. Thread 08 adds accepted in-memory
-[note preservation](NOTE_FORMAT.md), delivered at merge `dba53ab`; #8 is closed.
-Thread 09 adds accepted internal [read-only state/move reconciliation](SYNC_SAFETY.md),
-including correction `890ced2` / merge `dff34a7`; #9 is closed. Exact-merge run
-`39502679337`, attempt 1, passed all 12 cells and 24 independent installs; see the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-09-acceptance-and-closure--20-october-2026).
-Thread 10 internal read-only planning/reporting is accepted, including correction
-`a2132c3` / merge `6004c35`; #10 is closed. All 12 cells and 24 independent installs
-passed in exact-merge run `39510802449`, attempt 1; see the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-10-acceptance-and-closure--20-october-2026).
-Thread 11 internal bounded transaction/recovery primitives are accepted, including
-correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final exact-merge run
-`39676435834`, attempt 2, has all 12 cells and 24 independent installs passing;
-see the [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026) and
-[transaction contract](SYNC_SAFETY.md#thread-11-pre-implementation-transaction-contract--20-october-2026).
-Thread 12 is implemented locally pending acceptance; Threads 13–17 and
-enhancement #18 remain NOT STARTED.
+These engineering details describe current implementation contracts, not a stable
+public Python API. Use the [quickstart](QUICKSTART.md), [live setup](LIVE_SETUP.md)
+and [CLI reference](CLI.md) for command journeys.
 
 ## Direction, endpoints and provenance
 
@@ -73,7 +42,7 @@ metadata and must not be logged or copied into public reports.
 The graph-specific endpoint/evidence records support unresolved sources without
 changing frozen `ComponentKey`, `Relationship`, component/scope hashes, ownership
 or note/state schemas. The existing Relationship record continues to represent
-resolved-source evidence. Thread 09 separately supplies strict state serialization/validation
+resolved-source evidence. State reconciliation supplies strict state serialization/validation
 and old/new managed path mappings; it never replaces stale relationship evidence.
 
 ## Fixed collection and independently verified identity
@@ -81,7 +50,7 @@ and old/new managed path mappings; it never replaces stale relationship evidence
 The caller supplies the explicit executable, neutral existing working directory,
 explicit target and a normalized `LiveInventory`. It must separately obtain
 live authorization for that target and those operations. The adapter reissues
-Thread 05's exact `SELECT Id FROM Organization LIMIT 2` and requires consistent
+the exact `SELECT Id FROM Organization LIMIT 2` and requires consistent
 complete identity evidence plus the same verified org/workspace binding as the
 inventory. Incompatible prior source/selection is refused before queries.
 Retargeting an alias cannot rebind the graph. Separate calls still require stable
@@ -114,7 +83,7 @@ IN, COUNT, ORDER BY, OFFSET, arbitrary endpoint, continuation, Bulk API, query f
 or alternative transport is used. The accepted [CLI boundary](SF_CLI.md) retains
 its executable/target/working-directory controls, JSON/byte/time gates, cleanup,
 redaction and Windows refusal. `_Session` now accepts internal budget overrides;
-Thread 05 defaults and offline acquisition behavior remain unchanged.
+Live inventory and offline acquisition retain independent coverage.
 
 | Application boundary | Maximum |
 | --- | --- |
@@ -207,7 +176,7 @@ Documentation/source reads only; no real `sf` invocation:
   [JSON evolution](https://developer.salesforce.com/docs/platform/sfdx-setup/guide/sfdx-dev-cli-json-support.html),
   official [query source](https://github.com/salesforcecli/plugin-data/blob/a0cdb671f42af74e31a782c34c5cdcc22e1ea5b0/src/commands/data/query.ts)
   and [result schema](https://github.com/salesforcecli/plugin-data/blob/a0cdb671f42af74e31a782c34c5cdcc22e1ea5b0/schemas/data-query.json)
-  were rechecked. Current plugin-data main resolves to that source commit. It uses
+  were rechecked. The reviewed plugin-data main resolved to that commit on that date. It uses
   auto-fetch/maxFetch, warns about missing records and can issue column-metadata
   requests; records/totalSize/done form the inner result. The accepted transport
   validates the outer status/result/warnings envelope; current
@@ -218,34 +187,25 @@ Documentation/source reads only; no real `sf` invocation:
 Synthetic tests and installed mocks verify local behavior. They cannot establish
 actual org permissions, supported-type coverage, live exhaustion or Windows sf
 execution. Future live validation requires separate authorization for its target
-and operations. Enhancement #18 and Threads 11–17 remain NOT STARTED.
+and operations.
 
-Thread 07 projects both graph directions into candidate notes with explicit
-managed paths, method/coverage/staleness and unresolved labels. No endpoint ID or
-raw payload is rendered. Existing per-note graph fingerprints remain unchanged;
-rendering composes them with independent coverage to catch audit/inventory-only
-output changes. This adds no collection, adoption, state or publication capability.
+## Rendering, refresh and private evidence
 
-Thread 10 requires explicit previous graph evidence matching saved per-note
-hashes at saved paths; a hash cannot reconstruct lost relationship provenance.
-Current partial/unavailable refreshes preserve old observations stale through
-`refresh_graph`. Reconciled unique UUID moves feed both directions of graph/render
-invalidation. No filename/record-ID rename inference or filesystem rename occurs.
-The complete candidate plan retains the refreshed graph in memory for the caller's
-next comparison; the accepted state wire stays unchanged. Persisting graph
-provenance requires a later explicit design decision; this thread adds no storage.
+Rendering projects both graph directions with explicit managed paths, method,
+coverage, staleness and unresolved labels. No endpoint ID or raw payload enters
+notes. Per-note graph fingerprints compose with independent coverage so audit or
+inventory-only changes can invalidate output. A unique target move invalidates
+neighbor links without changing their own metadata.
 
-Thread 11 adds internal publication/recovery only. Prior/current graph snapshots
-remain explicit transient planner inputs; no graph state persistence or saved
-baseline reconstruction is added. Recovery performs no platform collection.
-Partial/unavailable platform relationships, offline not-collected coverage and
-Windows sf refusal remain unchanged.
+Planning requires previous graph evidence matching saved hashes at saved paths;
+hashes cannot reconstruct lost provenance. Current partial/unavailable observations
+preserve old evidence as stale. The refreshed graph and exact retained facts are
+stored privately in state-document schema 2 / evidence schema 1 and validated
+independently on loading, planning and writer replanning. Recovery uses validated
+local evidence and performs no platform collection.
 
-Thread 12 public initial build composes this graph directly with the independent
-inventory/audit coverage before rendering/planning. Live orchestration tests mock
-the accepted process boundary and reverify org identity for relationship probes.
-Requested relationships remain partial/unavailable even after clean empty probes,
-so a completed live first build/preview returns 4. Offline graphs remain empty
-and uncollected/unrequested. Neither graph snapshots nor inferred edges are
-persisted; saved hashes never reconstruct a previous graph. No refresh lifecycle
-or enhancement #18 is started.
+Live orchestration re-verifies org identity for relationship probes. Requested
+relationships remain partial/unavailable even after clean empty probes, so a
+completed live build/preview can return 4. Offline graphs remain empty and
+uncollected/unrequested. No regex or AI inference creates authoritative edges.
+See [refresh](REFRESH.md), [coverage](COVERAGE.md) and [safety](SYNC_SAFETY.md).

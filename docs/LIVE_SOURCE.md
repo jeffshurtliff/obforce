@@ -1,30 +1,8 @@
-# Internal live Apex inventory and audit adapter
+# Live Apex inventory and audit
 
-Thread 05 implements `sources/live.py`, tested with synthetic CLI envelopes and
-mocked process collection only. It adds no public command, authentication,
-renderer, state adoption, deletion planner, or vault writes. A separately invoked
-Thread 06 [relationship adapter](RELATIONSHIPS.md) now consumes normalized live
-inventory and reverifies identity; `collect_live` itself still leaves relationships
-uncollected.
-Internal interfaces are not a stable Python API. Thread 12 connects the adapter to explicit public initial build;
-see [configuration](CONFIGURATION.md#public-initialization-and-initial-build-thread-12). Windows `sf` execution remains refused by the unchanged
-[process boundary](SF_CLI.md); [enhancement #18](https://github.com/jeffshurtliff/obforce/issues/18)
-is outside v0.1.0 and is not a prerequisite for this adapter.
-
-Thread 05 is accepted and delivered at merge `85ba7cd`. Exact-commit
-[run 39325616681, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/39325616681)
-passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells: Linux/macOS each
-reported 441 passed; Windows each reported 430 passed/11 expected skips. Every
-cell passed standalone checks, fresh build/Twine and both independent artifact
-installations. The Windows skips cover nine POSIX collector cases, the POSIX
-wrapper-symlink case and the unavailable FIFO case. Mocked adapter/refusal checks
-and hosted Windows results do not qualify Windows sf execution. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-05-acceptance-and-closure--19-october-2026).
-Thread 06 is accepted at merge `2aa8d2b` with all 12 exact-merge hosted cells
-passing; its [relationship adapter documentation](RELATIONSHIPS.md) retains the
-partial/unavailable coverage limitation. Subsequent renderer/planner/writer increments are accepted; Thread 12 now
-composes the adapter into initial build with mocked live orchestration only.
-Thread 13 and later and enhancement #18 remain NOT STARTED.
+These engineering details describe current implementation contracts, not a stable
+public Python API. Use the [quickstart](QUICKSTART.md), [live setup](LIVE_SETUP.md)
+and [CLI reference](CLI.md) for command journeys.
 
 ## Invocation and verified identity
 
@@ -33,7 +11,7 @@ neutral working directory, target, logical workspace, existing `Selection`,
 privacy option, and any previously verified configured/state `SourceBinding`.
 There is no executable/default-org/auth/config/state discovery. A caller must
 separately obtain authorization for the target and read operations before a real
-invocation. No real CLI or org was invoked to implement or validate this thread.
+invocation. No real CLI or org was invoked to implement or validate the adapter.
 
 The first query is ordinary `SELECT Id FROM Organization LIMIT 2`. Exactly one
 valid `00D` Salesforce ID, `done=true`, matching count, no continuation, no warning
@@ -49,8 +27,8 @@ binding contains workspace/mode/verified org ID, never alias. Every supplied
 configured/state binding must match exactly before inventory starts; a different
 workspace, mode, or org is a conflict (3), without adoption/rebinding. Bindings
 supplied by callers must already use the canonical org-ID representation; this
-adapter does not migrate existing state. State-document validation remains Thread
-09. Missing bindings mean an initial internal collection, not permission to adopt
+adapter does not migrate existing state. State-document validation is performed by the synchronization layer. Missing bindings mean an initial internal collection,
+not permission to adopt
 managed notes or reconstruct missing state.
 
 An alias is merely the explicit CLI selector. These separate CLI calls assume a
@@ -172,7 +150,7 @@ only if inventory is exhausted and all requested date/name queries and fields
 are complete (observed null is known). With some known facts it is partial;
 otherwise unavailable. Complete empty scope has vacuously complete requested
 audit. Relationships are `not_collected`, `requested=false` in `collect_live`;
-explicitly requested Thread 06 collection returns its own independent relationship
+explicitly requested relationship collection returns its own independent relationship
 coverage. Any requested incomplete dimension produces outcome 4 through the
 existing coverage contract. Combined errors retain precedence 3, 2, 1, 4, 0.
 Consumers must inspect coverage/outcome; returned rows or their hash are never a
@@ -215,13 +193,13 @@ Documentation/source reads only, without executing `sf`:
   [implementation](https://github.com/salesforcecli/plugin-data/blob/a0cdb671f42af74e31a782c34c5cdcc22e1ea5b0/src/commands/data/query.ts)
   and [inner result schema](https://github.com/salesforcecli/plugin-data/blob/a0cdb671f42af74e31a782c34c5cdcc22e1ea5b0/schemas/data-query.json)
   confirm auto-fetch/maxFetch, truncation warnings, aggregated records/count/done
-  and additional column-metadata requests. Current main still resolved to that
-  source commit during this review; it is not an installed CLI/version pin.
+  and additional column-metadata requests. Main resolved to that
+  source commit on the recorded review date; it is not an installed CLI/version pin.
 
 Synthetic fixture/test evidence does not establish actual Salesforce permission,
 installed CLI/Node/plugin compatibility, live exhaustion, native Windows sf
 execution, or full lifecycle safety. Those require separately authorized work.
 
-Thread 07 adds internal [candidate rendering](RENDERING.md) from these normalized
+The [candidate renderer](RENDERING.md) uses these normalized
 records and graph results. It changes no live queries, transport, privacy controls
 or Windows sf refusal, and requires no real org access to test rendering.

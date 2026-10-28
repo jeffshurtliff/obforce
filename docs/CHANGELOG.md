@@ -1,400 +1,96 @@
 # Changelog
 
-All notable changes to this project will be documented in this file, following
+All notable changes to this project are documented here using
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+The current package is `0.1.0.dev0`; no stable release has been published.
 
 ## [Unreleased]
 
-### Fixed
-
-- Approved Thread 15/#21 runtime correction: reuse immutable note-path validation
-  within each renderer/graph batch, while independently validating fresh snapshots
-  at each state/evidence/planning boundary. Preserve exact output/hashes, ordering,
-  move invalidation, errors, schemas and all filesystem/transaction guards. No
-  payload, matrix, deadline or publication-limit reduction/increase. CI adds
-  bounded case names, 25 slow durations and unfinished-line timeout diagnostics.
-  Accepted at implementation `3771c16` / merge `178bf98`: exact-merge run
-  `40721222520`, attempt 2, passed all 12 cells and 24 independent installs; #15
-  closed. Run 40603283983's timeouts and all earlier observations remain.
-  #21's broader optional work remains open; Threads 16–17 remain NOT STARTED.
-
-- Thread 15 Windows pytest setup/teardown failures from oversized parameter IDs
-  in `PYTEST_CURRENT_TEST`, with repeated huge diagnostics. Complete boundary
-  payloads now use short IDs; shared collection guards refuse oversized IDs.
-  CI supervision fails explicitly on output/line/time overflow, preserves bounded
-  incomplete evidence, stops owned children and retains nonzero exits. Short
-  diagnostics, fail-fast, concurrency and outer deadlines limit runaway runs.
-  Application limits/contracts and dependencies remain unchanged. The correction
-  is accepted with Thread 15 after run `40721222520`, attempt 2; failed/cancelled
-  runs and all earlier observations remain separate evidence.
-
 ### Added
 
-- Thread 15 synthetic platform/failure/scale qualification harnesses and installed
-  finite-bound/lifecycle probes, with explicit 1,000-class/10,000-edge topology,
-  stage timing/allocation metrics, actual publication refusal and native versus
-  mocked/skipped/unavailable evidence. No publication limit or schema change.
-  CI now reports skip reasons and runs for developer Python probe changes.
-  Accepted with all required gates in run `40721222520`, attempt 2: Linux
-  1607 passed/1 skipped each, macOS 1605/3 each, Windows 1586/22 each; #15 closed.
-  Thread 16 is next eligible but NOT STARTED; Thread 17 and #18/#19 are NOT STARTED.
+- Explicit, noninteractive `init`, initial-only `build`, managed-vault `sync` and
+  local `recover`, with console/module help and installed-version reporting.
+- Read-only offline ApexClass inventory from declared Salesforce DX packages and
+  explicit live inventory/audit collection through separately authorized sf on
+  POSIX. Verified org identity, bounded fixed queries and independent inventory,
+  audit and relationship coverage. Windows sf execution remains refused.
+- Directed platform-reported relationship evidence with reciprocal links,
+  unresolved labels, partial/unavailable coverage and stale-evidence preservation.
+  No inferred dependency or runtime-impact claims.
+- Bounded installed Jinja defaults and explicit finite per-template overrides,
+  readable generated Markdown and YAML, persistent UUIDs and unique note-move
+  reconciliation. Creation templates initialize only new notes.
+- Strict note parsing and generated-property/body baselines, supported human
+  YAML/comment/prose preservation, whole-batch conflict refusal and byte/mtime-stable
+  no-op behavior. Unsafe YAML, malformed markers and unsupported schemas refuse.
+- Private state-document schema 2 with evidence schema 1 for retained normalized
+  facts/graph, exact NoteState-schema-1 baselines and immutable optional live
+  inventory scope declarations. Explicit per-sync comparable-scope attestation
+  gates missing evaluation; partial/offline absences preserve prior facts.
+- Guarded recoverable notes/dashboard/state publication, continuous writer lock,
+  same-filesystem staging, journal-schema-2 before-images, preview, conservative
+  precommit rollback and committed cleanup. Intervening edits preserve evidence.
+- A tracked packaged Apex Classes Base with exact dashboard-schema-1 ownership,
+  class-name links and audit/API/debt columns. UI layout edits are conflicts too.
+  Ordinary Markdown works without plugins; no `.obsidian` settings are changed.
+- Creation-only Boolean `technical_debt: false`, blank human severity/status and
+  null review date, with all existing human values preserved afterward.
+- Fictional multi-package DX and presentation samples; complete installation,
+  offline/live, CLI, customization, coverage, ownership, dashboard and recovery
+  guides; contributor/security guidance and a documentation-only release runbook.
+- Executable offline guide verification in fresh independent wheel/sdist installs,
+  using both actual entry points, quoted space paths, active runtime guards,
+  previews/no-op snapshots, UUID moves, template creation, conflicts and synthetic
+  interruption/recovery. Examples use only fictional data.
+- Synthetic platform/failure/scale qualification and bounded CI collection/test
+  supervision with exclusive logs, finite deadlines/output budgets, owned-child
+  cleanup and concise per-case/slow-duration diagnostics. Complete historical
+  results and measurement limits remain in the maintainer evidence records.
 
-- Thread 14 protected native Apex Classes Base, packaged as a bounded literal asset
-  and published with notes/state through the same planner/writer/recovery protocol.
-  Exact dashboard-schema-1 path/hash/content ownership optionally extends
-  evidence-bearing state schema 2; NoteState/evidence/renderer/journal versions
-  are 1/1/4/2 after MTF-2. Valid Thread 13 vaults add only an absent asset; no adoption or
-  note migration. Dashboard edits/missing/moves/collisions block the entire batch.
-  Reserved identity/schema/type filters follow note moves and retain human tags,
-  aliases and human debt decisions. Expanded plain CLI
-  summaries/help and phase-specific recovery guidance; fictional presentation
-  sample and synthetic lifecycle/interruption/concurrency/installed probes.
-  No dependency/lock/config-schema change, new metadata/commands, real sf/Obsidian
-  access or native preview. Accepted at Windows correction `6d08696` / merge
-  `cdf0e68`; exact-merge run `40517073513`, attempt 1, passed all 12 cells and
-  24 independent installs; #14 closed. Optional native preview remains unavailable.
-  Threads 15–17 and enhancement #18 remain NOT STARTED.
+### Changed
 
-- Thread 14 MTF-2 dashboard correction: class-name links, requested column labels,
-  API Version, available UTC `sf_created`/`sf_last_modified` audit date projections
-  retaining original timestamp facts, and actual Technical Debt property column.
-  New notes default to Boolean false plus blank human severity/status/review date;
-  fictional/example/test defaults also use false under explicit maintainer
-  authorization, without historical unassessed data or a legacy view. Human
-  decisions remain preserved. Lifecycle remains in notes/state but leaves the table.
-  Renderer fingerprint advances to 4; exact old baselines remain valid, without
-  human-field migration, settings changes or weakening batch/recovery guards.
-  Accepted with Thread 14 on 27 October 2026; optional native visual confirmation
-  remains unperformed and is not inferred from automated checks.
-
-- Thread 13 public `sync`/`--dry-run` for existing explicitly selected managed vaults.
-  New builds save bounded exact normalized component/graph evidence in private
-  state-document schema 2/evidence schema 1. NoteState schema 1, journal schema 2,
-  identities, hashes, renderer version 3 and full transaction/recovery guards remain.
-  Region/property-only patches preserve human YAML/prose/debt and unique moves;
-  affected incoming links update. Partial/offline absences retain facts/lifecycle;
-  live missing proposals require declared scope, explicit comparability attestation
-  and complete supported inventory. Legacy evidence-less sync refuses without
-  migration/adoption. No-op/previews preserve bytes/mtimes and create no artifacts.
-  Added synthetic lifecycle/tampering/process-death/concurrency tests and installed
-  console/module sync probes; archive allowlist deliberately adds sync/evidence.py.
-  No dependency/lock/config-schema change. Accepted at correction b43ed64 / merge
-  3f5e909 after exact-merge run 40346586335 attempt 1 passed all 12 cells and
-  24 independent installs; #13 closed. Linux 1440 passed each, macOS 1438/2 each,
-  Windows 1424/16 each. Prior failures/skips and live/native limits remain;
-  no real org or Windows sf qualification. Threads 14–17/#18 not started.
-
-- Design-only Thread 13 private persistent-evidence proposal following maintainer
-  authorization: embedded state-document schema 2/evidence schema 1, bounded exact
-  component/graph retention, existing transaction/recovery integration, legacy-vault
-  refusal and explicit comparable-scope attestation. Supersedes the earlier
-  transient-only recommendation; no format, flag or runtime behavior implemented.
-
-- Thread 13 pre-implementation evidence review and proposed command contract,
-  with explicit blockers for transient prior-graph/retained-fact handoff and
-  comparable accessible live inventory. Prerequisite #12 exact-commit CI and
-  current native dependencies were reverified. Public sync remains unimplemented;
-  no runtime, persisted format or safety contract changed. #13 remains open
-  pending the required design decision and eventual maintainer acceptance.
-
-- Thread 12 public noninteractive `init`, initial-only `build`, and local `recover`.
-  Explicit source/config selection, config-relative roots, escaped/validated
-  exclusive TOML creation, guarded absent-vault setup, genuinely write-free
-  missing-destination previews, and existing source/graph/render/plan/writer
-  composition. Every nonempty/repeated destination refuses; no adoption/refresh.
-  Explicit rollback/committed cleanup is phase-checked under the continuous
-  writer guard without acquisition; unsafe/legacy evidence remains retained.
-  Added fictional offline quickstart/example, synthetic public end-to-end and
-  process-death/concurrency/intervening-edit tests, and fresh installed console/
-  module/recovery probes. Archive allowlist deliberately adds sync/engine.py.
-  Accepted source/transport/state-wire/hash/UUID/coverage/renderer/journal-schema-2
-  contracts and Apache license stay unchanged; no dependency. Thread 12 is accepted
-  and complete at f833505; #12/#20 closed after exact-commit run 39985255497
-  attempt 1 passed all 12 cells/24 independent installs and maintainer rendering
-  acceptance. Prior failures/skips/local refusals remain historical. Thread 13
-  onward and enhancement #18 NOT STARTED. No release publication implied.
-
-- Internal bounded transaction writer/recovery primitives consuming explicit
-  accepted planner inputs. Independently regenerate/compare complete candidates,
-  then recheck exact bytes/identities/absence and full parents under a persistent
-  kernel writer guard. Same-filesystem immutable before/after blobs and tracked
-  transfer copies, version-two bounded journal, deterministic notes-then-state
-  publication and persisted commit point support conservative local rollback and
-  committed cleanup. Recovery preview and no-op create no artifacts; ambiguous
-  crashes/edits retain explicit recovery-required evidence. Synthetic fault and
-  subprocess-death/concurrency tests, package allowlist and guarded independent
-  installed probes are included. No dependency, accepted state-wire/hash/ownership/
-  coverage/source/transport change or public lifecycle command. Thread 11 is accepted
-  at recovery correction `4aaeb0f` / merge `2995f93`; #11 is closed. Final run
-  `39676435834`, attempt 2, has all 12 cells passing: Linux 1248 passed each;
-  macOS 1246 passed/2 skipped each; Windows 1232 passed/16 skipped each. All required
-  commands and 24 independent installs passed. Eleven successful attempt-1 logs
-  are retained; macOS 3.14 completed in attempt 2 after its earlier cancellation
-  with no runner/steps and unavailable log. Historical failed attempts/runs and
-  skipped gates retain their outcomes. Threads 12–17 and #18 remain NOT STARTED. Native
-  transaction/platform and power-loss limits remain explicit in SYNC_SAFETY.md.
-
-- Internal complete deterministic read-only change planner and bounded redacted
-  reports with typed create/update/no-op/move/missing/conflict actions, candidate
-  bytes/state and immutable publication preconditions. Reuses strict saved
-  baselines, bounded discovery, renderer-local independent coverage composition,
-  stale graph evidence and preservation patches. Stable UUIDv5 creation, explicit
-  retained source/previous graph inputs, coverage-gated missing proposals, full
-  portable target/parent collision checks and all-or-nothing refusal are recorded
-  before implementation. Synthetic tests and guarded independent installed probes
-  verify exact no-write behavior and LF/CRLF/Windows timestamp semantics.
-  No dependency, writer, public command, source/transport or state-wire/hash
-  change. Thread 10 is accepted, including correction `a2132c3` / merge
-  `6004c35`; #10 is closed. Exact-merge run `39510802449`, attempt 1, passed
-  all 12 cells: Linux 1061 passed each; macOS 1059 passed/2 skipped each;
-  Windows 1045 passed/16 skipped each. Every standalone gate, fresh build,
-  strict Twine, exact archive check and all 24 independent installs passed.
-  Thread 11 is described above; Threads 12–17 and enhancement #18 remain NOT STARTED.
-
-- Internal strict version-one private state serialization/loading and bounded
-  read-only managed-note discovery with conservative indicators. Exact saved
-  LF/CRLF generated bytes accompany unchanged immutable NoteState/property/hash
-  baselines; unique UUID moves return deterministic candidate paths and old/new
-  invalidation inputs. Unknown/corrupt/contradictory state, generated edits,
-  ambiguous ownership, unsafe paths/reads and source/scope rebinding refuse.
-  Unrelated notes are never adopted. Added synthetic regressions, explicit finite
-  safety contracts and guarded independent installed state/parser probes. No new
-  dependency, public lifecycle, planner, state writes, publication, locking, journal
-  or recovery. Thread 09 is accepted, including Windows correction `890ced2` / merge
-  `dff34a7`; #9 is closed. Exact-merge run `39502679337`, attempt 1, passed all 12
-  cells: Linux 935 passed each, macOS 933 passed/2 skipped each, Windows 920
-  passed/15 skipped each. Every standalone gate/build/Twine/archive check and
-  all 24 independent installs passed. Thread 10 is described above; Threads 12–17
-  and enhancement #18 remain NOT STARTED.
-
-- Internal bounded parsing and preservation patches for caller-supplied managed-note
-  bytes, validated in-memory state and accepted generated candidates. Both strict
-  owned-property and exact-byte generated-body baselines gate every patch; identity,
-  schema, unsupported YAML/markers and generated edits refuse with redacted errors.
-  Round-trip source spans retain supported user YAML/comments/order/quotes/styles
-  and exact outside-body bytes; LF/CRLF, mixed-envelope refusal, no-op identity,
-  audit omission/privacy and technical-debt distinctions are explicit and tested.
-- Poetry-generated `ruamel-yaml >=0.19.1,<0.20.0` dependency/lock (0.19.1), synthetic
-  hand-edited/expected notes, parser/patch regressions and deliberate sync package
-  allowlists with guarded independent wheel/sdist installed probes. No public
-  lifecycle, discovery/adoption, state loading, planner, filesystem publication,
-  locking, journal or recovery. Thread 08 is accepted at implementation `d79f5e2` /
-  merge `dba53ab`; #8 is closed. Exact-merge run `39453887153`, attempt 1, passed
-  all 12 cells: Linux/macOS 744 passed each; Windows 732 passed/12 expected skips
-  each. All standalone checks, fresh builds/Twine and 24 independent installs
-  passed. Subsequent state/planner work is recorded above; Threads 12–17 and enhancement #18
-  remain NOT STARTED. Source/transport/hash contracts,
-  coverage limitations, Windows sf refusal and Apache licensing are unchanged.
-
-- Internal deterministic ApexClass new-note and generated-section candidate rendering
-  with installed Jinja assets, explicit per-file overrides, finite sandboxed
-  interpolation, flat YAML serialization, escaped labels/validated managed links,
-  marker/ownership enforcement and separate creation/generated invalidation.
-  Full independent coverage participates in render invalidation; source/graph/hash
-  helper contracts and source/transport behavior remain unchanged. Poetry adds
-  Jinja2 with its generated lock and transitive MarkupSafe. No lifecycle command,
-  existing-note parser, state, planner, publication or recovery is added.
-- Synthetic rendering/security/availability/collision regressions and reviewed
-  candidate fixture; exact package/resource allowlists and independent wheel/sdist
-  rendering checks outside the checkout with runtime network/process access blocked.
-  Thread 07 is accepted at implementation `b4658eb` / merge `eedeff4`; #7 is closed.
-  Exact-merge run `39440606470`, attempt 1, passed all 12 Python 3.12–3.15 cells:
-  Linux/macOS 618 passed each; Windows 606 passed/12 expected skips each. Every
-  standalone check, fresh build/Twine and both independent installs passed.
-  Windows sf execution remains refused. This records Thread 07 acceptance;
-  the subsequent Thread 08 increment is described above.
-
-- Internal directed platform relationship graph and bounded selected-ID outgoing/
-  incoming adapter with reverified org identity, exact Apex endpoint resolution,
-  explicit unsupported/external/unresolved sources and targets, deduplicated
-  provenance/coverage observations and matching-scope stale-edge preservation.
-  Graph-only changes and note moves invalidate incident graph fingerprints without
-  changing component source hashes. No new command, note type or dependency.
-- Synthetic relationship fixtures/regressions, documented current MCD restrictions
-  and release limitation: the fixed allowlist cannot prove exhaustion, so requested
-  platform relationships remain partial/unavailable, including clean empty replies.
-  Offline remains not collected; Windows sf execution remains refused. Explicit
-  wheel/sdist allowlists and independent installed graph/adapter mocks are extended.
-  Accepted at implementation `d1134fa` / merge `2aa8d2b`: exact-commit run
-  `39431345348`, attempt 1, passed all 12 Python 3.12–3.15 hosted cells;
-  Linux/macOS each 517 passed, Windows each 506 passed/11 expected skips.
-  Standalone checks, fresh builds/Twine and 24 independent artifact installs
-  passed. #6 is closed as completed; the relationship coverage limitation and
-  Windows sf refusal remain. Thread 07 is next eligible; Threads 07–17 and
-  enhancement #18 remain not started.
-
-- Internal live Apex inventory/audit adapter with explicit target and minimal org
-  identity verification, configured/state mismatch refusal, bounded SELECT keyset
-  enumeration and independent inventory/audit/relationship coverage. Optional
-  display-name queries are scoped to selected Apex IDs; omission sends no name
-  query. No Body, User scan, auth discovery, rebinding or public command.
-  Accepted at implementation `a5b7269` / merge `85ba7cd`: exact-commit run
-  `39325616681`, attempt 1, passed all 12 hosted Python 3.12–3.15 cells;
-  Linux/macOS each 441 passed, Windows each 430 passed/11 expected skips.
-  Standalone checks, fresh builds/Twine and 24 independent artifact installs
-  passed. Windows sf execution remains refused; #5 is closed as completed.
-- Synthetic process-response fixtures and live-adapter regression coverage for
-  pagination contradictions, finite collection budgets, namespace selection,
-  permission/field failures, privacy, validation, duplicate identities and hashes.
-  The existing process controls, Windows refusal, offline source and frozen
-  model/ownership contracts remain unchanged. No dependencies added.
-- Explicit artifact allowlist and independent installed synthetic smoke checks
-  extended to `sources/live.py`; live access and Windows sf qualification remain
-  unavailable. The Thread 05 increment left relationships uncollected;
-  Thread 06 now provides a separately requested adapter as described above.
-
-- Internal allowlisted Salesforce CLI transport with explicit executable/target/
-  working directory, byte bounds enforced during collection, timeouts, POSIX
-  process-group cleanup, private JSON envelope validation and fixed redacted errors.
-  Windows execution and command wrappers fail closed; no shell fallback, public
-  command, org verification, live inventory, or real Salesforce execution is added.
-  Accepted at merge `6980b26`: all 12 hosted Python 3.12–3.15 cells passed
-  checks/build/Twine/independent installs; Linux/macOS ran 340 tests per cell,
-  Windows 329 passed/11 expected skips. Windows sf execution remains refused;
-  future support is tracked in #18 outside v0.1.0 and does not block Thread 05.
-- Synthetic CLI fixtures, argv/envelope/refusal tests and fictional child-process
-  cleanup/bounds tests; exact artifact allowlists and independent installed
-  synthetic-envelope smoke checks now include `sources/sf_cli.py`.
-
-- Internal read-only offline Apex acquisition, bounded safe XML via
-  Poetry-managed `defusedxml`, declared DX package/path validation, duplicate
-  refusal, source-preservation checks, and explicit local/partial coverage.
-- A fictional multi-package DX example, adversarial offline source/parser tests,
-  and acquisition limits/availability documentation. Apex bodies are never read
-  or used to infer dependencies; no public command or live access is added.
-- Artifact allowlists and independent installed smoke checks for offline source
-  and parser modules in both wheel and sdist installations.
-- Internal strict version-one TOML loading, config-relative paths, explicit source
-  selection, typed errors, and frozen terminal exit precedence.
-- Immutable component, independent coverage, relationship, and note-state records;
-  structured identities, collision refusal, availability-aware canonical hashes,
-  source binding, and graph/path/template invalidation fingerprints.
-- Configuration, coverage, and note ownership/schema contracts with fictional
-  examples and focused offline regression tests. No connectors, renderer,
-  state/vault publication, or public lifecycle commands are introduced.
-- Fresh artifact checks now explicitly include the four internal-contract modules
-  and exercise installed model imports/hashing in independent wheel/sdist installs.
-- Poetry/PEP 621 `0.1.0.dev0` foundation with Python `>=3.12`, Apache 2.0 metadata,
-  and console/module help and installed-version reporting.
-- Offline CLI tests, Ruff/pytest/coverage/Bandit tooling, and fresh wheel/sdist
-  inspection and independent installation checks.
-- Test-only CI targeting stable Python 3.12–3.15 on Linux, macOS, and Windows;
-  configured matrix cells do not establish platform support.
-- Contributor/security guidance and explicit foundation limitations.
+- Revised the stable 0.1.0 roadmap and tracking with R1–R8 requirements/design,
+  real-input discovery, vault-owned config, distinct DX presence/warnings,
+  successful 1,000-class lifecycle and actual/native release acceptance gates.
+  These are planned requirements, not delivered runtime behavior; optional alpha
+  publication remains separate. Historical Thread 01–15 acceptance is retained.
+- Clarified Obforce's goal of documenting an entire Salesforce org's metadata
+  and configuration, with Apex classes as the current version's scope and
+  additional areas planned for future releases.
+- Reused immutable note-path validation within one batch without caching filesystem
+  observations. Each evidence-validation/planning/replanning pass creates a fresh
+  snapshot; bytes, hashes, error precedence and independent integrity guards remain.
+- Renderer fingerprint is 4 for readable escaped metadata, four-space generated
+  nesting and reserved UTC audit-date projections. Note/marker/config/model remain
+  1; state-document/evidence/NoteState/journal/dashboard remain 2/1/1/2/1.
+- Product and maintenance instructions describe current behavior rather than
+  development sequence. Release-site styling and reviewed repository cleanup are
+  tracked separately as [a v0.1.0 release blocker](https://github.com/jeffshurtliff/obforce/issues/22).
 
 ### Fixed
 
-- CLI unreadable-path diagnostics defer to existing guarded engine/transport
-  reads, preserving redaction and operational errors instead of exposing explicit
-  paths through Click's preliminary readability check. Native path conversion and
-  all safety guards remain unchanged.
+- Native unrooted Windows relative config paths with spaces, while retaining
+  refusal of ambiguous drive paths and portable case/Unicode collisions.
+- Windows lexical alias validation retains original caller spelling; LF checkout
+  and explicit LF template fixtures preserve platform-independent exact bytes.
+- Unreadable config errors use bounded redacted operational diagnostics without
+  premature path disclosure from Click readability checks.
+- Oversized pytest parameter IDs no longer exceed Windows environment-value
+  limits; complete fixture payloads remain unchanged and collection bounds IDs.
+- Same-byte/restored-mtime concurrent changes retain full historical descriptor
+  and pathname guards; recovery never treats byte equality alone as authority.
 
-- Thread 14 shared config resolver now accepts native unrooted Windows relative
-  paths, including the CLI's normalized backslash spelling. Retains ambiguous
-  drive/root-relative and foreign POSIX syntax refusals and all lexical/
-  filesystem/transaction guards. Added mocked path-flavour regression checks and
-  both installed entry points' relative/absolute space-path journeys. Failed run
-  40427329142 attempt 1 at merge 40e0ffa remains: all four Windows cells failed
-  two relative-config cases; downstream packaging/install checks were skipped.
-  Correction `6d08696` / merge `cdf0e68` passed exact-merge run `40517073513`,
-  attempt 1: all 12 cells and 24 independent installs, including all four Windows
-  cells (1539 passed/16 skipped each) and downstream package/install gates.
-  #14 closed after maintainer-authorized acceptance. No Windows sf qualification.
+### Security
 
-- Thread 13 lifecycle test now writes its generated-template override as explicit
-  UTF-8/LF on Windows too. Added synthetic CRLF refusal checks for sync and dry-run
-  with unchanged vault/state/source/template snapshots. Template validation and
-  filesystem guards remain unchanged. Corrected exact-merge run 40346586335,
-  attempt 1, passed all four Windows cells, including downstream package/install
-  gates; failed run 40235515146 remains historical evidence.
-
-- Use a shared four-space indentation convention for engine-generated nested
-  Markdown lists, including every coverage warning, to address the reported
-  Obsidian nesting issue. Renderer fingerprint version 3 records the presentation
-  change; validated v2 baseline patches preserve human spacing/properties. No
-  public setting, template-literal reformatting or existing-vault rewrite.
-
-- Corrected Thread 12 Windows alias validation to retain original lexical spelling
-  even when the native resolver returns on-disk case. Bounded alias checks apply
-  before accepting resolved config/source/template/vault paths; full historical
-  descriptor/pathname/parent/lock guards and isolated CI ancestry are unchanged.
-  No skipped tests, retries or weakened guards.
-- Corrected MTF-1 / #20 in current Thread 12 acceptance work: renderer version 2
-  emits readable ordinary inline labels, provenance, straight quotes, numeric
-  versions and ISO timestamps while preserving injection/automatic-link controls.
-  Retained v1 fixtures verify saved-state compatibility and human-content
-  preservation. Current output snapshots and installed hashes are deliberately
-  updated; state/hash algorithms/schema/journal/source/transport are unchanged.
-  No automatic vault rewrite, adoption, migration or public refresh. The maintainer
-  confirmed the fictional quickstart readability correction; merge 8285aca passed
-  all 12 hosted cells in run 39868649758, attempt 1. Historical failed runs remain
-  recorded; the subsequent four-space correction f833505 passed run 39985255497
-  attempt 1 in all 12 cells and was confirmed by the maintainer. #20 is completed.
-
-- Retain historical full descriptor change-time observations across transaction
-  guards and recovery. On Windows, an identical in-place rewrite with restored
-  mtime can retain the entire pathname creation-time stamp; recovery now refuses
-  that intervening edit, including state, before-images, staged/transfer files and
-  committed cleanup. Private journal schema 2 requires exact bounded descriptor
-  evidence; schema 1 is retained as unsupported rather than migrated or guessed.
-  Accepted state/planner wire, full pathname/parent guards, birthtime bridging and
-  continuous owning-lock reads remain intact. Added synthetic Windows-semantics
-  regressions and both independent installed recovery probes. Run 39670042028
-  at bde1225 remains historically failed on Windows (1 failed/1211 passed/16
-  skipped per cell; downstream artifact gates skipped), while Linux/macOS passed.
-  Corrected hosted Windows evidence and maintainer acceptance are now recorded in
-  the [Thread 11 acceptance](../dev/IMPLEMENTATION_PLAN.md#thread-11-acceptance-and-closure--21-october-2026).
-
-- Windows transaction guards no longer reopen their own byte-locked writer file
-  through a second handle. Validation retains the continuous owning descriptor,
-  exact canonical bytes/hash, full same-API identity/timestamp guards and Windows
-  cross-API birthtime comparison. Guard ownership is detached before close even
-  on failed entry. Added deterministic mandatory-read-denial, descriptor/byte/
-  lifetime/birthtime regressions and installed owner-handle probes. Synthetic
-  process tests now report fixed transaction failures before death checkpoints;
-  lock-held snapshots respect Windows handle access and OS-denied lock renames
-  remain tested refusals. No lock/journal/state-wire change, retry, bypass, skip,
-  dependency or transport expansion. Failed run 39610229702 remains historical;
-  the later schema-2 correction passed the accepted matrix recorded above.
-
-- CI now creates a fresh dedicated runner temporary root and exports TMPDIR,
-  TEMP and TMP for all subsequent setup, tests and independent artifact probes.
-  This avoids unrelated shared system-temp ancestor changes blocking synthetic
-  planner fixtures. A controlled sibling-churn regression keeps full parent
-  change refusal and proves isolation; blocked baseline setup now shows only the
-  redacted plan report. Production read guards, timestamps, state/hash/ownership
-  contracts and Windows sf refusal remain unchanged. Historical failed Thread 10
-  run `39507844963` remains failed, including skipped downstream gates in its
-  macOS 3.12 cell. Correction `a2132c3` / merge `6004c35` passed every required
-  command in all 12 cells of run `39510802449`, attempt 1; #10 is accepted
-  and closed. Historical local setup/probe failures remain recorded in the
-  [roadmap](../dev/IMPLEMENTATION_PLAN.md#thread-10-macos-ci-correction-handoff--20-october-2026).
-
-- Windows read-only state/note loading no longer treats different pathname and
-  descriptor `st_ctime_ns` meanings as a file change. Cross-API comparisons require
-  explicit matching creation time while retaining identity/type/link/size/mtime
-  checks, full ctime checks within each API, and post-read birthtime/reparse checks.
-  Added synthetic positive/adversarial regressions, native rewritten/renamed-file
-  fixtures and independent installed probes. POSIX behavior, saved baselines,
-  source/transport behavior and Windows sf refusal remain unchanged. Corrected
-  native Windows read tests/builds/independent installs passed in all four
-  Python 3.12–3.15 cells of exact-merge run `39502679337`, attempt 1. Historical
-  failed run `39500770363` and actual skips remain historical; this does not
-  qualify Windows sf execution, hostile read races or publication.
-
-- Offline reads now handle Windows CPython's pathname creation-time versus
-  descriptor change-time semantics through an exact birthtime comparison,
-  preserving all other identity fields, raw descriptor before/after guards,
-  and independent pathname checks. Regression tests cover stable reads and
-  refusal of changed metadata without introducing platform skips. Delivered
-  correction `20bff7f` / merge `6154b74` passed all 12 hosted Python 3.12–3.15
-  cells, including Windows tests/build/Twine/independent installs; the existing
-  unavailable Windows FIFO case remains explicitly skipped.
-- Enforced LF repository text checkouts and separated setup/validation commands
-  into individual CI steps so Windows Ruff failures cannot be masked by a later
-  successful command. Correction `65305fb` passed standalone checks and artifact
-  validation across Linux/macOS/Windows on Python 3.12–3.15.
-- Entry-point integration tests now use Poetry's installed Python launcher on
-  Windows instead of assuming its editable install creates `obforce.exe`. Added
-  cross-platform regression coverage for interpreter-driven console invocation;
-  independent pip artifact checks retain direct executable validation.
+- No credential discovery, custom OAuth, telemetry, AI service, runtime network in
+  offline mode, force overwrite, automatic adoption/migration, automatic deletion,
+  backup/Git integration or stable public Python API.
+- Bounds refuse rather than truncate. Source/workspace/org/scope binding, exact
+  ownership, complete batch validation and fresh writer integrity checks remain.
+  Exit precedence is 3, 2, 1, 4, 0. Legacy evidence-less sync and journal-schema-1
+  recovery remain refused. Private retained state/before-images are unencrypted.
+- [Qualification](QUALIFICATION.md) separates local, hosted, native, mocked,
+  skipped and unavailable evidence. Tests do not establish atomic snapshots,
+  atomic multi-file writes, power-loss/hostile-race or arbitrary filesystem/ACL
+  guarantees. Native Obsidian preview remains unavailable. Earlier failures,
+  cancellations and uncaptured causes are retained in maintainer evidence.

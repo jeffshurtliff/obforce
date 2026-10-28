@@ -1,21 +1,8 @@
-# Normalized identity and coverage
+# Identity and independent coverage
 
-Thread 13 [public refresh](REFRESH.md) loads exact private prior component/graph
-evidence from state-document schema 2 rather than reconstructing it from hashes.
-Missing evaluation additionally requires an immutable declared live scope and this
-invocation's explicit comparability attestation; verified org/Selection and current
-exhaustion alone cannot prove permission continuity. Independent coverage records,
-semantic hashes and source-key identity retain the contracts below.
-
-Thread 02 supplies immutable internal records, canonical serialization/hashing,
-and validation helpers. Thread 03 now implements the internal
-[offline Apex source](OFFLINE_SOURCE.md), using these unchanged contracts.
-Thread 05 implements the internal [live Apex adapter](LIVE_SOURCE.md) with mocked
-process tests, verified org binding, bounded enumeration and optional scoped audit
-names. Thread 06 adds internal [platform relationship probes and graph construction](RELATIONSHIPS.md),
-with explicit partial/unavailable coverage and synthetic tests.
-All examples below are fictional. These are
-versioned internal contracts, not a stable public Python API.
+These engineering details describe current implementation contracts, not a stable
+public Python API. Use the [quickstart](QUICKSTART.md), [live setup](LIVE_SETUP.md)
+and [CLI reference](CLI.md) for command journeys.
 
 ## Records and identities
 
@@ -46,7 +33,7 @@ Duplicate component keys, duplicate live record-ID mappings, note IDs, note-key
 mappings, or equivalent paths cause conflict; identical duplicates are refused
 too. A record ID supplements the source key and never changes it into a filename.
 Similar names/text do not establish a rename. A persistent note UUID survives a
-unique move; Thread 09 [reconciles explicit read-only vault observations](SYNC_SAFETY.md)
+unique move; state reconciliation [reconciles explicit read-only vault observations](SYNC_SAFETY.md)
 without changing these supplied-record validators.
 
 Bindings contain no machine path or live alias. A local workspace is the explicit
@@ -79,7 +66,8 @@ booleans, integers, or immutable ordered tuples of strings (serialized as arrays
 Use strings for decimal API versions and normalized audit dates. Null is an
 explicitly observed null; unavailable means not obtainable/collected, without
 inventing a value. No filesystem or Git date becomes a Salesforce audit date.
-Technical debt remains a user decision; an unset assessment is never false.
+Technical debt remains a user decision. Creation initializes Boolean false; refresh
+preserves absent/null/custom human values without conversion.
 
 ## Independent collection coverage
 
@@ -101,16 +89,16 @@ The scope fingerprint includes model version, binding, ApexClass selection,
 namespace inclusion, and internal name filters. It excludes collection outcomes;
 therefore a complete and partial result may share scope, but their full coverage
 records differ. Namespace exclusion is explicit and must be reported. Complete
-inventory alone never means complete audit or dependency coverage. Later threads
-must also verify accessible comparable scope before marking a component missing;
-Thread 02 implements no missing/deletion planner.
+inventory alone never means complete audit or dependency coverage. Missing
+evaluation must also verify accessible comparable scope before marking a component
+missing. See [refresh](REFRESH.md) for the full absence/comparability gates.
 
 Platform-reported references are evidence of reported relationships, not proof
 of runtime behavior or comprehensive impact analysis. Unresolved endpoints stay
 labeled text and do not create component notes. Offline XML alone supplies no
 Apex code-reference proof. Failed refreshes must preserve prior edges as stale;
-the Thread 06 graph layer performs matching-source/scope stale preservation in memory.
-Thread 04 process contracts and Thread 05 inventory/audit capabilities/limits are
+the graph layer performs matching-source/scope stale preservation in memory.
+Process contracts and inventory/audit capabilities/limits are
 documented in [SF_CLI.md](SF_CLI.md) and [LIVE_SOURCE.md](LIVE_SOURCE.md).
 The [relationship adapter](RELATIONSHIPS.md) never claims complete platform coverage: current
 MCD restrictions prevent independent exhaustion proof under the fixed allowlist.
@@ -138,7 +126,7 @@ complete scan; coverage is always separate.
 The graph fingerprint sorts supplied relationship evidence and relevant resolved
 note paths. Direction, incoming/outgoing edges, coverage, staleness, unresolved
 labels, or a target move can change it without changing a component's own source
-hash. The Thread 06 graph layer supplies relevant incident edges/locations and composes
+hash. The relationship collection graph layer supplies relevant incident edges/locations and composes
 this unchanged helper with unresolved-source descriptors and independent coverage;
 the helper itself does not collect or derive edges. Exact duplicate evidence is refused.
 
@@ -154,31 +142,31 @@ safe publication. See [note ownership](NOTE_FORMAT.md).
 
 ## Candidate rendering boundary
 
-Thread 07 [renders internal candidates](RENDERING.md) with these unchanged records.
+The renderer [produces internal candidates](RENDERING.md) with these unchanged records.
 It retains the accepted source and graph hashes and composes the per-note graph
 digest with full independent Coverage for the existing render helper graph input.
 This catches inventory/audit-only coverage changes without altering source hashes
 or graph helper contracts. It does not publish or authorize overwriting baselines.
 
 
-Thread 08's in-memory patcher preserves these source/graph/render/creation hash
+The in-memory patcher preserves these source/graph/render/creation hash
 contracts and renderer-local independent-Coverage composition. It compares saved
 owned-property values and exact generated bytes even when incoming hashes match.
 The patch's region hash covers actual output line endings, including CRLF; it
 may differ from the renderer's LF region hash. No coverage outcome grants
-overwrite permission. See [supported preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation-thread-08).
+overwrite permission. See [supported preservation](NOTE_FORMAT.md#internal-existing-note-parsing-and-preservation).
 
 
-Thread 09 retains saved binding/Selection/scope hash separately from independent
+State reconciliation retains saved binding/Selection/scope hash separately from independent
 collection outcomes. Exact selection or source rebinding mismatches refuse.
 It accepts no source inventory and makes no absence/deletion/lifecycle decisions.
 A vanished tracked note is an ownership conflict; an unobserved source component
-is a different question for later planning. Move results retain saved hashes
+is a different question for planning. Move results retain saved hashes
 and provide paths/old-new changes for existing graph/renderer invalidation.
 
-## Thread 10 planning and absence
+## Planning and absence
 
-The internal [planner](SYNC_SAFETY.md#thread-10-pre-implementation-planner-contract--20-october-2026)
+The internal [planner](SYNC_SAFETY.md#complete-planning-and-fresh-integrity-checks)
 requires exact saved binding/selection and independently verified live org ID.
 The explicit `comparable_live_inventory` attestation defaults false and describes
 accessible scope, independently of collection status. Missing proposals require
@@ -196,25 +184,25 @@ empty platform probes into complete relationships or offline XML into edges.
 Reports show each coverage dimension independently with fixed safe warnings/status
 and counts; raw warning text and audit identities stay out of diagnostics.
 
-Thread 11 can publish a valid partial-coverage plan and retains outcome 4. It does
+The writer can publish a valid partial-coverage plan and retains outcome 4. It does
 not use partial/offline/unavailable coverage as proof of absence or deletion.
 Conflict/invalid/operational outcomes retain precedence 3, 2, 1, 4, 0; transaction
 recovery acquires no source data and restores exact saved coverage with the prior
 state when ownership permits rollback.
 
-Thread 12 public initial build carries these same independent records through
+Public initial build carries these same independent records through
 source, graph, rendering, planning and publication. Reports include each status,
 requested flag and warning count. Offline exclusions alone permit 0; a bounded
 partial local inventory or requested partial/unavailable live facet yields 4 on
 completed publication/preview. Identity ambiguity can stop before any write with
 4; conflict/recovery, invalid input and operational errors retain precedence
 3,2,1 over coverage. Public initial build never marks a component missing or
-reactivated. No graph snapshot is stored or reconstructed from saved hashes.
+reactivated. Private graph evidence is stored; it is never reconstructed from hashes.
 
 
 ## Synthetic scale evidence
 
-Thread 15 measures a seeded 1,000-class/10,000-edge graph separately from source
+The synthetic measurement harness measures a seeded 1,000-class/10,000-edge graph separately from source
 collection and publication. Those edges are explicit synthetic inputs, labeled
 partial; no local source text or clean empty platform reply creates dependency
 facts. Mocked live inventory/audit acquisition is batched, while the fixed
@@ -222,6 +210,5 @@ relationship collector retains its 101-query budget and partial/unavailable
 coverage. Its per-ID probes do not collect the complete synthetic graph.
 [Qualification](QUALIFICATION.md) reports elapsed time, the exact environment,
 Python traced allocations separately from whole-process RSS, refused bounds,
-observed hosted results and remaining unavailable native checks. Thread 15's
-selected matrix passed in run `40721222520`, attempt 2; skips and unperformed
+observed hosted results and remaining unavailable native checks. The selected matrix passed in run `40721222520`, attempt 2; skips and unperformed
 native/live operations remain gaps. None is a throughput or service-level promise.

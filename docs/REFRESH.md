@@ -1,16 +1,14 @@
 # Refresh an existing managed vault
 
-Thread 13 adds public `sync` for an explicitly configured managed vault created
-with private refresh evidence. Examples here are fictional. See the
-[quickstart](QUICKSTART.md) for a new offline build; real Salesforce operations
-still require separate authorization. Internal Python interfaces are not stable APIs.
+Use `sync` with the explicit config for an evidence-bearing managed vault.
+Examples here are fictional; start with the [quickstart](QUICKSTART.md).
+Live commands require separately managed authorization and explicit selection.
 
-Thread 13 is accepted at correction `b43ed64` / merge `3f5e909`; #13 is closed.
-Exact-merge run `40346586335`, attempt 1, passed all 12 Linux/macOS/Windows ×
-Python 3.12–3.15 cells and 24 independent installs. See the
-[acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-13-acceptance-and-closure--26-october-2026)
-for counts, retained failures and native/live limits. No live org or Windows sf
-execution is qualified by these synthetic results.
+The [approved stable target](../dev/STABLE_010_RELEASE_PLAN.md) adds distinct DX
+project presence, a generated warning and dashboard visibility under R3/R5.
+Current offline sync still preserves absent facts/lifecycle as described below;
+the proposed property is not yet generator-owned or available. Project absence
+will describe the selected project, not Salesforce deletion or live lifecycle.
 
 ```sh
 obforce sync --config "/absolute/path/Fictional Workspace/obforce.toml" --dry-run
@@ -53,7 +51,7 @@ responses; inventory completeness does not imply relationship completeness.
 New builds publish private state-document schema 2 at `.obforce/state.json`, with
 embedded evidence schema 1: exact tracked normalized component facts, the accepted
 refreshed directed graph and optional declared live inventory scope. NoteState's
-schema 1, UUIDs, note/marker schemas, accepted hashes and renderer version 3 remain.
+schema 1, UUIDs, note/marker schemas, accepted hashes and renderer version 4 remain.
 No external program is needed to retain facts between independent CLI runs.
 
 The state is private, unencrypted local data. It can include canonical org/record
@@ -155,26 +153,23 @@ for requested incomplete coverage. Exit precedence remains **3, 2, 1, 4, 0**:
 conflict/recovery, invalid input, operational failure, completed incomplete result,
 complete/no-op. Reports expose bounded categories/counts/coverage, not private facts.
 
-See the [roadmap handoff](../dev/IMPLEMENTATION_PLAN.md) for actual local/hosted
-results, remaining platform limits and acceptance status. Enhancement #18 remains
-unimplemented; the dashboard extension is described below.
+See [qualification](QUALIFICATION.md) for actual evidence and platform limits.
 
 
-## Dashboard refresh (Thread 14)
+## Dashboard refresh
 
 Sync now includes a protected [native Apex Classes dashboard](DASHBOARDS.md).
-Valid Thread 13 evidence-bearing vaults add it only when the destination is
+Valid evidence-bearing vaults without a dashboard record add it only when the destination is
 absent; no existing file is adopted. Notes and corresponding state retain their
 accepted source/graph/ownership contracts. Dashboard edits, missing/moved files,
 ambiguity or collisions block the whole batch. Its exact saved baseline uses an
 optional dashboard-schema-1 record inside state-document schema 2, while evidence
-schema 1, NoteState schema 1 and journal schema 2 remain. MTF-2 advances only the
-renderer fingerprint to version 4 for available UTC audit date projections.
+schema 1, NoteState schema 1 and journal schema 2 remain. The renderer fingerprint is version 4 for available UTC audit date projections.
 Dashboard changes share publication, rollback, committed cleanup and no-op/preview
 guards with notes/state. Older executables refuse the extension; use this version
 for these vaults and recovery. Legacy evidence-less sync still refuses.
 
-The MTF-2 table update replaces only a clean exact saved dashboard baseline.
+The packaged table update replaces only a clean exact saved dashboard baseline.
 Existing human debt/status/severity/review fields are never renamed or backfilled;
 new-note Boolean/blank defaults do not authorize whole-note recreation. Human
 Boolean decisions remain preserved. New reserved

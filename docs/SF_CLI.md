@@ -1,24 +1,8 @@
-# Internal Salesforce CLI process boundary
+# Salesforce CLI process boundary
 
-Thread 04 implements `sources/sf_cli.py`, an internal transport boundary with
-mocked protocol tests and fictional Python child-process tests. It adds no
-public CLI command or live source adapter. It does not verify an org, collect
-Apex inventory/audit fields, normalize records, or decide collection coverage.
-Thread 05 now supplies a separate internal [live Apex adapter](LIVE_SOURCE.md)
-that verifies org identity and interprets bounded inventory/audit coverage.
-The transport itself remains unchanged. Internal interfaces are not a stable Python API.
-No Salesforce CLI installation or authentication is needed for tests/help/version.
-
-Thread 04 is accepted and delivered at merge `6980b26`. Exact-commit
-[run 39314787749](https://github.com/jeffshurtliff/obforce/actions/runs/39314787749)
-passed all 12 Linux/macOS/Windows Python 3.12–3.15 cells: Linux/macOS each
-executed 340 tests; Windows each reported 329 passed and 11 expected skips.
-Every cell passed standalone checks, fresh build/Twine and both independent
-artifact installations. The Windows skips include the nine POSIX collector
-cases, POSIX wrapper-symlink case and existing FIFO case. These results qualify
-those tests/refusals, not real CLI or Windows sf execution. Future native Windows
-support is tracked in [#18](https://github.com/jeffshurtliff/obforce/issues/18),
-an unstarted enhancement outside v0.1.0 that does not block Thread 05.
+These engineering details describe current implementation contracts, not a stable
+public Python API. Use the [quickstart](QUICKSTART.md), [live setup](LIVE_SETUP.md)
+and [CLI reference](CLI.md) for command journeys.
 
 ## Execution contract and platform boundary
 
@@ -43,7 +27,7 @@ argument. Queries are complete internal-caller SELECT statements, at most
 16,384 characters; controls, comments, and semicolon-separated statements are
 refused. This is a conservative transport gate, not a SOQL grammar validator.
 Future callers must use reviewed field/query templates and validated values;
-this module never interpolates user values into SOQL. No Thread 05 query
+this module never interpolates user values into SOQL. No inventory query
 selection or org-identity logic is implemented here.
 
 Only **POSIX direct execution** is implemented. The supplied path resolves to an
@@ -124,7 +108,7 @@ boolean `done`. `records` is an array of objects. An output-file result is
 unsupported. Optional `nextRecordsUrl` must be a bounded nonempty string and is
 retained as private data, never followed. Warnings accept the framework's string
 or structured-object forms but expose only presence. Compatible extra query
-properties remain private for a later adapter to interpret; they are not trusted
+properties remain private for the acquisition adapter to interpret; they are not trusted
 normalized facts. Version success uses the bare oclif object and retains only
 `cliVersion`, `architecture`, and `nodeVersion` strings. Nonzero query errors
 validate `name`, `message`, and positive integer `status`; version errors use an
@@ -137,11 +121,11 @@ a failure exit with a success envelope also fails. Empty stdout never succeeds.
 
 `done`, `totalSize`, returned records, continuation, and warning/stderr presence
 are observations. Even `done: true` with fewer records than `totalSize`, or with
-a continuation signal, remains visible to the later adapter. No success/empty
+a continuation signal, remains visible to the acquisition adapter. No success/empty
 result proves complete inventory, verified org identity, accessible comparable
 scope, or audit/dependency completeness. See [coverage](COVERAGE.md) and
 [configuration/error precedence](CONFIGURATION.md). Coverage errors and normalized
-identity remain the later adapter's responsibility.
+identity remain the acquisition adapter's responsibility.
 
 ## Official contracts reviewed on 19 October 2026
 
@@ -170,11 +154,11 @@ These are observed official contracts, not a tested installed CLI/version pin.
 No real CLI or platform support claim follows from source inspection. Refresh
 contracts and obtain targeted authorization before any future live validation.
 
-Thread 12 public live initial build requires explicit `--config`, optional live-only
+Public live build/sync require explicit `--config`, optional live-only
 `--org` override, and both absolute `--sf-executable`/`--sf-directory` options.
 The directory must be existing and neutral; no PATH/default-org/auth discovery is
 added. The accepted adapters verify actual org identity before graph/planning.
 Implementation and lifecycle tests use mocked process replies only. Recovery
 never calls this transport. Live previews may cause sf's own local state changes
 as described above; Obforce previews create no artifacts. Windows execution
-remains refused and enhancement #18 remains outside v0.1.0 and NOT STARTED.
+remains refused. Native Windows transport needs separate qualification.

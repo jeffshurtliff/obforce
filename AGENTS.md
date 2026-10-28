@@ -26,6 +26,19 @@ native Bases dashboard, are documented in the roadmap. It distinguishes confirme
 direction, observed facts, and proposed defaults; do not present unimplemented
 design as an existing capability.
 
+**Stable-release direction — 28 October 2026:** The approved
+[usable release plan](dev/STABLE_010_RELEASE_PLAN.md) and R1–R8/#23–#30 add
+mandatory actual DX/live qualification, vault-owned `.obforce/obforce.toml`,
+distinct project presence with generated warnings/dashboard visibility, a
+successful 1,000-class installed lifecycle and native Obsidian acceptance.
+These are future targets until their packages pass; current runtime contracts
+remain enforced. R1 collects maintainer inputs, R2 performs separately authorized
+discovery, and R3 requires concrete design approval before R4 onward. Stable
+promotion/publication is blocked by R8 and final #16/#22 docs before #17; optional
+`0.1.0a1` requires separate approval and cannot waive preservation defects.
+Windows DX is required; Windows sf remains deferred in #18. Synthetic tests stay
+the ordinary default and are supplemented by explicitly scoped real validation.
+
 - Implement only the requested thread/task and necessary supporting work.
   Verify its dependencies against actual code and validation evidence.
 - Preserve maintainer changes; avoid unrelated cleanup, broad reformatting,
@@ -159,6 +172,8 @@ Do not update unrelated headers.
 - `obforce_id`/`obforce_schema` and documented `sf_*` properties are reserved.
   Other properties, including `tags`, `aliases`, business fields, and all
   `technical_debt*` fields, belong to the user after creation.
+  Proposed `obf_found_in_project` is currently user-owned; R3 must approve its
+  exact name, ownership/version and collision behavior before R5 can introduce it.
 - Initialize new `technical_debt` as Boolean false under accepted MTF-2/Thread 14;
   it remains human-owned after creation. Do not infer debt from metadata, coerce
   existing human values during refresh, or overwrite severity/status/review decisions.
@@ -195,6 +210,9 @@ Do not update unrelated headers.
 - Never delete component notes automatically. Mark missing only after a comparable
   complete supported live scan; partial/offline/changed-scope input cannot do so.
   Missing means not observed in the selected accessible scope, not proven deletion.
+  This describes current `sf_lifecycle`. R5 must separately implement project
+  presence after a complete comparable DX scan, without inferring org deletion;
+  failed/partial/changed-scope scans cannot establish that absence either.
 - Validate state as untrusted data. Missing/corrupt/unknown state alongside
   managed notes causes refusal, not automatic adoption or reconstruction.
 - Before public writes, establish the single-writer guard, same-filesystem
@@ -215,6 +233,11 @@ Behavior changes need meaningful tests; fixes need focused regression coverage.
 Use temporary directories/vaults and mocked `sf` responses. Tests must be
 deterministic and offline by default. Real org and real-vault tests require a
 separate explicit instruction; never auto-discover or reuse credentials.
+
+Stable release additionally requires the approved real/native/scale acceptance
+matrix. Do not carry a named thread's synthetic-only execution authorization
+forward as a permanent product exclusion, or infer real access from the roadmap.
+Targets/operations and disposable output must be explicitly authorized first.
 
 After foundation tooling exists, use the applicable checks:
 

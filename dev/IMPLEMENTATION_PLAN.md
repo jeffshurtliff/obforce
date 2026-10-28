@@ -4,6 +4,17 @@
 
 **Target release:** `0.1.0`; initial development version: `0.1.0.dev0`
 
+**Approved release revision — 28 October 2026:** Follow the
+[usable stable release plan](STABLE_010_RELEASE_PLAN.md) and R1–R8 / issues
+[#23](https://github.com/jeffshurtliff/obforce/issues/23)–[#30](https://github.com/jeffshurtliff/obforce/issues/30).
+Stable acceptance requires actual DX and macOS/Linux live workflows, vault-owned
+configuration, project-presence handling, a successful 1,000-class installed
+lifecycle and native Obsidian review. These are future release gates, not
+capabilities implemented by this documentation revision. R1 is next eligible,
+**NOT STARTED**. #16 remains under its original review; #22 and #17 stay unstarted.
+An optional `0.1.0a1` needs separate approval; finishing the old threads cannot
+authorize stable promotion or publication.
+
 **Status:** Thread 01 is **accepted and complete**, including the delivered
 Windows test correction and all 12 passing hosted CI cells. Issue #1 is closed
 as completed. Thread 02 is **accepted and complete**, including delivered
@@ -48,9 +59,13 @@ Thread 14 is **accepted and complete**, including Windows path correction
 [acceptance record](#thread-14-acceptance-and-closure--27-october-2026) and
 [dashboard contract](THREAD_14_DASHBOARD_CONTRACT.md). Native Obsidian preview
 was optional and remains unavailable, not an inferred pass. Thread 15 is
-**LOCALLY IMPLEMENTED**, under the 27 October authorization; #15 stays open
-for acceptance and separately authorized exact-commit hosted verification.
-Threads 16–17 and enhancements #18/#19 remain **NOT STARTED**.
+**accepted and complete**; #15 is closed. Exact-merge `178bf98`, run
+`40721222520`, attempt 2, passed all 12 cells / 24 independent installs under
+its original synthetic qualification scope. Thread 16 is **implemented and
+locally verified**, with unstaged work under maintainer review and #16 open.
+R1–R8, Thread 16b/#22, Thread 17 and enhancements #18/#19 remain **NOT STARTED**.
+Historical failure/skip/native limits remain; mandatory new product evidence is
+tracked separately in R8 and does not retroactively change accepted threads.
 Windows sf execution remains refused; future support is tracked separately in #18.
 
 **Repository location:** `dev/IMPLEMENTATION_PLAN.md`
@@ -74,7 +89,9 @@ institutional knowledge administrators add themselves. The result should help an
 administrator understand what exists, how components relate, who changed them,
 and what business context or technical debt deserves attention.
 
-The long-term objective is broad org documentation and mapping. The first release
+The long-term objective is to document the metadata and configuration of an entire
+Salesforce org. The current version is scoped to Apex classes, with additional
+metadata and configuration areas planned for future releases. The first release
 is a useful, deliberately limited foundation for that objective; it must not
 claim to document every Salesforce metadata type or discover every dependency.
 
@@ -104,12 +121,22 @@ claim to document every Salesforce metadata type or discover every dependency.
 
 ### Observable success for v0.1.0
 
-A user can install Obforce, point it at a synthetic local project or an explicitly
-selected authenticated org, preview a build, and create one note per supported
-Apex class. They can add business context, custom properties, and technical debt
-notes; move a note within the vault; then preview and apply a refresh without
-losing those edits. Unchanged output remains untouched. Conflicts and incomplete
-inputs produce clear results. Interrupted publication can be recovered safely.
+A user can install Obforce, point it at an actual Salesforce DX project or an
+explicitly selected authenticated nonproduction org, preview a build, and create
+ApexClass notes plus a useful native Base. Configuration lives in the vault's
+`.obforce/obforce.toml`. They can add business context, custom properties and debt
+notes, move a note, and safely refresh without losing human content or identities.
+Classes no longer found in a complete comparable project scan retain their notes
+and known facts, with managed project presence, a generated warning and dashboard
+visibility; reappearance reuses the same note. This never asserts org deletion.
+
+Successful installed build, substantial refresh, no-op and interruption/recovery
+at 1,000 classes, actual DX workflows on claimed platforms, actual live workflows
+on macOS/Linux, and native Obsidian Reading/Live Preview/property review are
+required. Synthetic CI supplements these gates. Conflicts and incomplete input
+remain explicit; previews create no artifacts and unchanged output stays untouched.
+These approved targets require R1–R8 implementation/acceptance; current behavior
+and gaps are distinguished in the [release plan](STABLE_010_RELEASE_PLAN.md).
 
 ## 2. Evidence, decisions, and planning assumptions
 
@@ -152,6 +179,13 @@ scope; all 17 implementation threads remain not started.
 
 ### Proposed implementation defaults
 
+**28 October revision:** The stable target below incorporates the approved
+release contract. Sections 3–7 retain the accepted implementation baseline where
+not explicitly amended; current code still forbids vault-contained config,
+preserves offline absences and enforces the 128-file limit. R3 must approve the
+exact replacement contracts before R4–R7 implement them. Historical launch
+prompts and handoffs are dated evidence, not authority to bypass revised gates.
+
 The following defaults implement the confirmed scope. Detailed technology,
 schema, CLI, and workflow choices remain recommendations informed by the earlier
 discussions unless explicitly confirmed above. A direct maintainer correction
@@ -167,11 +201,12 @@ supersedes them. Record material changes before implementing dependent work.
 | Presentation | Markdown, flat YAML properties, wikilinks, and a small native Bases dashboard |
 | Templates | Bundled Jinja2 defaults plus explicitly configured local overrides |
 | Synchronization | Generated-field/region ownership, persistent note identities, hashes, preflight plans, and recoverable writes |
-| Missing components | Mark as missing only after a comparable complete supported scan; never delete notes automatically |
+| Missing components | Distinct project presence after a complete comparable DX scan; live missing retains its separate accessible-scope gate; never delete notes |
 | Technical debt | User-managed Boolean, false by default (MTF-2); blank severity/status/review date and narrative section |
-| Configuration | One TOML file; relative paths resolve from its directory |
-| Platform target | Linux, macOS, and Windows; target stable Python 3.12–3.15, verifying interpreter/dependency availability and recording gaps |
-| Release | Prepare `0.1.0` after acceptance; publication requires a separate explicit instruction |
+| Configuration | Stable home `<vault>/.obforce/obforce.toml`; exact schema/path/init/compatibility requires R3 approval and R4 implementation |
+| Platform target | DX on Linux/macOS/Windows; actual live qualification on macOS/Linux; Windows sf deferred in #18; retain Python 3.12–3.15 evidence and gaps |
+| Capacity and native use | Successful 1,000-class installed lifecycle and mandatory native Obsidian acceptance, not refusal-only scale or YAML-only evidence |
+| Release | R8 product acceptance plus final #22 docs before #17 stable preparation; optional alpha and publication require separate approval |
 
 **Scope gate:** The focused Apex-first release is confirmed. Adding objects,
 fields, Flows, or LWC to `0.1.0` requires a new maintainer decision and revisions
@@ -195,6 +230,10 @@ parser thread without that decision.
   detection, no-op behavior, explicit conflict reporting, and crash recovery.
 - Custom creation/generated-section templates, default user sections, a small
   dashboard, synthetic examples, docs, and offline automated tests.
+- R1–R8 gaps: vault-owned config, distinct DX presence/warnings/Base, successful
+  1,000-class lifecycle, actual-input discovery before design approval, actual sf
+  compatibility and mandatory real/native product acceptance. These are targets,
+  not features delivered by updating the roadmap.
 
 ### Explicitly deferred
 
@@ -466,6 +505,10 @@ collection is unavailable, but the command must report that limitation.
 
 ### Generated vault layout
 
+**Stable target:** R3/R4 add `.obforce/obforce.toml` beside state/recovery data.
+Current config-in-vault refusal remains until that work passes; do not place a
+current config there by following this future direction alone.
+
 Keep generated customer/org documentation separate from the application repo.
 Default example, with configurable note and dashboard folders:
 
@@ -622,6 +665,11 @@ change set. No managed note or state changes occur during this phase.
 | Optional dependency query unavailable | Preserve prior edges as stale or report uncollected; no false completeness |
 | Template/render/path validation fails | Publish nothing |
 | Writer fails or process stops | Retain recovery evidence; block ordinary writes pending recovery |
+
+The local-absence row records current code. R5 adds the separately approved
+project-presence property/warning/Base after a complete comparable DX scan;
+partial/failed/changed-scope input still cannot establish absence. This is separate
+from the live `sf_lifecycle` gate and does not authorize note deletion.
 
 Marking missing means **not observed in this selected, accessible scope**. It does
 not assert that Salesforce has permanently deleted the component. Changes in
@@ -841,17 +889,32 @@ for a truncated requested live scan. This contract adds no public commands.
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Accepted/closed; correction 6d08696 / merge cdf0e68 / run 40517073513 all 12 cells passed |
 | 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Accepted and complete; #15 closed; exact-merge 40721222520 attempt 2 passed all 12 cells / 24 installs |
-| 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Eligible after #15 acceptance; NOT STARTED |
-| 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
+| 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Implemented/locally verified; OPEN pending acceptance |
+| 16b | Release documentation site and repository cleanup | 16, R8 | F: release blocker | [#22](https://github.com/jeffshurtliff/obforce/issues/22) | NOT STARTED; final behavior follows R8 |
+| 17 | v0.1.0 release preparation | 16, 16b, R8 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | NOT STARTED |
+| R1 | Stable-release requirements and maintainer inputs | Approved revision | G: product acceptance path | [#23](https://github.com/jeffshurtliff/obforce/issues/23) | NOT STARTED; next eligible |
+| R2 | Real DX and nonproduction-org discovery | R1; explicit access authorization | G | [#24](https://github.com/jeffshurtliff/obforce/issues/24) | NOT STARTED |
+| R3 | Product design package and maintainer approval | R2 | G | [#25](https://github.com/jeffshurtliff/obforce/issues/25) | NOT STARTED; blocks implementation |
+| R4 | Vault-owned configuration and initialization | R3 | G | [#26](https://github.com/jeffshurtliff/obforce/issues/26) | NOT STARTED |
+| R5 | DX project presence and retained-note lifecycle | R4 | G | [#27](https://github.com/jeffshurtliff/obforce/issues/27) | NOT STARTED |
+| R6 | Successful 1,000-class lifecycle | R5 | G | [#28](https://github.com/jeffshurtliff/obforce/issues/28) | NOT STARTED |
+| R7 | Real Salesforce CLI compatibility and live workflow | R6 | G | [#29](https://github.com/jeffshurtliff/obforce/issues/29) | NOT STARTED |
+| R8 | Integrated product acceptance | R4, R5, R6, R7 | G | [#30](https://github.com/jeffshurtliff/obforce/issues/30) | NOT STARTED; blocks #22/#17 |
 
-All 17 issues are assigned to `jeffshurtliff` and associated with the
+The [approved release plan](STABLE_010_RELEASE_PLAN.md) defines new packages,
+maintainer-input/design gates and acceptance demos. Completed threads retain
+historical acceptance. #16's current-scope review can finish independently; the
+default next product work is R1, not stable preparation.
+
+The original 17 roadmap issues are assigned to `jeffshurtliff` and associated with the
 [`v0.1.0` GitHub milestone](https://github.com/jeffshurtliff/obforce/milestone/1). They carry `maintainer`, `codex`,
 and the category labels from their selected maintainer templates, with additional
-`ci`/`security` labels where relevant. A–F are internal implementation phases,
+`ci`/`security` labels where relevant. A–G are internal implementation phases,
 not separate GitHub milestones. Thread IDs in the dependency column map to the
-issues in this table; GitHub's native blocked-by/blocking relationships mirror
-the exact 21 direct prerequisite edges, including redundant direct prerequisites
-that the roadmap lists explicitly. Issue creation does not start implementation.
+issues in this table. The original 21 native direct prerequisite edges remain,
+along with #16 → #22 → #17. The revision adds seven R1→R7→R8 chain edges, three
+additional explicit R4/R5/R6 → R8 edges, and R8 → #22/#17. Redundant direct
+prerequisites are deliberate. Issue creation does not start implementation.
 
 The default path is sequential. Threads 03 and 04 can be worked on independently
 after 02 if the maintainer explicitly chooses parallel work; avoid shared-file
@@ -1988,10 +2051,9 @@ evidence are distinct; a skip is never qualification.
 
 **Goal:** An accurate, maintainable path from installation through safe refresh.
 
-**Depends on:** 15. **Status:** Eligible after accepted/closed #15; NOT STARTED.
-
-Use the [exact Thread 16 kickoff prompt](THREAD_16_KICKOFF.md). Preparing the
-prompt and recording eligibility do not start implementation.
+**Depends on:** 15. **Status:** Implemented and locally verified on
+28 October 2026; #16 OPEN pending maintainer acceptance. The original
+[kickoff prompt](THREAD_16_KICKOFF.md) remains historical launch context.
 
 **GitHub issue:** [#16](https://github.com/jeffshurtliff/obforce/issues/16)
 
@@ -2009,8 +2071,9 @@ prompt and recording eligibility do not start implementation.
 3. Finish contribution/security guidance, synthetic example provenance, and a
    maintainer release runbook. Keep raw metadata/private outputs out of examples.
 4. Execute every offline tutorial from a clean installation with the fictional
-   sample. Add only documentation tooling justified by current needs; a large
-   hosted Sphinx site is optional later rather than a v0.1.0 prerequisite.
+   sample. Add only bounded tutorial-verification support justified by current needs.
+   Sphinx/ReadTheDocs styling and reviewed development cleanup are now required
+   before release under separate Thread 16b / #22; no site or deletion in #16.
 
 **Locations:** `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `docs/`, `examples/`.
 
@@ -2035,22 +2098,53 @@ No dependency installation or application refactoring merely to check prose.
 > a hosted site, access production data, or start release preparation. Leave work
 > uncommitted.
 
+### Thread 16b — Release documentation site and repository cleanup
+
+**Goal:** Professional public documentation and a reviewed clean release repository.
+
+**Depends on:** 16 and R8/#30 for final acceptance. **Status:** **NOT STARTED**.
+
+**GitHub issue:** [#22](https://github.com/jeffshurtliff/obforce/issues/22).
+**Blocks:** #17 and releasing v0.1.0, including PyPI publication.
+
+Inspect actual Obfuscidian, SalesPyForce and PyDPlus Sphinx/ReadTheDocs theme,
+styling and presentation conventions. Integrate the official documentation from
+#16 without development-thread narrative. Inventory development-only notes and
+one-use scripts/tests; obtain maintainer review of a concrete retention/removal
+plan before deleting data. Preserve historical failed/skipped/unavailable and
+uncaptured-cause evidence plus full benchmark/profile records in an approved
+maintainer-accessible location. Retain required reproducible verification and
+update references/CI/archive allowlists as necessary. Verify local documentation,
+links, privacy and artifacts; hosting/publication and Git delivery need explicit
+authorization. This is a future task, not implementation permission in #16.
+
+#16 retains user/contributor/security content, a documentation-only release
+runbook and independent installed fictional tutorials. No source capability,
+release preparation, Sphinx build/hosted site or evidence removal in #16.
+
+The 28 October revision requires final integration of R4–R8 behavior/evidence
+after R8 acceptance. Existing styling and reviewed-retention rules remain; this
+task cannot substitute documentation polish for product acceptance.
+
 ### Thread 17 — v0.1.0 release preparation
 
 **Goal:** Reviewable `0.1.0` candidate artifacts and a concrete publication handoff.
 
-**Depends on:** 16. **Status:** Not started.
+**Depends on:** 16, 16b (#22), and R8 (#30). **Status:** **NOT STARTED**.
 
 **GitHub issue:** [#17](https://github.com/jeffshurtliff/obforce/issues/17)
 
 **Issue template:** [`maintainer-release.md`](https://github.com/jeffshurtliff/obforce/blob/main/.github/ISSUE_TEMPLATE/maintainer-release.md)
 
-**Blocked by:** [#16](https://github.com/jeffshurtliff/obforce/issues/16)
+**Blocked by:** [#16](https://github.com/jeffshurtliff/obforce/issues/16) and
+[#22](https://github.com/jeffshurtliff/obforce/issues/22), plus
+[R8/#30](https://github.com/jeffshurtliff/obforce/issues/30).
 
 **Blocks:** None within v0.1.0.
 
-1. Verify the acceptance matrix, dependency/license metadata, accurate platform
-   claims, current changelog, and absence of unresolved preservation blockers.
+1. Verify R8 real/native/scale and #16/#22 documentation acceptance, the revised
+   matrix, dependency/license metadata, accurate platform claims, current
+   changelog, and absence of unresolved preservation blockers.
 2. Prepare final `0.1.0` metadata/changelog and only necessary lock updates;
    build fresh candidate wheel/sdist files in an isolated output directory.
 3. Run strict artifact checks, inspect file lists for secrets/private content,
@@ -2065,7 +2159,10 @@ candidate artifacts and handoff; no committed build outputs.
 
 **Acceptance/demo:** Both candidate distributions pass the required checks and the
 installed offline lifecycle. The handoff clearly distinguishes prepared artifacts
-from a published release.
+from a published release. Required actual DX/live, successful 1,000-class lifecycle
+and native Obsidian evidence must match the candidate. Synthetic-only success or
+old-thread completion is insufficient. An optional alpha needs separate approval
+and cannot waive preservation defects.
 
 **Validation:** Full relevant offline/security/docs checks; strict Twine checks;
 isolated wheel and sdist installs; artifact resource/privacy/license audit.
@@ -2079,7 +2176,8 @@ not part of this thread without separate direct authorization.
 > verified checklist, and handoff evidence, synchronized with the roadmap. Leave
 > it open pending maintainer acceptance; do not create duplicate tracking issues.
 >
-> Implement only Thread 17 after verifying the release acceptance matrix. Prepare
+> Implement only Thread 17 after verifying R8/#30, #16/#22 acceptance and the
+> revised release matrix in dev/STABLE_010_RELEASE_PLAN.md. Prepare
 > and validate fresh v0.1.0 candidates, release notes, and a reviewable publication
 > handoff. Report checksums and actual evidence. Do not stage/commit, push, tag,
 > create a release, upload to an index, or activate publishing automation. Leave
@@ -2092,7 +2190,7 @@ not part of this thread without separate direct authorization.
 | Clean install, console/module entry points, Apache metadata | 01, 17 | Fresh wheel and sdist installs outside checkout |
 | Python 3.12+ and honest supported-platform claims | 01, 15 | Actual stable matrix results; gaps retained explicitly |
 | Offline input without network or source mutation | 03, 12 | Mock network/process prohibition and before/after source snapshots |
-| Explicit live target and audit normalization | 04, 05 | Mocked multi-page/permission/error fixtures; opt-in live checks separately labeled |
+| Explicit live target and audit normalization | 04, 05, R2, R7, R8 | Mocked cases plus mandatory authorized actual sf/nonproduction workflows on macOS/Linux |
 | Honest dependency coverage and reciprocal links | 06, 07, 13 | Directed/reciprocal graph, unsupported endpoint, stale/partial cases |
 | Bundled defaults and custom templates | 07, 17 | Installed resources, override/fallback/error tests |
 | Human prose/properties/debt survive refresh | 08, 13 | Exact outside-body comparisons and supported YAML preservation tests |
@@ -2102,8 +2200,16 @@ not part of this thread without separate direct authorization.
 | No-op avoids note/state churn | 10, 13 | Repeated runs retain bytes and modification times |
 | Conflict and unsafe-path refusal | 08–13, 15 | Generated edits, malformed inputs, overlap/collision/link/concurrency tests |
 | Recoverable note/state publication | 11–13, 15 | Fault injection and process interruption at publication boundaries |
-| Useful native dashboard without plugin dependency | 14 | Asset/schema tests and optional clearly labeled native preview |
-| Safe onboarding and privacy | 16, 17 | Executed offline tutorial, source/artifact/log review |
+| Useful native dashboard without plugin dependency | 14, R5, R8 | Automated checks plus mandatory native Reading/Live Preview, callout/link/Base and property review |
+| Safe onboarding and privacy | 16, R4, R8, 16b, 17 | Fictional tutorial plus actual-input installed journeys and source/artifact/log review |
+| Vault-owned config and initialization | R3, R4, R8 | Approved .obforce/obforce.toml setup, initialized-empty recognition, compatibility/refusal and recovery |
+| Actual DX project and retained absence | R2, R5, R8 | Real build/refresh; disposable-copy removal/restoration, UUID/human preservation and complete versus partial scope |
+| Successful 1,000-class publication | R3, R6, R8 | Installed build, all-affected refresh, no-op and interruption/recovery; rendering or refusal alone is insufficient |
+| Reviewed requirements before development | R1, R2, R3 | Nominated/authorized inputs, private discovery findings, concrete examples and maintainer design approval |
+
+The [detailed revised matrix](STABLE_010_RELEASE_PLAN.md#required-release-acceptance)
+is mandatory for stable release. Current fictional/mock/hosted results retain
+their historical scope and do not imply new real/native/capacity passes.
 
 Use pytest with deterministic unit and synthetic integration fixtures. Ordinary
 tests run offline, never discover credentials, and never query a real org. Any
@@ -6868,3 +6974,166 @@ Final acceptance review: 10 Markdown files / 188 local links and anchors / zero
 errors; complete 12-job evidence JSON, privacy/new-file formatting and whitespace
 passed. All 11 changed/new acceptance files remain unstaged/uncommitted; no staged
 or unrelated file and no source/test/lock/workflow change in this acceptance pass.
+
+### Thread 16 start and prerequisite verification — 28 October 2026
+
+Checkout began clean at `17243c7`, descending from accepted merge
+`178bf98a53f910364eb0985d201a372f3fe8cd7e`. No uncommitted acceptance material
+was present; existing committed acceptance documentation is preserved. Read the
+required guidance, designs, findings, current source/help/examples and #16/#15/#14.
+No `local/vendor_docs/` exists. Entire Brain brief failed on a local lock-file
+permission; direct source/evidence inspection is the fallback for that query.
+
+Re-read all twelve full job command logs and metadata at exact-merge run
+`40721222520`, attempt 2: all gates, complete captures/cleanup, exact 36/35 archive
+lists and 24 independent installs passed. Linux 1607/1 each; macOS 1605/3 each;
+Windows 1586/22 each. Runtime source/tests/metadata/lock match implementation
+`3771c16` at task start. Native #14 → #15 → #16 → #17 verified. Attempt 1's macOS
+3.15 job `122932342732` has runner_id 0, no steps and cancellation; capacity
+annotations/unavailable 404 log remain in the existing acceptance record. All
+older failed/timeouts/skips/unavailable/uncaptured causes and full benchmark/profile
+records remain unchanged. No CI was rerun.
+
+Maintainer's new release-presentation requirements are tracked in #22, Thread 16b,
+with native #16 → #22 → #17 edges added, existing edges and metadata preserved.
+It blocks v0.1.0 release; NOT STARTED. No evidence deletion or Sphinx/hosted-site
+work is authorized here. #16 implementation/verification is in progress; #16 stays
+open pending acceptance. Thread 17 and #18/#19 stay NOT STARTED; broader #21 stays
+open and excluded. No subagents or other-chat actions.
+
+### Thread 16 verified handoff — 28 October 2026
+
+**Implemented and locally verified; #16 OPEN pending maintainer acceptance.**
+README, official user/contributor/security guides and the documentation-only
+release runbook describe current behavior without development-sequence narrative.
+The fictional journey covers installation, explicit init/build/sync/recover and
+previews, human edits/UUID moves, templates/dashboard/debt, independent coverage,
+comparability/missing/stale/reactivation, binding restrictions and recovery.
+
+Excluded developer support `dev/verify_tutorials.py` runs through the existing
+artifact checker. Fresh independent wheel/sdist installs each exercised both
+actual entry points (four journeys), literal supplied-sample setup/edit/template
+snippets, quoted relative/absolute space paths, source/cwd and preview/no-op
+bytes/mtime snapshots, creation-only templates, dashboard conflict, separate
+synthetic rollback/cleanup and retained intervening-edit refusal. Active runtime
+socket/process denial and empty external-tool PATH were verified; setup downloads
+and authorized synthetic Python children remain separate.
+
+| Executed local check | Result |
+| --- | --- |
+| Native macOS 27.0.1 ARM64/APFS, Python 3.14.7 installed-wheel full suite | 1605 passed / 3 skipped, 148.73s; 92% statement/branch/subprocess coverage |
+| Bounded full capture / cleanup | 182942 bytes, complete, exit 0, cleanup confirmed |
+| Metadata/lock, Ruff lint/format, Bandit, whitespace | Passed; existing Bandit annotations retained |
+| Fresh build / strict Twine / exact archive-source-resource-license checks | Passed, 36 wheel / 35 sdist files |
+| Independent installs / actual console+module tutorials | Both installs / all four journeys passed |
+| Local references / public vendor-source GET links | 216 / 39 resolved, TLS verified |
+
+[Complete verification and candidate hashes](evidence/documentation-verification-20261028.json)
+retain all current failures: initial build network refusal; corrected tutorial
+fixture error; first full run 4 failed/1540 passed/3 skipped/1 setup error
+(137.46s, incomplete test tools/PyYAML plus uncaptured refusals); locked-tool full
+run 1 failed/1604 passed/3 skipped (142.67s, 92%, read-path-change refusal before
+1000-class bound); separate observation-only focused pass (11.53s) and final
+uninstrumented pass. Changed path/cause remains uncaptured; later passes explain
+neither earlier failure. Tool/search/TLS/HEAD and baseline-format conversion
+failures are retained too. Raw logs remain local outside checkout.
+
+[Lossless pre-edit documentation baseline](evidence/documentation-baseline-20261028.json)
+retains 17 original documents with verified SHA-256. Existing roadmap/design/
+findings/full benchmark/profile/CI records remain untouched, including every older
+failure/timeout/skip/unavailable observation and original uncaptured causes.
+Allocation-versus-RSS/instrumentation limits remain. Historical deep links resolve.
+
+Production source/dependencies/lock/workflow/version and schemas 2/1/1/2/1/4,
+note/marker/config/model 1, precedence 3/2/1/4/0 and all ownership/binding/coverage/
+fresh independent integrity/publication guards are unchanged. Three skips retain
+case/NFC representation and unavailable Windows-junction gaps. No new hosted,
+Windows/Linux/local Python 3.15, live sf/org or native Obsidian result. No ACL,
+power-loss/hostile-race/arbitrary-filesystem/atomic-snapshot or multi-file guarantee.
+Windows sf, legacy evidence-less sync and journal-schema-1 recovery remain refused.
+
+#16 start/progress/checklist/handoff tracking is synchronized. Connector commenting
+was rejected for PR-shaped parameters; verified issue-specific API updates succeeded.
+Optional #17 body editing was separately auto-review rejected as outside explicit
+mutation authorization; body unchanged. Verified native #16 → #22 → #17 edges and
+#22's scope establish the release blocker, preserving original edges/metadata.
+After #16 acceptance, **Thread 16b / #22 is next eligible, NOT STARTED**;
+**Thread 17 remains NOT STARTED**, blocked by #16/#22. #18/#19 stay NOT STARTED;
+broader #21 remains open/excluded; its approved scoped optimization stays verified.
+
+All files are **unstaged/uncommitted** on existing
+`docs/16-thread-16-user-and-maintainer-documentation` at `17243c7`. No Git delivery,
+CI rerun, issue closure, release/site/automation, evidence deletion, real services/
+vault/auth/credentials/settings, provisioning, capability expansion or delegation.
+
+Tracking receipt: #16 checklist/body and
+[final handoff](https://github.com/jeffshurtliff/obforce/issues/16#issuecomment-6480643714)
+posted/read back; issue remains open with acceptance unchecked and original metadata.
+The final authored-document review resolves 216 local references (including the two
+new evidence links) and 39 public vendor/source GET links. All new JSON/baseline
+files were parsed, SHA-256 checked and explicitly checked for whitespace; no
+untracked file is hidden by ordinary `git diff --check`.
+
+### Product-purpose wording clarification — 28 October 2026
+
+The maintainer clarified that Obforce's goal is documentation of the metadata and
+configuration of an entire Salesforce org. ApexClass is the current version's
+scope; additional metadata/configuration areas are planned for future releases.
+README, contributor/security/setup/config/release guidance and the purpose section
+now distinguish that goal from delivered coverage. No runtime scope expansion or
+future implementation is authorized. Prose links/consistency/privacy/whitespace
+checked; no tests or builds rerun for this wording-only edit. Prior artifact hashes
+and tutorial evidence describe the earlier documentation snapshot; README's
+packaged long description has since changed. Historical evidence remains intact.
+Changes remain unstaged/uncommitted; #16 stays open, #22/16b and #17 NOT STARTED.
+
+### Usable stable release roadmap revision — 28 October 2026
+
+**Authorized scope:** Implement the approved documentation/tracking revision only,
+preserving the concurrent unstaged Thread 16 candidate. No runtime implementation,
+real-project/org assessment or dependent work was started. Baseline remains
+`17243c73f5e40d7c2d41023345365b99c8cd5ff1` on
+`docs/16-thread-16-user-and-maintainer-documentation`.
+
+Added [the detailed stable release plan](STABLE_010_RELEASE_PLAN.md), with the
+maintainer-input checklist, R1–R8 scope/dependencies, concrete R3 design gates,
+actual DX/live/native acceptance and successful 1,000-class publication/recovery.
+Updated current roadmap status/index/acceptance and #22/#17 prerequisites, agent/
+contributor guidance, README, configuration/refresh/qualification notices,
+changelog and release runbook. All target behavior is distinguished from current
+config-in-vault refusal, offline-absence preservation and capacity limits.
+Optional alpha preparation/publication remains separate; stable promotion cannot
+follow merely from completing the original threads.
+
+Created [R1/#23](https://github.com/jeffshurtliff/obforce/issues/23) through
+[R8/#30](https://github.com/jeffshurtliff/obforce/issues/30), with category and
+maintainer/codex labels, maintainer assignment and milestone `v0.1.0`; R1/R3 add
+the existing question label. Updated #16/#17/#22 bodies while preserving their
+state, labels, assignees, milestone and acceptance checkbox states. Updated the
+existing milestone description to the usable 0.1.0 goal, retaining title/state.
+Read back exact final bodies/metadata and **35 native dependency edges in both
+directions: all 23 prior edges preserved, 12 new edges added**. #1–#15 remain
+closed; #16/#17/#22 and every new package remain open. No issue was closed.
+
+The GitHub connector's create operation returned 403; the authorized tracking
+actions completed through authenticated `gh`, with verified readback. Entire's
+brief lookup could not create its sandboxed lock; direct source/issue inspection
+supplied this task's context. No tool setup/repair or memory write was performed.
+
+**Verification:** Local Markdown path/anchor/fence, planned-versus-delivered
+consistency, privacy, whitespace and task-start-relative diff review. The complete
+402,243-byte historical handoff tail preceding this new record was unchanged.
+Existing Thread 16 evidence/baselines and pending developer harnesses were
+preserved. Application tests/builds/installs and CI reruns were not appropriate
+for this prose/tracking change and were not run. Earlier artifact hashes describe
+their original documentation snapshot, not the now-edited packaged README; no
+fresh candidate artifact pass is claimed. No new actual sf/org/project/vault or
+native Obsidian/platform result is established.
+
+**Git/review/next:** All local changes remain unstaged/uncommitted on the existing
+branch. No source/test/resource/dependency/lock/schema/version/workflow change was
+made by this revision; pre-existing Thread 16 changes remain under review. No Git
+delivery, cleanup, publication, hosting, automation, platform provisioning, real
+access or delegation. #16 review can finish independently. **R1/#23 is next
+eligible, NOT STARTED**, pending a separately scoped request and maintainer inputs;
+R2–R8, #22/16b and #17 remain **NOT STARTED**.

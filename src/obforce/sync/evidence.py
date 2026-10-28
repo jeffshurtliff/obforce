@@ -4,7 +4,7 @@
 :Synopsis:          Validates bounded private normalized refresh evidence
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     25 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from typing import TYPE_CHECKING
 
 from obforce import constants as const
 from obforce.errors import ConflictError
-from obforce.graph.dependencies import DependencyGraph, Edge, Endpoint, Evidence
+from obforce.graph.dependencies import DependencyGraph, Edge, Endpoint, Evidence, _FingerprintPaths
 from obforce.models import (
     Availability,
     CollectionCoverage,
@@ -135,6 +135,9 @@ class RefreshEvidence:
         if {c.key for c in self.components} != saved.keys():
             raise ConflictError('Retained facts do not match tracked notes')
         locations = {key: note.path for key, note in saved.items()}
+        # Fresh for each independent evidence-validation pass, never retained
+        # from rendering, planning, publication or an earlier state read.
+        graph_paths = _FingerprintPaths(locations, coverage.binding.workspace_id)
         for component in self.components:
             require_same_source(coverage.binding, component.binding)
             key = component.key
@@ -144,7 +147,7 @@ class RefreshEvidence:
                 raise ConflictError('Retained component lies outside selected scope')
             if component.source_hash != saved[key].source_hash:
                 raise ConflictError('Retained facts differ from saved fingerprint')
-            if paths and self.graph.note_fingerprint(key, locations) != saved[key].graph_hash:
+            if paths and self.graph.note_fingerprint(key, graph_paths) != saved[key].graph_hash:
                 raise ConflictError('Retained graph differs from saved fingerprint')
 
 

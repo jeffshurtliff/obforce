@@ -4,7 +4,7 @@
 :Synopsis:          Serializes deterministic Apex candidates without reading or writing notes
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     26 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -13,16 +13,17 @@ import hashlib
 import json
 import re
 import unicodedata
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from functools import cached_property
 from types import MappingProxyType
 from uuid import UUID
 
 from obforce import constants as const
 from obforce.config import Layout, Options, relative_path
 from obforce.errors import ConfigError, ConflictError, ModelError
-from obforce.graph.dependencies import DependencyGraph, Endpoint
+from obforce.graph.dependencies import DependencyGraph, Endpoint, _FingerprintPaths
 from obforce.models import (
     Availability,
     Component,
@@ -114,8 +115,46 @@ def _path(path: str) -> str:
     return path
 
 
-def _paths(paths: Mapping[ComponentKey, str]) -> dict[ComponentKey, str]:
+@dataclass(frozen=True)
+class _BatchPaths(Mapping[ComponentKey, str]):
+    """Hold an immutable batch snapshot with validation at existing call sites.
+
+    Construct afresh for each planning pass. Lazy views retain error precedence;
+    standalone renderer calls with ordinary mappings still validate every call.
+    """
+
+    source: Mapping[ComponentKey, str]
+    workspace_id: str
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, 'source', MappingProxyType(dict(self.source)))
+
+    def __getitem__(self, key: ComponentKey) -> str:
+        return self.source[key]
+
+    def __iter__(self) -> Iterator[ComponentKey]:
+        return iter(self.source)
+
+    def __len__(self) -> int:
+        return len(self.source)
+
+    @cached_property
+    def checked(self) -> Mapping[ComponentKey, str]:
+        return MappingProxyType(_paths(self.source))
+
+    @cached_property
+    def workspaces(self) -> frozenset[str]:
+        return frozenset(key.workspace_id for key in self.checked)
+
+    @cached_property
+    def graph_paths(self) -> _FingerprintPaths:
+        return _FingerprintPaths(self.checked, self.workspace_id)
+
+
+def _paths(paths: Mapping[ComponentKey, str]) -> Mapping[ComponentKey, str]:
     """Refuse portable collisions in supplied mappings, including parent/file ambiguity."""
+    if type(paths) is _BatchPaths:
+        return paths.checked
     if not isinstance(paths, Mapping) or len(paths) > const.MAX_RENDER_COMPONENTS:
         raise ModelError('Invalid or excessive managed-note mapping')
     checked, portable, prefixes = {}, set(), set()
@@ -347,7 +386,8 @@ def render_generated(
     if component.binding.mode == 'local' and (graph.edges or coverage.relationships.status.value != 'not_collected'):
         raise ConflictError('Offline relationships must remain not collected')
     paths = _paths(managed_paths)
-    if any(key.workspace_id != component.binding.workspace_id for key in paths):
+    workspaces = managed_paths.workspaces if type(managed_paths) is _BatchPaths else (key.workspace_id for key in paths)
+    if any(workspace != component.binding.workspace_id for workspace in workspaces):
         raise ConflictError('Managed paths belong to another workspace')
     incident = tuple(edge for edge in graph.edges if component.key in (edge.source.key, edge.target.key))
     if len(incident) > const.MAX_RENDER_EDGES:
@@ -401,7 +441,8 @@ def render_generated(
         raise ConfigError('Expected the known generated-section template')
     region = asset.render(context)
     _section_check(region, _GENERATED_HEADINGS)
-    graph_hash = graph.note_fingerprint(component.key, paths)
+    graph_paths = managed_paths.graph_paths if type(managed_paths) is _BatchPaths else paths
+    graph_hash = graph.note_fingerprint(component.key, graph_paths)
     context_graph_hash = fingerprint({'graph': graph_hash, 'coverage': coverage.canonical()})
     render_hash = render_fingerprint(
         source_hash=component.source_hash,

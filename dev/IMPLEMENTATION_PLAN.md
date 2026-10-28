@@ -840,7 +840,7 @@ for a truncated requested live scan. This contract adds no public commands.
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Accepted/closed; correction 6d08696 / merge cdf0e68 / run 40517073513 all 12 cells passed |
-| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Windows CI failed/cancelled; correction locally verified; corrected hosted verification/acceptance pending; open |
+| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Windows 3.12/3.13 timed out; approved runtime correction locally verified; new hosted verification/acceptance pending; open |
 | 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
 | 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
 
@@ -1931,8 +1931,10 @@ consistency. Report separately whether a native app preview was actually done.
 **Goal:** Evidence for the supported platforms and realistic local operation.
 
 **Depends on:** 14. **Status:** Initial hosted run passed eight Linux/macOS cells;
-Windows failed or was cancelled. The test-ID/CI-supervision correction is locally
-verified; corrected exact-commit hosted verification and acceptance remain pending.
+Windows failed or was cancelled. The correction run `40603283983` passed ten
+cells, but Windows 3.12/3.13 reached the unchanged 45-minute test deadline.
+The approved immutable batch path optimization is locally verified; new exact-commit
+hosted matrix verification and acceptance remain pending.
 #15 stays open.
 
 Thread 14 is accepted/closed. The exact
@@ -6700,3 +6702,108 @@ labels, maintainer assignee, milestone 1 and native closed #14 → open #15 → 
 Final correction review: five changed Markdown files / 99 local links/anchors /
 zero errors; metadata/lock, Ruff lint/format and whitespace passed. All 11
 changed/new files remain unstaged/uncommitted, with no unrelated or staged file.
+
+### Thread 15 runtime investigation and scoped approval — 28 October 2026
+
+Run `40603283983`, attempt 1, at merge
+`08f67b6a0ca62fdd8d38afb541e6ae17e6eba7a0` passed ten cells and twenty independent
+installs. Windows 3.12/3.13 reached the unchanged 2700-second pytest deadline;
+captures were incomplete and downstream package/install gates skipped. #15 is
+not ready to close and Thread 16 remains NOT STARTED. The bounded supervisor
+worked; no completed result is inferred from 94% progress. Existing #21 profiling
+has begun without becoming a new prerequisite or receiving a milestone.
+
+The maintainer explicitly approved a focused renderer/graph optimization on
+28 October: validate an immutable note-path mapping once per batch, preserve
+fresh validation at independent integrity boundaries, exact bytes/hashes,
+ordering, error precedence and all fixtures. Local partial instrumented evidence
+found 1881 renderer path validations and about 4.77 million relative-path checks
+while rendering 1872 candidates before deliberate interruption. This is not a
+complete test pass or the exact native Windows timeout cause. Implementation
+will use private batch-local snapshots with lazy validation at existing call
+sites, never global/shared mutable caches, earlier refusal or weakened guards.
+No deadline/matrix/payload/schema/renderer/public-command change is authorized.
+Bounded diagnostics (per-case names, 25 slow durations, unfinished timeout line)
+are implemented; optimization and full validation are in progress.
+
+
+### Thread 15 runtime correction local handoff — 28 October 2026
+
+**Acceptance decision:** keep #15 OPEN. Exact merge `08f67b6a0ca62fdd8d38afb541e6ae17e6eba7a0`
+/ run `40603283983` attempt 1 passed ten cells and twenty independent installs.
+Windows 3.12/3.13 reached the unchanged 2700-second test deadline with incomplete
+1713-byte captures and confirmed cleanup; downstream build/Twine/archive/install/
+whitespace gates skipped. Windows 3.14/3.15 each passed 1574/22, but cannot fill
+those gaps. All twelve command logs/steps and actual interpreter versions are
+recorded in the [complete review](THREAD_15_QUALIFICATION.md#bounded-timeout-review-and-approved-runtime-correction--28-october-2026).
+The old oversized-ID defect did not recur; output/time/cleanup guards worked.
+
+**Approved scope delivered locally:** private immutable batch path snapshots and
+lazy renderer/graph validation at existing call sites; direct relevant-location
+selection; fresh snapshots for every evidence-validation/planning/replanning
+pass. No global/FS cache, error-precedence change, skipped guard, new public API,
+source acquisition change, earlier refusal or scope/bound/schema/renderer change.
+The maintainer explicitly approved this #21 optimization after partial profiling;
+#21 remains a follow-up in progress without a milestone or new native dependency.
+Bounded case names, 25 slow durations and unfinished-line timeout diagnostics
+retain all original capture/line/deadline/fail-fast/concurrency protections.
+
+**Local native macOS 27.0.1 ARM64/APFS full installed-candidate suites:**
+Python 3.12.7 **1605/3 in 416.08s**; 3.13.15 **1605/3 in 382.80s**; 3.14.7
+**1605/3 in 179.44s**, all **92% statement/branch coverage** (4737 statements,
+2074 branches), exit 0, complete bounded captures and confirmed cleanup. Skips
+remain case/NFC representation and locally unavailable Windows junction. Strict
+metadata/lock, Ruff lint/format, Bandit, whitespace, fresh build/Twine/exact 36/35
+archives and **six fresh independent wheel/sdist installs** passed, including
+actual console/module space paths, privacy/bounds/lifecycle/lower-level checks,
+active runtime network/process guards and no application cwd artifacts.
+
+**Measured evidence:** the [public-safe profile summary](evidence/thread15-path-profile-20261028.json)
+retains the deliberately interrupted baseline (1 failed / KeyboardInterrupt,
+597.33s) and complete post-change 1000-class refusal profile (1 passed, 78.90s).
+Baseline rendered 1872 candidates with 4773121 relative-path checks; the complete
+optimized workload rendered 2000 with 44033 checks. These are instrumented call
+observations, not a complete timing ratio or exact native Windows timeout cause.
+The clean diagnostic-only Python 3.14 baseline suite was 1594/3, 222.32s, 92%,
+with 85.71s for the unchanged 1000-class test; the optimized call was 14.86s.
+Host load differed; no throughput promise. Shared-coverage startup mistakes,
+argument refusal, fixture typo and the failed parallel installer attempt remain
+separate failed/exploratory evidence; no uncaptured stamp cause is inferred.
+
+The [complete repeated seed-15 scale JSON](evidence/thread15-scale-macos-py314-20261028.jsonl)
+retains 1000 classes/10000 explicit edges, seven stages, exact unchanged rendered
+6855000-byte digest, large write-free state-bound refusal and valid separate
+34-file/506545-byte state plan. Maximum traced allocation peak **50159647 bytes**
+is not RSS; separate macOS whole-process high-water RSS **137265152 bytes**.
+Actual 127/1000-note publication refusals and separate 12-note lifecycle remain.
+No batch splitting, raised bound, new acquisition call form or debt inference.
+
+**Pending:** separately authorized delivery/exact-commit hosted verification of
+all claimed cells, including Windows 3.12/3.13 and downstream installs, then
+maintainer acceptance. The precise native slow case remains unmeasured until
+new diagnostics run there. All older failures/skips/unavailable/uncaptured
+observations remain. No native Windows sf/ACL, Obsidian, power-loss, hostile-race
+or new-filesystem claim. All changes remain unstaged/uncommitted on existing
+`main` at `639a53823c23d9a709b578111e6e685fa927cc97`; maintainer changes preserved.
+No Git delivery, CI rerun/cancellation, issue closure or publication. **Thread 16
+is next only after #15 acceptance, NOT STARTED**; Thread 17 and #18/#19 remain
+**NOT STARTED**. #21's approved narrow work is in progress, not accepted.
+
+
+Runtime tracking receipt: [#15 handoff](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6471628796)
+and [#21 scoped handoff](https://github.com/jeffshurtliff/obforce/issues/21#issuecomment-6471629396)
+are posted and body/checklist updates retain both issues OPEN. Original metadata
+and closed #14 → open #15 → open #16 native links remain; #21 has no native
+dependencies, assignee or milestone. Hosted verification and acceptance stay
+unchecked. The passing parallel 3.12 artifact attempt is exploratory after the
+shared-installer-parent configuration was identified; final 3.12/3.13 installer
+checks use dedicated ancestry, and both earlier outcomes remain documented.
+
+
+Final review receipt: six selected fresh independent installs are confirmed under
+quiescent installer ancestry (dedicated 3.12/3.13 repeats; earlier separate 3.14
+checks). Exploratory parallel outcomes remain excluded/separate. Six changed
+Markdown files / 131 local links and anchors / zero missing targets; both new
+public evidence files parse completely and contain no identifying local paths.
+Metadata/lock, Ruff lint/format and whitespace rechecked; all 16 changed/new files
+remain unstaged/uncommitted, with no unrelated or staged file.

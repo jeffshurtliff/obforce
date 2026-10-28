@@ -1,9 +1,12 @@
 # Platform, failure and scale qualification
 
-Thread 15 remains open for maintainer acceptance. The initial implementation at
-merge `ae44a2c` passed eight Linux/macOS hosted cells, but Windows failed or was
-cancelled. The Windows test-ID/CI-supervision correction is a local candidate
-pending separately authorized delivery and exact-commit hosted verification.
+Thread 15 remains open. Correction merge `08f67b6a` / run `40603283983`, attempt 1,
+passed ten cells, including Windows 3.14/3.15. Windows 3.12/3.13 reached the
+unchanged 45-minute test deadline; downstream package/install gates skipped.
+Those incomplete results prevent acceptance of the selected full matrix.
+Bounded diagnostics and a maintainer-approved immutable batch path optimization
+are local candidates pending separate delivery/exact-commit hosted verification.
+Issue #21's relevant profiling has started; it is not a new prerequisite.
 The accepted Thread 14 matrix remains prerequisite evidence. See the detailed
 [qualification record](../dev/THREAD_15_QUALIFICATION.md) and
 [roadmap](../dev/IMPLEMENTATION_PLAN.md).
@@ -82,7 +85,7 @@ including org identity, and reports partial coverage even for clean empty replie
 It cannot collect all 10,000 explicit synthetic edges for 1,000 selected classes.
 No query/timeout/bound is raised and no additional live query form is introduced.
 
-## Installed checks and current results
+## Initial installed checks — 27 October 2026
 
 Local full installed-wheel suites passed on all three available interpreters:
 Python 3.12.7: **1579 passed / 3 skipped**, 852.78s; 3.13.15: same counts, 790.86s;
@@ -114,7 +117,7 @@ in the [detailed record](../dev/THREAD_15_QUALIFICATION.md#measured-environment-
 Threads 16–17 and enhancements #18/#19 remain **NOT STARTED**.
 
 
-## Corrected local CI-supervision evidence
+## First ID correction local evidence — 27 October 2026
 
 After the initial Windows failure, the full corrected suite on native macOS
 27.0.1 ARM64/APFS/Python 3.14.7 passed **1593 tests / 3 skipped in 222.26s**,
@@ -176,3 +179,62 @@ and the corrected hosted matrix still require exact-commit verification. No
 application limit, filesystem guard, schema, payload, dependency or scope changed.
 The supplied raw failure log stays private and unmodified; public tracking holds
 only reviewed synthetic summaries and evidence boundaries.
+
+
+## Runtime investigation after the bounded Windows timeouts
+
+Ten successful cells establish their own results; they cannot fill the two
+incomplete Windows interpreter cells. The supervisor reported only 1713 raw
+bytes in each failure, incomplete capture and confirmed cleanup. The giant-ID
+problem did not recur. Reaching 94% is not an exact test, coverage or packaging
+result. Per-case verbose output and `--durations=25` now remain within the same
+2 MiB/4 KiB budgets. On timeout, a bounded unfinished line can identify the last
+started case; it does not establish its completion or precise internal phase.
+
+The approved internal optimization snapshots note paths immutably for one batch.
+Renderer and graph validation remain lazy at their original call sites, retaining
+error precedence. Each evidence-validation invocation and each planning/replanning
+pass constructs a fresh snapshot; no global or filesystem-observation cache is
+added. Ordinary mapping inputs to standalone helpers still receive full checks.
+Exact note bytes, hashes, graph/move invalidation and malformed/unrelated path
+refusals are compared in regressions. No renderer/schema version, input payload,
+128-file publication ceiling, deadline or safety guard changes. Other #21
+optimizations remain proposals; Windows sf remains refused.
+
+Profiling has instrumentation overhead. An interrupted partial baseline is not
+a passing test, complete timing baseline or proof of the Windows timeout cause.
+The detailed record retains it and the shared-coverage/installer-ancestry setup
+errors separately from clean isolated validation. Give each concurrent local run
+its own `COVERAGE_FILE`, fixture root and stable installer/application ancestry.
+Use `Profile.runcall(pytest.main, ...)` with explicit propagation of pytest's exit
+status for profiling: the stdlib `cProfile -m` CLI can consume `SystemExit`, so
+its shell status alone cannot establish pytest success.
+
+
+## Approved runtime correction local results — 28 October 2026
+
+Full installed-candidate suites on observed native macOS 27.0.1 ARM64/APFS:
+
+| Actual Python | Full pytest outcome | Seconds | Statement/branch coverage |
+| --- | --- | ---: | ---: |
+| 3.12.7 | 1605 passed, 3 skipped | 416.08 | 92% |
+| 3.13.15 | 1605 passed, 3 skipped | 382.80 | 92% |
+| 3.14.7 | 1605 passed, 3 skipped | 179.44 | 92% |
+
+Captures completed under existing budgets with confirmed cleanup. The unchanged
+case/NFC representation and locally unavailable Windows junction skips remain
+gaps. Six fresh independent wheel/sdist installs, exact 36/35 archives and all
+standard checks passed. These local results do not qualify the new runtime code
+on hosted Windows/Linux/Python 3.15. #15 remains open pending exact-commit hosted
+verification and acceptance; Threads 16–17 and #18/#19 remain NOT STARTED.
+
+The [complete repeated scale JSON](../dev/evidence/thread15-scale-macos-py314-20261028.jsonl)
+retains seven stages, 1000 classes/10000 explicit edges and seed 15. All candidate
+bytes/hash and the valid 34-file/506545-state-byte plan exactly match the original.
+Large planning still refuses its structural state bound without output. Maximum
+traced Python allocation peak is 50159647 bytes; separate macOS whole-process RSS
+high-water is 137265152 bytes. Tracing and concurrent host load limit timing
+interpretation; direct rendering uses ordinary inputs and full per-call checks.
+The [detailed record](../dev/THREAD_15_QUALIFICATION.md#bounded-timeout-review-and-approved-runtime-correction--28-october-2026)
+retains the partial profiler failure, completed profile and setup/installer failures
+without assigning uncaptured causes or turning later success into earlier proof.

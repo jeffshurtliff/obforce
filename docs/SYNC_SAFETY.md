@@ -871,3 +871,13 @@ path-bearing preliminary errors; unreadable config reads use redacted operationa
 checks do not certify ACLs, Windows privacy or power-loss behavior. Quiescent
 ancestry must include both synthetic fixtures and the installed application.
 No runtime race retry, weaker observation or new automatic cleanup is introduced.
+
+
+## Internal batch path validation
+
+A planning pass may reuse validated views of its own immutable note-path snapshot.
+Every independent evidence validation and planning/replanning pass creates a fresh
+snapshot; read observations, pathname/descriptor/hash checks, transaction guards,
+publication and recovery retain their complete independent checks. This pure
+derived-data optimization does not cache filesystem observations or reuse
+authorization from an earlier boundary, run or batch.

@@ -4,7 +4,7 @@
 :Synopsis:          Normalizes private directed evidence and reciprocal graph invalidation
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     19 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -12,6 +12,8 @@ from __future__ import annotations
 import unicodedata
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
+from functools import cached_property
+from types import MappingProxyType
 from typing import Any
 
 from obforce import constants as const
@@ -31,6 +33,41 @@ from obforce.models import (
     require_same_source,
     validate_identities,
 )
+
+
+def _checked_locations(paths: Mapping[ComponentKey, str], workspace_id: str) -> dict[ComponentKey, str]:
+    """Validate a complete graph location map, including nonincident endpoints."""
+    checked: dict[ComponentKey, str] = {}
+    portable: set[str] = set()
+    for endpoint, path in paths.items():
+        if not isinstance(endpoint, ComponentKey) or endpoint.workspace_id != workspace_id:
+            raise ConflictError('Managed graph location belongs to another workspace.')
+        normalized = relative_path(path)
+        location = unicodedata.normalize('NFC', normalized).casefold()
+        if location in portable:
+            raise ConflictError('Duplicate portable managed graph location.')
+        portable.add(location)
+        checked[endpoint] = normalized
+    return checked
+
+
+@dataclass(frozen=True)
+class _FingerprintPaths:
+    """Snapshot one batch's locations; lazily validate at the original hash boundary.
+
+    Each independent validation pass must construct its own snapshot. No cache
+    spans batches or replaces state/planner/transaction integrity checks.
+    """
+
+    source: Mapping[ComponentKey, str]
+    workspace_id: str
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, 'source', MappingProxyType(dict(self.source)))
+
+    @cached_property
+    def checked(self) -> Mapping[ComponentKey, str]:
+        return MappingProxyType(_checked_locations(self.source, self.workspace_id))
 
 
 def _label(value: object, limit: int) -> None:
@@ -220,7 +257,7 @@ class DependencyGraph:
         """Derive incoming Referenced By, retaining unsupported referencing endpoints."""
         return tuple(edge for edge in self.edges if edge.target.key == key)
 
-    def note_fingerprint(self, key: ComponentKey, paths: Mapping[ComponentKey, str]) -> str:
+    def note_fingerprint(self, key: ComponentKey, paths: Mapping[ComponentKey, str] | _FingerprintPaths) -> str:
         """Hash incident edges, coverage and explicit managed-note locations.
 
         :param key: Supported identity whose candidate may need invalidation.
@@ -230,22 +267,19 @@ class DependencyGraph:
         """
         if not isinstance(key, ComponentKey) or key.workspace_id != self.binding.workspace_id:
             raise ConflictError('Graph fingerprint identity belongs to another workspace.')
-        checked: dict[ComponentKey, str] = {}
-        portable: set[str] = set()
-        for endpoint, path in paths.items():
-            if not isinstance(endpoint, ComponentKey) or endpoint.workspace_id != self.binding.workspace_id:
-                raise ConflictError('Managed graph location belongs to another workspace.')
-            normalized = relative_path(path)
-            location = unicodedata.normalize('NFC', normalized).casefold()
-            if location in portable:
-                raise ConflictError('Duplicate portable managed graph location.')
-            portable.add(location)
-            checked[endpoint] = normalized
+        if type(paths) is _FingerprintPaths:
+            checked = (
+                paths.checked
+                if paths.workspace_id == self.binding.workspace_id
+                else _checked_locations(paths.source, self.binding.workspace_id)
+            )
+        else:
+            checked = _checked_locations(paths, self.binding.workspace_id)
         incident = tuple(edge for edge in self.edges if key in (edge.source.key, edge.target.key))
         relevant = {key} | {
             endpoint.key for edge in incident for endpoint in (edge.source, edge.target) if endpoint.key is not None
         }
-        locations = {endpoint: path for endpoint, path in checked.items() if endpoint in relevant}
+        locations = {endpoint: checked[endpoint] for endpoint in relevant if endpoint in checked}
         # Keep the frozen Relationship and graph_fingerprint contracts unchanged.
         projected = []
         for edge in incident:

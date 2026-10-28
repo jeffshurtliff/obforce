@@ -4,7 +4,7 @@
 :Synopsis:          Verifies deterministic candidate contracts with synthetic metadata only
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     26 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -67,6 +67,97 @@ def render(example, **kwargs):
 def properties(text):
     raw = text.split('---\n', 2)[1]
     return {json.loads(key): json.loads(value) for key, value in (line.split(': ', 1) for line in raw.splitlines())}
+
+
+def test_batch_paths_preserve_bytes_hashes_and_snapshot_caller_mutation(example):
+    from obforce.renderer.notes import _BatchPaths
+
+    component, coverage, graph = example
+    paths = note_paths([component])
+    batch = _BatchPaths(paths, component.binding.workspace_id)
+    before = render_new_note(component, coverage, graph, identity=IDENTITY, managed_paths=paths)
+    assert render_new_note(component, coverage, graph, identity=IDENTITY, managed_paths=batch) == before
+    paths[component.key] = 'Moved/DemoService.md'
+    assert render_new_note(component, coverage, graph, identity=IDENTITY, managed_paths=batch) == before
+    moved = render_new_note(component, coverage, graph, identity=IDENTITY, managed_paths=paths)
+    assert moved.path != before.path and moved.generated.graph_hash != before.generated.graph_hash
+    with pytest.raises(TypeError):
+        batch.source[component.key] = 'Changed.md'
+    with pytest.raises(AttributeError):
+        batch.source = paths
+
+
+@pytest.mark.parametrize('defect', ['case', 'namespace', 'parent', 'reserved', 'workspace', 'key', 'component'])
+def test_batch_paths_preserve_validation_and_combined_error_precedence(example, defect):
+    from obforce.renderer.notes import _BatchPaths
+
+    component, coverage, graph = example
+    other = replace(component.key, full_name='Other')
+    paths = {component.key: 'Classes/A.md', other: 'Classes/B.md'}
+    if defect == 'case':
+        paths[other] = 'classes/a.MD'
+    elif defect == 'namespace':
+        paths = {component.key: 'Classes/ns/A.md', other: 'Classes/NS/B.md'}
+    elif defect == 'parent':
+        paths[other] = 'Classes/A.md/B.md'
+    elif defect == 'reserved':
+        paths[other] = 'Classes/CON.md'
+    elif defect == 'workspace':
+        paths[replace(other, workspace_id='other')] = paths.pop(other)
+    elif defect == 'key':
+        paths['invalid-key'] = paths.pop(other)
+    else:
+        # Component/scope errors must still precede a simultaneous bad path map.
+        component = replace(component, binding=SourceBinding('fictional', 'live', '00D000000000001EAA'))
+        paths[other] = 'classes/a.MD'
+    batch = _BatchPaths(paths, coverage.binding.workspace_id)
+    outcomes = []
+    for mapping in (paths, batch, batch):
+        with pytest.raises((ModelError, ConflictError, ConfigError)) as error:
+            render_generated(component, coverage, graph, identity=IDENTITY, managed_paths=mapping)
+        outcomes.append((type(error.value), str(error.value)))
+    assert outcomes[0] == outcomes[1] == outcomes[2]
+
+
+def test_evidence_graph_validation_is_fresh_after_each_independent_pass(example, monkeypatch):
+    from obforce.graph import dependencies
+    from obforce.models import NoteState
+    from obforce.sync.evidence import RefreshEvidence
+    from obforce.sync.notes import parse_note
+    from obforce.sync.state import SavedNote
+
+    component, coverage, graph = example
+    candidate = render(example)
+    parsed = parse_note(candidate.text.encode())
+    generated = candidate.generated
+    note = NoteState(
+        IDENTITY,
+        component.binding,
+        component.key,
+        candidate.path,
+        generated.source_hash,
+        generated.graph_hash,
+        generated.render_hash,
+        parsed.generated_properties,
+        parsed.region_hash,
+    )
+    saved = SavedNote(note, parsed.region)
+    retained = RefreshEvidence((component,), graph)
+    calls = []
+    original = dependencies._checked_locations
+
+    def checked(paths, workspace):
+        calls.append(dict(paths))
+        return original(paths, workspace)
+
+    monkeypatch.setattr(dependencies, '_checked_locations', checked)
+    retained.validate(coverage, (saved,))
+    retained.validate(coverage, (saved,))
+    assert len(calls) == 2
+    moved = replace(saved, note=replace(note, path='Moved/DemoService.md'))
+    with pytest.raises(ConflictError, match='Retained graph differs'):
+        retained.validate(coverage, (moved,))
+    assert len(calls) == 3 and calls[-1][component.key] == moved.note.path
 
 
 def test_deterministic_snapshot_no_artifacts(example, tmp_path, monkeypatch):

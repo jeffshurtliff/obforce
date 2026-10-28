@@ -88,10 +88,13 @@ passed all 12 cells and 24 independent installs: Linux 1555 passed each, macOS
 [Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Failed run `40427329142` and every earlier failure/skip remain historical.
 Optional native Obsidian preview remains unavailable; Windows sf stays refused.
-Thread 15 reached an initial hosted run at merge `ae44a2c`: eight Linux/macOS
-cells passed; Windows failed or was cancelled. The test-ID/CI-supervision
-correction remains local pending separately authorized exact-commit hosted
-verification and acceptance; #15 stays open.
+Thread 15's correction at merge `08f67b6a` ran as `40603283983`, attempt 1:
+ten cells passed all required gates and twenty independent installs; Windows
+3.12/3.13 reached the unchanged 45-minute test deadline with incomplete captures
+and downstream packaging skipped. #15 remains open. Bounded per-case/duration
+diagnostics and the maintainer-approved immutable batch path optimization are
+local candidates pending separately authorized exact-commit hosted verification.
+Issue #21's narrow profiling work has started without becoming a prerequisite.
 Threads 16–17 and enhancements #18/#19 remain NOT STARTED. See
 [qualification boundaries and reproduction](docs/QUALIFICATION.md).
 
@@ -134,6 +137,8 @@ exclusive external logs, 2 MiB raw/console budgets, 4 KiB diagnostic lines and
 5-minute collection / 45-minute test deadlines. Overflow is a failed incomplete
 run, never a truncated pass. Collection rejects node IDs over 512 UTF-8 bytes;
 use short descriptive IDs for large parameter values without shrinking fixtures.
+CI prints bounded case IDs and the slowest 25 setup/call/teardown durations; a
+timeout also exposes any bounded unfinished child line without implying a result.
 Default pytest diagnostics use short tracebacks, omit captured-output dumps and
 stop after five failure reports. Matrix fail-fast, workflow concurrency and outer
 step/job deadlines limit redundant work. Cancelled/unexecuted cells remain gaps.

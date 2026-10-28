@@ -4,7 +4,7 @@
 :Synopsis:          Runs CI pytest with finite time, capture and diagnostic-line budgets
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     27 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -188,6 +188,15 @@ def _run(command: list[str], log: Path, *, seconds: float, output_bytes: int = O
                 cleaned = False
             else:
                 process.stdout.close()
+        # Verbose pytest flushes the next node ID before running it, without a
+        # newline until its result. Keep that bounded unfinished line visible
+        # after a deadline too; it is diagnostic output, never a completed test.
+        if not complete and pending and len(pending) <= line_bytes:
+            print('CI pytest: unfinished child output follows; no completed result implied.', flush=True)
+            try:
+                emit(bytes(pending))
+            except _OutputLimit:
+                pass  # The existing failed outcome and both output ceilings remain.
         if not cleaned:
             if complete:
                 reason = 'cleanup_unconfirmed'
@@ -213,12 +222,14 @@ def main() -> int:
     args = parser.parse_args()
     if not args.log.is_absolute() or not args.log.parent.is_dir():
         parser.error('Select an absolute log path with an existing parent outside the checkout')
-    command = [sys.executable, '-m', 'pytest', '-q', '-ra', '--tb=short', '--show-capture=no', '--maxfail=5', '--color=no']
+    command = [sys.executable, '-m', 'pytest', '-ra', '--tb=short', '--show-capture=no', '--maxfail=5', '--color=no']
     if args.collect_only:
-        command.extend(['--collect-only', '-q'])
+        command.extend(['--collect-only', '-qq'])
     else:
         command.extend(
             [
+                '-v',
+                '--durations=25',
                 '--cov=obforce',
                 '--cov-report=term-missing',
                 '--cov-config=' + str(Path(__file__).resolve().parents[1] / 'pyproject.toml'),

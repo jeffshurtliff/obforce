@@ -4,7 +4,7 @@
 :Synopsis:          Verifies directed graph preservation and reciprocal invalidation offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     19 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from dataclasses import replace
@@ -64,6 +64,49 @@ def test_outgoing_incoming_and_both_endpoint_invalidation():
     removed = refresh_graph(graph(), after)
     assert removed.edges == ()
     assert removed.note_fingerprint(B.key, PATHS) == before.note_fingerprint(B.key, PATHS)
+
+
+def test_batch_graph_paths_validate_once_and_preserve_incident_hashes(monkeypatch):
+    from obforce.graph import dependencies
+
+    snapshot = graph((edge(), edge(B, C), edge(C, A)))
+    expected = {key: snapshot.note_fingerprint(key, PATHS) for key in PATHS}
+    source = dict(PATHS)
+    prepared = dependencies._FingerprintPaths(source, BINDING.workspace_id)
+    calls = []
+    original = dependencies._checked_locations
+
+    def checked(paths, workspace):
+        calls.append(dict(paths))
+        return original(paths, workspace)
+
+    monkeypatch.setattr(dependencies, '_checked_locations', checked)
+    assert {key: snapshot.note_fingerprint(key, prepared) for key in PATHS} == expected
+    assert len(calls) == 1
+    source[B.key] = 'Moved/Helper.md'
+    assert snapshot.note_fingerprint(A.key, prepared) == expected[A.key]
+    assert snapshot.note_fingerprint(A.key, dependencies._FingerprintPaths(source, BINDING.workspace_id)) != expected[A.key]
+    assert len(calls) == 2
+    with pytest.raises(TypeError):
+        prepared.source[A.key] = 'Changed.md'
+
+
+def test_batch_graph_paths_keep_unrelated_invalid_locations_and_workspace_guards():
+    from obforce.graph.dependencies import _FingerprintPaths
+
+    snapshot = graph((edge(),))
+    invalid = dict(PATHS)
+    invalid[C.key] = PATHS[A.key].swapcase()
+    prepared = _FingerprintPaths(invalid, BINDING.workspace_id)
+    for mapping in (invalid, prepared, prepared):
+        with pytest.raises(ConflictError, match='Duplicate portable'):
+            snapshot.note_fingerprint(A.key, mapping)
+    with pytest.raises(ConflictError, match='another workspace'):
+        snapshot.note_fingerprint(replace(A.key, workspace_id='other'), prepared)
+    # A snapshot made for another workspace cannot reuse its checked result.
+    source = {replace(A.key, workspace_id='other'): PATHS[A.key]}
+    with pytest.raises(ConflictError, match='another workspace'):
+        snapshot.note_fingerprint(A.key, _FingerprintPaths(source, 'other'))
 
 
 def test_duplicate_reordered_self_and_cycle_evidence():

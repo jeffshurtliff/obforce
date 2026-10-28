@@ -4,7 +4,7 @@
 :Synopsis:          Plans complete bounded read-only changes without publication
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     26 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ from obforce.models import (
     validate_identities,
 )
 from obforce.renderer.dashboards import dashboard_path, render_dashboard
-from obforce.renderer.notes import _bounded, _paths, note_paths, render_generated, render_new_note
+from obforce.renderer.notes import _BatchPaths, _bounded, _paths, note_paths, render_generated, render_new_note
 from obforce.renderer.templates import TemplateAsset
 from obforce.sync.evidence import InventoryScope, RefreshEvidence
 from obforce.sync.notes import parse_note, patch_note
@@ -311,6 +311,7 @@ def _actions(
     actions, total = [], 0
     moved = {change.key: change.old_path for change in result.path_changes}
     absence = _complete_absence(coverage, result, comparable)
+    batch_paths = _BatchPaths(paths, coverage.binding.workspace_id)
     for key in sorted(components, key=lambda item: item.token):
         component, prior = components[key], existing.get(key)
         identity = (
@@ -330,7 +331,7 @@ def _actions(
                 coverage,
                 graph,
                 identity=identity,
-                managed_paths=paths,
+                managed_paths=batch_paths,
                 layout=layout,
                 options=options,
                 generated_template=generated_template,
@@ -357,7 +358,7 @@ def _actions(
                 coverage,
                 graph,
                 identity=identity,
-                managed_paths=paths,
+                managed_paths=batch_paths,
                 layout=layout,
                 options=options,
                 template=generated_template,

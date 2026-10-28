@@ -1,0 +1,155 @@
+{
+  "scope": "Approved immutable per-batch path validation; synthetic offline 1000-class publication refusal, preview and actual build; no graph edges",
+  "environment": {
+    "system": "macOS 27.0.1",
+    "architecture": "ARM64",
+    "filesystem": "APFS",
+    "python": "3.12.7",
+    "pytest": "9.1.1",
+    "pytest_cov": "7.1.0",
+    "coverage": "7.17.0"
+  },
+  "measurement": "cProfile function calls and accumulated elapsed times with coverage; cumulative times overlap; no RSS measurement",
+  "limitations": [
+    "Baseline deliberately interrupted; no complete baseline pass or timing ratio",
+    "Baseline cProfile CLI consumed pytest SystemExit; outer exit 0 is not a pytest pass",
+    "Initial profiling and exploratory validation shared default coverage path; final validation uses separate files",
+    "Concurrent host load and instrumentation affect timings; not native Windows timeout attribution or throughput evidence"
+  ],
+  "profiles": {
+    "before": {
+      "status": "deliberately interrupted; pytest 1 failed / KeyboardInterrupt",
+      "pstats_sha256": "b312709f1352bde52637ffb74c84929c10b281895772ba89c24b503caeaa437f",
+      "pstats_bytes": 769343,
+      "total_calls": 1963370495,
+      "accumulated_seconds": 597.9424436490016,
+      "functions": [
+        {
+          "file": "src/obforce/config.py",
+          "name": "relative_path",
+          "calls": 4773121,
+          "self_seconds": 25.789716318,
+          "cumulative_seconds": 214.638622147
+        },
+        {
+          "file": "src/obforce/graph/dependencies.py",
+          "name": "note_fingerprint",
+          "calls": 2871,
+          "self_seconds": 4.650484691,
+          "cumulative_seconds": 133.91015198600002
+        },
+        {
+          "file": "src/obforce/renderer/notes.py",
+          "name": "_paths",
+          "calls": 1881,
+          "self_seconds": 13.126747706000002,
+          "cumulative_seconds": 294.575425468
+        },
+        {
+          "file": "src/obforce/renderer/notes.py",
+          "name": "render_generated",
+          "calls": 1872,
+          "self_seconds": 0.195295673,
+          "cumulative_seconds": 387.43296103800003
+        },
+        {
+          "file": "src/obforce/renderer/notes.py",
+          "name": "render_new_note",
+          "calls": 1872,
+          "self_seconds": 0.065854153,
+          "cumulative_seconds": 591.4639562010001
+        },
+        {
+          "file": "src/obforce/sync/evidence.py",
+          "name": "validate",
+          "calls": 3,
+          "self_seconds": 0.031673239,
+          "cumulative_seconds": 46.750932666000004
+        },
+        {
+          "file": "src/obforce/sync/planner.py",
+          "name": "plan_changes",
+          "calls": 2,
+          "self_seconds": 0.002791645,
+          "cumulative_seconds": 487.504212417
+        }
+      ]
+    },
+    "after": {
+      "status": "pytest 1 passed in 78.90s; complete capture and cleanup; test call 78.06s",
+      "pstats_sha256": "94b7db81859e597d78b9d9b5a9bf1d6271e7bc1a33ea8902d73c88f09ddbb75e",
+      "pstats_bytes": 646506,
+      "total_calls": 246369792,
+      "accumulated_seconds": 78.90113763200004,
+      "functions": [
+        {
+          "file": "src/obforce/config.py",
+          "name": "relative_path",
+          "calls": 44033,
+          "self_seconds": 0.280379471,
+          "cumulative_seconds": 2.1038753370000003
+        },
+        {
+          "file": "src/obforce/graph/dependencies.py",
+          "name": "_checked_locations",
+          "calls": 4,
+          "self_seconds": 0.006440337,
+          "cumulative_seconds": 0.207134958
+        },
+        {
+          "file": "src/obforce/graph/dependencies.py",
+          "name": "note_fingerprint",
+          "calls": 4000,
+          "self_seconds": 0.037327696,
+          "cumulative_seconds": 0.9753260300000001
+        },
+        {
+          "file": "src/obforce/renderer/notes.py",
+          "name": "_paths",
+          "calls": 2014,
+          "self_seconds": 0.09836958200000001,
+          "cumulative_seconds": 2.077445666
+        },
+        {
+          "file": "src/obforce/renderer/notes.py",
+          "name": "render_generated",
+          "calls": 2000,
+          "self_seconds": 0.128295183,
+          "cumulative_seconds": 7.6827179260000005
+        },
+        {
+          "file": "src/obforce/renderer/notes.py",
+          "name": "render_new_note",
+          "calls": 2000,
+          "self_seconds": 0.036224844,
+          "cumulative_seconds": 9.355149109000001
+        },
+        {
+          "file": "src/obforce/sync/evidence.py",
+          "name": "validate",
+          "calls": 6,
+          "self_seconds": 0.018964199,
+          "cumulative_seconds": 0.9557245830000001
+        },
+        {
+          "file": "src/obforce/sync/planner.py",
+          "name": "plan_changes",
+          "calls": 2,
+          "self_seconds": 0.005595592,
+          "cumulative_seconds": 73.00514441600001
+        }
+      ]
+    }
+  },
+  "complete_profile_pytest_arguments": [
+    "-q",
+    "tests/integration/test_qualification.py::test_thousand_class_publication_refuses_without_setup",
+    "--cov=obforce",
+    "--cov-report=term",
+    "--cov-config=pyproject.toml",
+    "--durations=5",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "complete_profile_driver": "Profile.runcall(pytest.main, arguments); finally dump_stats; SystemExit(status), supervised with 600-second deadline"
+}

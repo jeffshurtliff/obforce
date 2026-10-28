@@ -1,13 +1,12 @@
 # Thread 15 qualification record
 
 Thread 15 / [#15](https://github.com/jeffshurtliff/obforce/issues/15) only, authorized
-27 October 2026. Initial implementation was delivered by the maintainer at
-merge `ae44a2c`; eight hosted Linux/macOS cells passed and Windows failed or
-was cancelled. The test-ID/CI-supervision correction is a local candidate pending
-separately authorized delivery/exact-commit hosted verification and acceptance.
-Earlier local handoffs below remain historical; the correction record at the end
-is current. Threads 16–17 and
-enhancements #18/#19 are **NOT STARTED**. No release or platform provisioning.
+27 October 2026, with a scoped runtime correction approved on 28 October.
+Current status: ten cells passed in run `40603283983`; Windows 3.12/3.13 timed
+out, so #15 remains open. The approved immutable batch path optimization is
+locally verified below; new exact-commit hosted verification and acceptance are
+pending. Earlier dated handoffs remain historical. Threads 16–17 and enhancements
+#18/#19 remain **NOT STARTED**. No release or platform provisioning.
 
 ## Prerequisite and scope
 
@@ -601,3 +600,236 @@ labels, maintainer assignee, milestone 1 and native closed #14 → open #15 → 
 Final correction review: five changed Markdown files, 99 local links/anchors,
 zero missing targets; metadata/lock, Ruff lint/format and whitespace rechecked.
 All 11 changed/new files remain unstaged/uncommitted; no staged or unrelated file.
+
+
+## Bounded timeout review and approved runtime correction — 28 October 2026
+
+### Acceptance decision and exact hosted evidence
+
+Thread 15 is **not ready for acceptance**. Read all 12 complete command logs and
+step conclusions in [40603283983, attempt 1](https://github.com/jeffshurtliff/obforce/actions/runs/40603283983),
+exact merge `08f67b6a0ca62fdd8d38afb541e6ae17e6eba7a0`, implementation `9ca7450`.
+Ten cells passed metadata/lock, Ruff lint/format, Bandit, full pytest coverage,
+fresh build, strict Twine, exact 36/35 archives, both independent installs and
+whitespace: **20 independent installs**. Their actual setup interpreters follow.
+These establish their own results, not the two incomplete cells or later code.
+
+| Hosted cell / actual Python | Job | pytest result | Seconds |
+| --- | --- | --- | ---: |
+| Linux 3.12.15 | 122536447734 | 1595 passed, 1 skipped | 1823.61 |
+| Linux 3.13.16 | 122536447333 | 1595 passed, 1 skipped | 1834.78 |
+| Linux 3.14.8 | 122536447692 | 1595 passed, 1 skipped | 339.34 |
+| Linux 3.15.2 | 122536447612 | 1595 passed, 1 skipped | 556.94 |
+| macOS 3.12.10 | 122536447774 | 1593 passed, 3 skipped | 1091.74 |
+| macOS 3.13.16 | 122536447765 | 1593 passed, 3 skipped | 1045.00 |
+| macOS 3.14.8 | 122536447728 | 1593 passed, 3 skipped | 461.42 |
+| macOS 3.15.2 | 122536447641 | 1593 passed, 3 skipped | 455.50 |
+| Windows 3.14.9 | 122536447769 | 1574 passed, 22 skipped | 1983.74 |
+| Windows 3.15.1 | 122536447682 | 1574 passed, 22 skipped | 1863.31 |
+| Windows 3.12.10 | 122536447622 | Incomplete: wall_time_limit | 2700 budget |
+| Windows 3.13.16 | 122536447788 | Incomplete: wall_time_limit | 2700 budget |
+
+Both incomplete jobs passed collection and all preceding gates, then reported
+`exit=1; captured_bytes=1713; capture_complete=false; cleanup_confirmed=true`.
+Build/Twine/archive/install/whitespace gates skipped. No completed pytest count
+or coverage is inferred from 94%. Linux/macOS successful coverage was 92%; the
+two successful Windows cells measured 91%. Windows skips include existing POSIX
+collector/FIFO/symlink/mode-denial and filename fixture limits; skips do not
+qualify Windows sf, ACLs or unsupported native operations. The native junction
+case was not skipped in those successful Windows cells. No filesystem name is
+inferred from runner labels. The oversized-ID error did not recur in these logs;
+bounded output/deadline/cleanup safeguards behaved as designed.
+
+The [acceptance blocker receipt](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6470765238)
+and [#21 narrow profiling start](https://github.com/jeffshurtliff/obforce/issues/21#issuecomment-6470765626)
+retain this decision. #21 is an existing follow-up, not a new native prerequisite,
+acceptance gate, duplicate issue or milestone. The maintainer explicitly approved
+the focused immutable batch path optimization on 28 October; broader acquisition,
+adjacency indexing, early refusal and test-harness changes remain proposals.
+
+### Implemented scope and preservation
+
+- Bounded per-case pytest output and `--durations=25` identify slow completed
+  setup/call/teardown phases. A bounded unfinished child line is emitted on
+  deadline without implying a completed result or exact internal phase.
+- A private renderer batch snapshots caller paths into an immutable mapping.
+  Renderer and graph checked views are lazy at their original call sites,
+  preserving error precedence. Graph fingerprinting selects relevant locations
+  directly instead of rescanning every location after validation.
+- Each planning/replanning pass and each independent evidence validation creates
+  fresh snapshots. No global cache, filesystem-observation cache, reuse of old
+  authorization, skipped guard or weakened independent integrity check.
+- Ordinary standalone mapping inputs still validate fully. New regressions check
+  exact candidate equality/bytes/hashes, caller mutation isolation, invalid
+  unrelated paths, case/namespace/parent/reserved collisions, workspace/key
+  mismatches, combined error precedence, and fresh moved-note evidence checks.
+- All schemas/renderer/config versions, 128-file publication ceiling, complete
+  1000-class fixtures, original preview and actual refusal, public commands,
+  source/org/scope/identity/coverage/human-content and transaction/recovery
+  contracts remain unchanged. No new dependency or packaged file. No earlier
+  refusal, batch splitting, deadline increase, matrix reduction or automatic retry.
+
+### Profiling evidence and retained local failures
+
+The [public-safe profile summary](evidence/thread15-path-profile-20261028.json)
+records a synthetic offline 1000-class, zero-edge publication refusal workload,
+including preview and actual build; it is distinct from the 10000-edge benchmark.
+Raw pstats/logs remain private because they contain local source paths.
+
+The baseline Python 3.12.7 cProfile/coverage attempt was deliberately interrupted:
+pytest **1 failed / KeyboardInterrupt, 597.33s**; its first interruption aborted
+an in-progress build and a second interrupted coverage collection. No complete
+baseline pass or coverage is claimed. The stdlib `cProfile -m` CLI consumed
+pytest's SystemExit and returned outer 0; that outer status is not a test pass.
+The post-change harness explicitly propagates `pytest.main`'s status and uses a
+600-second child deadline, separate coverage/fixture roots and bounded capture.
+It completed **1 passed in 78.90s**, test call 78.06s, full capture/cleanup.
+
+| Instrumented function work | Interrupted baseline | Complete optimized workload |
+| --- | ---: | ---: |
+| Rendered candidates | 1872 | 2000 |
+| `relative_path` calls | 4773121 | 44033 |
+| Renderer `_paths` dispatch calls | 1881 (full validations) | 2014 (mostly cached dispatch) |
+| Graph fingerprint calls | 2871 | 4000 |
+| Graph complete-map validator calls | Previously inline | 4 fresh batch/boundary validations |
+
+The incomplete baseline accumulated 1,963,370,495 profiled calls versus
+246,369,792 in the complete optimized workload. Baseline renderer path validation
+had 294.575425 cumulative seconds; optimized dispatch 2.077446s. Cumulative times
+overlap and are not additive or CPU measurements. Instrumentation and concurrent
+host load affect elapsed times. No timing ratio, throughput promise, complete
+before/after baseline, or exact native Windows timeout cause is inferred.
+
+Additional exploratory observations remain explicit:
+
+- The repository Brain brief could not open its lock in the sandbox; recall
+  returned with degraded vitality recording. Code/impact retrieval succeeded but
+  correctly identified a committed-tree index; current source/tests govern.
+- The initial scoped native process lookup was unavailable in the sandbox; a
+  privileged lookup identified only the synthetic profiler for interruption.
+  A later guarded stop found it already exited and sent no kill signal.
+- One new diagnostic command used a relative log path and was refused with exit
+  2 before pytest; its output remains. A subsequent absolute-path run passed.
+- The initial profile and exploratory full suite shared default `.coverage`.
+  The exploratory full suite passed 1594/3 in 220.77s, but its coverage is not
+  accepted because isolation was incomplete. The clean repeat used explicit
+  `COVERAGE_FILE`: **1594/3, 222.32s, 92%**, complete raw 181205 bytes. Its
+  unchanged 1000-class test call was 85.71s. Optimized 3.14 call: 14.86s; these
+  individual observations have differing host load, not a service guarantee.
+- Focused new diagnostic tests: **15 passed, 3.96s**. Initial new batch tests
+  failed **5/1 in 0.19s**, stopping at maxfail 5 because a test used `name` instead
+  of `full_name`; the fixture was corrected. No production behavior changed for
+  that test error. Final renderer/graph/planner/state subset: **457/2, 5.46s**.
+- A parallel Python 3.13 independent-artifact attempt returned recovery_required
+  during the transaction probe. Installer ancestry was shared and mutable;
+  the precise failed stamp was not captured. Do not assign it an inferred cause.
+  The failed log is retained. Separate stable installer parents were prepared
+  before new independent wheel/sdist checks on both 3.12 and 3.13. The original
+  parallel 3.12 check passed but also used that shared parent; it remains
+  exploratory and is excluded from the final isolated six-install selection.
+  No guard or retry mechanism changed; both earlier outcomes remain separate evidence.
+
+### Final installed-candidate local validation
+
+Native local environment remains macOS 27.0.1 (26A434), ARM64, observed APFS;
+Poetry 2.4.2, pytest 9.1.1, pytest-cov 7.1.0 and coverage 7.17.0. Runtime versions
+remain Click 8.5.0, Jinja2 3.1.6, MarkupSafe 3.0.4, ruamel.yaml 0.19.1 and
+defusedxml 0.7.1. Candidate wheels were installed without dependency changes in
+existing external test environments; tests/application/fixtures were outside the
+checkout under stable ancestry with separate coverage databases and all three
+temp variables set. Application runtime network/process guards remained active.
+
+| Actual local Python | Full suite | Seconds | Statement/branch coverage | 1000-class call |
+| --- | --- | ---: | ---: | ---: |
+| 3.12.7 | 1605 passed, 3 skipped | 416.08 | 92% | 40.61s |
+| 3.13.15 | 1605 passed, 3 skipped | 382.80 | 92% | 39.31s |
+| 3.14.7 | 1605 passed, 3 skipped | 179.44 | 92% | 14.86s |
+
+All three supervisor commands exited 0 with complete capture and confirmed
+cleanup; 4737 statements, 2074 branches. Raw captures respectively
+182858/182591/182816 bytes, console 198130/197845/198088; longest raw line 754
+bytes. Three skips per run retain case/NFC filesystem representation and locally
+unavailable native Windows junction execution. No skip is qualification.
+
+Strict metadata/lock, Ruff lint/format, Bandit (zero findings, five existing
+suppressions), whitespace, fresh build and strict Twine passed. Exact unchanged
+**36-wheel / 35-sdist** source/resource/license/metadata allowlists and **six
+fresh independent installs** passed across 3.12.7/3.13.15/3.14.7, including actual
+console/module entry points, relative/absolute space paths, bounded/private
+invalid and unreadable inputs, installed assets, init/build/sync/recover,
+within-bound lifecycle, over-bound write-free refusal, lower-level guards and no
+application cwd artifacts. Setup downloads remain separate from runtime.
+
+Wheel SHA-256 `fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda`;
+sdist `78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8`.
+
+### Complete repeated synthetic scale observation
+
+The [complete repeated 16-record JSON](evidence/thread15-scale-macos-py314-20261028.jsonl)
+retains the same seed 15, 1000 classes/10000 explicit directed edges and all seven
+stages, native Python 3.14.7/environment versions and active runtime audit guards.
+The developer-only controller bounded this measurement to 900 seconds without
+changing any application or CI limit. It exited 0, full 2976-byte raw capture,
+confirmed cleanup. The direct rendering phase retains ordinary mapping inputs;
+it still performs full per-call validation and is not a batch-cache speed test.
+
+| Stage | Seconds | Peak traced Python allocation bytes |
+| --- | ---: | ---: |
+| Offline collection/normalization | 1.932047 | 8014708 |
+| Mocked live collection/normalization | 0.288214 | 3918789 |
+| Explicit graph | 1.637072 | 8434046 |
+| All candidate rendering | 153.065636 | 5605017 |
+| Large persistent planning attempt | 48.836131 | 50159647 |
+| Separate 32-class/320-edge planning | 1.369052 | 11913047 |
+| Mocked fixed relationship budget | 0.070892 | 6513871 |
+
+All 1000 candidates still produce **6855000 bytes**, exact unchanged SHA-256
+`5d6f8dcca8e105a43ff3a32fae1adf48b44eb380d181af8b94c90d2e4768a7a5`.
+The large plan still refuses ConflictError/state structural bound, outcome 3,
+without creating the vault. Separate valid planning remains **34 changed files /
+506545 state bytes**; public lifecycle fixtures still validate whole-batch
+127/1000-note refusals and a separate 12-note publication. No split batches.
+Inventory/audit calls remain identity 1/inventory 6/audit 5; relationship calls
+remain 101, zero returned edges and partial coverage. No new acquisition form.
+
+Maximum **traced Python allocation** peak 50159647 bytes is not RSS. The separate
+whole-process `resource.ru_maxrss` high-water is **137265152 bytes on macOS**,
+including setup/tracing; no per-stage RSS is claimed. Prior JSON/results/failures
+remain intact. Host load and tracing preclude throughput/service-level promises.
+
+### Current review and next step
+
+All approved local changes remain unstaged/uncommitted on existing `main` at
+maintainer HEAD `639a53823c23d9a709b578111e6e685fa927cc97`; no branch, commit,
+push, PR, merge, CI rerun/cancellation, issue closure or publication by this
+session. Maintainer Entire/ignore/instruction changes are preserved. The scoped
+#21 work is in progress, not accepted or a new prerequisite/milestone.
+
+**Pending:** separately authorized delivery and exact-commit verification of all
+claimed hosted cells, especially Windows 3.12/3.13, including their downstream
+package/install gates, then maintainer acceptance. The precise native timeout
+hotspot remains unmeasured until per-case/duration evidence is delivered there.
+No new native Windows/Linux/Python 3.15 result for this uncommitted runtime change,
+Windows sf/ACL/power-loss/hostile-race/native Obsidian or new filesystem claim.
+Every historical failure/skip/unavailable and uncaptured cause remains, including
+40575562800, 40427329142, 40235515146, original template conflict 3 and Thread 12's
+2-failed/1371-passed/2-skipped. Later passes do not explain those failures.
+**#15 remains OPEN. Thread 16 is next only after acceptance, NOT STARTED.**
+Thread 17 and enhancements #18/#19 remain **NOT STARTED**.
+
+
+Tracking receipt: [#15 runtime handoff](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6471628796)
+and [#21 scoped handoff](https://github.com/jeffshurtliff/obforce/issues/21#issuecomment-6471629396)
+are posted. The bodies/checklists preserve OPEN status, original labels, #15
+assignee/milestone 1, and #21's unassigned/no-milestone state. Native closed #14
+→ open #15 → open #16 remains; #21 has no native blocked-by/blocking edges.
+Corrected hosted verification and maintainer acceptance remain unchecked.
+
+
+Final review receipt: six selected fresh independent installs are confirmed under
+quiescent installer ancestry (dedicated 3.12/3.13 repeats; earlier separate 3.14
+checks). Exploratory parallel outcomes remain excluded/separate. Six changed
+Markdown files / 131 local links and anchors / zero missing targets; both new
+public evidence files parse completely and contain no identifying local paths.
+Metadata/lock, Ruff lint/format and whitespace rechecked; all 16 changed/new files
+remain unstaged/uncommitted, with no unrelated or staged file.

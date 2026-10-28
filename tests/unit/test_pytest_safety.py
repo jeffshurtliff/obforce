@@ -4,7 +4,7 @@
 :Synopsis:          Regresses bounded pytest identifiers and CI output/time supervision offline
 :Created By:        Jeff Shurtliff
 :Last Modified:     Jeff Shurtliff (via GPT-6.1 Sol)
-:Modified Date:     27 Oct 2026
+:Modified Date:     28 Oct 2026
 """
 
 from __future__ import annotations
@@ -178,6 +178,18 @@ def test_ci_controller_never_overwrites_existing_evidence(tmp_path):
     with pytest.raises(FileExistsError):
         RUNNER['_run']([sys.executable, '-I', '-c', 'raise AssertionError("must not run")'], log, seconds=1)
     assert log.read_bytes() == b'prior evidence'
+
+
+def test_ci_controller_exposes_unfinished_test_line_after_deadline(tmp_path, capsys):
+    """Retain the last started case when verbose pytest has not finished its line."""
+    code = 'import sys,time; sys.stdout.write("test_synthetic.py::test_waiting "); sys.stdout.flush(); time.sleep(30)'
+    log = tmp_path / 'capture.log'
+    result = RUNNER['_run']([sys.executable, '-I', '-c', code], log, seconds=1)
+    output = capsys.readouterr().out
+    assert result == 1 and 'wall_time_limit' in output and 'capture_complete=false' in output
+    assert '[pytest] test_synthetic.py::test_waiting ' in output
+    assert 'no completed result implied' in output
+    assert log.read_bytes() == b'test_synthetic.py::test_waiting '
 
 
 def test_ci_controller_stops_cooperating_descendant(tmp_path, capsys):

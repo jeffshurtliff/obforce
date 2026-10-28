@@ -7,6 +7,15 @@ All notable changes to this project will be documented in this file, following
 
 ### Fixed
 
+- Approved Thread 15/#21 runtime correction: reuse immutable note-path validation
+  within each renderer/graph batch, while independently validating fresh snapshots
+  at each state/evidence/planning boundary. Preserve exact output/hashes, ordering,
+  move invalidation, errors, schemas and all filesystem/transaction guards. No
+  payload, matrix, deadline or publication-limit reduction/increase. CI adds
+  bounded case names, 25 slow durations and unfinished-line timeout diagnostics.
+  Local candidate pending new exact-commit hosted evidence; #15 remains open after
+  Windows 3.12/3.13 timeouts in run 40603283983. Threads 16–17 remain NOT STARTED.
+
 - Thread 15 Windows pytest setup/teardown failures from oversized parameter IDs
   in `PYTEST_CURRENT_TEST`, with repeated huge diagnostics. Complete boundary
   payloads now use short IDs; shared collection guards refuse oversized IDs.

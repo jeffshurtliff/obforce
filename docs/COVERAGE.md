@@ -222,4 +222,6 @@ relationship collector retains its 101-query budget and partial/unavailable
 coverage. Its per-ID probes do not collect the complete synthetic graph.
 [Qualification](QUALIFICATION.md) reports elapsed time, the exact environment,
 Python traced allocations separately from whole-process RSS, refused bounds,
-and unavailable native/hosted cells. None is a throughput or service-level promise.
+observed hosted results and remaining unavailable native checks. Thread 15's
+selected matrix passed in run `40721222520`, attempt 2; skips and unperformed
+native/live operations remain gaps. None is a throughput or service-level promise.

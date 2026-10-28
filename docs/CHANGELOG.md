@@ -13,8 +13,10 @@ All notable changes to this project will be documented in this file, following
   move invalidation, errors, schemas and all filesystem/transaction guards. No
   payload, matrix, deadline or publication-limit reduction/increase. CI adds
   bounded case names, 25 slow durations and unfinished-line timeout diagnostics.
-  Local candidate pending new exact-commit hosted evidence; #15 remains open after
-  Windows 3.12/3.13 timeouts in run 40603283983. Threads 16–17 remain NOT STARTED.
+  Accepted at implementation `3771c16` / merge `178bf98`: exact-merge run
+  `40721222520`, attempt 2, passed all 12 cells and 24 independent installs; #15
+  closed. Run 40603283983's timeouts and all earlier observations remain.
+  #21's broader optional work remains open; Threads 16–17 remain NOT STARTED.
 
 - Thread 15 Windows pytest setup/teardown failures from oversized parameter IDs
   in `PYTEST_CURRENT_TEST`, with repeated huge diagnostics. Complete boundary
@@ -22,9 +24,9 @@ All notable changes to this project will be documented in this file, following
   CI supervision fails explicitly on output/line/time overflow, preserves bounded
   incomplete evidence, stops owned children and retains nonzero exits. Short
   diagnostics, fail-fast, concurrency and outer deadlines limit runaway runs.
-  Application limits/contracts and dependencies remain unchanged. Correction is
-  locally validated only until separately authorized exact-commit hosted testing;
-  #15 stays open. Failed/cancelled runs and all earlier observations remain.
+  Application limits/contracts and dependencies remain unchanged. The correction
+  is accepted with Thread 15 after run `40721222520`, attempt 2; failed/cancelled
+  runs and all earlier observations remain separate evidence.
 
 ### Added
 
@@ -33,8 +35,9 @@ All notable changes to this project will be documented in this file, following
   stage timing/allocation metrics, actual publication refusal and native versus
   mocked/skipped/unavailable evidence. No publication limit or schema change.
   CI now reports skip reasons and runs for developer Python probe changes.
-  Local candidate only; #15 stays open for acceptance and new exact-commit hosted
-  verification remains pending. Threads 16–17 and enhancements #18/#19 are NOT STARTED.
+  Accepted with all required gates in run `40721222520`, attempt 2: Linux
+  1607 passed/1 skipped each, macOS 1605/3 each, Windows 1586/22 each; #15 closed.
+  Thread 16 is next eligible but NOT STARTED; Thread 17 and #18/#19 are NOT STARTED.
 
 - Thread 14 protected native Apex Classes Base, packaged as a bounded literal asset
   and published with notes/state through the same planner/writer/recovery protocol.

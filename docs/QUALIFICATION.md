@@ -1,12 +1,12 @@
 # Platform, failure and scale qualification
 
-Thread 15 remains open. Correction merge `08f67b6a` / run `40603283983`, attempt 1,
-passed ten cells, including Windows 3.14/3.15. Windows 3.12/3.13 reached the
-unchanged 45-minute test deadline; downstream package/install gates skipped.
-Those incomplete results prevent acceptance of the selected full matrix.
-Bounded diagnostics and a maintainer-approved immutable batch path optimization
-are local candidates pending separate delivery/exact-commit hosted verification.
-Issue #21's relevant profiling has started; it is not a new prerequisite.
+Thread 15 is **accepted and complete; #15 closed**, after exact-merge
+[run 40721222520, attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520),
+implementation `3771c16` / merge `178bf98a53f910364eb0985d201a372f3fe8cd7e`.
+All 12 selected Linux/macOS/Windows Python 3.12–3.15 cells and 24 independent
+installs passed every required gate. Historical failures/timeouts/cancellations
+and skips remain. The approved #21 path optimization is delivered/verified;
+broader optional work stays open without becoming a prerequisite.
 The accepted Thread 14 matrix remains prerequisite evidence. See the detailed
 [qualification record](../dev/THREAD_15_QUALIFICATION.md) and
 [roadmap](../dev/IMPLEMENTATION_PLAN.md).
@@ -126,7 +126,8 @@ Complete raw capture was 8730 bytes; console output 9393 bytes; longest raw line
 754 bytes. The 14 new regressions passed separately on Python 3.12.7 and 3.13.15.
 Two fresh independent Python 3.14.7 wheel/sdist installs and all standard checks
 passed. This is local evidence; the corrected native Windows/hosted matrix
-remains pending. The detailed record preserves initial failures/cancellations,
+was pending at that checkpoint; the accepted result below supersedes that status.
+The detailed record preserves initial failures/cancellations,
 simulated/mocked boundaries and all prior failed or unavailable observations.
 
 ## Bounded CI test execution
@@ -174,8 +175,9 @@ tests remain qualification gaps. Default pytest diagnostics are bounded in
 The controller terminates its owned POSIX process group or uses Windows' native
 `taskkill` for its owned pytest tree, then reaps the child. The outer Actions
 deadlines backstop unconfirmed cleanup. This is ordinary CI process management,
-not hostile-process containment or Windows sf execution. Native Windows cleanup
-and the corrected hosted matrix still require exact-commit verification. No
+not hostile-process containment or Windows sf execution. Owned-Python-tree cleanup is now observed in the accepted hosted Windows cells;
+escaped/hostile descendants remain outside that evidence. The exact hosted matrix
+is accepted as recorded below. No
 application limit, filesystem guard, schema, payload, dependency or scope changed.
 The supplied raw failure log stays private and unmodified; public tracking holds
 only reviewed synthetic summaries and evidence boundaries.
@@ -224,9 +226,9 @@ Full installed-candidate suites on observed native macOS 27.0.1 ARM64/APFS:
 Captures completed under existing budgets with confirmed cleanup. The unchanged
 case/NFC representation and locally unavailable Windows junction skips remain
 gaps. Six fresh independent wheel/sdist installs, exact 36/35 archives and all
-standard checks passed. These local results do not qualify the new runtime code
-on hosted Windows/Linux/Python 3.15. #15 remains open pending exact-commit hosted
-verification and acceptance; Threads 16–17 and #18/#19 remain NOT STARTED.
+standard checks passed. These were local results at that checkpoint; the accepted hosted result below
+subsequently qualifies the selected matrix separately. Threads 16–17 and #18/#19
+remain NOT STARTED.
 
 The [complete repeated scale JSON](../dev/evidence/thread15-scale-macos-py314-20261028.jsonl)
 retains seven stages, 1000 classes/10000 explicit edges and seed 15. All candidate
@@ -238,3 +240,28 @@ interpretation; direct rendering uses ordinary inputs and full per-call checks.
 The [detailed record](../dev/THREAD_15_QUALIFICATION.md#bounded-timeout-review-and-approved-runtime-correction--28-october-2026)
 retains the partial profiler failure, completed profile and setup/installer failures
 without assigning uncaptured causes or turning later success into earlier proof.
+
+
+## Accepted hosted matrix — 28 October 2026
+
+Merge `178bf98a53f910364eb0985d201a372f3fe8cd7e`,
+[run 40721222520, attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/attempts/2),
+passed every required command in all twelve cells and twenty-four independent
+wheel/sdist installs. Linux: **1607 passed/1 skipped** each; macOS **1605/3** each;
+Windows **1586/22** each. Linux/macOS coverage was 92%, Windows 91%. Both
+collection/test captures completed with confirmed cleanup under unchanged budgets.
+Windows 3.12/3.13 completed in 2389.33/2261.48s; no speed or future-runtime promise.
+
+Attempt 1's macOS 3.15 job was not acquired by a runner (capacity annotations);
+its log is unavailable (404), so it supplies no application execution result.
+The earlier Windows timeouts, oversized-ID failures/cancellations and all older
+observations remain in the [complete acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-15-acceptance-and-closure--28-october-2026)
+and [job/gate/hash manifest](../dev/evidence/thread15-ci-40721222520-attempt2.json).
+Later success does not explain uncaptured older causes. Native hosted synthetic
+results do not establish Windows sf/ACL, power-loss/hostile-race, atomic snapshot/
+multi-file guarantees or native Obsidian preview. No hosted filesystem is inferred
+from runner labels. All skips remain explicit gaps.
+
+#15 is accepted/closed. Thread 16 is eligible but NOT STARTED; Thread 17 and
+#18/#19 remain NOT STARTED. The approved #21 path scope is delivered/verified;
+its broader optional work remains open and outside the dependency graph.

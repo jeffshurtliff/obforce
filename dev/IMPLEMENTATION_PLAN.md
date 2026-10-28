@@ -840,8 +840,8 @@ for a truncated requested live scan. This contract adds no public commands.
 | 12 | Public initialization and initial build | 11 | D | [#12](https://github.com/jeffshurtliff/obforce/issues/12) | Accepted/closed; final f833505 / 39985255497 all 12 cells passed |
 | 13 | Public refresh and missing-component lifecycle | 12 | D | [#13](https://github.com/jeffshurtliff/obforce/issues/13) | Accepted/closed; correction b43ed64 / merge 3f5e909 / run 40346586335 all 12 cells passed |
 | 14 | Native dashboard and CLI usability | 13 | E: usable product | [#14](https://github.com/jeffshurtliff/obforce/issues/14) | Accepted/closed; correction 6d08696 / merge cdf0e68 / run 40517073513 all 12 cells passed |
-| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Windows 3.12/3.13 timed out; approved runtime correction locally verified; new hosted verification/acceptance pending; open |
-| 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Not started |
+| 15 | Platform, failure, and scale qualification | 14 | E | [#15](https://github.com/jeffshurtliff/obforce/issues/15) | Accepted and complete; #15 closed; exact-merge 40721222520 attempt 2 passed all 12 cells / 24 installs |
+| 16 | User and maintainer documentation | 15 | F: release candidate | [#16](https://github.com/jeffshurtliff/obforce/issues/16) | Eligible after #15 acceptance; NOT STARTED |
 | 17 | v0.1.0 release preparation | 16 | F | [#17](https://github.com/jeffshurtliff/obforce/issues/17) | Not started |
 
 All 17 issues are assigned to `jeffshurtliff` and associated with the
@@ -1930,12 +1930,11 @@ consistency. Report separately whether a native app preview was actually done.
 
 **Goal:** Evidence for the supported platforms and realistic local operation.
 
-**Depends on:** 14. **Status:** Initial hosted run passed eight Linux/macOS cells;
-Windows failed or was cancelled. The correction run `40603283983` passed ten
-cells, but Windows 3.12/3.13 reached the unchanged 45-minute test deadline.
-The approved immutable batch path optimization is locally verified; new exact-commit
-hosted matrix verification and acceptance remain pending.
-#15 stays open.
+**Depends on:** 14. **Status:** Accepted and complete; #15 closed after
+maintainer-authorized exact-merge verification of `178bf98`, run `40721222520`,
+attempt 2: all 12 Linux/macOS/Windows Python 3.12–3.15 cells and 24 independent
+installs passed. Historical failures/skips/unavailable results remain below.
+Thread 16 is next eligible, NOT STARTED.
 
 Thread 14 is accepted/closed. The exact
 [Thread 15 launch prompt](#copy-ready-thread-15-launch-prompt) carries its final
@@ -1989,7 +1988,10 @@ evidence are distinct; a skip is never qualification.
 
 **Goal:** An accurate, maintainable path from installation through safe refresh.
 
-**Depends on:** 15. **Status:** Not started.
+**Depends on:** 15. **Status:** Eligible after accepted/closed #15; NOT STARTED.
+
+Use the [exact Thread 16 kickoff prompt](THREAD_16_KICKOFF.md). Preparing the
+prompt and recording eligibility do not start implementation.
 
 **GitHub issue:** [#16](https://github.com/jeffshurtliff/obforce/issues/16)
 
@@ -6807,3 +6809,62 @@ Markdown files / 131 local links and anchors / zero missing targets; both new
 public evidence files parse completely and contain no identifying local paths.
 Metadata/lock, Ruff lint/format and whitespace rechecked; all 16 changed/new files
 remain unstaged/uncommitted, with no unrelated or staged file.
+
+### Thread 15 acceptance and closure — 28 October 2026
+
+Maintainer-authorized acceptance is complete: implementation
+`3771c16f133703bd76615d1af383e88d7d8dbf08` / merge
+`178bf98a53f910364eb0985d201a372f3fe8cd7e`,
+[run 40721222520, attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/attempts/2).
+All twelve exact-commit command logs and step conclusions were verified:
+**Linux 1607 passed/1 skipped each; macOS 1605/3 each; Windows 1586/22 each**.
+All 24 independent wheel/sdist installs and every required metadata/lock,
+Ruff lint/format, Bandit, bounded pytest/coverage, fresh build, strict Twine,
+exact 36/35 archive and whitespace gate passed. Linux/macOS coverage 92%,
+Windows 91%; complete capture and confirmed cleanup in every cell. Windows
+3.12/3.13 completed in 2389.33/2261.48s under the unchanged 2700-second limit.
+
+The [complete acceptance matrix and boundaries](THREAD_15_QUALIFICATION.md#final-accepted-hosted-qualification--28-october-2026)
+and [structured job/gate/hash manifest](evidence/thread15-ci-40721222520-attempt2.json)
+retain actual interpreter versions, every job, package hashes, slow-case times
+and step conclusions. Attempt 1 remains run-level failure: eleven successful
+job conclusions plus cancelled macOS 3.15 job `122932342732`, no runner/steps;
+annotations identify hosted macOS ARM64 capacity, and its log is unavailable
+(404). No application execution is inferred for that job. No agent CI rerun.
+
+Older 40603283983 Windows timeouts, 40575562800 oversized-ID failures/cancelled
+cells, 40597252222/40697576055 cancellations, 40427329142, 40235515146 and every
+older failed/skipped/unavailable observation remain. Original template conflict
+3 and Thread 12's 2-failed/1371-passed/2-skipped causes stay uncaptured; later
+passes do not explain them. Skips are not qualification; Windows sf/ACL,
+power-loss, hostile-race, atomic-snapshot/multi-file and native Obsidian-preview
+guarantees remain unestablished. Only local APFS is named as filesystem evidence;
+no hosted filesystem is inferred from runner labels.
+
+**#15 is accepted, complete and closed as completed** under the maintainer's
+conditional authorization. The approved #21 immutable path scope is delivered
+and verified; broader optional work stays open/unscheduled without a new native
+prerequisite. Existing labels, assignees, milestones and native dependency edges
+are preserved. Thread 16 is next eligible, explicitly **NOT STARTED**; use the
+[exact Thread 16 kickoff](THREAD_16_KICKOFF.md). Thread 17 and #18/#19 remain
+**NOT STARTED**. Preparing a prompt does not start implementation.
+
+This pass changes acceptance documentation/evidence only. Links/anchors, JSON,
+privacy/consistency, whitespace and Git state are verified without repeating
+application tests/builds/dependency setup for prose. Acceptance docs remain
+unstaged/uncommitted on existing main at `178bf98`; no branch/stage/commit/push/
+PR/merge/publication, real sf/Obsidian/org/vault/auth access or delegation.
+
+
+Acceptance tracking receipt: [#15 acceptance and closure](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6478886856)
+and [#21 delivered-scope update](https://github.com/jeffshurtliff/obforce/issues/21#issuecomment-6478887268)
+are posted. #15 readback is CLOSED/completed; #16 and #21 remain OPEN. #15/#16
+labels, maintainer assignees and milestone 1 are unchanged; #21 remains unassigned
+with its original labels/no milestone. Native #14 → #15 → #16 → #17 links are
+retained, with #15 now closed; #21 has no native prerequisites/dependents.
+Thread 16 remains NOT STARTED; its implementation checklist is unchanged.
+
+Final acceptance review: 10 Markdown files / 188 local links and anchors / zero
+errors; complete 12-job evidence JSON, privacy/new-file formatting and whitespace
+passed. All 11 changed/new acceptance files remain unstaged/uncommitted; no staged
+or unrelated file and no source/test/lock/workflow change in this acceptance pass.

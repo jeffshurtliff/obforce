@@ -849,9 +849,11 @@ failures/skips remain in the
 [acceptance record](../dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Optional native Obsidian preview is unavailable. Hosted synthetic results do not
 qualify Windows sf, native ACL/power-loss/hostile-race behavior, atomic snapshots
-or atomic multi-file publication. Thread 15 qualification is in progress;
-[the qualification record](../dev/THREAD_15_QUALIFICATION.md) separates candidate
-local/native/mocked checks from prerequisite hosted evidence. #15 remains open.
+or atomic multi-file publication. Thread 15 is accepted at merge `178bf98`, run
+`40721222520`, attempt 2: all twelve selected cells and twenty-four independent
+installs passed; #15 closed. [The qualification record](../dev/THREAD_15_QUALIFICATION.md)
+retains local/native/mocked/hosted distinctions, skips and historical failures.
+Thread 16 is next eligible but NOT STARTED.
 
 
 ## Thread 15 qualification limits

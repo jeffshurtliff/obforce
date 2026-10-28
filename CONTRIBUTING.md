@@ -88,13 +88,15 @@ passed all 12 cells and 24 independent installs: Linux 1555 passed each, macOS
 [Thread 14 acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
 Failed run `40427329142` and every earlier failure/skip remain historical.
 Optional native Obsidian preview remains unavailable; Windows sf stays refused.
-Thread 15's correction at merge `08f67b6a` ran as `40603283983`, attempt 1:
-ten cells passed all required gates and twenty independent installs; Windows
-3.12/3.13 reached the unchanged 45-minute test deadline with incomplete captures
-and downstream packaging skipped. #15 remains open. Bounded per-case/duration
-diagnostics and the maintainer-approved immutable batch path optimization are
-local candidates pending separately authorized exact-commit hosted verification.
-Issue #21's narrow profiling work has started without becoming a prerequisite.
+Thread 15 is accepted and #15 closed at implementation `3771c16` / merge
+`178bf98a53f910364eb0985d201a372f3fe8cd7e`. Exact-merge run `40721222520`,
+attempt 2, passed all 12 cells and 24 independent wheel/sdist installs: Linux
+1607/1 each, macOS 1605/3 each, Windows 1586/22 each (passed/skipped). Every
+required gate passed. Attempt 1's unacquired macOS 3.15 job and prior Windows
+timeouts/oversized-ID failures remain historical evidence. #21's approved narrow
+optimization is delivered/verified; broader optional work remains open. See the
+[acceptance record](dev/IMPLEMENTATION_PLAN.md#thread-15-acceptance-and-closure--28-october-2026)
+and [exact Thread 16 kickoff](dev/THREAD_16_KICKOFF.md).
 Threads 16–17 and enhancements #18/#19 remain NOT STARTED. See
 [qualification boundaries and reproduction](docs/QUALIFICATION.md).
 

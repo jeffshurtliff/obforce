@@ -1,0 +1,1854 @@
+{
+  "repository": "jeffshurtliff/obforce",
+  "review_date": "2026-10-28",
+  "implementation": "3771c16f133703bd76615d1af383e88d7d8dbf08",
+  "merge": "178bf98a53f910364eb0985d201a372f3fe8cd7e",
+  "run_id": 40721222520,
+  "attempt": 2,
+  "result": "all 12 cells and all required gates passed; 24 independent installs",
+  "verification": "Read every attempt-2 job command log and step conclusion; compared exact checkout SHA, metadata/lock, Ruff, Bandit, bounded pytest, fresh build, strict Twine, exact archive lists and independent installs",
+  "limits": [
+    "Synthetic offline/native-hosted evidence; no live Salesforce or native Obsidian preview",
+    "Skips are not qualification; runner labels do not identify filesystems",
+    "Artifact hashes vary per cell; no reproducible-build cause or guarantee inferred",
+    "Historical failures/cancellations and uncaptured causes remain"
+  ],
+  "attempt1": {
+    "run_conclusion": "failure",
+    "job_metadata": "11 successful; macOS/Python 3.15 cancelled before runner acquisition",
+    "cancelled_job": 122932342732,
+    "runner_id": 0,
+    "steps": [],
+    "annotations": [
+      "The job was not acquired by Runner of type hosted even after multiple attempts",
+      "Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times."
+    ],
+    "logs": "404 BlobNotFound; no job command execution evidence"
+  },
+  "jobs": [
+    {
+      "id": 123020848348,
+      "name": "macos-latest / Python 3.15",
+      "python": [
+        "Successfully set up CPython (3.15.2)"
+      ],
+      "summary": [
+        "1605 passed, 3 skipped in 337.57s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=180081; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "39a5828e046d60432ad2aa379eaa949a31a9207d6efeab9b71b84f6399d7034c",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 30.87,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1605 passed, 3 skipped in 337.57s",
+      "slow_test_seconds": 30.87,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020848663,
+      "name": "ubuntu-latest / Python 3.15",
+      "python": [
+        "Successfully set up CPython (3.15.1)"
+      ],
+      "summary": [
+        "1607 passed, 1 skipped in 206.61s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=179806; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "39a5828e046d60432ad2aa379eaa949a31a9207d6efeab9b71b84f6399d7034c",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 17.06,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1607 passed, 1 skipped in 206.61s",
+      "slow_test_seconds": 17.06,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020849907,
+      "name": "macos-latest / Python 3.12",
+      "python": [
+        "Successfully set up CPython (3.12.10)"
+      ],
+      "summary": [
+        "1605 passed, 3 skipped in 517.26s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=180016; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 60.33,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1605 passed, 3 skipped in 517.26s",
+      "slow_test_seconds": 60.33,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020850651,
+      "name": "windows-latest / Python 3.14",
+      "python": [
+        "Successfully set up CPython (3.14.9)"
+      ],
+      "summary": [
+        "1586 passed, 22 skipped in 1561.83s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1104; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=182948; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "184674cd945fc8adcce4a565f82b56764817be64dc6c09fb3d0aa1700060e573",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "744f0ee2d6f06e442b640a951c0469e9b6e79df9fc67211ee8399704efa5eaa6",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 22.36,
+      "coverage_percent": 91,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1586 passed, 22 skipped in 1561.83s",
+      "slow_test_seconds": 22.36,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020850801,
+      "name": "windows-latest / Python 3.13",
+      "python": [
+        "Successfully set up CPython (3.13.16)"
+      ],
+      "summary": [
+        "1586 passed, 22 skipped in 2261.48s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1104; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=182950; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "252c112961e70f7c471c9f43ec2586c6ef058585021af2a3cf32c59a06347295",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "3fffbf51d7a2ce0e8cc347b897b972b191e27d8f613e9ece97399da7bf7ed803",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 97.89,
+      "coverage_percent": 91,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1586 passed, 22 skipped in 2261.48s",
+      "slow_test_seconds": 97.89,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020851078,
+      "name": "windows-latest / Python 3.15",
+      "python": [
+        "Successfully set up CPython (3.15.1)"
+      ],
+      "summary": [
+        "1586 passed, 22 skipped in 1689.65s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1104; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=182893; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "184674cd945fc8adcce4a565f82b56764817be64dc6c09fb3d0aa1700060e573",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "d18b762be91ea815c7aae4bd325f648f2c6ac4820f7b1c3a0463687ab95836d8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 34.66,
+      "coverage_percent": 91,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1586 passed, 22 skipped in 1689.65s",
+      "slow_test_seconds": 34.66,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020901226,
+      "name": "windows-latest / Python 3.12",
+      "python": [
+        "Successfully set up CPython (3.12.10)"
+      ],
+      "summary": [
+        "1586 passed, 22 skipped in 2389.33s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1104; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=182951; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "252c112961e70f7c471c9f43ec2586c6ef058585021af2a3cf32c59a06347295",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "3fffbf51d7a2ce0e8cc347b897b972b191e27d8f613e9ece97399da7bf7ed803",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 105.04,
+      "coverage_percent": 91,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1586 passed, 22 skipped in 2389.33s",
+      "slow_test_seconds": 105.04,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020901931,
+      "name": "ubuntu-latest / Python 3.13",
+      "python": [
+        "Successfully set up CPython (3.13.16)"
+      ],
+      "summary": [
+        "1607 passed, 1 skipped in 778.09s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=179714; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 78.83,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1607 passed, 1 skipped in 778.09s",
+      "slow_test_seconds": 78.83,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020911656,
+      "name": "ubuntu-latest / Python 3.14",
+      "python": [
+        "Successfully set up CPython (3.14.9)"
+      ],
+      "summary": [
+        "1607 passed, 1 skipped in 385.00s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=179890; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 34.99,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1607 passed, 1 skipped in 385.00s",
+      "slow_test_seconds": 34.99,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020913589,
+      "name": "macos-latest / Python 3.14",
+      "python": [
+        "Successfully set up CPython (3.14.9)"
+      ],
+      "summary": [
+        "1605 passed, 3 skipped in 228.80s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=179937; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 21.41,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1605 passed, 3 skipped in 228.80s",
+      "slow_test_seconds": 21.41,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020929007,
+      "name": "macos-latest / Python 3.13",
+      "python": [
+        "Successfully set up CPython (3.13.16)"
+      ],
+      "summary": [
+        "1605 passed, 3 skipped in 534.17s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=180110; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 61.39,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1605 passed, 3 skipped in 534.17s",
+      "slow_test_seconds": 61.39,
+      "supervisor_complete": true
+    },
+    {
+      "id": 123020930144,
+      "name": "ubuntu-latest / Python 3.12",
+      "python": [
+        "Successfully set up CPython (3.12.15)"
+      ],
+      "summary": [
+        "1607 passed, 1 skipped in 901.53s"
+      ],
+      "capture": [
+        "CI pytest: complete; exit=0; captured_bytes=1074; capture_complete=true; cleanup_confirmed=true",
+        "CI pytest: complete; exit=0; captured_bytes=179908; capture_complete=true; cleanup_confirmed=true"
+      ],
+      "commit": true,
+      "installs": 2,
+      "archives": [
+        {
+          "artifact": "obforce-0.1.0.dev0-py3-none-any.whl",
+          "sha256": "fdb408f81f56796093d369ebb42efecec421188e6f1633cc40c1b32461aeddda",
+          "files": 36
+        },
+        {
+          "artifact": "obforce-0.1.0.dev0.tar.gz",
+          "sha256": "78bdb0cf85470a90324e5614522bba0ad8694030a76afcdcdb169956c57859a8",
+          "files": 35
+        }
+      ],
+      "errors": 0,
+      "required": [
+        [
+          "poetry check --lock --strict",
+          true
+        ],
+        [
+          "ruff check",
+          true
+        ],
+        [
+          "ruff format --check",
+          true
+        ],
+        [
+          "bandit -r",
+          true
+        ],
+        [
+          "poetry build",
+          true
+        ],
+        [
+          "twine check --strict",
+          true
+        ],
+        [
+          "dev/check_artifacts.py",
+          true
+        ],
+        [
+          "git diff --check",
+          true
+        ]
+      ],
+      "strict_twine_passes": 2,
+      "all_required_steps_success": true,
+      "thousand_class_seconds": 100.04,
+      "coverage_percent": 92,
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare isolated temporary root",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Poetry",
+          "conclusion": "success"
+        },
+        {
+          "name": "Select Python environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install locked environment",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check metadata and lock",
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint sources",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check formatting",
+          "conclusion": "success"
+        },
+        {
+          "name": "Audit source security",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preflight bounded test collection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run offline tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build fresh artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check artifact metadata",
+          "conclusion": "success"
+        },
+        {
+          "name": "Inspect and install each artifact independently",
+          "conclusion": "success"
+        },
+        {
+          "name": "Check whitespace",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ],
+      "pytest_summary": "1607 passed, 1 skipped in 901.53s",
+      "slow_test_seconds": 100.04,
+      "supervisor_complete": true
+    }
+  ]
+}

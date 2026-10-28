@@ -2,11 +2,13 @@
 
 Thread 15 / [#15](https://github.com/jeffshurtliff/obforce/issues/15) only, authorized
 27 October 2026, with a scoped runtime correction approved on 28 October.
-Current status: ten cells passed in run `40603283983`; Windows 3.12/3.13 timed
-out, so #15 remains open. The approved immutable batch path optimization is
-locally verified below; new exact-commit hosted verification and acceptance are
-pending. Earlier dated handoffs remain historical. Threads 16–17 and enhancements
-#18/#19 remain **NOT STARTED**. No release or platform provisioning.
+Current status: **ACCEPTED AND COMPLETE; #15 closed**, 28 October 2026.
+Implementation `3771c16` / merge `178bf98`, run `40721222520`, attempt 2, passed
+all twelve selected cells and twenty-four independent installs. Earlier dated
+handoffs remain historical. Thread 16 is eligible but **NOT STARTED**; Thread 17
+and enhancements #18/#19 remain **NOT STARTED**. The approved #21 path scope is
+delivered/verified; broader optional work remains open and proposed. No release
+or platform provisioning.
 
 ## Prerequisite and scope
 
@@ -833,3 +835,119 @@ Markdown files / 131 local links and anchors / zero missing targets; both new
 public evidence files parse completely and contain no identifying local paths.
 Metadata/lock, Ruff lint/format and whitespace rechecked; all 16 changed/new files
 remain unstaged/uncommitted, with no unrelated or staged file.
+
+## Final accepted hosted qualification — 28 October 2026
+
+The maintainer reviewed/pushed the candidate and explicitly requested closure if
+all required gates passed. Verified implementation
+`3771c16f133703bd76615d1af383e88d7d8dbf08`, merge
+`178bf98a53f910364eb0985d201a372f3fe8cd7e`, and
+[40721222520, **attempt 2**](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/attempts/2).
+The implementation and merge trees match; the initial checkout was clean at that
+merge. Every attempt-2 job command log, exact checkout SHA, required standalone
+command and step conclusion was read. **All twelve cells and twenty-four
+independent wheel/sdist installs passed.** No formatter/security/package gate was
+masked or skipped.
+
+| Hosted cell | Actual setup Python | Job | pytest |
+| --- | --- | --- | --- |
+| macos-latest / 3.12 | 3.12.10 | [123020849907](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020849907) | 1605 passed, 3 skipped in 517.26s |
+| macos-latest / 3.13 | 3.13.16 | [123020929007](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020929007) | 1605 passed, 3 skipped in 534.17s |
+| macos-latest / 3.14 | 3.14.9 | [123020913589](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020913589) | 1605 passed, 3 skipped in 228.80s |
+| macos-latest / 3.15 | 3.15.2 | [123020848348](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020848348) | 1605 passed, 3 skipped in 337.57s |
+| ubuntu-latest / 3.12 | 3.12.15 | [123020930144](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020930144) | 1607 passed, 1 skipped in 901.53s |
+| ubuntu-latest / 3.13 | 3.13.16 | [123020901931](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020901931) | 1607 passed, 1 skipped in 778.09s |
+| ubuntu-latest / 3.14 | 3.14.9 | [123020911656](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020911656) | 1607 passed, 1 skipped in 385.00s |
+| ubuntu-latest / 3.15 | 3.15.1 | [123020848663](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020848663) | 1607 passed, 1 skipped in 206.61s |
+| windows-latest / 3.12 | 3.12.10 | [123020901226](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020901226) | 1586 passed, 22 skipped in 2389.33s |
+| windows-latest / 3.13 | 3.13.16 | [123020850801](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020850801) | 1586 passed, 22 skipped in 2261.48s |
+| windows-latest / 3.14 | 3.14.9 | [123020850651](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020850651) | 1586 passed, 22 skipped in 1561.83s |
+| windows-latest / 3.15 | 3.15.1 | [123020851078](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/job/123020851078) | 1586 passed, 22 skipped in 1689.65s |
+
+Every cell passed strict Poetry metadata/lock, Ruff lint/format (115 Python
+files), Bandit (no issues; five existing narrow suppressions), bounded collection,
+full pytest with branch/subprocess coverage, fresh build, strict Twine for both
+artifacts, exact **36-wheel/35-sdist** source/resource/license/required-metadata
+checks, both independent installed probes and whitespace. Linux/macOS measured
+92% combined statement/branch coverage; Windows 91% (4737 statements,
+2074 branches). Both collection/suite captures were complete, exit 0 and cleanup
+confirmed. Suite raw captures span 179714–182951 bytes under the unchanged 2 MiB
+and 4096-byte line ceilings. The 2700-second test deadline, outer deadlines,
+fail-fast and concurrency protections were retained.
+
+The [structured job/gate/hash manifest](evidence/thread15-ci-40721222520-attempt2.json)
+records all twelve source/command checks and actual per-cell artifact hashes.
+Hashes differ by cell; exact package content/metadata/install checks passed,
+without a reproducible-build cause or guarantee being inferred. Independent
+installs exercised actual console/module entry points, relative/absolute paths
+with spaces, installed assets, privacy/bounds, init/build/sync/recover,
+within-bound lifecycle and lower-level preservation/recovery under runtime
+network/process guards and without application cwd artifacts. Setup downloads
+remain separate from application runtime.
+
+**Attempt 1 remains separate failed/unavailable evidence.** Its run conclusion
+is failure; job metadata reports eleven successful jobs and cancelled macOS
+3.15 job `122932342732`, runner_id 0, no steps. Check annotations state that no
+hosted runner acquired the job and identify macOS ARM64 capacity constraints.
+The command log returns 404 BlobNotFound; no application execution or test pass
+is inferred for that job. The agent did not cancel or rerun either attempt.
+
+Prior `40603283983` Windows 3.12/3.13 2700-second incomplete captures remain,
+as do `40575562800`'s two completed Windows oversized-ID failures and cancelled
+cells. The latter run's current overall conclusion is cancelled; that does not
+erase its captured per-cell failures. Cancelled `40597252222` and `40697576055`
+are retained without new application qualification. `40427329142`,
+`40235515146`, every older failed/skipped/unavailable observation, the original
+template-refresh conflict 3 and Thread 12's uncaptured
+2-failed/1371-passed/2-skipped causes remain. Later passes do not identify those
+causes or the precise older Windows timeout case.
+
+**Evidence boundaries:** Linux's one skip is unavailable native Windows
+junction execution. macOS's three retain case/NFC fixture representation and
+junction limits. Windows's twenty-two retain POSIX collector/FIFO/symlink/mode
+and filename fixture gaps; the native junction refusal case passed there.
+Skips are not qualification. Existing mocked descriptor/reparse/permission
+checks remain mocked; native Windows ACL/sf, power-loss, hostile races, atomic
+snapshots/multi-file publication and native Obsidian preview are not established.
+Only the locally observed APFS is named as filesystem evidence; runner labels
+do not prove hosted filesystem types. Windows sf remains refused, and optional
+Obsidian preview remains unavailable. New Windows duration observations
+(1000-class case: 105.04/97.89/22.36/34.66s on 3.12/3.13/3.14/3.15) are measured
+case times, not the cause of an earlier incomplete run or a throughput promise.
+
+**Acceptance:** all requested Thread 15 scope/gates are met with unsupported and
+unperformed paths explicitly gated/documented. **#15 is accepted, complete and
+closed as completed under the maintainer's conditional authorization.** The
+approved #21 immutable path scope is delivered and verified; broader optional
+profiling/acquisition/adjacency/early-refusal proposals remain open and
+unscheduled, outside the prerequisite graph. No extra #21 implementation or
+closure was authorized here.
+
+**Handoff:** Thread 16 is next eligible, explicitly **NOT STARTED**. The
+[exact kickoff prompt](THREAD_16_KICKOFF.md) captures accepted source/run evidence,
+scope, privacy/preservation contracts, clean-install tutorial verification and
+delivery limits. Thread 17 and enhancements #18/#19 remain **NOT STARTED**.
+Preparing this prompt and updating #16 eligibility do not start documentation
+implementation or release preparation.
+
+This acceptance pass changes documentation/evidence only. Local verification
+covers links/anchors, evidence JSON, privacy/consistency, whitespace and Git
+review; no application test/build/install or dependency setup was repeated for
+prose. Acceptance documentation remains unstaged/uncommitted on existing
+`main` at `178bf98`; source delivery was performed by the maintainer, not this
+session. No branch/stage/commit/push/PR/merge/CI rerun/publication, real sf/Obsidian/
+auth/org/vault/settings access, platform/policy change or delegation.
+
+
+Acceptance tracking receipt: [#15 acceptance and closure](https://github.com/jeffshurtliff/obforce/issues/15#issuecomment-6478886856)
+and [#21 delivered-scope update](https://github.com/jeffshurtliff/obforce/issues/21#issuecomment-6478887268)
+are posted. #15 readback is CLOSED/completed; #16 and #21 remain OPEN. #15/#16
+labels, maintainer assignees and milestone 1 are unchanged; #21 remains unassigned
+with its original labels/no milestone. Native #14 → #15 → #16 → #17 links are
+retained, with #15 now closed; #21 has no native prerequisites/dependents.
+Thread 16 remains NOT STARTED; its implementation checklist is unchanged.
+
+Final acceptance review: 10 Markdown files / 188 local links and anchors / zero
+errors; complete 12-job evidence JSON, privacy/new-file formatting and whitespace
+passed. All 11 changed/new acceptance files remain unstaged/uncommitted; no staged
+or unrelated file and no source/test/lock/workflow change in this acceptance pass.

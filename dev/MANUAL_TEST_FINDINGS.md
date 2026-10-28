@@ -222,3 +222,22 @@ Thread 14 contract and was not performed by the agent. This is implementation/
 automated acceptance, not a claim of native rendering or property-type validation.
 Failed 40427329142 and all older evidence remain in the
 [acceptance record](IMPLEMENTATION_PLAN.md#thread-14-acceptance-and-closure--27-october-2026).
+
+
+#### Thread 15 automated qualification acceptance — 28 October 2026
+
+The maintainer authorized closure if required gates passed after reviewing and
+pushing the scoped runtime correction. Verified implementation `3771c16` / merge
+`178bf98a53f910364eb0985d201a372f3fe8cd7e`,
+[run 40721222520, attempt 2](https://github.com/jeffshurtliff/obforce/actions/runs/40721222520/attempts/2):
+all twelve cells, every required command and twenty-four independent installs
+passed. Linux 1607/1, macOS 1605/3, Windows 1586/22 each; 92/92/91% statement/
+branch coverage. Windows 3.12/3.13 complete within the unchanged 45-minute bound.
+#15 is accepted/closed; Thread 16 is next eligible but NOT STARTED.
+
+This is synthetic automated/native-hosted evidence, not a newly executed manual
+Obsidian preview, real sf/org check, Windows ACL or power-loss/hostile-race test.
+Attempt 1's macOS 3.15 runner-capacity cancellation has no command log; earlier
+failures/skips/unavailable/uncaptured causes remain in the
+[acceptance record](IMPLEMENTATION_PLAN.md#thread-15-acceptance-and-closure--28-october-2026).
+The optional native preview remains unavailable. Broader #21 work remains open.
